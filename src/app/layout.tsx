@@ -17,6 +17,14 @@ export const metadata: Metadata = {
   title: "Care My Way",
   description:
     "Care My Way is a healthcare marketplace that connects clients with trusted Healthcare Professionals. ",
+  icons: [
+    {
+      rel: "icon",
+      type: "image/ico",
+      sizes: "32x32",
+      url: "/favicon.ico",
+    },
+  ],
 };
 
 export default function RootLayout({
