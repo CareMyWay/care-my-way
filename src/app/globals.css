@@ -3,6 +3,11 @@
 
 @theme {
 
+    --font-weight-bold: 700;
+    --font-weight-semibold: 600;
+    --font-weight-medium: 500;
+
+
     --color-primary-white: #FCFCFC;
 
     --color-light-green: #ADD2D4;

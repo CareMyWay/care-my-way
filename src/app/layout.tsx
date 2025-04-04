@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Manrope } from "next/font/google";
+import { Manrope } from "next/font/google";
 // import "./globals.css";
 import "@/app/globals.css";
 
@@ -8,11 +8,6 @@ const manrope = Manrope({
   subsets: ["latin"],
   weight: ["700", "600", "500"],
 });
-
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
 
 export const metadata: Metadata = {
   title: "Care My Way",
@@ -36,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${manrope.variable} flex-col size-full min-h-screen bg-primary-white antialiased`}
+        className={`${manrope.variable}  font-manrope flex-col size-full min-h-screen bg-primary-white antialiased`}
         suppressHydrationWarning
       >
         {children}
