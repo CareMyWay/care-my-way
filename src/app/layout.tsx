@@ -31,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${manrope.variable}  font-manrope flex-col size-full min-h-screen bg-primary-white antialiased`}
+        className={`${manrope.variable} overflow-x-hidden font-manrope flex-col size-full min-h-screen bg-primary-white antialiased`}
         suppressHydrationWarning
       >
         {children}
