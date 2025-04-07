@@ -20,7 +20,7 @@ const MobileNavbar = () => {
         <Link className={NAVBAR_ITEMS} href="/">
           Contact
         </Link>
-        <div className="pt-2 border-t border-medium-green mt-2">
+        <div className="pt-2 border-t border-darkest-green mt-2">
           <Link className={`${NAVBAR_ITEMS} block`} href="/">
             Login
           </Link>
