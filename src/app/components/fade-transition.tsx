@@ -1,10 +1,10 @@
 import React, { ReactNode } from "react";
 import { Transition } from "@headlessui/react";
 
-type TransitionPropTypes = {
+interface TransitionPropTypes {
   isMenuOpen: boolean;
   children: ReactNode;
-};
+}
 
 const FadeTransition: React.FC<TransitionPropTypes> = ({
   isMenuOpen,
