@@ -1,5 +1,7 @@
 import { TopNavBar } from "@/app/components/top-navbar";
-import MobileNavbar from "@/app/components/mobile-navbar";
+import "@/app/globals.css";
+
+import HeroSection from "@/app/components/home/hero-section";
 
 export default function Home() {
   return (
@@ -7,6 +9,7 @@ export default function Home() {
       <main>
         {/* Temp location of top navbar */}
         <TopNavBar />
+        <HeroSection />
       </main>
     </div>
   );
