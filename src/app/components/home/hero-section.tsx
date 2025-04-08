@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "next/link";
 import OrangeButton from "../orange-button";
 
 const HeroSection = () => {
