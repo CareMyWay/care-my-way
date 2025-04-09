@@ -44,7 +44,7 @@ export function TopNavBar() {
               )}
             </svg>
           </button>
-          <div className="flex items-center">
+          <div className="flex items-center ml-[-40px]">
             <Link href="/" className="flex items-center">
               <div className="relative w-10 h-10 mr-2 ">
                 <Image
@@ -59,7 +59,7 @@ export function TopNavBar() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6 lg:space-x-18 w-full px-16">
+          <nav className="hidden md:flex items-center space-x-4 md:space-x-6 lg:space-x-18 w-full px-14 ml-[-10px]">
             <Link href="/" className={NAVBAR_ITEMS}>
               <span>Home</span>
             </Link>
@@ -75,7 +75,7 @@ export function TopNavBar() {
           </nav>
 
           {/* Auth Buttons */}
-          <div className="hidden md:flex items-center space-x-2 lg:space-x-4">
+          <div className="hidden md:flex items-center space-x-0 ml-[-35px] lg:space-x-2">
             <Link
               href="/login"
               className=" text-darkest-green hover:text-medium-green text-md font-bold w-28 h-8 rounded-btn-radius text-center align-middle py-1"
@@ -84,7 +84,7 @@ export function TopNavBar() {
             </Link>
             <Link
               href="/signup"
-              className=" bg-darkest-green hover:bg-medium-green text-primary-white font-bold w-28 h-8 rounded-btn-radius text-center flex items-center justify-center px-4 py-2"
+              className=" bg-darkest-green hover:bg-medium-green text-primary-white font-bold w-28 h-8 rounded-btn-radius text-center flex items-center justify-center px-2 py-2"
             >
               Sign Up
             </Link>
