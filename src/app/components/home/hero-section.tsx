@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "next/link";
 import OrangeButton from "../orange-button";
 
 const HeroSection = () => {
@@ -10,7 +9,7 @@ const HeroSection = () => {
           <div className="flex flex-col px-4 md:px-10 gap-4">
             <h1
               style={{ textShadow: "2px 2px 20px rgba(255, 255, 255, 0.8)" }}
-              className=" text-darkest-green font-bold text-[38px] md:text-[70px] "
+              className=" text-darkest-green font-bold text-[38px] md:text-[50px] lg:text-[70px] "
             >
               Needing healthcare
               <br />
