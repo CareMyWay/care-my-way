@@ -7,7 +7,7 @@ interface ButtonPropTypes {
 }
 
 const BUTTON_STYLE =
-  "bg-dark-green rounded-btn-radius font-btn-font-wgt text-primary-white px-6 py-3 md:text-btn-font-size text-[14px] shadow-md w-fit transition-all hover:bg-darkest-green";
+  "bg-dark-green rounded-btn-radius font-btn-font-wgt text-primary-white px-8 py-3 md:text-btn-font-size text-[14px] shadow-md w-fit transition-all hover:bg-darkest-green";
 
 const GreenButton: React.FC<ButtonPropTypes> = ({ label, href }) => {
   return (
