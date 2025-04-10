@@ -15,7 +15,7 @@ export function TopNavBar() {
   return (
     <header className="min-w-screen">
       <div className="border-b-2 border-darkest-green mx-auto px-8">
-        <div className="rounded-b-2xl md:rounded-none flex justify-between items-center px-2 md:px-10 py-5 drop-shadow-lg z-30">
+        <div className="rounded-b-2xl md:rounded-none flex justify-between items-center px-2 md:px-10 py-5  z-30">
           <button
             type="button"
             className={`md:hidden text-darkest-green hover:text-medium-green`}

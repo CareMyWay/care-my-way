@@ -6,7 +6,7 @@ const NAVBAR_ITEMS =
 
 const MobileNavbar = () => {
   return (
-    <div className="absolute left-0 right-0 w-full z-50 bg-primary-white p-6 sm:p-10 rounded-b-1xl shadow-lg">
+    <div className="md:hidden absolute left-0 right-0 w-full z-50 bg-primary-white p-6 sm:p-10 rounded-b-1xl shadow-lg">
       <div className="flex flex-col ">
         <Link className={NAVBAR_ITEMS} href="/">
           Home

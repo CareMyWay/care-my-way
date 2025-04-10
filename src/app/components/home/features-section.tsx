@@ -2,100 +2,120 @@ import React from "react";
 import OrangeButton from "../orange-button";
 
 const TITLE_STYLE =
-  "flex text-[24px] md:text-[48px] font-medium text-darkest-green mb-10";
+  "flex text-[30px] md:text-[48px] font-medium text-darkest-green mb-10";
+const DESC_STYLE =
+  "text-[20px] md:text-[22px] lg:text-[30px] p-6 md:p-10 font-medium";
+const COL_STYLE =
+  "flex flex-col md:flex-row justify-center items-center gap-4 px-4";
 
-const DESC_STYLE = "text-[14px] md:text-[24px] p-4 md:p-10 font-medium";
+const features = [
+  {
+    id: 1,
+    title: "Healthcare Transition Quiz",
+    description:
+      "Don't know what level of help you need?\n\nTake this Transition Quiz that will guide you through the process of identifying the right level of care based on your loved one's current health situation.",
+    buttonLabel: "Health Quiz",
+    buttonHref: "/",
+    bgColor: "bg-medium-green",
+    shadowColor: "bg-darkest-green",
+    reverse: false,
+  },
+  {
+    id: 2,
+    title: "Personalized Healthcare Directory",
+    description:
+      "Don't know what level of help you need?\n\nTake this Transition Quiz that will guide you through the process of identifying the right level of care based on your loved one's current health situation.",
+    buttonLabel: "Directory",
+    buttonHref: "/",
+    bgColor: "bg-darkest-green",
+    shadowColor: "bg-medium-green",
+    reverse: true,
+  },
+  {
+    id: 3,
+    title: "Healthcare Resources Hub",
+    description:
+      "Want to learn more about your health?\n\nBrowse dozens of healthcare topics in several languages.",
+    buttonLabel: "Resources",
+    buttonHref: "/",
+    bgColor: "bg-medium-green",
+    shadowColor: "bg-darkest-green",
+    reverse: false,
+  },
+];
 
 const FeaturesSection = () => {
   return (
-    <div>
-      <h1 className="text-darkest-green text-[32px] md:text-[49px] mb-8 text-left">
-        Our Features
-      </h1>
-      <div className="flex justify-center items-center gap-4 p-4">
-        <div className=" aspect-square w-full max-w-lg  flex items-center justify-center text-center">
-          <div>
-            <h2 className={TITLE_STYLE}>
-              Healthcare <br />
-              Transition Quiz
-            </h2>
-            <OrangeButton href="/" label="Health Quiz" />
-          </div>
-        </div>
-        <div className="relative aspect-square w-full max-w-lg">
-          {/* Solid shadow block */}
-          <div className="absolute inset-0 bg-darkest-green translate-x-3 translate-y-3 z-0"></div>
+    <div className="my-20">
+      <div className="px-4 flex justify-center">
+        <h1 className="text-darkest-green text-[32px] md:text-[50px] mb-20  text-center w-full max-w-6xl font-medium">
+          Our Features
+        </h1>
+      </div>
 
-          {/* Foreground content block */}
-          <div className="relative z-10 text-primary-white bg-medium-green h-full w-full flex items-center justify-center text-center">
-            <div>
-              <p className={DESC_STYLE}>
-                Don't know what level of help you need?
-                <br />
-                <br />
-                Take this Transition Quiz that will guide you through the
-                process of identifying the right level of care based on your
-                loved one's current health situation.
-              </p>
+      {features.map(
+        (
+          {
+            id,
+            title,
+            description,
+            buttonLabel,
+            buttonHref,
+            bgColor,
+            shadowColor,
+            reverse,
+          },
+          index
+        ) => (
+          <div
+            key={id}
+            className={`flex ${
+              reverse ? "flex-col md:flex-row-reverse" : "flex-col md:flex-row"
+            } justify-center items-center gap-4 px-4`}
+            // className={`${reverse ? "flex-col-reverse" : ""} ${COL_STYLE}`}
+          >
+            <div className="aspect-square w-full max-w-lg flex items-center justify-center text-center">
+              <div>
+                <h2 className={TITLE_STYLE}>
+                  {title.split("\n").map((line, i) => (
+                    <React.Fragment key={i}>
+                      {line}
+                      <br />
+                    </React.Fragment>
+                  ))}
+                </h2>
+                <OrangeButton href={buttonHref} label={buttonLabel} />
+              </div>
+            </div>
+            <div className="relative aspect-square w-full max-w-lg">
+              {/* Shadow block - hidden in mobile */}
+              <div
+                className={`sm:block hidden absolute inset-0 ${
+                  reverse
+                    ? "-translate-x-3 translate-y-3"
+                    : "translate-x-3 translate-y-3"
+                } ${shadowColor}  z-0`}
+              ></div>
+
+              {/* Content block */}
+              <div
+                className={`relative z-10 text-primary-white ${bgColor} h-full w-full flex items-center justify-center text-center`}
+              >
+                <div>
+                  <p className={DESC_STYLE}>
+                    {description.split("\n").map((line, i) => (
+                      <React.Fragment key={i}>
+                        {line}
+                        <br />
+                      </React.Fragment>
+                    ))}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div className="flex justify-center items-center gap-4 px-4 mb-8">
-        <div className="relative aspect-square w-full max-w-lg">
-          {/* Solid shadow block */}
-          <div className="absolute inset-0 bg-medium-green -translate-x-3 translate-y-3 z-0"></div>
-
-          {/* Foreground content block */}
-          <div className="relative z-10 text-primary-white bg-darkest-green h-full w-full flex items-center justify-center text-center">
-            <div>
-              <p className={DESC_STYLE}>
-                Don't know what level of help you need?
-                <br />
-                <br />
-                Take this Transition Quiz that will guide you through the
-                process of identifying the right level of care based on your
-                loved one's current health situation.
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className=" aspect-square w-full max-w-lg  flex items-center justify-center text-center">
-          <div>
-            <h2 className={TITLE_STYLE}>
-              Personalized <br />
-              Healthcare Directory
-            </h2>
-            <OrangeButton href="/" label="Find a Healthcare Provider" />
-          </div>
-        </div>
-      </div>
-      <div className="flex justify-center items-center gap-4 px-4 mb-8">
-        <div className=" aspect-square w-full max-w-lg  flex items-center justify-center text-center">
-          <div>
-            <h2 className={TITLE_STYLE}>
-              Healthcare <br />
-              Resources Hub
-            </h2>
-            <OrangeButton href="/" label="Health Quiz" />
-          </div>
-        </div>
-        <div className="relative aspect-square w-full max-w-lg">
-          {/* Solid shadow block */}
-          <div className="absolute inset-0 bg-darkest-green translate-x-3 translate-y-3 z-0"></div>
-
-          {/* Foreground content block */}
-          <div className="relative z-10 text-primary-white bg-medium-green h-full w-full flex items-center justify-center text-center">
-            <div>
-              <p className={DESC_STYLE}>
-                Want to learn more about your health?
-                <br />
-                Browse dozen of health care topics in several languages.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+        )
+      )}
     </div>
   );
 };
