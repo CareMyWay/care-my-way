@@ -3,10 +3,10 @@ import GreenButton from "../green-button";
 
 const AboutSection = () => {
   return (
-    <div className="bg-medium-green">
-      <div className="w-full h-screen flex ">
-        <div className="container mx-auto mb-40 flex items-center h-screen">
-          <div className="flex flex-col px-6 md:px-20 items-center gap-12">
+    <div className="bg-medium-green p-14 md:p-24 ">
+      <div className="w-full flex">
+        <div className="container mx-auto  flex items-center ">
+          <div className="flex flex-col px-2 md:px-10 items-center gap-12">
             <p className="text-primary-white text-center text-[20px] md:text-[32px] ">
               Find Compassionate Care, Simplified.
               <br />
