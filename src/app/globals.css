@@ -1,7 +1,30 @@
 @import "tailwindcss";
 
+:root {
+    --font-manrope: 'Manrope', sans-serif;
+}
+
+/* Tailwind font class */
+.font-manrope {
+    font-family: var(--font-manrope);
+}
 
 @theme {
+
+    /* FONT SIZES */
+    --text-h1-size: 70px;
+    --text-h2-size: 64px;
+    --text-h3-size: 48px;
+    --text-h4-size: 28px;
+    --text-h5-size: 23px;
+    --text-h6-size: 20px;
+
+    --text-body1-size: 32px;
+    --text-body2-size: 30px;
+    --text-body3-size: 23px;
+    --text-body4-size: 20px;
+    --text-body5-size: 16px;
+
 
     /* FONT WEIGHTS */
     --font-weight-bold: 700;

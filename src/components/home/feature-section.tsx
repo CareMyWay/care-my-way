@@ -2,9 +2,9 @@ import React from "react";
 import OrangeButton from "../buttons/orange-button";
 
 const TITLE_STYLE =
-  "flex text-[30px] md:text-[48px] font-medium text-darkest-green mb-10";
+  "flex text-body2-size md:text-h3-size font-medium text-darkest-green mb-10";
 const DESC_STYLE =
-  "text-[20px] md:text-[22px] lg:text-[30px] p-6 md:p-10 font-medium";
+  "text-body4-size md:text-body3-size lg:text-body2-size p-6 md:p-10 font-medium";
 const COL_STYLE =
   "flex flex-col md:flex-row justify-center items-center gap-4 px-4";
 
@@ -48,7 +48,7 @@ const FeaturesSection = () => {
   return (
     <div className="my-20">
       <div className="px-4 flex justify-center">
-        <h1 className="text-darkest-green text-[32px] md:text-[50px] mb-20  text-center w-full max-w-6xl font-medium">
+        <h1 className="text-darkest-green text-body1-size md:text-h3-size mb-20  text-center w-full max-w-6xl font-medium">
           Our Features
         </h1>
       </div>
