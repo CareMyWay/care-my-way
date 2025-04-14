@@ -9,7 +9,7 @@ const HeroSection = () => {
           <div className="flex flex-col px-4 md:px-10 gap-4">
             <h1
               style={{ textShadow: "2px 2px 20px rgba(255, 255, 255, 0.8)" }}
-              className=" text-darkest-green font-bold text-[45px] md:text-[50px] lg:text-[70px] "
+              className=" text-darkest-green font-bold text-h3-size md:text-h2-size lg:text-h1-size"
             >
               Needing healthcare
               <br />

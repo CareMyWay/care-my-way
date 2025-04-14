@@ -7,7 +7,7 @@ const AboutSection = () => {
       <div className="w-full flex">
         <div className="container mx-auto  flex items-center ">
           <div className="flex flex-col px-2 md:px-10 items-center gap-12">
-            <p className="text-primary-white text-center text-[20px] md:text-[32px] ">
+            <p className="text-primary-white text-center text-body4-size md:text-body1-size ">
               Find Compassionate Care, Simplified.
               <br />
               Whether you’re searching for a reliable healthcare aid or looking
