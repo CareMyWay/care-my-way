@@ -19,21 +19,21 @@ const steps = [
     title: "Emergency & Support Person Information",
     subtitle: "This section has not started.",
   },
-  {
-    stepNum: 4,
-    title: "Medical Information",
-    subtitle: "This section has not started.",
-  },
-  {
-    stepNum: 5,
-    title: "Lifestyle & Habits",
-    subtitle: "This section has not started.",
-  },
-  {
-    stepNum: 6,
-    title: "Functional & Cognitive Abilities",
-    subtitle: "This section has not started.",
-  },
+  // {
+  //   stepNum: 4,
+  //   title: "Medical Information",
+  //   subtitle: "This section has not started.",
+  // },
+  // {
+  //   stepNum: 5,
+  //   title: "Lifestyle & Habits",
+  //   subtitle: "This section has not started.",
+  // },
+  // {
+  //   stepNum: 6,
+  //   title: "Functional & Cognitive Abilities",
+  //   subtitle: "This section has not started.",
+  // },
 ];
 
 const AccountSummary = () => {
