@@ -1,5 +1,5 @@
 import React from "react";
-import OrangeButton from "../buttons/OrangeButton";
+import OrangeButton from "../buttons/orange-button";
 
 const TITLE_STYLE =
   "flex text-[30px] md:text-[48px] font-medium text-darkest-green mb-10";

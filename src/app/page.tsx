@@ -1,9 +1,9 @@
-import { TopNavBar } from "@/components/navbars/TopNavBar";
+import { TopNavBar } from "@/components/navbars/top-navbar";
 import "@/app/globals.css";
 
-import HeroSection from "@/components/home/HeroSection";
-import AboutSection from "@/components/home/AboutSection"; // Adjust the path as necessary
-import FeaturesSection from "@/components/home/FeaturesSection";
+import HeroSection from "@/components/home/hero-section";
+import AboutSection from "@/components/home/about-section"; // Adjust the path as necessary
+import FeaturesSection from "@/components/home/feature-section";
 
 export default function Home() {
   return (
