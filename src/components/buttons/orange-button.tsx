@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import clsx from "clsx";
 
 interface ButtonPropTypes {
   label: string;
@@ -8,7 +9,7 @@ interface ButtonPropTypes {
 }
 
 const BUTTON_STYLE =
-  "bg-primary-orange rounded-btn-radius font-btn-font-wgt text-primary-white px-8 py-3 md:text-btn-font-size text-[14px] shadow-md w-fit transition-all hover:bg-hover-orange";
+  "bg-primary-orange rounded-btn-radius font-btn-font-wgt text-primary-white px-8 py-3 md:text-btn-font-size text-[14px] shadow-md transition-all hover:bg-hover-orange uppercase inline-block";
 
 const OrangeButton: React.FC<ButtonPropTypes> = ({
   label,
@@ -16,8 +17,8 @@ const OrangeButton: React.FC<ButtonPropTypes> = ({
   className,
 }) => {
   return (
-    <Link href={href} className={`${className} ${BUTTON_STYLE}`}>
-      <button className="uppercase">{label}</button>
+    <Link href={href} className={clsx(BUTTON_STYLE, className)}>
+      {label}
     </Link>
   );
 };
