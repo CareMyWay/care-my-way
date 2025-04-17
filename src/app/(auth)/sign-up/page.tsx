@@ -1,5 +1,5 @@
 import React from "react";
-import SignUpForm from "@/app/components/forms/SignUpForm";
+import SignUpForm from "@/components/forms/SignUpForm";
 
 const SignUpRoute = () => {
   return (
