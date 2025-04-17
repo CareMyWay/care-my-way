@@ -1,5 +1,5 @@
 import React from "react";
-import GreenButton from "../buttons/GreenButton";
+import GreenButton from "../buttons/green-button";
 
 const AboutSection = () => {
   return (

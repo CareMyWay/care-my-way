@@ -1,5 +1,5 @@
 import React from "react";
-import OrangeButton from "../buttons/OrangeButton";
+import OrangeButton from "../buttons/orange-button";
 
 const HeroSection = () => {
   return (

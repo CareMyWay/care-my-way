@@ -2,9 +2,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import MobileTopNav from "@/components/navbars/MobileTopNav";
+import MobileTopNav from "@/components/navbars/mobile-topnav";
 
-import FadeTransition from "@/components/FadeTransition";
+import FadeTransition from "@/components/fade-transition";
 
 const LOGO = "/svgs/CMW_Logo.svg";
 const NAVBAR_ITEMS = "text-darkest-green hover:text-medium-green font-bold ";
