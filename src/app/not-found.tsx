@@ -4,7 +4,7 @@ export default function NotFoundRoot() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
       <div className="space-y-4">
-        <BugIcon className="h-24 w-24 text-pink-500 dark:text-pink-400" />
+        <BugIcon className="h-24 w-24 text-primary-orange dark:text-primary-orange" />
         <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">
           Oops!
         </h1>
