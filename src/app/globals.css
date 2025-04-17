@@ -42,8 +42,11 @@
     --color-primary-orange: #CC5034;
     --color-hover-orange: #B93F23;
 
+    /* INPUT BOXES */
+
+
     /* BUTTON STYLES */
-    --text-btn-font-size: 24px;
+    --text-btn-font-size: 16px;
     --radius-btn-radius: 50px;
     --font-weight-btn-font-wgt: 600;
 
