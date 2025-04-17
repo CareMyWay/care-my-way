@@ -2,9 +2,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import MobileNavbar from "@/app/components/mobile-navbar";
+import MobileTopNav from "@/components/navbars/MobileTopNav";
 
-import FadeTransition from "@/app/components/fade-transition";
+import FadeTransition from "@/components/FadeTransition";
 
 const LOGO = "/svgs/CMW_Logo.svg";
 const NAVBAR_ITEMS = "text-darkest-green hover:text-medium-green font-bold ";
@@ -92,7 +92,7 @@ export function TopNavBar() {
         </div>
       </div>
       <FadeTransition isMenuOpen={isMenuOpen}>
-        <MobileNavbar />
+        <MobileTopNav />
       </FadeTransition>
     </header>
   );
