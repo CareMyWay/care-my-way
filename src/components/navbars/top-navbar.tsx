@@ -77,13 +77,13 @@ export function TopNavBar() {
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center space-x-0 ml-[-35px] lg:space-x-2">
             <Link
-              href="/login"
+              href="/sign-in"
               className=" text-darkest-green hover:text-medium-green text-md font-bold w-28 h-8 rounded-btn-radius text-center align-middle py-1"
             >
               Log In
             </Link>
             <Link
-              href="/signup"
+              href="/sign-up"
               className=" bg-darkest-green hover:bg-medium-green text-primary-white font-bold w-28 h-8 rounded-btn-radius text-center flex items-center justify-center px-2 py-2"
             >
               Sign Up
