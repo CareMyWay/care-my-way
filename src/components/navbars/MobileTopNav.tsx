@@ -4,7 +4,7 @@ import Link from "next/link";
 const NAVBAR_ITEMS =
   "py-2 text-darkest-green hover:text-medium-green font-bold ";
 
-const MobileNavbar = () => {
+const MobileTopNav = () => {
   return (
     <div className="md:hidden absolute left-0 right-0 w-full z-50 bg-primary-white p-6 sm:p-10 rounded-b-1xl shadow-lg">
       <div className="flex flex-col ">
@@ -33,4 +33,4 @@ const MobileNavbar = () => {
   );
 };
 
-export default MobileNavbar;
+export default MobileTopNav;
