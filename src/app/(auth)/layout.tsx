@@ -1,4 +1,4 @@
-import { TopNavBar } from "@/components/navbars/TopNavBar";
+import { TopNavBar } from "@/components/navbars/top-navbar";
 
 export default function AuthLayout({
   children,
