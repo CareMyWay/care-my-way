@@ -84,7 +84,11 @@ const FeaturesSection = () => {
                     </React.Fragment>
                   ))}
                 </h2>
-                <OrangeButton href={buttonHref} label={buttonLabel} />
+                <OrangeButton
+                  variant="route"
+                  href={buttonHref}
+                  label={buttonLabel}
+                />
               </div>
             </div>
             <div className="relative aspect-square w-full max-w-lg">
