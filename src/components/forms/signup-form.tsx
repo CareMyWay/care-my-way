@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import Image from "next/image";
-import OrangeButton from "@/components/buttons/OrangeButton";
+import OrangeButton from "@/components/buttons/orange-button";
 import { registerUserAction } from "@/data/auth-actions";
 
-import { ZodErrors } from "@/components/custom/zodErrors";
+import { ZodErrors } from "@/components/custom/zod-errors";
 
 const LOGO = "/svgs/CMW_Logo.svg";
 const INPUT_STYLES =
