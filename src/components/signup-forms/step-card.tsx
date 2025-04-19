@@ -1,16 +1,18 @@
-import OrangeButton from "@/app/components/orange-button";
 import React from "react";
+import OrangeButton from "@/components/buttons/orange-button";
 
 interface StepCardProps {
   stepNum: number;
   title: string;
   subtitle: string;
+  href: string;
 }
 
 export const StepCard: React.FC<StepCardProps> = ({
   stepNum,
   title,
   subtitle,
+  href,
 }) => {
   return (
     <div className="relative flex flex-col  md:flex-row justify-between items-start md:items-center border border-gray-300 rounded-md px-4 py-6 mb-4 shadow-sm w-full">
@@ -31,7 +33,8 @@ export const StepCard: React.FC<StepCardProps> = ({
 
       {/* Button */}
       <OrangeButton
-        href="/"
+        variant="route"
+        href={href}
         label="Start"
         className="px-10 md:px-20 self-center md:self-auto"
       />

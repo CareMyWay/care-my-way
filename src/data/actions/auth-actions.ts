@@ -33,13 +33,14 @@ export async function registerUserAction(prevState: any, formData: FormData) {
     return {
       ...prevState,
       zodErrors: validatedFields.error.flatten().fieldErrors,
-      message: "Missing Fields. Failed to register.",
+      strapiErrors: null,
+      message: "Missing Fields. Failed to Register.",
     };
   }
 
   //otherwise return prev state with message ok
   return {
     ...prevState,
-    data: "Ok",
+    data: "ok",
   };
 }
