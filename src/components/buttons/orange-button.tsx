@@ -4,13 +4,13 @@ import clsx from "clsx";
 
 interface BaseProps {
   label: string;
+  href: string;
   className?: string;
 }
 
 //Button variant for navigation
 interface RouteButtonProps extends BaseProps {
   variant: "route";
-  href: string;
 }
 
 //Button variant from for Actions or click handlers
@@ -42,9 +42,9 @@ const OrangeButton: React.FC<ButtonPropTypes> = ({
   }
 
   return (
-    <button onClick={props.onClick} className={classes}>
+    <Link href={props.href} onClick={props.onClick} className={classes}>
       {label}
-    </button>
+    </Link>
   );
 };
 

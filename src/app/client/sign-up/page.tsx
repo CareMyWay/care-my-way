@@ -1,13 +1,11 @@
 import React from "react";
-import { TopNavBar } from "@/app/components/top-navbar";
-import AccountSummary from "@/app/client/sign-up/components/account-summary";
+
+import SignUpForm from "@/components/signup-forms/signup-form";
 
 const page = () => {
   return (
     <div>
-      {" "}
-      <TopNavBar />
-      <AccountSummary />
+      <SignUpForm />
     </div>
   );
 };

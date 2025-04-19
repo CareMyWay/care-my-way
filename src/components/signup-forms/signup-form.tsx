@@ -4,8 +4,7 @@ import Link from "next/link";
 import { useActionState } from "react";
 import Image from "next/image";
 import OrangeButton from "@/components/buttons/orange-button";
-import { registerUserAction } from "@/data/auth-actions";
-
+import { registerUserAction } from "@/data/actions/auth-actions";
 import { ZodErrors } from "@/components/custom/zod-errors";
 
 const LOGO = "/svgs/CMW_Logo.svg";
@@ -25,8 +24,9 @@ export default function SignUpForm() {
     registerUserAction,
     INITIAL_STATE
   );
-  console.log(formState, "client");
-
+  console.log("## will render on client ##");
+  console.log(formState);
+  console.log("###########################");
   return (
     <main className="min-h-screen flex items-center justify-center bg-primary-white px-4 my-14 mt-6 md:mt-10">
       <div className="max-w-3xl">
@@ -44,12 +44,6 @@ export default function SignUpForm() {
           <form action={formAction}>
             <div className="space-y-4">
               <div className="space-y-2">
-                {/* <label
-                htmlFor="firstName"
-                className="block text-dark-green text-md font-bold"
-                >
-                First Name
-                </label> */}
                 <input
                   id="firstName"
                   type="firstName"
@@ -60,12 +54,6 @@ export default function SignUpForm() {
                 <ZodErrors error={formState?.zodErrors?.firstName} />
               </div>
               <div className="space-y-2">
-                {/* <label
-                htmlFor="firstName"
-                className="block text-dark-green text-md font-bold"
-                >
-                First Name
-                </label> */}
                 <input
                   id="lastName"
                   type="lastName"
@@ -76,12 +64,6 @@ export default function SignUpForm() {
                 <ZodErrors error={formState?.zodErrors?.lastName} />
               </div>
               <div className="space-y-2">
-                {/* <label
-                htmlFor="firstName"
-                className="block text-dark-green text-md font-bold"
-                >
-                First Name
-                </label> */}
                 <input
                   id="email"
                   type="email"
@@ -93,12 +75,6 @@ export default function SignUpForm() {
               </div>
 
               <div className="space-y-2">
-                {/* <label
-                htmlFor="password"
-                className="block text-darkest-white text-md font-bold"
-                >
-                Password
-                </label> */}
                 <input
                   id="password"
                   name="password"
@@ -112,6 +88,7 @@ export default function SignUpForm() {
 
             <div className="mt-6 text-center ">
               <OrangeButton
+                href="/client/sign-up/create-account"
                 variant="action"
                 type="submit"
                 label="Continue"
