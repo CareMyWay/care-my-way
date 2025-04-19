@@ -1,5 +1,4 @@
 import React from "react";
-import { CareMyWayHeader } from "@/components/headers/care-my-way";
 
 import OrangeButton from "../buttons/orange-button";
 import RegistrationLayout from "../layouts/registration-layout";
