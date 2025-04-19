@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import Image from "next/image";
 import OrangeButton from "@/components/buttons/orange-button";
 import { useState } from "react";
 import RegistrationLayout from "../layouts/registration-layout";
