@@ -52,19 +52,17 @@ const FeaturesSection = () => {
       </div>
 
       {features.map(
-        (
-          {
-            id,
-            title,
-            description,
-            buttonLabel,
-            buttonHref,
-            bgColor,
-            shadowColor,
-            reverse,
-          },
-          index
-        ) => (
+        ({
+          id,
+          title,
+          description,
+          buttonLabel,
+          buttonHref,
+          bgColor,
+          shadowColor,
+          reverse,
+        }) => (
+          // index
           <div
             key={id}
             className={`flex ${

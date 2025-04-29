@@ -10,12 +10,6 @@ const INPUT_STYLES =
 const ALT_SIGNIN_BTN =
   "flex items-center gap-2 rounded-md px-4 py-2 border border-[#B5BAC0] hover:border-black transition-all text-sm";
 
-const INITIAL_STATE = {
-  data: null,
-  zodErrors: null,
-  message: null,
-};
-
 export default function SignUpForm() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-primary-white px-4 my-14 mt-6 md:mt-10">
