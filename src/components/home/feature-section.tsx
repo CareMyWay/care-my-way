@@ -5,8 +5,6 @@ const TITLE_STYLE =
   "flex text-body2-size md:text-h3-size font-medium text-darkest-green mb-10";
 const DESC_STYLE =
   "text-body4-size md:text-body3-size lg:text-body2-size p-6 md:p-10 font-medium";
-const COL_STYLE =
-  "flex flex-col md:flex-row justify-center items-center gap-4 px-4";
 
 const features = [
   {

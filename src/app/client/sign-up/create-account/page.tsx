@@ -1,4 +1,3 @@
-import { CareMyWayHeader } from "@/components/headers/care-my-way";
 import AccountSummary from "@/components/signup-forms/account-summary";
 import React from "react";
 

@@ -1,11 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
 import Image from "next/image";
 import OrangeButton from "@/components/buttons/orange-button";
-import { registerUserAction } from "@/data/actions/auth-actions";
-import { ZodErrors } from "@/components/custom/zod-errors";
 
 const LOGO = "/svgs/CMW_Logo.svg";
 const INPUT_STYLES =
@@ -20,13 +17,6 @@ const INITIAL_STATE = {
 };
 
 export default function SignUpForm() {
-  const [formState, formAction] = useActionState(
-    registerUserAction,
-    INITIAL_STATE
-  );
-  console.log("## will render on client ##");
-  console.log(formState);
-  console.log("###########################");
   return (
     <main className="min-h-screen flex items-center justify-center bg-primary-white px-4 my-14 mt-6 md:mt-10">
       <div className="max-w-3xl">
@@ -41,7 +31,7 @@ export default function SignUpForm() {
           <h2 className="text-2xl font-bold text-darkest-green text-center mb-10">
             Welcome to Care My Way!
           </h2>
-          <form action={formAction}>
+          <form>
             <div className="space-y-4">
               <div className="space-y-2">
                 <input
@@ -51,7 +41,6 @@ export default function SignUpForm() {
                   placeholder="First Name"
                   className={INPUT_STYLES}
                 />
-                <ZodErrors error={formState?.zodErrors?.firstName} />
               </div>
               <div className="space-y-2">
                 <input
@@ -61,7 +50,6 @@ export default function SignUpForm() {
                   placeholder="Last Name"
                   className={INPUT_STYLES}
                 />
-                <ZodErrors error={formState?.zodErrors?.lastName} />
               </div>
               <div className="space-y-2">
                 <input
@@ -71,7 +59,6 @@ export default function SignUpForm() {
                   placeholder="Email Address"
                   className={INPUT_STYLES}
                 />
-                <ZodErrors error={formState?.zodErrors?.email} />
               </div>
 
               <div className="space-y-2">
@@ -82,7 +69,6 @@ export default function SignUpForm() {
                   placeholder="Password"
                   className={INPUT_STYLES}
                 />
-                <ZodErrors error={formState?.zodErrors?.password} />
               </div>
             </div>
 

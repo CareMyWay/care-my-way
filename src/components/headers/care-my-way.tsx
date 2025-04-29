@@ -9,7 +9,7 @@ export const CareMyWayHeader = () => {
       {/* Header */}
       <div className="flex items-center mb-10">
         <Image
-          src="/svgs/CMW_Logo.svg"
+          src={LOGO}
           width={8}
           height={8}
           alt="Care My Way Logo"
