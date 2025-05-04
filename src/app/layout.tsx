@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
-// import "./globals.css";
 import "@/app/globals.css";
+import Auth from "@/components/auth/auth";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -35,7 +35,7 @@ export default function RootLayout({
         className={`${manrope.variable} overflow-x-hidden font-manrope flex-col size-full min-h-screen bg-primary-white antialiased`}
         suppressHydrationWarning
       >
-        {children}
+        <Auth>{children}</Auth>
       </body>
     </html>
   );

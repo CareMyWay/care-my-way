@@ -1,4 +1,4 @@
-import { TopNavBar } from "@/components/navbars/top-navbar";
+// import { TopNavBar } from "@/components/navbars/top-navbar";
 import "@/app/globals.css";
 
 import HeroSection from "@/components/home/hero-section";
@@ -10,7 +10,7 @@ export default function Home() {
     <div>
       <main>
         {/* Temp location of top navbar */}
-        <TopNavBar />
+        {/* <TopNavBar /> */}
         <HeroSection />
         <AboutSection />
         <FeaturesSection />
