@@ -1,6 +1,6 @@
 import React from "react";
 
-import SignUpForm from "@/components/signup-forms/signup-form";
+import SignUpForm from "@/components/signup-forms/signup-ignore";
 
 const page = () => {
   return (

@@ -5,6 +5,7 @@ import { useState } from "react";
 import MobileTopNav from "@/components/navbars/mobile-topnav";
 
 import FadeTransition from "@/components/fade-transition";
+import Logout from "../signup-forms/logout";
 
 const LOGO = "/svgs/CMW_Logo.svg";
 const NAVBAR_ITEMS = "text-darkest-green hover:text-medium-green font-bold ";
@@ -89,6 +90,7 @@ export function TopNavBar() {
               Sign Up
             </Link>
           </div>
+          <Logout />
         </div>
       </div>
       <FadeTransition isMenuOpen={isMenuOpen}>

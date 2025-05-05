@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "@/app/globals.css";
+import ConfigureAmplifyClientSide from "@/app/amplify-config";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -34,6 +35,7 @@ export default async function RootLayout({
         className={`${manrope.variable} overflow-x-hidden font-manrope flex-col size-full min-h-screen bg-primary-white antialiased`}
         suppressHydrationWarning
       >
+        <ConfigureAmplifyClientSide />
         {children}
       </body>
     </html>
