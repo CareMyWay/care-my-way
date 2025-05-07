@@ -4,7 +4,8 @@ import { TopNavBar } from "@/components/navbars/top-navbar";
 import HeroSection from "@/components/home/hero-section";
 import AboutSection from "@/components/home/about-section"; // Adjust the path as necessary
 import FeaturesSection from "@/components/home/feature-section";
-import { MeetOurProviders } from "@/components/home/provider-section";
+import { MeetOurProviders } from "@/components/home/meet-provider-section";
+import { HowItWorks } from "@/components/home/how-it-works";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
         <AboutSection />
         <FeaturesSection />
         <MeetOurProviders />
+        <HowItWorks />
       </main>
     </div>
   );

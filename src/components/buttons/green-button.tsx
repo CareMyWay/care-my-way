@@ -1,18 +1,49 @@
 import React from "react";
 import Link from "next/link";
+import clsx from "clsx";
 
-interface ButtonPropTypes {
+interface BaseProps {
   label: string;
   href: string;
+  className?: string;
 }
 
-const BUTTON_STYLE =
-  "bg-dark-green rounded-btn-radius font-btn-font-wgt text-primary-white px-8 py-3 md:text-btn-font-size text-[14px] shadow-md w-fit transition-all hover:bg-darkest-green";
+//Button variant for navigation
+interface RouteButtonProps extends BaseProps {
+  variant: "route";
+}
 
-const GreenButton: React.FC<ButtonPropTypes> = ({ label, href }) => {
+//Button variant from for Actions or click handlers
+
+interface ActionButtonProps extends BaseProps {
+  variant: "action";
+  type?: "button" | "submit" | "reset";
+  onClick?: () => void;
+}
+
+type ButtonPropTypes = RouteButtonProps | ActionButtonProps;
+
+const BUTTON_STYLE =
+  "bg-dark-green rounded-btn-radius font-btn-font-wgt text-primary-white px-8 py-3 md:text-btn-font-size text-[14px] shadow-md transition-all hover:bg-darkest-green uppercase inline-block";
+
+const GreenButton: React.FC<ButtonPropTypes> = ({
+  label,
+  className,
+  ...props
+}) => {
+  const classes = clsx(BUTTON_STYLE, className);
+
+  if (props.variant === "route") {
+    return (
+      <Link href={props.href} className={classes}>
+        {label}
+      </Link>
+    );
+  }
+
   return (
-    <Link href={href} className={BUTTON_STYLE}>
-      <button className="uppercase">{label}</button>
+    <Link href={props.href} onClick={props.onClick} className={classes}>
+      {label}
     </Link>
   );
 };

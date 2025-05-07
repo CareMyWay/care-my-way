@@ -62,3 +62,29 @@
     background-repeat: no-repeat;
     background-position: right;
 }
+
+/* @layer base {
+    h1 {
+        @apply text-darkest-green text-[70px] font-[700];
+    }
+
+    h2 {
+        @apply text-darkest-green text-[64px] font-[500];
+    }
+
+    h3 {
+        @apply text-darkest-green text-[48px] font-[500];
+    }
+
+    h4 {
+        @apply text-darkest-green text-[28px] font-[600];
+    }
+
+    h5 {
+        @apply text-darkest-green text-[23px] font-[600];
+    }
+
+    h6 {
+        @apply text-darkest-green text-[20px] font-[500];
+    }
+} */
