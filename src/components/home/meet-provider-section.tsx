@@ -41,6 +41,9 @@ export function MeetOurProviders() {
                         src={`/images/home/meet-providers/person-placeholder-${index}.${index == 1 ? "png" : "jpg"}`}
                         alt={`Caregiver ${index}`}
                         fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        placeholder="blur"
+                        blurDataURL="..."
                         className="object-cover"
                       />
                     </div>
