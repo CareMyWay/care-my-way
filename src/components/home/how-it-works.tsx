@@ -69,7 +69,7 @@ const provider_steps = [
 
 export function HowItWorks() {
   return (
-    <section className="py-16">
+    <section className="md:mx-10 py-16">
       <div className="container mx-auto px-4">
         <h2 className="mb-6 text-h3-size md:text-h2-size text-center md:text-start">
           How It Works
