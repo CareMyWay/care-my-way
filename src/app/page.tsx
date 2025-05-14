@@ -6,13 +6,16 @@ import AboutSection from "@/components/home/about-section"; // Adjust the path a
 import FeaturesSection from "@/components/home/feature-section";
 import { MeetOurProviders } from "@/components/home/meet-provider-section";
 import { HowItWorks } from "@/components/home/how-it-works";
+import NavBar from "@/components/navbars/navbar";
+import { isAuthenticated } from "@/utils/amplify-server-utils";
 
-export default function Home() {
+export default async function Home() {
   return (
     <div>
       <main>
         {/* Temp location of top navbar */}
-        <TopNavBar />
+        {/* <TopNavBar /> */}
+        <NavBar isSignedIn={await isAuthenticated()} />
         <HeroSection />
         <AboutSection />
         <FeaturesSection />
