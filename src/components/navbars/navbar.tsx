@@ -18,6 +18,11 @@ export default function NavBar({ isSignedIn }: { isSignedIn: boolean }) {
     setShowLoading(isPending);
   }, [isPending]);
 
+<<<<<<< HEAD
+=======
+  const router = useRouter();
+
+>>>>>>> 1b87dd5 (Complete navbar with auth functionality)
   useEffect(() => {
     const hubListenerCancel = Hub.listen("auth", (data) => {
       switch (data.payload.event) {
@@ -37,6 +42,7 @@ export default function NavBar({ isSignedIn }: { isSignedIn: boolean }) {
     return () => hubListenerCancel();
   }, [router]);
 
+<<<<<<< HEAD
   const handleLoading = () => {
     if (showLoading) {
       return (
@@ -59,17 +65,15 @@ export default function NavBar({ isSignedIn }: { isSignedIn: boolean }) {
     } else {
       router.push("/signin");
     }
+=======
+  const handleSignOut = async () => {
+    await signOut();
+>>>>>>> 1b87dd5 (Complete navbar with auth functionality)
   };
+
   const defaultRoutes = [
-    {
-      href: "/",
-      label: "Home",
-    },
-    {
-      href: "/add",
-      label: "Add Title",
-      loggedIn: true,
-    },
+    { href: "/", label: "Home" },
+    { href: "/add", label: "Add Title", loggedIn: true },
   ];
 
   const routes = defaultRoutes.filter(
@@ -82,7 +86,7 @@ export default function NavBar({ isSignedIn }: { isSignedIn: boolean }) {
         direction="row"
         justifyContent="space-between"
         alignItems="center"
-        padding={"1rem"}
+        padding="1rem"
       >
         <Flex as="nav" alignItems="center" gap="3rem" margin="0 2rem">
           {routes.map((route) => (
@@ -91,16 +95,37 @@ export default function NavBar({ isSignedIn }: { isSignedIn: boolean }) {
             </Link>
           ))}
         </Flex>
-        <Button
-          variation="primary"
-          borderRadius="2rem"
-          className="mr-4"
-          onClick={signOutSignIn}
-        >
-          {authCheck ? "Sign Out" : "Sign In"}
-        </Button>
+
+        <Flex gap="1rem" alignItems="center">
+          {authCheck ? (
+            <Button
+              variation="primary"
+              borderRadius="2rem"
+              onClick={handleSignOut}
+            >
+              Sign Out
+            </Button>
+          ) : (
+            <>
+              <Button
+                variation="link"
+                borderRadius="2rem"
+                onClick={() => router.push("/sign-in")}
+              >
+                Sign In
+              </Button>
+              <Button
+                variation="primary"
+                borderRadius="2rem"
+                onClick={() => router.push("/sign-up")}
+              >
+                Sign Up
+              </Button>
+            </>
+          )}
+        </Flex>
       </Flex>
-      <Divider size="small"></Divider>
+      <Divider size="small" />
     </>
   );
 }
