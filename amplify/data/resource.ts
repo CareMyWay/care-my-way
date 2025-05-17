@@ -1,4 +1,5 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
+import { User } from "aws-cdk-lib/aws-iam";
 
 /*== STEP 1 ===============================================================
 The section below creates a Todo database table with a "content" field. Try
@@ -7,11 +8,39 @@ specifies that any unauthenticated user can "create", "read", "update",
 and "delete" any "Todo" records.
 =========================================================================*/
 const schema = a.schema({
-  Todo: a
+  User: a
     .model({
-      content: a.string(),
+      id: a.string().required(),
+      firstName: a.string(),
+      lastName: a.string(),
+      email: a.string(),
+      role: a
+        .string()
+        .default("Client")
+        .authorization((allow) => [
+          allow.ownerDefinedIn("profileOwner").to(["read", "create"]),
+          allow.groups(["Admin"]).to(["read", "update", "create"]),
+        ]),
+      gender: a.string(),
+      dateOfBirth: a.date(),
+      address: a.string(),
+      country: a.string(),
+      city: a.string(),
+      postalCode: a.string(),
+      emergencyContactFullName: a.string(),
+      emergencyRelationshipStatus: a.string(),
+      emergencyContactPhone: a.string(),
+      hasRepSupportPerson: a.boolean(),
+      supportFullName: a.string(),
+      supportRelationshipStatus: a.string(),
+      supportContactPhone: a.string(),
+      // profileOwner: a.string().array(),
     })
-    .authorization((allow) => [allow.guest()]),
+    .authorization((allow) => [
+      allow.groups(["Admin"]).to(["read", "create", "update", "delete"]),
+      allow.ownerDefinedIn("profileOwner").to(["read", "update", "create"]),
+      allow.authenticated().to(["read", "create"]),
+    ]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
