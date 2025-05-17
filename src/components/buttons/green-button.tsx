@@ -24,7 +24,7 @@ interface ActionButtonProps extends BaseProps {
 type ButtonPropTypes = RouteButtonProps | ActionButtonProps;
 
 const BUTTON_STYLE =
-  "bg-dark-green rounded-btn-radius font-btn-font-wgt text-primary-white px-8 py-3 md:text-btn-font-size text-[14px] shadow-md transition-all hover:bg-darkest-green uppercase inline-block";
+  "text-center bg-dark-green rounded-btn-radius font-btn-font-wgt text-primary-white px-8 py-3 md:text-btn-font-size text-[14px] shadow-md transition-all hover:bg-darkest-green uppercase inline-block";
 
 const GreenButton: React.FC<ButtonPropTypes> = ({
   label,
