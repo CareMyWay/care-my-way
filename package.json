@@ -33,9 +33,14 @@
   "devDependencies": {
     "@aws-amplify/backend": "^1.16.0",
     "@aws-amplify/backend-cli": "^1.7.0",
+    "@aws-sdk/client-cognito-identity-provider": "^3.810.0",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+<<<<<<< HEAD
     "@types/date-fns": "^2.5.3",
+=======
+    "@types/aws-lambda": "^8.10.149",
+>>>>>>> 94e6bc2 (In progress of adding user to user pool groups)
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
