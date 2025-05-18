@@ -1,9 +1,13 @@
-import { SignUpHalfCard_needCG } from "@/components/signup/sign-up-half-card-need-cg";
-import { SignUpHalfCard_asCG } from "@/components/signup/sign-up-half-card-as-a-cg";
+import { SignUpHalfCard_needCG } from "@/components/auth/sign-up-half-card-need-cg";
+import { SignUpHalfCard_asCG } from "@/components/auth/sign-up-half-card-as-a-cg";
 
 import type React from "react";
 
-export default function SignUpStep4({ voidNext }: { voidNext?: () => void }) {
+export default function SignUpSelectLanguage({
+  voidNext,
+}: {
+  voidNext?: () => void;
+}) {
   return (
     <>
       <div className="flex flex-col w-full justify-center items-center mt-32">

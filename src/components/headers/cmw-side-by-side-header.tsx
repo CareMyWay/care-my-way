@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const LOGO = "/svgs/CMW_Logo.svg";
 
-export const CareMyWayHeader = () => {
+export const CMWSideBySideHeader = () => {
   return (
     <div>
       {/* Header */}

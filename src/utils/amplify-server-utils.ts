@@ -3,7 +3,7 @@ import { createServerRunner } from "@aws-amplify/adapter-nextjs";
 import { getCurrentUser } from "aws-amplify/auth/server";
 import config from "../../amplify_outputs.json";
 import { cookies } from "next/headers";
-import { generateServerClientUsingCookies } from "@aws-amplify/adapter-nextjs/data";
+// import { generateServerClientUsingCookies } from "@aws-amplify/adapter-nextjs/data";
 
 //use runWithAmplifyServerContext to call Amplify APIs within isolated request contexts - keeping it within the server
 // and not leaking to the client
@@ -24,9 +24,10 @@ export const isAuthenticated = async () =>
     nextServerContext: { cookies },
     async operation(contextSpec) {
       try {
-        const user = await getCurrentUser(contextSpec);
-        return !!user;
+        const currentUser = await getCurrentUser(contextSpec);
+        return !!currentUser;
       } catch (error) {
+        console.log(error);
         return false;
       }
     },
