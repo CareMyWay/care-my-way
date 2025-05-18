@@ -1,5 +1,5 @@
-import { SignUpHalfCard_needCG } from "@/components/signup/sign-up-half-card-need-cg";
-import { SignUpHalfCard_asCG } from "@/components/signup/sign-up-half-card-as-a-cg";
+import { SignUpHalfCard_needCG } from "@/components/auth/sign-up-half-card-need-cg";
+import { SignUpHalfCard_asCG } from "@/components/auth/sign-up-half-card-as-a-cg";
 
 export default function SignUpStep1({ voidNext }: { voidNext: () => void }) {
   return (

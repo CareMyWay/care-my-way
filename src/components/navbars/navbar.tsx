@@ -2,11 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Button, Divider, Flex } from "@aws-amplify/ui-react";
 import { signOut } from "aws-amplify/auth";
 import { useRouter } from "next/navigation";
 import { Hub } from "aws-amplify/utils";
 import { useTransition } from "react";
+import { getErrorMessage } from "@/utils/get-error-message";
 
 export default function NavBar({ isSignedIn }: { isSignedIn: boolean }) {
   const [authCheck, setAuthCheck] = useState(isSignedIn);
@@ -67,8 +69,17 @@ export default function NavBar({ isSignedIn }: { isSignedIn: boolean }) {
     }
 =======
   const handleSignOut = async () => {
+<<<<<<< HEAD
     await signOut();
 >>>>>>> 1b87dd5 (Complete navbar with auth functionality)
+=======
+    try {
+      await signOut();
+    } catch (error) {
+      console.log(getErrorMessage(error));
+    }
+    redirect("/auth/sign-in");
+>>>>>>> c523b7f (Complete sign up, sign in, and logout with authentication)
   };
 
   const defaultRoutes = [
@@ -110,14 +121,14 @@ export default function NavBar({ isSignedIn }: { isSignedIn: boolean }) {
               <Button
                 variation="link"
                 borderRadius="2rem"
-                onClick={() => router.push("/sign-in")}
+                onClick={() => router.push("/auth/sign-in")}
               >
                 Sign In
               </Button>
               <Button
                 variation="primary"
                 borderRadius="2rem"
-                onClick={() => router.push("/sign-up")}
+                onClick={() => router.push("/auth/sign-up")}
               >
                 Sign Up
               </Button>

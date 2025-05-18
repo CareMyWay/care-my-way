@@ -1,0 +1,27 @@
+import React from "react";
+import Image from "next/image";
+
+const LOGO = "/svgs/CMW_Logo.svg";
+
+type CMWStackedHeaderProps = {
+  title?: string;
+};
+
+const CMWStackedHeader: React.FC<CMWStackedHeaderProps> = ({ title }) => {
+  return (
+    <div>
+      <Image
+        src={LOGO}
+        alt="Care My Way Logo"
+        width={80}
+        height={80}
+        className="mx-auto mb-4"
+      />
+      <h2 className="text-2xl font-bold text-darkest-green text-center ">
+        {title}
+      </h2>
+    </div>
+  );
+};
+
+export default CMWStackedHeader;

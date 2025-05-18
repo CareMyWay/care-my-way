@@ -1,6 +1,6 @@
 import React from "react";
 import { StepCard } from "./step-card";
-import { CareMyWayHeader } from "../headers/care-my-way";
+import { CareMyWayHeader } from "../headers/cmw-side-by-side-header";
 const steps = [
   {
     stepNum: 1,
