@@ -6,6 +6,7 @@ import {
   signOut,
   resendSignUpCode,
   autoSignIn,
+  fetchAuthSession,
 } from "aws-amplify/auth";
 import { getErrorMessage } from "@/utils/get-error-message";
 
@@ -14,6 +15,10 @@ export async function handleSignUp(
   formData: FormData
 ) {
   try {
+    const userType = formData.get("userType") as string;
+    if (!userType) {
+      throw new Error("User type is required");
+    }
     const { isSignUpComplete, userId, nextStep } = await signUp({
       username: String(formData.get("email")),
       password: String(formData.get("password")),
@@ -21,6 +26,7 @@ export async function handleSignUp(
         userAttributes: {
           email: String(formData.get("email")),
           name: String(formData.get("name")),
+          "custom:userType": String(formData.get("userType")), // e.g., "Caregiver"
         },
         // optional
         autoSignIn: true,
@@ -68,7 +74,9 @@ export async function handleConfirmSignUp(
   } catch (error) {
     return getErrorMessage(error);
   }
-  redirect("/auth/sign-in");
+
+  //LATER REDIREC TO USER PROFILE/DASHBOARD
+  redirect("/");
 }
 
 export async function handleSignIn(
@@ -87,6 +95,10 @@ export async function handleSignIn(
       });
       redirectLink = "/auth/confirm-signup";
     }
+
+    //DELETE session const and console.log later
+    const session = await fetchAuthSession();
+    console.log(session);
   } catch (error) {
     return getErrorMessage(error);
   }

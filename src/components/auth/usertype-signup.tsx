@@ -1,7 +1,8 @@
+"use client";
 import { SignUpHalfCard_needCG } from "@/components/auth/sign-up-half-card-need-cg";
 import { SignUpHalfCard_asCG } from "@/components/auth/sign-up-half-card-as-a-cg";
 
-export default function SignUpStep1({ voidNext }: { voidNext: () => void }) {
+export default function UserTypeSignUp() {
   return (
     <div className="min-h-screen py-12 flex flex-col justify-center items-center">
       <div className="mb-6 px-4">
@@ -12,10 +13,10 @@ export default function SignUpStep1({ voidNext }: { voidNext: () => void }) {
 
       <div className="flex flex-col md:flex-row justify-center items-stretch gap-6 px-4 w-full max-w-5xl">
         <div className="flex">
-          <SignUpHalfCard_needCG voidNext={voidNext} />
+          <SignUpHalfCard_needCG />
         </div>
         <div className="flex">
-          <SignUpHalfCard_asCG voidNext={voidNext} />
+          <SignUpHalfCard_asCG />
         </div>
       </div>
     </div>
