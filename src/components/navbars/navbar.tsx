@@ -41,7 +41,7 @@ export default function NavBar({ isSignedIn }: { isSignedIn: boolean }) {
     } catch (error) {
       console.log(getErrorMessage(error));
     }
-    redirect("/auth/sign-in");
+    redirect("/login");
   };
 
   const defaultRoutes = [
@@ -83,14 +83,14 @@ export default function NavBar({ isSignedIn }: { isSignedIn: boolean }) {
               <Button
                 variation="link"
                 borderRadius="2rem"
-                onClick={() => router.push("/auth/sign-in")}
+                onClick={() => router.push("/login")}
               >
                 Sign In
               </Button>
               <Button
                 variation="primary"
                 borderRadius="2rem"
-                onClick={() => router.push("/auth/user")}
+                onClick={() => router.push("/sign-up/user")}
               >
                 Sign Up
               </Button>

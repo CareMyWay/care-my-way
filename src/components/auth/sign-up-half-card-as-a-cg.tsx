@@ -31,8 +31,8 @@ export function SignUpHalfCard_asCG() {
         <OrangeButton
           className="text-center s-btn orange-button self-center min-w-[220px] mb-4"
           label="Provider"
-          href="/auth/sign-up?userType=Provider"
-          onClick={() => router.push("/auth/sign-up?userType=Provider")}
+          href="/sign-up/register?userType=Provider"
+          onClick={() => router.push("/sign-up/register?userType=Provider")}
           type="button"
           variant="action"
         />

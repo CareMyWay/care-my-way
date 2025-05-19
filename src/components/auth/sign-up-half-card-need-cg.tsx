@@ -32,18 +32,18 @@ export function SignUpHalfCard_needCG() {
         <OrangeButton
           className="text-center s-btn orange-button self-center min-w-[220px] mb-4"
           label="Client"
-          href="/auth/sign-up?userType=Client"
+          href="/sign-up/register?userType=Client"
           variant="action"
           type="button"
-          onClick={() => router.push("/auth/sign-up?userType=Client")}
+          onClick={() => router.push("/sign-up/register?userType=Client")}
         />
         <OrangeButton
           className="text-center s-btn orange-button self-center min-w-[220px] mb-4"
           label="Support Person"
-          href="/auth/sign-up?userType=Support"
+          href="/sign-up/register?userType=Support"
           variant="action"
           type="button"
-          onClick={() => router.push("/auth/sign-up?userType=Support")}
+          onClick={() => router.push("/sign-up/register?userType=Support")}
         />
       </div>
     </div>
