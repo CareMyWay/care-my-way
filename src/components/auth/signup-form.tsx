@@ -7,15 +7,20 @@ import Image from "next/image";
 import { useFormStatus } from "react-dom";
 import { Button } from "@/components/button";
 import { handleSignUp } from "@/lib/cognitoActions";
+import { useSearchParams } from "next/navigation";
+
 import CMWStackedHeader from "../headers/cmw-stacked-header";
 
 export default function SignUpForm() {
   const [errorMessage, dispatch] = useActionState(handleSignUp, undefined);
+  const searchParams = useSearchParams();
+  const userType = searchParams.get("userType"); // Get from query
 
   return (
     <main className="min-h-screen flex items-center justify-center px-4 my-14 mt-6 md:mt-10">
       <form action={dispatch} className="space-y-3">
         <CMWStackedHeader title="Sign up to Care My Way" />
+        <input type="hidden" name="userType" value={userType ?? ""} />
 
         <div>
           <div className="flex flex-row w-full justify-center">

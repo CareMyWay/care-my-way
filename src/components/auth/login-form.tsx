@@ -78,7 +78,7 @@ export default function LoginForm() {
               <div className="mt-6">
                 <p>
                   Don't have an account? &nbsp;
-                  <Link href="/auth/sign-up" className="underline">
+                  <Link href="/auth/user" className="underline">
                     Sign Up
                   </Link>
                 </p>

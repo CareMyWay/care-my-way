@@ -1,13 +1,16 @@
 import Image from "next/image";
 import OrangeButton from "../buttons/orange-button";
+import { useRouter } from "next/navigation";
 
-export function SignUpHalfCard_asCG({ voidNext }: { voidNext: () => void }) {
+export function SignUpHalfCard_asCG() {
+  const router = useRouter();
+
   return (
     <div className="bg-primary-white rounded-lg shadow-drop p-8 w-[360px]">
       <div className="mb-4">
         <Image
           src={"/svgs/client-signup/step1-as-cg.svg"}
-          alt="as a care giver"
+          alt="Healthcare Provider"
           className="mx-auto"
           width={150}
           height={150}
@@ -28,8 +31,8 @@ export function SignUpHalfCard_asCG({ voidNext }: { voidNext: () => void }) {
         <OrangeButton
           className="text-center s-btn orange-button self-center min-w-[220px] mb-4"
           label="Provider"
-          href="#"
-          onClick={voidNext}
+          href="/auth/sign-up?userType=Provider"
+          onClick={() => router.push("/auth/sign-up?userType=Provider")}
           type="button"
           variant="action"
         />

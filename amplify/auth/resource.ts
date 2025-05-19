@@ -1,5 +1,5 @@
 import { defineAuth, secret } from "@aws-amplify/backend";
-import { PostConfirmation } from "./PostConfirmation/resource";
+import { postConfirmation } from "./post-confirmation/resource";
 // import { AddUserToGroup } from "../function/BusinessLogic/AddUserToGroup/resource";
 
 /**
@@ -20,11 +20,14 @@ export const auth = defineAuth({
       logoutUrls: ["http://localhost:3000/"],
     },
   },
+  userAttributes: {
+    "custom:userType": { dataType: "String", mutable: true },
+  },
   triggers: {
-    postConfirmation: PostConfirmation,
+    postConfirmation: postConfirmation,
   },
   access: (allow) => [
-    allow.resource(PostConfirmation).to(["addUserToGroup"]),
+    allow.resource(postConfirmation).to(["addUserToGroup"]),
     // allow.resource(AddUserToGroup).to(["addUserToGroup"]),
   ],
 });

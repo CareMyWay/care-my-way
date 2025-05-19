@@ -128,7 +128,7 @@ export default function NavBar({ isSignedIn }: { isSignedIn: boolean }) {
               <Button
                 variation="primary"
                 borderRadius="2rem"
-                onClick={() => router.push("/auth/sign-up")}
+                onClick={() => router.push("/auth/user")}
               >
                 Sign Up
               </Button>

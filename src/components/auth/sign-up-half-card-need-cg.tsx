@@ -1,8 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import OrangeButton from "../buttons/orange-button";
+import { useRouter } from "next/navigation";
 
-export function SignUpHalfCard_needCG({ voidNext }: { voidNext: () => void }) {
+export function SignUpHalfCard_needCG() {
+  const router = useRouter();
+
   return (
     <div className="bg-primary-white rounded-lg shadow-drop p-8 w-[360px]">
       <div className="mb-4">
@@ -29,18 +32,18 @@ export function SignUpHalfCard_needCG({ voidNext }: { voidNext: () => void }) {
         <OrangeButton
           className="text-center s-btn orange-button self-center min-w-[220px] mb-4"
           label="Client"
-          href="#"
+          href="/auth/sign-up?userType=Client"
           variant="action"
           type="button"
-          onClick={voidNext}
+          onClick={() => router.push("/auth/sign-up?userType=Client")}
         />
         <OrangeButton
           className="text-center s-btn orange-button self-center min-w-[220px] mb-4"
           label="Support Person"
-          href="#"
+          href="/auth/sign-up?userType=Support"
           variant="action"
           type="button"
-          onClick={voidNext}
+          onClick={() => router.push("/auth/sign-up?userType=Support")}
         />
       </div>
     </div>
