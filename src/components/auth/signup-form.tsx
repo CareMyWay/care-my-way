@@ -113,7 +113,7 @@ export default function SignUpForm() {
               <div className="mt-6">
                 <p>
                   Already have an account? &nbsp;
-                  <Link href="/auth/sign-in" className="underline">
+                  <Link href="/login" className="underline">
                     Sign In
                   </Link>
                 </p>

@@ -1,13 +1,6 @@
-import { SignUpHalfCard_needCG } from "@/components/auth/sign-up-half-card-need-cg";
-import { SignUpHalfCard_asCG } from "@/components/auth/sign-up-half-card-as-a-cg";
-
 import type React from "react";
 
-export default function SignUpSelectLanguage({
-  voidNext,
-}: {
-  voidNext?: () => void;
-}) {
+export default function SelectLanguage() {
   return (
     <>
       <div className="flex flex-col w-full justify-center items-center mt-32">
@@ -27,10 +20,7 @@ export default function SignUpSelectLanguage({
         </div>
 
         <div className="my-12">
-          <button
-            className=" s-btn orange-button self-center min-w-[220px] mb-4"
-            onClick={voidNext}
-          >
+          <button className=" s-btn orange-button self-center min-w-[220px] mb-4">
             CONTINUE
           </button>
         </div>
