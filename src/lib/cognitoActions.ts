@@ -35,7 +35,7 @@ export async function handleSignUp(
   } catch (error) {
     return getErrorMessage(error);
   }
-  redirect("/auth/confirm-sign-up");
+  redirect("/sign-up/confirm-sign-up");
 }
 
 export async function handleSendEmailVerificationCode(
@@ -93,7 +93,7 @@ export async function handleSignIn(
       await resendSignUpCode({
         username: String(formData.get("email")),
       });
-      redirectLink = "/auth/confirm-signup";
+      redirectLink = "/sign-up/confirm-signup";
     }
 
     //DELETE session const and console.log later
@@ -112,5 +112,5 @@ export async function handleSignOut() {
   } catch (error) {
     console.log(getErrorMessage(error));
   }
-  redirect("/auth/login");
+  redirect("/login");
 }

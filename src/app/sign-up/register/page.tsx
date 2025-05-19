@@ -3,7 +3,7 @@
 import SignUpForm from "@/components/auth/signup-form";
 import React from "react";
 
-export default function SignUp() {
+export default function Register() {
   return (
     <div>
       <SignUpForm />

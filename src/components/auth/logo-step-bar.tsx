@@ -3,16 +3,19 @@
 import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
+import { CMWSideBySideHeader } from "../headers/cmw-side-by-side-header";
 
 export function LogoStepBar({ stepsCount }: { stepsCount?: number }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <header className={`bg-primary-white min-w-[520px]`}>
+      <CMWSideBySideHeader />
+
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           <div className="flex flex-col items-center">
-            <Link href="/" className="flex items-center">
+            {/* <Link href="/" className="flex items-center">
               <div
                 className="relative w-10 h-10 mr-2"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -24,7 +27,7 @@ export function LogoStepBar({ stepsCount }: { stepsCount?: number }) {
                   className="mx-auto"
                 />
               </div>
-            </Link>
+            </Link> */}
           </div>
 
           {/* Desktop Navigation */}

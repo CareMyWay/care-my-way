@@ -3,7 +3,6 @@
 import Link from "next/link";
 import React, { useActionState } from "react";
 import Image from "next/image";
-const LOGO = "/svgs/CMW_Logo.svg";
 
 import { useFormStatus } from "react-dom";
 import { Button } from "@/components/button";
@@ -78,7 +77,7 @@ export default function LoginForm() {
               <div className="mt-6">
                 <p>
                   Don't have an account? &nbsp;
-                  <Link href="/auth/user" className="underline">
+                  <Link href="/sign-up/user" className="underline">
                     Sign Up
                   </Link>
                 </p>
