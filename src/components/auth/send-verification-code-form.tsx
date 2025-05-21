@@ -14,7 +14,7 @@ export default function SendVerificationCode() {
   return (
     <>
       <Button
-        className="mt-4 w-full"
+        className="mt-2 w-full"
         aria-disabled={pending}
         formAction={dispatch}
       >
@@ -28,11 +28,11 @@ export default function SendVerificationCode() {
         >
           {response?.errorMessage && (
             <>
-              <p className="text-sm text-red-500">{response.errorMessage}</p>
+              <p className="text-sm text-red-800">{response.errorMessage}</p>
             </>
           )}
           {response?.message && (
-            <p className="text-sm text-green-500">{response.message}</p>
+            <p className="text-sm text-darkest-green">{response.message}</p>
           )}
         </div>
       </div>

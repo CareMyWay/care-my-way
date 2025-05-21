@@ -26,7 +26,7 @@ export default function LoginForm() {
           <div className="flex flex-col w-full justify-center items-center gap-6">
             <div className="space-y-5 w-[458px]">
               <div className="space-y-2">
-                <label htmlFor="email" className="block text-darkest-green">
+                <label htmlFor="email" className="block text-darkest-green ">
                   Email
                 </label>
                 <input

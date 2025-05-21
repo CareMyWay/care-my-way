@@ -17,7 +17,7 @@ const CMWStackedHeader: React.FC<CMWStackedHeaderProps> = ({ title }) => {
         height={80}
         className="mx-auto mb-4"
       />
-      <h2 className="text-2xl font-bold text-darkest-green text-center ">
+      <h2 className="text-h4-size font-bold text-darkest-green text-center ">
         {title}
       </h2>
     </div>
