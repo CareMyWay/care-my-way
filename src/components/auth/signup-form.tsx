@@ -17,14 +17,14 @@ export default function SignUpForm() {
   const userType = searchParams.get("userType"); // Get from query
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-4 my-14 mt-6 md:mt-10">
+    <main>
       <form action={dispatch} className="space-y-3">
         <CMWStackedHeader title="Sign up to Care My Way" />
         <input type="hidden" name="userType" value={userType ?? ""} />
 
         <div>
           <div className="flex flex-row w-full justify-center">
-            <p className="mb-4 text-darkest-green">
+            <p className="mb-4 text-h6-size text-darkest-green">
               Create your account today.
             </p>
           </div>
@@ -33,7 +33,7 @@ export default function SignUpForm() {
               <div className="space-y-2">
                 <label
                   htmlFor="first-name"
-                  className="block text-darkest-green"
+                  className=" text-darkest-green mb-3 mt-5 std-form-label"
                 >
                   First Name
                 </label>
@@ -48,7 +48,10 @@ export default function SignUpForm() {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="last-name" className="block text-darkest-green">
+                <label
+                  htmlFor="last-name"
+                  className=" text-darkest-green mb-3 mt-5 std-form-label"
+                >
                   Last Name
                 </label>
                 <input
@@ -62,7 +65,10 @@ export default function SignUpForm() {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="email" className="block text-darkest-green">
+                <label
+                  htmlFor="email"
+                  className=" text-darkest-green mb-3 mt-5 std-form-label"
+                >
                   Email
                 </label>
                 <input
@@ -76,7 +82,10 @@ export default function SignUpForm() {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="password" className="block text-darkest-green">
+                <label
+                  htmlFor="password"
+                  className=" text-darkest-green mb-3 mt-5 std-form-label"
+                >
                   Password
                 </label>
                 <input

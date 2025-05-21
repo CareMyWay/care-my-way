@@ -73,6 +73,14 @@
     border-radius: 6px;
 }
 
+.std-form-label {
+    /* text-gray-700 font-semibold */
+    display: block;
+    font-size: 20px;
+    color: var(--color-dark-green);
+    font-weight: var(--font-weight-semibold);
+}
+
 /* @layer base {
     h1 {
         @apply text-darkest-green text-[70px] font-[700];
