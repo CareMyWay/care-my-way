@@ -18,7 +18,7 @@ export const CMWSideBySideHeader = () => {
                 className="mx-auto"
               />
             </div>
-            <h1 className="text-2xl font-bold text-darkest-green">
+            <h1 className="text-h4-size font-bold text-darkest-green">
               Care My Way
             </h1>
           </Link>
