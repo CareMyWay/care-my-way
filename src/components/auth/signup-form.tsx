@@ -6,6 +6,7 @@ import Image from "next/image";
 
 import { useFormStatus } from "react-dom";
 import { Button } from "@/components/button";
+import OrangeButton from "@/components/buttons/orange-button";
 import { handleSignUp } from "@/lib/cognitoActions";
 import { useSearchParams } from "next/navigation";
 
@@ -148,8 +149,13 @@ function SignUpButton() {
   const { pending } = useFormStatus();
 
   return (
-    <Button className="mt-4 w-full" type="submit" aria-disabled={pending}>
+    <OrangeButton
+      className="mt-4 w-full"
+      variant="action"
+      type="submit"
+      aria-disabled={pending}
+    >
       {pending ? "Creating Account..." : "Create Account"}
-    </Button>
+    </OrangeButton>
   );
 }
