@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/button";
+import OrangeButton from "@/components/buttons/orange-button";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { handleConfirmSignUp } from "@/lib/cognitoActions";
@@ -15,13 +15,13 @@ export default function ConfirmSignUpForm() {
     <main>
       <form action={dispatch} className="space-y-3">
         <div
-          className="flex flex-col w-full justify-center items-center mt-12
+          className="flex flex-col w-full justify-center items-center mt-4
         "
         >
-          <h4 className="text-h4-size font-weight-bold">
+          <h4 className="text-h4-size font-weight-bold text-darkest-green">
             Verify Your Account.
           </h4>
-          <p className="text-center my-6 text-h6-size text-dark-green">
+          <p className="text-center my-6 text-h6-size text-darkest-green">
             Enter the six digit code we sent to your email address to verify
             your <br /> new Care My Way Account
           </p>
@@ -75,29 +75,22 @@ export default function ConfirmSignUpForm() {
           <input id="idx6" type="text" className="std-input px-3.5 w-[40px]" />
         </div> */}
           <ConfirmButton />
-          <div className="flex h-8 items-end space-x-1 ">
+          <div className="flex h-8 items-center space-x-1 ">
             <div
-              className="flex h-8 items-end space-x-1"
+              className="flex h-8 items-center space-x-1"
               aria-live="polite"
               aria-atomic="true"
             >
               {errorMessage && (
                 <>
-                  <p className="text-sm text-red-600">{errorMessage}</p>
+                  <p className="text-h4-size text-red-600 text-center">
+                    {errorMessage}
+                  </p>
                 </>
               )}
             </div>
           </div>
           <SendVerificationCode />
-          {/* <div className="my-12">
-          <button className=" s-btn orange-button self-center min-w-[220px] mb-4">
-            CONTINUE
-          </button>
-        </div>
-
-        <div className="space-y-8">
-          <p className="underline self-center ">Resend Code</p>
-        </div> */}
         </div>
       </form>
     </main>
@@ -108,8 +101,13 @@ function ConfirmButton() {
   const { pending } = useFormStatus();
 
   return (
-    <Button className="mt-2 w-full" aria-disabled={pending}>
+    <OrangeButton
+      className="mt-2 w-full"
+      type="submit"
+      variant="action"
+      aria-disabled={pending}
+    >
       {pending ? "Confirming..." : "Confirm"}
-    </Button>
+    </OrangeButton>
   );
 }

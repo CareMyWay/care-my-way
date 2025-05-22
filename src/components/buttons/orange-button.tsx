@@ -24,7 +24,7 @@ interface ActionButtonProps
 type ButtonPropTypes = RouteButtonProps | ActionButtonProps;
 
 const BUTTON_STYLE =
-  "text-center bg-primary-orange rounded-btn-radius font-btn-font-wgt text-primary-white px-8 py-3 md:text-btn-font-size text-[14px] shadow-md transition-all hover:bg-hover-orange uppercase inline-block";
+  "cursor-pointer text-center bg-primary-orange rounded-btn-radius font-btn-font-wgt text-primary-white px-8 py-3 md:text-btn-font-size text-[14px] shadow-md transition-all hover:bg-hover-orange uppercase inline-block";
 
 const OrangeButton: React.FC<ButtonPropTypes> = (props) => {
   const extraStyles = clsx(BUTTON_STYLE, props.className);

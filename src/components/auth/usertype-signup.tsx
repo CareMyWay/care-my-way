@@ -1,6 +1,6 @@
 "use client";
-import { SignUpHalfCard_needCG } from "@/components/auth/sign-up-half-card-need-cg";
-import { SignUpHalfCard_asCG } from "@/components/auth/sign-up-half-card-as-a-cg";
+import { SignUpCardClientSupport } from "@/components/auth/signup-card-client-support";
+import { SignUpCardProvider } from "@/components/auth/signup-card-provider";
 
 export default function UserTypeSignUp() {
   return (
@@ -13,10 +13,10 @@ export default function UserTypeSignUp() {
 
       <div className="flex flex-col md:flex-row justify-center items-stretch gap-6 px-4 w-full max-w-5xl">
         <div className="flex">
-          <SignUpHalfCard_needCG />
+          <SignUpCardClientSupport />
         </div>
         <div className="flex">
-          <SignUpHalfCard_asCG />
+          <SignUpCardProvider />
         </div>
       </div>
     </div>

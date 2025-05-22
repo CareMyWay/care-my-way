@@ -2,7 +2,7 @@ import Image from "next/image";
 import OrangeButton from "../buttons/orange-button";
 import { useRouter } from "next/navigation";
 
-export function SignUpHalfCard_asCG() {
+export function SignUpCardProvider() {
   const router = useRouter();
 
   return (
@@ -30,12 +30,11 @@ export function SignUpHalfCard_asCG() {
       <div className="flex flex-col items-center space-y-4 md:mt-16">
         <OrangeButton
           className="text-center s-btn orange-button self-center min-w-[220px] mb-4"
-          label="Provider"
-          href="/sign-up/register?userType=Provider"
           onClick={() => router.push("/sign-up/register?userType=Provider")}
-          type="button"
           variant="action"
-        />
+        >
+          Provider
+        </OrangeButton>
       </div>
     </div>
   );

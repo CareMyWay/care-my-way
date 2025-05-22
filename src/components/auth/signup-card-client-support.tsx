@@ -3,7 +3,7 @@ import Image from "next/image";
 import OrangeButton from "../buttons/orange-button";
 import { useRouter } from "next/navigation";
 
-export function SignUpHalfCard_needCG() {
+export function SignUpCardClientSupport() {
   const router = useRouter();
 
   return (
@@ -30,21 +30,19 @@ export function SignUpHalfCard_needCG() {
 
       <div className="flex flex-col items-center space-y-4 mt-auto">
         <OrangeButton
-          className="text-center s-btn orange-button self-center min-w-[220px] mb-4"
-          label="Client"
-          href="/sign-up/register?userType=Client"
+          className="text-center self-center min-w-[220px] mb-4"
           variant="action"
-          type="button"
           onClick={() => router.push("/sign-up/register?userType=Client")}
-        />
+        >
+          Client
+        </OrangeButton>
         <OrangeButton
-          className="text-center s-btn orange-button self-center min-w-[220px] mb-4"
-          label="Support Person"
-          href="/sign-up/register?userType=Support"
+          className="text-center self-center min-w-[220px] mb-4"
           variant="action"
-          type="button"
           onClick={() => router.push("/sign-up/register?userType=Support")}
-        />
+        >
+          Support Person
+        </OrangeButton>
       </div>
     </div>
   );
