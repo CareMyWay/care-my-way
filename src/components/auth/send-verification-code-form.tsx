@@ -3,7 +3,7 @@
 import { handleSendEmailVerificationCode } from "@/lib/cognitoActions";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
-import { Button } from "@/components/button";
+import OrangeButton from "../buttons/orange-button";
 
 export default function SendVerificationCode() {
   const [response, dispatch] = useActionState(handleSendEmailVerificationCode, {
@@ -13,13 +13,15 @@ export default function SendVerificationCode() {
   const { pending } = useFormStatus();
   return (
     <>
-      <Button
+      <OrangeButton
         className="mt-2 w-full"
+        type="submit"
+        variant="action"
         aria-disabled={pending}
         formAction={dispatch}
       >
         Resend Verification Code{" "}
-      </Button>
+      </OrangeButton>
       <div className="flex h-8 items-end space-x-1">
         <div
           className="flex h-8 items-end space-x-1"

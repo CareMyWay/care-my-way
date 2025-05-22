@@ -43,7 +43,6 @@
 
     --color-input-border-gray: #B5BAC0;
 
-    /* INPUT BOXES */
 
     /* BUTTON STYLES */
     --text-btn-font-size: 16px;
@@ -55,7 +54,6 @@
     --shadow-drop: 0px 4px 10px 2px rgba(0, 0, 0, 0.25);
 }
 
-/* Add your global styles here */
 .bg-hero-section {
     background-image: url('/images/home/hero-section.jpg');
     background-size: cover;
@@ -63,8 +61,8 @@
     background-position: right;
 }
 
+/* INPUT BOXES */
 .std-form-input {
-    /* w-full px-4 py-2 border-2 border-gray-300 rounded-md */
     width: 100%;
     padding: 8px 16px;
     border-width: 2px;
@@ -73,8 +71,8 @@
     border-radius: 6px;
 }
 
+/* FORM/INPUT BOX LABELS */
 .std-form-label {
-    /* text-gray-700 font-semibold */
     display: block;
     font-size: 20px;
     color: var(--color-dark-green);
