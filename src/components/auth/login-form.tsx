@@ -5,7 +5,7 @@ import React, { useActionState } from "react";
 import Image from "next/image";
 
 import { useFormStatus } from "react-dom";
-import { Button } from "@/components/button";
+import OrangeButton from "@/components/buttons/orange-button";
 import { handleSignIn } from "@/lib/cognitoActions";
 import CMWStackedHeader from "../headers/cmw-stacked-header";
 
@@ -19,14 +19,17 @@ export default function LoginForm() {
 
         <div>
           <div className="flex flex-row w-full justify-center">
-            <p className=" mb-4 text-darkest-green">
+            <p className=" text-h6-size mb-12 text-darkest-green">
               Please login to your account to continue.
             </p>
           </div>
           <div className="flex flex-col w-full justify-center items-center gap-6">
             <div className="space-y-5 w-[458px]">
               <div className="space-y-2">
-                <label htmlFor="email" className="block text-darkest-green ">
+                <label
+                  htmlFor="email"
+                  className="std-form-label text-darkest-green"
+                >
                   Email
                 </label>
                 <input
@@ -40,7 +43,10 @@ export default function LoginForm() {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="password" className="block text-darkest-green">
+                <label
+                  htmlFor="password"
+                  className="std-form-label text-darkest-green"
+                >
                   Password
                 </label>
                 <input
@@ -103,8 +109,13 @@ function LoginButton() {
   const { pending } = useFormStatus();
 
   return (
-    <Button className="mt-4 w-full" aria-disabled={pending}>
+    <OrangeButton
+      variant="action"
+      type="submit"
+      className="mt-4 w-full"
+      aria-disabled={pending}
+    >
       {pending ? "Logging in..." : "Login"}
-    </Button>
+    </OrangeButton>
   );
 }

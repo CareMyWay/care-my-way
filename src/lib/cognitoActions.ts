@@ -6,7 +6,6 @@ import {
   signOut,
   resendSignUpCode,
   autoSignIn,
-  fetchAuthSession,
 } from "aws-amplify/auth";
 import { getErrorMessage } from "@/utils/get-error-message";
 
@@ -95,10 +94,6 @@ export async function handleSignIn(
       });
       redirectLink = "/sign-up/confirm-signup";
     }
-
-    //DELETE session const and console.log later
-    const session = await fetchAuthSession();
-    console.log(session);
   } catch (error) {
     return getErrorMessage(error);
   }

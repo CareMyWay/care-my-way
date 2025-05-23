@@ -1,4 +1,3 @@
-import { type Schema } from "@../../amplify/data/resource";
 import { createServerRunner } from "@aws-amplify/adapter-nextjs";
 <<<<<<< HEAD
 import { getCurrentUser } from "aws-amplify/auth";
@@ -11,14 +10,12 @@ import { getCurrentUser } from "aws-amplify/auth/server";
 >>>>>>> 94e6bc2 (In progress of adding user to user pool groups)
 import config from "../../amplify_outputs.json";
 import { cookies } from "next/headers";
-// import { generateServerClientUsingCookies } from "@aws-amplify/adapter-nextjs/data";
 
-//use runWithAmplifyServerContext to call Amplify APIs within isolated request contexts - keeping it within the server
-// and not leaking to the client
 export const { runWithAmplifyServerContext } = createServerRunner({
   config,
 });
 
+<<<<<<< HEAD
 // export const cookiesClient = generateServerClientUsingCookies<Schema>({
 //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 //   config,
@@ -42,18 +39,24 @@ export async function GetAuthCurrentUserServer() {
 =======
 export const isAuthenticated = async () =>
   await runWithAmplifyServerContext({
+=======
+export const isAuthenticated = async (): Promise<boolean> => {
+  const result = await runWithAmplifyServerContext({
+>>>>>>> c27aa6c (In process of fixing authentication flow)
     nextServerContext: { cookies },
     async operation(contextSpec) {
       try {
         const currentUser = await getCurrentUser(contextSpec);
         return !!currentUser;
       } catch (error) {
-        console.log(error);
+        // This catches the UserUnAuthenticatedException inside the server context
+        console.log("User not authenticated:", error);
         return false;
       }
     },
   });
 
+<<<<<<< HEAD
 // export async function GetAuthCurrentUserServer() {
 //   try {
 //     const currentUser = await runWithAmplifyServerContext({
@@ -66,3 +69,7 @@ export const isAuthenticated = async () =>
 //   }
 // }
 >>>>>>> 1b87dd5 (Complete navbar with auth functionality)
+=======
+  return result;
+};
+>>>>>>> c27aa6c (In process of fixing authentication flow)

@@ -7,7 +7,7 @@ export function SignUpCardProvider() {
 
   return (
     <div className="bg-primary-white rounded-lg shadow-drop p-8 w-[360px]">
-      <div className="mb-4">
+      <div className="mb-8 md:mb-24">
         <Image
           src={"/svgs/client-signup/step1-as-cg.svg"}
           alt="Healthcare Provider"
@@ -17,17 +17,17 @@ export function SignUpCardProvider() {
         />
       </div>
 
-      <div className="my-10">
+      <div className="justify-center items-center">
         <h6 className="text-h6-size mb-4 text-center">
-          I am a Healthcare Provider providing care.
+          I am a Healthcare Provider.
         </h6>
         <p className="mb-4 text-center">
-          Join our community of healthcare providers and connect directly with
-          families in need of care.
+          I want to join a community of healthcare providers and connect
+          directly with families in need of care.
         </p>
       </div>
 
-      <div className="flex flex-col items-center space-y-4 md:mt-16">
+      <div className="flex flex-col items-center space-y-4 mt-10">
         <OrangeButton
           className="text-center s-btn orange-button self-center min-w-[220px] mb-4"
           onClick={() => router.push("/sign-up/register?userType=Provider")}
