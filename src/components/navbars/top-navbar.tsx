@@ -70,9 +70,7 @@ export function TopNavBar() {
             <Link href="/" className={NAVBAR_ITEMS}>
               <span>Features</span>
             </Link>
-            <Link href="/provider" className={NAVBAR_ITEMS}>
-              {" "}
-              {/* Temporary link to provider profile */}
+            <Link href="/provider" className={NAVBAR_ITEMS}> {/* Temporary link to provider profile */}
               <span>Contact</span>
             </Link>
           </nav>

@@ -1,11 +1,18 @@
 import "@/app/globals.css";
 
 import { TopNavBar } from "@/components/navbars/top-navbar";
+<<<<<<< HEAD
 import BackToMarketplace from "@/components/provider-profile/back-to-marketplace";
 import ProfileSummary from "@/components/provider-profile/profile-summary";
 import ProfileDetails from "@/components/provider-profile/profile-details";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+=======
+import BackToMarketplace from "@/components/providerprofile/backToMarketplace";
+import ProfileSummary from "@/components/providerprofile/profileSummary";
+import BookButton from "@/components/providerprofile/requestToBook";
+import { Book } from "lucide-react";
+>>>>>>> 04be5df (Profile Summary commit)
 
 export default function Provider() {
   return (
