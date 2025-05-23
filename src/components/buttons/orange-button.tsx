@@ -3,48 +3,47 @@ import Link from "next/link";
 import clsx from "clsx";
 
 interface BaseProps {
-  label: string;
-  href: string;
   className?: string;
 }
 
-//Button variant for navigation
+// Route variant
 interface RouteButtonProps extends BaseProps {
   variant: "route";
+  href: string;
+  children: React.ReactNode;
 }
 
-//Button variant from for Actions or click handlers
-
-interface ActionButtonProps extends BaseProps {
+// Action variant
+interface ActionButtonProps
+  extends BaseProps,
+    React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant: "action";
-  type?: "button" | "submit" | "reset";
-  onClick?: () => void;
+  children: React.ReactNode;
 }
 
 type ButtonPropTypes = RouteButtonProps | ActionButtonProps;
 
 const BUTTON_STYLE =
-  "bg-primary-orange rounded-btn-radius font-btn-font-wgt text-primary-white px-8 py-3 md:text-btn-font-size text-[14px] shadow-md transition-all hover:bg-hover-orange uppercase inline-block";
+  "cursor-pointer text-center bg-primary-orange rounded-btn-radius font-btn-font-wgt text-primary-white px-8 py-3 md:text-btn-font-size text-[14px] shadow-md transition-all hover:bg-hover-orange uppercase inline-block";
 
-const OrangeButton: React.FC<ButtonPropTypes> = ({
-  label,
-  className,
-  ...props
-}) => {
-  const classes = clsx(BUTTON_STYLE, className);
+const OrangeButton: React.FC<ButtonPropTypes> = (props) => {
+  const extraStyles = clsx(BUTTON_STYLE, props.className);
 
   if (props.variant === "route") {
     return (
-      <Link href={props.href} className={classes}>
-        {label}
+      <Link href={props.href} className={extraStyles}>
+        {props.children}
       </Link>
     );
   }
 
+  //Override the default type of button if needed (e.g. submit)
+  const { type = "button", ...rest } = props;
+
   return (
-    <Link href={props.href} onClick={props.onClick} className={classes}>
-      {label}
-    </Link>
+    <button type={type} {...rest} className={extraStyles}>
+      {props.children}
+    </button>
   );
 };
 

@@ -123,7 +123,9 @@ export function HowItWorks() {
               your needs.
             </p>
             <div className="flex justify-center md:justify-start">
-              <OrangeButton variant="route" href="/" label="Healthcare Quiz" />
+              <OrangeButton variant="route" href="/">
+                Join Today
+              </OrangeButton>
             </div>{" "}
           </div>
         </div>
@@ -177,7 +179,9 @@ export function HowItWorks() {
               difference!
             </p>
             <div className="flex justify-center md:justify-start">
-              <OrangeButton variant="route" href="/" label="Join Today" />
+              <OrangeButton variant="route" href="/">
+                Join Today
+              </OrangeButton>
             </div>{" "}
           </div>
         </div>
