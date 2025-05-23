@@ -1,5 +1,5 @@
 import React from "react";
-import PersonalInfo from "@/components/signup-forms/personal-info";
+import PersonalInfo from "@/components/old-dont-use-signup-forms/personal-info";
 
 const CreateAccountRoute = () => {
   return (
