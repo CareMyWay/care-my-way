@@ -33,7 +33,6 @@
 
     /* COLOURS */
     --color-primary-white: #FCFCFC;
-
     --color-light-green: #ADD2D4;
     --color-medium-green: #5F9C9D;
     --color-dark-green: #274D4D;
@@ -44,7 +43,6 @@
 
     --color-input-border-gray: #B5BAC0;
 
-    /* INPUT BOXES */
 
     /* BUTTON STYLES */
     --text-btn-font-size: 16px;
@@ -52,11 +50,11 @@
     --font-weight-btn-font-wgt: 600;
 
 
+
     /* PANEL SHADOWS */
     --shadow-drop: 0px 4px 10px 2px rgba(0, 0, 0, 0.25);
 }
 
-/* Add your global styles here */
 .bg-hero-section {
     background-image: url('/images/home/hero-section.jpg');
     background-size: cover;
@@ -64,28 +62,21 @@
     background-position: right;
 }
 
-/* @layer base {
-    h1 {
-        @apply text-darkest-green text-[70px] font-[700];
-    }
+/* INPUT BOXES */
+.std-form-input {
+    width: 100%;
+    height: 60px;
+    padding: 8px 16px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--color-gray-300);
+    border-radius: 10px;
+}
 
-    h2 {
-        @apply text-darkest-green text-[64px] font-[500];
-    }
-
-    h3 {
-        @apply text-darkest-green text-[48px] font-[500];
-    }
-
-    h4 {
-        @apply text-darkest-green text-[28px] font-[600];
-    }
-
-    h5 {
-        @apply text-darkest-green text-[23px] font-[600];
-    }
-
-    h6 {
-        @apply text-darkest-green text-[20px] font-[500];
-    }
-} */
+/* FORM/INPUT BOX LABELS */
+.std-form-label {
+    display: block;
+    font-size: 20px;
+    color: var(--color-dark-green);
+    font-weight: var(--font-weight-semibold);
+}
