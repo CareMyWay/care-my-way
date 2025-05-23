@@ -2,18 +2,17 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { Button, Divider, Flex } from "@aws-amplify/ui-react";
 import { signOut } from "aws-amplify/auth";
-import { useRouter } from "next/navigation";
 import { Hub } from "aws-amplify/utils";
 import { useTransition } from "react";
 import { getErrorMessage } from "@/utils/get-error-message";
+import GreenButton from "../buttons/green-button";
 
 export default function NavBar({ isSignedIn }: { isSignedIn: boolean }) {
   const [authCheck, setAuthCheck] = useState(isSignedIn);
   const [isPending, startTransition] = useTransition();
-
   const router = useRouter();
 
   useEffect(() => {
@@ -21,12 +20,10 @@ export default function NavBar({ isSignedIn }: { isSignedIn: boolean }) {
       switch (data.payload.event) {
         case "signedIn":
           setAuthCheck(true);
-          startTransition(() => router.push("/"));
           startTransition(() => router.refresh());
           break;
         case "signedOut":
           setAuthCheck(false);
-          startTransition(() => router.push("/"));
           startTransition(() => router.refresh());
           break;
       }
@@ -63,7 +60,11 @@ export default function NavBar({ isSignedIn }: { isSignedIn: boolean }) {
       >
         <Flex as="nav" alignItems="center" gap="3rem" margin="0 2rem">
           {routes.map((route) => (
-            <Link key={route.href} href={route.href}>
+            <Link
+              className="text-darkest-green"
+              key={route.href}
+              href={route.href}
+            >
               {route.label}
             </Link>
           ))}
@@ -71,29 +72,26 @@ export default function NavBar({ isSignedIn }: { isSignedIn: boolean }) {
 
         <Flex gap="1rem" alignItems="center">
           {authCheck ? (
-            <Button
-              variation="primary"
-              borderRadius="2rem"
-              onClick={handleSignOut}
-            >
+            <GreenButton variant="action" onClick={handleSignOut}>
               Sign Out
-            </Button>
+            </GreenButton>
           ) : (
             <>
               <Button
                 variation="link"
+                style={{ color: "#173F3F", textTransform: "uppercase" }}
                 borderRadius="2rem"
                 onClick={() => router.push("/login")}
               >
-                Sign In
+                Log In
               </Button>
-              <Button
-                variation="primary"
-                borderRadius="2rem"
+
+              <GreenButton
+                variant="action"
                 onClick={() => router.push("/sign-up/user")}
               >
                 Sign Up
-              </Button>
+              </GreenButton>
             </>
           )}
         </Flex>

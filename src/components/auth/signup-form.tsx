@@ -5,14 +5,15 @@ import React, { useActionState } from "react";
 import Image from "next/image";
 
 import { useFormStatus } from "react-dom";
-import { Button } from "@/components/button";
 import OrangeButton from "@/components/buttons/orange-button";
 import { handleSignUp } from "@/lib/cognitoActions";
 import { useSearchParams } from "next/navigation";
+import { AuthUser } from "aws-amplify/auth";
+import { withAuthenticator } from "@aws-amplify/ui-react";
 
 import CMWStackedHeader from "../headers/cmw-stacked-header";
 
-export default function SignUpForm() {
+const SignUpForm = ({ user }: { user?: AuthUser }) => {
   const [errorMessage, dispatch] = useActionState(handleSignUp, undefined);
   const searchParams = useSearchParams();
   const userType = searchParams.get("userType"); // Get from query
@@ -143,7 +144,7 @@ export default function SignUpForm() {
       </form>
     </main>
   );
-}
+};
 
 function SignUpButton() {
   const { pending } = useFormStatus();
@@ -159,3 +160,5 @@ function SignUpButton() {
     </OrangeButton>
   );
 }
+
+export default SignUpForm;

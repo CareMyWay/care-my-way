@@ -1,4 +1,4 @@
-import AccountSummary from "@/components/signup-forms/account-summary";
+import AccountSummary from "@/components/old-dont-use-signup-forms/account-summary";
 import React from "react";
 
 const CreateAccountRoute = () => {
