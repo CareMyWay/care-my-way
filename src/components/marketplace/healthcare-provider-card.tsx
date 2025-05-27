@@ -26,7 +26,7 @@ const HealthcareProviderCard: React.FC<HealthcareProviderCardProps> = ({
   imageSrc,
 }) => {
   return (
-    <div className="flex flex-col md:flex-row justify-between items-stretch gap-6 p-6 bg-primary-white rounded-lg shadow-md">
+    <div className="flex flex-col md:flex-row justify-between items-stretch gap-6 p-6 bg-primary-white rounded-xl border border-gray-200 shadow-md hover:shadow-lg transition-shadow">
       {/* Left Section: Image and Info */}
       <div className="flex flex-1 gap-4">
         {/* Image Block */}
@@ -49,28 +49,31 @@ const HealthcareProviderCard: React.FC<HealthcareProviderCardProps> = ({
               {title} | {location}
             </p>
             <p className="text-body4-size text-darkest-green mt-1">
-              {experience} ({testimonials} testimonials)
+              {experience} | {testimonials} testimonials
             </p>
             <p className="text-body4-size text-darkest-green">
-              Languages: {languages.join(", ")}
+              {languages.join(", ")}
             </p>
-          </div>
 
-          {/* Services */}
-          <div className="flex flex-wrap gap-2 mt-2">
-            {services.slice(0, 3).map((service, idx) => (
-              <span
-                key={idx}
-                className="bg-light-green text-darkest-green px-3 py-1 rounded-full text-sm"
-              >
-                {service}
-              </span>
-            ))}
-            {services.length > 3 && (
-              <span className="text-body4-size text-medium-green font-medium">
-                more...
-              </span>
-            )}
+            {/* Services */}
+            <p className="text-body4-size text-darkest-green mt-2 mb-1 font-semibold">
+              Services:
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {services.slice(0, 3).map((service, idx) => (
+                <span
+                  key={idx}
+                  className="bg-light-green text-darkest-green px-3 py-1 rounded-full text-sm"
+                >
+                  {service}
+                </span>
+              ))}
+              {services.length > 3 && (
+                <span className="text-body4-size text-medium-green font-medium">
+                  more...
+                </span>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -81,7 +84,11 @@ const HealthcareProviderCard: React.FC<HealthcareProviderCardProps> = ({
           <span className="block text-sm">Starting From</span>
           <span className="text-h5-size font-bold">${hourlyRate}/hr</span>
         </div>
-        <OrangeButton variant="route" href="/" className="mt-4 w-fit">
+        <OrangeButton
+          variant="route"
+          href="/" // Replace with actual profile link
+          className="!px-4 !py-1.5 !text-md mt-4"
+        >
           View Profile
         </OrangeButton>
       </div>
