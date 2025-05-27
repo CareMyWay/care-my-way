@@ -26,10 +26,11 @@ const HealthcareProviderCard: React.FC<HealthcareProviderCardProps> = ({
   imageSrc,
 }) => {
   return (
-    <div className="flex flex-col md:flex-row justify-between items-start gap-6 p-6 bg-primary-white rounded-lg shadow-md">
-      {/* Image */}
-      <div className="w-full md:w-1/4 flex justify-center">
-        <div className="relative w-28 h-28 rounded-full overflow-hidden">
+    <div className="flex flex-col md:flex-row justify-between items-stretch gap-6 p-6 bg-primary-white rounded-lg shadow-md">
+      {/* Left Section: Image and Info */}
+      <div className="flex flex-1 gap-4">
+        {/* Image Block */}
+        <div className="relative w-[250px] h-[222px] rounded-lg overflow-hidden shrink-0">
           <Image
             src={imageSrc}
             alt={`${name}'s profile photo`}
@@ -37,56 +38,52 @@ const HealthcareProviderCard: React.FC<HealthcareProviderCardProps> = ({
             className="object-cover"
           />
         </div>
-      </div>
 
-      {/* Content */}
-      <div className="flex-1 space-y-2">
-        <div className="flex justify-between items-start flex-wrap gap-y-2">
+        {/* Text Content */}
+        <div className="flex flex-col justify-between">
           <div>
             <h3 className="text-h5-size font-semibold text-darkest-green">
               {name}
             </h3>
-            <p className="text-body4-size text-darkest-green">
+            <p className="text-body4-size text-medium-green">
               {title} | {location}
             </p>
-          </div>
-          <div className="text-right text-darkest-green text-body4-size">
-            <p className="font-semibold">
-              Starting from ${hourlyRate}/hr
+            <p className="text-body4-size text-darkest-green mt-1">
+              {experience} ({testimonials} testimonials)
+            </p>
+            <p className="text-body4-size text-darkest-green">
+              Languages: {languages.join(", ")}
             </p>
           </div>
-        </div>
 
+          {/* Services */}
+          <div className="flex flex-wrap gap-2 mt-2">
+            {services.slice(0, 3).map((service, idx) => (
+              <span
+                key={idx}
+                className="bg-light-green text-darkest-green px-3 py-1 rounded-full text-sm"
+              >
+                {service}
+              </span>
+            ))}
+            {services.length > 3 && (
+              <span className="text-body4-size text-medium-green font-medium">
+                more...
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Right Section: Rate and Button */}
+      <div className="flex flex-col items-end justify-between text-right shrink-0 w-40">
         <div className="text-body4-size text-darkest-green">
-          <p>
-            <strong>Experience:</strong> {experience} | {testimonials} testimonials
-          </p>
-          <p>
-            <strong>Languages:</strong> {languages.join(", ")}
-          </p>
+          <span className="block text-sm">Starting From</span>
+          <span className="text-h5-size font-bold">${hourlyRate}/hr</span>
         </div>
-
-        <div className="flex flex-wrap gap-2 pt-2">
-          {services.slice(0, 3).map((service, idx) => (
-            <span
-              key={idx}
-              className="bg-light-green text-darkest-green px-3 py-1 rounded-full text-sm"
-            >
-              {service}
-            </span>
-          ))}
-          {services.length > 3 && (
-            <span className="text-body4-size text-medium-green font-medium">
-              more...
-            </span>
-          )}
-        </div>
-
-        <div className="pt-4">
-          <OrangeButton variant="route" href="/">
-            View Profile
-          </OrangeButton>
-        </div>
+        <OrangeButton variant="route" href="/" className="mt-4 w-fit">
+          View Profile
+        </OrangeButton>
       </div>
     </div>
   );
