@@ -93,7 +93,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 6px; /* Adjust bottom to position the line */
+  bottom: 5px; /* Adjust bottom to position the line */
   height: 1px; /* Thickness of the underline */
   background: #274D4D;
   border-radius: 1px;
