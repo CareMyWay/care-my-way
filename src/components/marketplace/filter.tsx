@@ -101,7 +101,7 @@ const MarketplaceFilter = () => {
       {/* Filters */}
       <div className="w-full md:w-80 shrink-0 ml-5">
         <div className="border text-input-border-gray rounded-lg p-6">
-          <h5 className="text-[23px] font-bold mb-6">Filters</h5>
+          <h5 className="text-[23px] text-darkest-green font-bold mb-6">Filters</h5>
 
           {/* Pay Rate */}
           <div className="mb-6">
