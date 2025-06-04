@@ -4,18 +4,26 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { redirect, useRouter } from "next/navigation";
 import { Button, Divider, Flex } from "@aws-amplify/ui-react";
-import { signOut } from "aws-amplify/auth";
+import { getCurrentUser, signOut } from "@aws-amplify/auth";
+
 import { Hub } from "aws-amplify/utils";
 import { useTransition } from "react";
 import { getErrorMessage } from "@/utils/get-error-message";
 import GreenButton from "../buttons/green-button";
 
-export default function NavBar({ isSignedIn }: { isSignedIn: boolean }) {
-  const [authCheck, setAuthCheck] = useState(isSignedIn);
+// export default function NavBar({ isSignedIn }: { isSignedIn: boolean }) {
+export default function NavBar() {
+  const [authCheck, setAuthCheck] = useState<boolean | null>(null);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
   useEffect(() => {
+    // Check current user on mount
+    getCurrentUser()
+      .then(() => setAuthCheck(true))
+      .catch(() => setAuthCheck(false));
+    // Listen to auth events
+
     const hubListenerCancel = Hub.listen("auth", (data) => {
       switch (data.payload.event) {
         case "signedIn":
