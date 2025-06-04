@@ -15,7 +15,8 @@ export default async function Home() {
       <main>
         {/* Temp location of top navbar */}
         {/* <TopNavBar /> */}
-        <NavBar isSignedIn={await isAuthenticated()} />
+        {/* <NavBar isSignedIn={await isAuthenticated()} /> */}
+        <NavBar />
         <HeroSection />
         <AboutSection />
         <FeaturesSection />
