@@ -92,7 +92,7 @@ export async function handleSignIn(
       await resendSignUpCode({
         username: String(formData.get("email")),
       });
-      redirectLink = "/sign-up/confirm-signup";
+      redirectLink = "/sign-up/confirm-sign-up";
     }
   } catch (error) {
     return getErrorMessage(error);
