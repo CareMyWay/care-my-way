@@ -59,6 +59,14 @@ export default function LoginForm() {
                   required
                 />
               </div>
+              <div className="text-right">
+                <Link
+                  href="/forgot-password"
+                  className="text-sm text-darkest-green hover:underline"
+                >
+                  Forgot password?
+                </Link>
+              </div>
 
               <div className="justify-center flex flex-row self-center">
                 <LoginButton />

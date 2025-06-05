@@ -10,6 +10,11 @@ const client = new CognitoIdentityProviderClient();
 export const handler: PostConfirmationTriggerHandler = async (event) => {
   const group = event.request.userAttributes["custom:userType"];
 
+  if (!group) {
+    console.error("Group name not found in user attributes or environment.");
+    return event;
+  }
+
   const command = new AdminAddUserToGroupCommand({
     GroupName: group,
     Username: event.userName,
