@@ -2,17 +2,15 @@ import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 import { User } from "aws-cdk-lib/aws-iam";
 
 /*== STEP 1 ===============================================================
-The section below creates a Todo database table with a "content" field. Try
+The section below creates a UserProfile database table with a "content" field. Try
 adding a new "isDone" field as a boolean. The authorization rule below
 specifies that any unauthenticated user can "create", "read", "update", 
-and "delete" any "Todo" records.
+and "delete" any "UserProfile" records.
 =========================================================================*/
 const schema = a.schema({
-  User: a
+  UserProfile: a
     .model({
       id: a.string().required(),
-      firstName: a.string(),
-      lastName: a.string(),
       email: a.string(),
       role: a
         .string()
@@ -21,6 +19,10 @@ const schema = a.schema({
           allow.ownerDefinedIn("profileOwner").to(["read", "create"]),
           allow.groups(["Admin"]).to(["read", "update", "create"]),
         ]),
+
+      // Shared fields
+      firstName: a.string(),
+      lastName: a.string(),
       gender: a.string(),
       dateOfBirth: a.date(),
       address: a.string(),
@@ -30,11 +32,16 @@ const schema = a.schema({
       emergencyContactFullName: a.string(),
       emergencyRelationshipStatus: a.string(),
       emergencyContactPhone: a.string(),
+
+      //Client support fields
       hasRepSupportPerson: a.boolean(),
-      supportFullName: a.string(),
+      supportFirstName: a.string(),
+      supportLastName: a.string(),
       supportRelationshipStatus: a.string(),
       supportContactPhone: a.string(),
-      // profileOwner: a.string().array(),
+
+      //healthcare provider fields
+      //NEED TO ADD FIELDS HERE
     })
     .authorization((allow) => [
       allow.groups(["Admin"]).to(["read", "create", "update", "delete"]),
@@ -49,6 +56,9 @@ export const data = defineData({
   schema,
   authorizationModes: {
     defaultAuthorizationMode: "userPool",
+    apiKeyAuthorizationMode: {
+      expiresInDays: 30,
+    },
   },
 });
 
