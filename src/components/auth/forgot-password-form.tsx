@@ -8,6 +8,8 @@ import {
 } from "aws-amplify/auth";
 
 import { useFormStatus } from "react-dom";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import OrangeButton from "@/components/buttons/orange-button";
 import CMWStackedHeader from "@/components/headers/cmw-stacked-header";
 
@@ -58,87 +60,104 @@ export default function ForgotPasswordForm() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-4 my-4">
-      <form className="space-y-4 w-full max-w-md">
-        <CMWStackedHeader title="Reset Your Password" />
+    <main className="flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
+      <div className="w-full max-w-md space-y-6">
+        {/* Back to login */}
+        <div>
+          <Link
+            href="/login"
+            className="flex items-center text-sm text-darkest-green hover:underline mb-2"
+          >
+            <ArrowLeft className="w-4 h-4 mr-1" /> Return to login
+          </Link>
+        </div>
+        <div className="mt-20">
+          <CMWStackedHeader title="Reset Your Password" />
+        </div>
 
-        {step === "REQUEST" && (
-          <>
-            <label
-              className="std-form-label text-darkest-green"
-              htmlFor="email"
-            >
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              className="std-form-input"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-            <OrangeButton
-              className="mt-2"
-              variant="action"
-              type="button"
-              onClick={() => handleResetPassword(username)}
-            >
-              Send Reset Code
-            </OrangeButton>
-          </>
-        )}
+        <form className="space-y-4">
+          {step === "REQUEST" && (
+            <>
+              <label
+                className="std-form-label text-darkest-green"
+                htmlFor="email"
+              >
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                className="std-form-input"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+              <OrangeButton
+                className="mt-2 w-full"
+                variant="action"
+                type="button"
+                onClick={() => handleResetPassword(username)}
+              >
+                Send Reset Code
+              </OrangeButton>
+            </>
+          )}
 
-        {step === "CONFIRM" && (
-          <>
-            <label className="std-form-label text-darkest-green" htmlFor="code">
-              Confirmation Code
-            </label>
-            <input
-              type="text"
-              id="code"
-              className="std-form-input"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              required
-            />
-            <label
-              className="std-form-label text-darkest-green"
-              htmlFor="new-password"
-            >
-              New Password
-            </label>
-            <input
-              type="password"
-              id="new-password"
-              className="std-form-input"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required
-            />
-            <OrangeButton
-              variant="action"
-              type="button"
-              onClick={handleConfirmResetPassword}
-            >
-              Reset Password
-            </OrangeButton>
-          </>
-        )}
+          {step === "CONFIRM" && (
+            <>
+              <label
+                className="std-form-label text-darkest-green"
+                htmlFor="code"
+              >
+                Confirmation Code
+              </label>
+              <input
+                type="text"
+                id="code"
+                className="std-form-input"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                required
+              />
+              <label
+                className="std-form-label text-darkest-green"
+                htmlFor="new-password"
+              >
+                New Password
+              </label>
+              <input
+                type="password"
+                id="new-password"
+                className="std-form-input"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                required
+              />
+              <OrangeButton
+                className="w-full"
+                variant="action"
+                type="button"
+                onClick={handleConfirmResetPassword}
+              >
+                Reset Password
+              </OrangeButton>
+            </>
+          )}
 
-        {step === "DONE" && (
-          <p className="text-green-600 font-medium">
-            {message}{" "}
-            <a className="underline text-blue-600" href="/login">
-              Log in
-            </a>
-          </p>
-        )}
+          {step === "DONE" && (
+            <p className="text-green-600 font-medium">
+              {message}{" "}
+              <a className="underline text-blue-600" href="/login">
+                Log in
+              </a>
+            </p>
+          )}
 
-        {message && step !== "DONE" && (
-          <p className="text-sm text-red-500 mt-2">{message}</p>
-        )}
-      </form>
+          {message && step !== "DONE" && (
+            <p className="text-sm text-red-500 mt-2">{message}</p>
+          )}
+        </form>
+      </div>
     </main>
   );
 }
