@@ -100,6 +100,15 @@ const SignUpForm = ({ user }: { user?: AuthUser }) => {
                   required
                 />
               </div>
+              {errorMessage && (
+                <div
+                  className="flex h-8 items-end space-x-1"
+                  aria-live="polite"
+                  aria-atomic="true"
+                >
+                  <p className="text-sm text-red-700">{errorMessage}</p>
+                </div>
+              )}
 
               <div className="justify-center flex flex-row self-center">
                 <SignUpButton />
@@ -129,15 +138,6 @@ const SignUpForm = ({ user }: { user?: AuthUser }) => {
                   </Link>
                 </p>
               </div>
-              {errorMessage && (
-                <div
-                  className="flex h-8 items-end space-x-1"
-                  aria-live="polite"
-                  aria-atomic="true"
-                >
-                  <p className="text-sm text-red-500">{errorMessage}</p>
-                </div>
-              )}
             </div>
           </div>
         </div>
