@@ -7,7 +7,6 @@ import {
   type ResetPasswordOutput,
 } from "aws-amplify/auth";
 
-import { useFormStatus } from "react-dom";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import OrangeButton from "@/components/buttons/orange-button";
@@ -16,13 +15,19 @@ import CMWStackedHeader from "@/components/headers/cmw-stacked-header";
 export default function ForgotPasswordForm() {
   const [step, setStep] = useState<"REQUEST" | "CONFIRM" | "DONE">("REQUEST");
   const [username, setUsername] = useState("");
+  const [emailTouched, setEmailTouched] = useState(false);
   const [code, setCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  const { pending } = useFormStatus();
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username);
 
   const handleResetPassword = async (email: string) => {
+    if (!isEmailValid) {
+      setMessage("Please enter a valid email address.");
+      return;
+    }
+
     try {
       const output: ResetPasswordOutput = await resetPassword({
         username: email,
@@ -31,16 +36,18 @@ export default function ForgotPasswordForm() {
 
       if (nextStep.resetPasswordStep === "CONFIRM_RESET_PASSWORD_WITH_CODE") {
         setStep("CONFIRM");
-        setMessage(
-          `A confirmation code was sent via ${nextStep.codeDeliveryDetails?.deliveryMedium}.`
-        );
+        setMessage(`A confirmation code was sent to your email.`);
       } else if (nextStep.resetPasswordStep === "DONE") {
         setStep("DONE");
         setMessage("Password reset complete. You can now log in.");
       }
     } catch (error: any) {
       console.error(error);
-      setMessage(error.message || "Failed to start password reset.");
+      if (error.name === "UserNotFoundException") {
+        setMessage("No account found with that email address.");
+      } else {
+        setMessage(error.message || "Failed to start password reset.");
+      }
     }
   };
 
@@ -87,16 +94,24 @@ export default function ForgotPasswordForm() {
               <input
                 type="email"
                 id="email"
-                className="std-form-input"
+                placeholder="Enter your email"
+                className={`std-form-input ${emailTouched && !isEmailValid ? "border-red-500" : ""}`}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                onBlur={() => setEmailTouched(true)}
                 required
               />
+              {emailTouched && !isEmailValid && (
+                <p className="text-sm text-red-500 mt-1">
+                  Please enter a valid email address.
+                </p>
+              )}
               <OrangeButton
                 className="mt-2 w-full"
                 variant="action"
                 type="button"
                 onClick={() => handleResetPassword(username)}
+                disabled={!isEmailValid}
               >
                 Send Reset Code
               </OrangeButton>
@@ -145,7 +160,7 @@ export default function ForgotPasswordForm() {
           )}
 
           {step === "DONE" && (
-            <p className="text-green-600 font-medium">
+            <p className="text-darkest-green font-medium">
               {message}{" "}
               <a className="underline text-blue-600" href="/login">
                 Log in
@@ -154,7 +169,7 @@ export default function ForgotPasswordForm() {
           )}
 
           {message && step !== "DONE" && (
-            <p className="text-sm text-red-500 mt-2">{message}</p>
+            <p className="text-sm text-red-600 mt-2">{message}</p>
           )}
         </form>
       </div>
