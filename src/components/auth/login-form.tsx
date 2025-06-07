@@ -59,6 +59,15 @@ export default function LoginForm() {
                   required
                 />
               </div>
+              {errorMessage && (
+                <div
+                  className="flex h-8 items-end space-x-1"
+                  aria-live="polite"
+                  aria-atomic="true"
+                >
+                  <p className="text-sm text-red-700">{errorMessage}</p>
+                </div>
+              )}
               <div className="text-right">
                 <Link
                   href="/forgot-password"
@@ -96,7 +105,7 @@ export default function LoginForm() {
                   </Link>
                 </p>
               </div>
-              {errorMessage && (
+              {/* {errorMessage && (
                 <div
                   className="flex h-8 items-end space-x-1"
                   aria-live="polite"
@@ -104,7 +113,7 @@ export default function LoginForm() {
                 >
                   <p className="text-sm text-red-500">{errorMessage}</p>
                 </div>
-              )}
+              )} */}
             </div>
           </div>
         </div>
