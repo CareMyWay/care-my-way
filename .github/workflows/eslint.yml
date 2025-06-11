@@ -53,9 +53,9 @@ jobs:
           ${{ steps.detect-package-manager.outputs.manager }} add @microsoft/eslint-formatter-sarif@2.1.7
 
       - name: Run ESLint
+        working-directory: ${{ github.workspace }}
         run: |
-          ${{ steps.detect-package-manager.outputs.runner }} eslint . \
-            --ext .js,.jsx,.ts,.tsx
+          ${{ steps.detect-package-manager.outputs.runner }} eslint . --ext .js,.jsx,.ts,.tsx
         #     --format @microsoft/eslint-formatter-sarif
         #     --output-file eslint-results.sarif
 
