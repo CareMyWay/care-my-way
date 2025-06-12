@@ -1,6 +1,5 @@
 "use client";
 
-import { signUp } from "aws-amplify/auth";
 import { AuthUser } from "aws-amplify/auth";
 import { useEffect } from "react";
 import { redirect } from "next/navigation";

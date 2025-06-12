@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface CarouselProps {
@@ -50,17 +50,17 @@ export const Carousel: React.FC<CarouselProps> = ({
   const totalSlides =
     Math.ceil(children.length / visibleSlides) * visibleSlides;
 
-  const prev = () => {
+  const prev = useCallback(() => {
     setCurr((curr) =>
       curr <= 0 ? Math.ceil(children.length / visibleSlides) - 1 : curr - 1
     );
-  };
+  }, [children.length, visibleSlides]);
 
-  const next = () => {
+  const next = useCallback(() => {
     setCurr((curr) =>
       curr >= Math.ceil(children.length / visibleSlides) - 1 ? 0 : curr + 1
     );
-  };
+  }, [children.length, visibleSlides]);
 
   const goToSlide = (index: number) => {
     setCurr(index);
