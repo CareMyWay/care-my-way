@@ -1,0 +1,152 @@
+{
+  "chapters": [
+    {
+      "chapter-idx": 1,
+      "chapter-str": "Patient Information",
+      "questions": []
+    },
+    {
+      "chapter-idx": 2,
+      "chapter-str": "Address Information",
+      "questions": []
+    },
+    {
+      "chapter-idx": 3,
+      "chapter-str": "Emergency & Support Person",
+      "questions": []
+    },
+    {
+      "chapter-idx": 4,
+      "chapter-str": "Medical Information",
+      "questions": [
+        {
+          "q-idx": "1",
+          "q-str": "Do you have any past or current medical conditions?",
+          "answers": [
+            {
+              "a-tp": "checkbox",
+              "checkboxes": [
+                "None",
+                "Heart disease",
+                "Diabetes",
+                "Other (please specify):"
+              ]
+            },
+            {
+              "a-tp": "textarea",
+              "a-size": 3
+            }
+          ]
+        },
+        {
+          "q-idx": "2",
+          "q-str": "Have you had any previous surgeries or hospitalizations?",
+          "answers": [
+            {
+              "a-tp": "radio",
+              "radios": [
+                "No",
+                "Yes (Please provide details including dates and reasons):"
+              ]
+            },
+            {
+              "a-tp": "textarea",
+              "a-size": 3
+            }
+          ]
+        },
+        {
+          "q-idx": "3",
+          "q-str": "Do you have any allergies? (Check all that apply and specify the allergen)",
+          "answers": [
+            {
+              "a-tp": "checkbox",
+              "checkboxes": [
+                "No known allergies",
+                "Medication allergies:"
+              ]
+            },
+            {
+              "a-tp": "input-underline"
+            },
+            {
+              "a-tp": "checkbox",
+              "checkboxes": [
+                "Food allergies:"
+              ]
+            },
+            {
+              "a-tp": "input-underline"
+            },
+            {
+              "a-tp": "checkbox",
+              "checkboxes": [
+                "Environmental allergies (e.g., pollen, pet dander): "
+              ]
+            },
+            {
+              "a-tp": "input-underline"
+            },
+            {
+              "a-tp": "checkbox",
+              "checkboxes": [
+                "Other: "
+              ]
+            },
+            {
+              "a-tp": "input-underline"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chapter-idx": 5,
+      "chapter-str": "Lifestyle & Habits",
+      "questions": [
+        {
+          "q-idx": "1",
+          "q-str": "temp question:",
+          "answers": [
+            {
+              "a-tp": "textarea",
+              "a-size": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chapter-idx": 6,
+      "chapter-str": "Functional & Cognitive Abilities",
+      "questions": [
+        {
+          "q-idx": "1",
+          "q-str": "temp question:",
+          "answers": [
+            {
+              "a-tp": "textarea",
+              "a-size": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chapter-idx": 7,
+      "chapter-str": "Additional Information",
+      "questions": [
+        {
+          "q-idx": "0",
+          "q-str": "Provide any additional information and/or special requests you want this Caregiver to know:",
+          "answers": [
+            {
+              "a-tp": "textarea",
+              "a-size": 7
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
