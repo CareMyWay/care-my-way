@@ -9,19 +9,30 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
+// Use dynamic imports instead of require()
+const [
+  typescriptEslintPlugin,
+  reactPlugin,
+  reactHooksPlugin,
+  typescriptParser,
+] = await Promise.all([
+  import("@typescript-eslint/eslint-plugin"),
+  import("eslint-plugin-react"),
+  import("eslint-plugin-react-hooks"),
+  import("@typescript-eslint/parser"),
+]);
+
 const eslintConfig = [
   {
     files: ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
     ignores: ["node_modules", "dist", ".next"],
-
     plugins: {
-      "@typescript-eslint": require("@typescript-eslint/eslint-plugin"),
-      react: require("eslint-plugin-react"),
-      "react-hooks": require("eslint-plugin-react-hooks"),
+      "@typescript-eslint": typescriptEslintPlugin.default,
+      react: reactPlugin.default,
+      "react-hooks": reactHooksPlugin.default,
     },
-
     languageOptions: {
-      parser: require("@typescript-eslint/parser"),
+      parser: typescriptParser.default,
       parserOptions: {
         ecmaVersion: 2020,
         sourceType: "module",
@@ -30,11 +41,10 @@ const eslintConfig = [
         },
       },
     },
-
     rules: {
-      ...require("eslint-plugin-react").configs.recommended.rules,
-      ...require("@typescript-eslint/eslint-plugin").configs.recommended.rules,
-      ...require("eslint-plugin-react-hooks").configs.recommended.rules,
+      ...reactPlugin.configs.recommended.rules,
+      ...typescriptEslintPlugin.configs.recommended.rules,
+      ...reactHooksPlugin.configs.recommended.rules,
     },
   },
   ...compat.extends(
