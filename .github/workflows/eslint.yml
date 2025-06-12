@@ -54,9 +54,8 @@ jobs:
 
       - name: Run ESLint with Flat Config
         run: >
-          ${{ steps.detect-package-manager.outputs.runner }}
-          eslint . --config ./eslint.config.mjs
-          --ext .js,.jsx,.ts,.tsx
+          ${{ steps.detect-package-manager.outputs.runner }} eslint . \
+            --ext .js,.jsx,.ts,.tsx
         #     --format @microsoft/eslint-formatter-sarif
         #     --output-file eslint-results.sarif
 
