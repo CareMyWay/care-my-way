@@ -1,9 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+// Define the Zod schema
+const emergencySchema = z.object({
+  contactName: z.string().min(2, "Contact name is required"),
+  relationship: z.string().min(2, "Relationship is required"),
+  contactPhone: z
+    .string()
+    .min(10, "Phone number is required")
+    .regex(/^\d{10}$/, "Phone number must be 10 digits"),
+  supportPerson: z.enum(["Select an Option", "Yes", "No"], {
+    errorMap: () => ({ message: "Please select Yes or No" }),
+  }),
+});
+
+type EmergencyFormFields = z.infer<typeof emergencySchema>;
 
 interface EmergencyContactSectionProps {
-  onDataChange: (data: any) => void;
+  onDataChange: (data: EmergencyFormFields) => void;
   isCompleted: boolean;
 }
 
@@ -11,23 +29,40 @@ export function EmergencyContactSection({
   onDataChange,
   isCompleted,
 }: EmergencyContactSectionProps) {
-  const [formData, setFormData] = useState({
-    contactName: "",
-    relationship: "",
-    contactPhone: "",
-    supportPerson: "",
+  const {
+    register,
+    watch,
+    formState: { errors, isValid },
+  } = useForm<EmergencyFormFields>({
+    mode: "onChange",
+    resolver: zodResolver(emergencySchema),
+    defaultValues: {
+      contactName: "",
+      relationship: "",
+      contactPhone: "",
+      supportPerson: "Select an Option", // Default to empty, or use "Yes" if you want to preselect
+    },
   });
 
-  const handleChange = (field: string, value: string) => {
-    const newData = { ...formData, [field]: value };
-    setFormData(newData);
-    onDataChange(newData);
-  };
+  const watchedFields = watch();
+
+  // useEffect(() => {
+  //   if (isValid) {
+  //     onDataChange(watchedFields);
+  //   }
+  // }, [watchedFields, isValid, onDataChange]);
+  // Track and notify parent of progress
+  useEffect(() => {
+    const subscription = watch((value) => {
+      onDataChange(value as EmergencyFormFields);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, onDataChange]);
 
   return (
     <div className="h-full bg-white rounded-lg border shadow-sm overflow-hidden">
       <div className="p-6 h-full flex flex-col">
-        {/* Compact Header */}
+        {/* Header */}
         <div className="mb-6 flex items-center gap-3">
           <div
             className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-bold ${
@@ -58,7 +93,7 @@ export function EmergencyContactSection({
           </div>
         </div>
 
-        {/* Compact Form Content */}
+        {/* Form */}
         <div className="flex-1 overflow-y-auto">
           <div className="space-y-4">
             <div className="space-y-2">
@@ -67,11 +102,15 @@ export function EmergencyContactSection({
               </label>
               <input
                 id="contactName"
-                value={formData.contactName}
-                onChange={(e) => handleChange("contactName", e.target.value)}
+                {...register("contactName")}
                 className="std-form-input"
                 placeholder="Enter contact name"
               />
+              {errors.contactName && (
+                <p className="text-sm text-red-600">
+                  {errors.contactName.message}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -80,11 +119,15 @@ export function EmergencyContactSection({
               </label>
               <input
                 id="relationship"
-                value={formData.relationship}
-                onChange={(e) => handleChange("relationship", e.target.value)}
+                {...register("relationship")}
                 className="std-form-input"
                 placeholder="e.g., Spouse, Parent, Sibling"
               />
+              {errors.relationship && (
+                <p className="text-sm text-red-600">
+                  {errors.relationship.message}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -94,24 +137,31 @@ export function EmergencyContactSection({
               <input
                 id="contactPhone"
                 type="tel"
-                value={formData.contactPhone}
-                onChange={(e) => handleChange("contactPhone", e.target.value)}
+                {...register("contactPhone")}
                 className="std-form-input"
-                placeholder="Enter phone number"
+                placeholder="Enter 10-digit phone number"
               />
+              {errors.contactPhone && (
+                <p className="text-sm text-red-600">
+                  {errors.contactPhone.message}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
               <label htmlFor="supportPerson" className="std-form-label">
                 Do you have a Support Person? *
               </label>
-              <input
-                id="supportPerson"
-                value={formData.supportPerson}
-                onChange={(e) => handleChange("supportPerson", e.target.value)}
-                className="std-form-input"
-                placeholder="Yes or No"
-              />
+              <select {...register("supportPerson")} className="std-form-input">
+                <option value="">Select an option</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+              {errors.supportPerson && (
+                <p className="text-sm text-red-600">
+                  {errors.supportPerson.message}
+                </p>
+              )}
             </div>
           </div>
         </div>
