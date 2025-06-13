@@ -4,7 +4,6 @@ import { TopNavBar } from "@/components/navbars/top-navbar";
 import BackToMarketplace from "@/components/providerprofile/backToMarketplace";
 import ProfileSummary from "@/components/providerprofile/profileSummary";
 import BookButton from "@/components/providerprofile/requestToBook";
-import { Book } from "lucide-react";
 
 export default function Provider() {
   return (
