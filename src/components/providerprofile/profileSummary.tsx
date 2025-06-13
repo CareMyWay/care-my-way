@@ -2,14 +2,14 @@ import React from "react";
 import Image from "next/image";
 
 // Need to fetch data from dynamoDB when ready
-const fetchProvider = async () => {
-    const res = await fetch("https://jsonplaceholder.typicode.com/users/1");
-    if (!res.ok) {
-        throw new Error("Failed to fetch data");
-    }
-    const providerData = await res.json();
-    return providerData;
-}
+// const fetchProvider = async () => {
+//     const res = await fetch("https://jsonplaceholder.typicode.com/users/1");
+//     if (!res.ok) {
+//         throw new Error("Failed to fetch data");
+//     }
+//     const providerData = await res.json();
+//     return providerData;
+// }
 
 const providerName = "Nina Nguyen"; // get name from data when available
 const providerTitle = "Health Care Aid"; // get title from data when available
