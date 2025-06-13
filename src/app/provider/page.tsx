@@ -18,7 +18,6 @@ import { Book } from "lucide-react";
 =======
 import BackToMarketplace from "@/components/provider-profile/back-to-marketplace";
 import ProfileSummary from "@/components/provider-profile/profile-summary";
-import { Book } from "lucide-react";
 import ProfileDetails from "@/components/provider-profile/profile-details";
 >>>>>>> 6087b50 (provider-details completed)
 =======
