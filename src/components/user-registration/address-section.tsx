@@ -1,33 +1,65 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+// Zod schema
+const addressSchema = z.object({
+  address: z.string().min(10, "Street address is required"),
+  city: z.string().min(2, "City is required"),
+  province: z.string().min(5, "Province is required"),
+  postalCode: z
+    .string()
+    .regex(
+      /^T\d[A-Z] ?\d[A-Z]\d$/,
+      "Postal code must be a valid Alberta postal code (e.g., T2N 1N4)"
+    ),
+});
+
+type AddressFormFields = z.infer<typeof addressSchema>;
 
 interface AddressSectionProps {
-  onDataChange: (data: any) => void;
+  onDataChange: (data: AddressFormFields) => void;
   isCompleted: boolean;
+  defaultValues?: AddressFormFields;
 }
 
 export function AddressSection({
   onDataChange,
   isCompleted,
+  defaultValues,
 }: AddressSectionProps) {
-  const [formData, setFormData] = useState({
-    address: "",
-    city: "",
-    country: "",
-    postalCode: "",
+  const {
+    register,
+    watch,
+    formState: { errors },
+  } = useForm<AddressFormFields>({
+    mode: "onChange",
+    defaultValues: defaultValues || {
+      address: "",
+      city: "",
+      province: "",
+      postalCode: "",
+    },
+    resolver: zodResolver(addressSchema),
   });
 
-  const handleChange = (field: string, value: string) => {
-    const newData = { ...formData, [field]: value };
-    setFormData(newData);
-    onDataChange(newData);
-  };
+  const watchedFields = watch();
+
+  // Track and notify parent of progress
+  useEffect(() => {
+    const subscription = watch((value) => {
+      onDataChange(value as AddressFormFields);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, onDataChange]);
 
   return (
     <div className="h-full bg-white rounded-lg border shadow-sm overflow-hidden">
       <div className="p-6 h-full flex flex-col">
-        {/* Compact Header */}
+        {/* Header */}
         <div className="mb-6 flex items-center gap-3">
           <div
             className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-bold ${
@@ -58,20 +90,22 @@ export function AddressSection({
           </div>
         </div>
 
-        {/* Compact Form Content */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="space-y-4">
+        {/* Form */}
+        <form>
+          <div className="flex-1 overflow-y-auto space-y-4">
             <div className="space-y-2">
               <label htmlFor="address" className="std-form-label">
                 Street Address *
               </label>
               <input
                 id="address"
-                value={formData.address}
-                onChange={(e) => handleChange("address", e.target.value)}
+                {...register("address")}
                 className="std-form-input"
                 placeholder="Enter street address"
               />
+              {errors.address && (
+                <p className="text-sm text-red-600">{errors.address.message}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -80,24 +114,29 @@ export function AddressSection({
               </label>
               <input
                 id="city"
-                value={formData.city}
-                onChange={(e) => handleChange("city", e.target.value)}
+                {...register("city")}
                 className="std-form-input"
                 placeholder="Enter city"
               />
+              {errors.city && (
+                <p className="text-sm text-red-600">{errors.city.message}</p>
+              )}
             </div>
-
             <div className="space-y-2">
-              <label htmlFor="country" className="std-form-label">
-                Country *
+              <label htmlFor="province" className="std-form-label">
+                Province *
               </label>
               <input
-                id="country"
-                value={formData.country}
-                onChange={(e) => handleChange("country", e.target.value)}
+                id="province"
+                {...register("province")}
                 className="std-form-input"
-                placeholder="Enter country"
+                placeholder="Enter province"
               />
+              {errors.province && (
+                <p className="text-sm text-red-600">
+                  {errors.province.message}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -106,16 +145,20 @@ export function AddressSection({
               </label>
               <input
                 id="postalCode"
-                value={formData.postalCode}
-                onChange={(e) => handleChange("postalCode", e.target.value)}
+                {...register("postalCode")}
                 className="std-form-input"
                 placeholder="Enter postal code"
               />
+              {errors.postalCode && (
+                <p className="text-sm text-red-600">
+                  {errors.postalCode.message}
+                </p>
+              )}
             </div>
           </div>
-        </div>
+        </form>
 
-        {/* Completion Status */}
+        {/* Completion notice */}
         {isCompleted && (
           <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
             <div className="flex items-center gap-2 text-green-700">
@@ -136,3 +179,4 @@ export function AddressSection({
     </div>
   );
 }
+//

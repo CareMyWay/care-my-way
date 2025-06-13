@@ -42,7 +42,7 @@ export default function ClientRegistration() {
   };
 
   const validateAddress = (data: any) => {
-    const required = ["address", "city", "country", "postalCode"];
+    const required = ["address", "city", "province", "postalCode"];
     const filled = required.filter(
       (field) => data[field] && data[field].trim() !== ""
     );
