@@ -53,18 +53,42 @@ export default function ClientRegistration() {
   };
 
   const validateEmergencyContact = (data: any) => {
-    const required = [
-      "contactName",
+    const requiredBase = [
+      "contactFirstName",
+      "contactLastName",
       "relationship",
       "contactPhone",
       "supportPerson",
     ];
-    const filled = required.filter(
-      (field) => data[field] && data[field].trim() !== ""
-    );
+
+    const supportRequired = [
+      "supportFirstName",
+      "supportLastName",
+      "supportRelationship",
+      "supportPhone",
+    ];
+
+    const isSupportPersonYes =
+      data["supportPerson"]?.toString().toLowerCase() === "yes" ||
+      data["supportPerson"] === true;
+
+    const requiredFields = isSupportPersonYes
+      ? [...requiredBase, ...supportRequired]
+      : requiredBase;
+
+    const filled = requiredFields.filter((field) => {
+      const value = data[field];
+      return (
+        value !== undefined &&
+        value !== null &&
+        (typeof value === "boolean" ||
+          (typeof value === "string" && value.trim() !== ""))
+      );
+    });
+
     return {
-      progress: (filled.length / required.length) * 100,
-      completed: filled.length === required.length,
+      progress: (filled.length / requiredFields.length) * 100,
+      completed: filled.length === requiredFields.length,
     };
   };
 
@@ -132,55 +156,12 @@ export default function ClientRegistration() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Compact Header */}
+    <div className="min-h-screen bg-primary-white">
       <NavBar />
-      {/* <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <div className="h-8 w-8 relative">
-                <svg viewBox="0 0 40 40" className="h-8 w-8">
-                  <path
-                    d="M20 5C11.729 5 5 11.729 5 20C5 28.271 11.729 35 20 35C28.271 35 35 28.271 35 20C35 11.729 28.271 5 20 5Z"
-                    fill="#4A9B9B"
-                  />
-                  <path
-                    d="M20 10C14.477 10 10 14.477 10 20C10 25.523 14.477 30 20 30C25.523 30 30 25.523 30 20C30 14.477 25.523 10 20 10Z"
-                    fill="white"
-                  />
-                  <path
-                    d="M15 17.5C15 16.119 16.119 15 17.5 15C18.881 15 20 16.119 20 17.5C20 18.881 18.881 20 17.5 20C16.119 20 15 18.881 15 17.5Z"
-                    fill="#CC5034"
-                  />
-                  <path
-                    d="M20 20C21.381 20 22.5 21.119 22.5 22.5C22.5 23.881 21.381 25 20 25C18.619 25 17.5 23.881 17.5 22.5C17.5 21.119 18.619 20 20 20Z"
-                    fill="#CC5034"
-                  />
-                  <path
-                    d="M25 17.5C25 16.119 23.881 15 22.5 15C21.119 15 20 16.119 20 17.5C20 18.881 21.119 20 22.5 20C23.881 20 25 18.881 25 17.5Z"
-                    fill="#CC5034"
-                  />
-                </svg>
-              </div>
-              <div className="ml-2">
-                <h1 className="text-lg font-bold text-gray-900">Care My Way</h1>
-                <p className="text-xs text-gray-600">Patient Registration</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <div className="text-xs text-gray-600">Need help?</div>
-              <div className="text-xs font-medium text-[#4A9B9B]">
-                1-800-CARE-WAY
-              </div>
-            </div>
-          </div>
-        </div>
-      </header> */}
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 py-4 mt-4">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-auto md:h-[calc(100vh-140px)]">
+      <main className="max-w-7xl mx-auto px-4 py-4 my-4">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           {/* Sidebar - hidden on mobile, visible on md+ */}
           <div className="hidden md:block md:col-span-3">
             <RegistrationNavSideBar
