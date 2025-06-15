@@ -26,18 +26,19 @@ const schema = a.schema({
       gender: a.string(),
       dateOfBirth: a.date(),
       address: a.string(),
-      country: a.string(),
       city: a.string(),
+      province: a.string(),
       postalCode: a.string(),
-      emergencyContactFullName: a.string(),
-      emergencyRelationshipStatus: a.string(),
+      emergencyContactFirstName: a.string(),
+      emergencyContactLastName: a.string(),
+      emergencyRelationship: a.string(),
       emergencyContactPhone: a.string(),
 
       //Client support fields
       hasRepSupportPerson: a.boolean(),
       supportFirstName: a.string(),
       supportLastName: a.string(),
-      supportRelationshipStatus: a.string(),
+      supportRelationship: a.string(),
       supportContactPhone: a.string(),
 
       //healthcare provider fields
