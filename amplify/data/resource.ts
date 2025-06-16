@@ -10,7 +10,7 @@ and "delete" any "UserProfile" records.
 const schema = a.schema({
   UserProfile: a
     .model({
-      id: a.string().required(),
+      userId: a.string().required(),
       email: a.string(),
       role: a
         .string()
