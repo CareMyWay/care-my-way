@@ -7,13 +7,42 @@ import {
 import { type Schema } from "../../data/resource";
 import { Amplify } from "aws-amplify";
 import { generateClient } from "aws-amplify/data";
+
 import { getAmplifyDataClientConfig } from "@aws-amplify/backend/function/runtime";
 import { env } from "$amplify/env/post-confirmation";
 
-const { resourceConfig, libraryOptions } =
-  await getAmplifyDataClientConfig(env);
+// const { resourceConfig, libraryOptions } =
+//   await getAmplifyDataClientConfig(env);
 
-Amplify.configure(resourceConfig, libraryOptions);
+// Amplify.configure(resourceConfig, libraryOptions);
+Amplify.configure(
+  {
+    API: {
+      GraphQL: {
+        endpoint: process.env.AMPLIFY_DATA_GRAPHQL_ENDPOINT as string,
+        region: process.env.AWS_REGION,
+        defaultAuthMode: "userPool",
+        // modelIntrospection: data.model_introspection as any,
+      },
+    },
+  },
+  {
+    Auth: {
+      credentialsProvider: {
+        getCredentialsAndIdentityId: async () => ({
+          credentials: {
+            accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
+            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
+            sessionToken: process.env.AWS_SESSION_TOKEN as string,
+          },
+        }),
+        clearCredentialsAndIdentityId: () => {
+          /* noop */
+        },
+      },
+    },
+  }
+);
 
 const cognitoClient = new CognitoIdentityProviderClient();
 
@@ -38,8 +67,9 @@ export const handler: PostConfirmationTriggerHandler = async (event) => {
 
   const cognitoGroupResponse = await cognitoClient.send(command);
 
+  // Create user profile in DynamoDB after user confirmation
   const dynamoDBResponse = await dataClient.models.UserProfile.create({
-    id: event.request.userAttributes.sub,
+    userId: event.request.userAttributes.sub,
     email: event.request.userAttributes.email,
     role: group,
     firstName: "",
@@ -64,7 +94,7 @@ export const handler: PostConfirmationTriggerHandler = async (event) => {
     .then((user) => {
       if (user.errors) {
         console.error(user.errors);
-        throw new Error("Failed to create user in DB");
+        throw new Error("Failed to create user in database");
       }
       console.log("User created", user);
       return event;
@@ -81,7 +111,7 @@ export const handler: PostConfirmationTriggerHandler = async (event) => {
     throw new Error("Failed to add user to group");
   }
   if (!dynamoDBResponse) {
-    throw new Error("Failed to create user in DB");
+    throw new Error("Failed to create user in database");
   }
 
   console.log("processed", cognitoGroupResponse.$metadata.requestId);

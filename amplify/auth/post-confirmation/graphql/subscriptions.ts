@@ -1,0 +1,118 @@
+/* tslint:disable */
+/* eslint-disable */
+// this is an auto generated file. This will be overwritten
+
+import * as APITypes from "./API";
+type GeneratedSubscription<InputType, OutputType> = string & {
+  __generatedSubscriptionInput: InputType;
+  __generatedSubscriptionOutput: OutputType;
+};
+
+export const onCreateUserProfile = /* GraphQL */ `subscription OnCreateUserProfile(
+  $filter: ModelSubscriptionUserProfileFilterInput
+  $profileOwner: String
+) {
+  onCreateUserProfile(filter: $filter, profileOwner: $profileOwner) {
+    address
+    city
+    createdAt
+    dateOfBirth
+    email
+    emergencyContactFirstName
+    emergencyContactLastName
+    emergencyContactPhone
+    emergencyRelationship
+    firstName
+    gender
+    hasRepSupportPerson
+    id
+    lastName
+    postalCode
+    profileOwner
+    province
+    role
+    supportContactPhone
+    supportFirstName
+    supportLastName
+    supportRelationship
+    updatedAt
+    userId
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreateUserProfileSubscriptionVariables,
+  APITypes.OnCreateUserProfileSubscription
+>;
+export const onDeleteUserProfile = /* GraphQL */ `subscription OnDeleteUserProfile(
+  $filter: ModelSubscriptionUserProfileFilterInput
+  $profileOwner: String
+) {
+  onDeleteUserProfile(filter: $filter, profileOwner: $profileOwner) {
+    address
+    city
+    createdAt
+    dateOfBirth
+    email
+    emergencyContactFirstName
+    emergencyContactLastName
+    emergencyContactPhone
+    emergencyRelationship
+    firstName
+    gender
+    hasRepSupportPerson
+    id
+    lastName
+    postalCode
+    profileOwner
+    province
+    role
+    supportContactPhone
+    supportFirstName
+    supportLastName
+    supportRelationship
+    updatedAt
+    userId
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeleteUserProfileSubscriptionVariables,
+  APITypes.OnDeleteUserProfileSubscription
+>;
+export const onUpdateUserProfile = /* GraphQL */ `subscription OnUpdateUserProfile(
+  $filter: ModelSubscriptionUserProfileFilterInput
+  $profileOwner: String
+) {
+  onUpdateUserProfile(filter: $filter, profileOwner: $profileOwner) {
+    address
+    city
+    createdAt
+    dateOfBirth
+    email
+    emergencyContactFirstName
+    emergencyContactLastName
+    emergencyContactPhone
+    emergencyRelationship
+    firstName
+    gender
+    hasRepSupportPerson
+    id
+    lastName
+    postalCode
+    profileOwner
+    province
+    role
+    supportContactPhone
+    supportFirstName
+    supportLastName
+    supportRelationship
+    updatedAt
+    userId
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdateUserProfileSubscriptionVariables,
+  APITypes.OnUpdateUserProfileSubscription
+>;
