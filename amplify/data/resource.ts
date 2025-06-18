@@ -1,55 +1,85 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
-import { User } from "aws-cdk-lib/aws-iam";
-
+import { postConfirmation } from "../auth/post-confirmation/resource";
 /*== STEP 1 ===============================================================
 The section below creates a UserProfile database table with a "content" field. Try
 adding a new "isDone" field as a boolean. The authorization rule below
 specifies that any unauthenticated user can "create", "read", "update", 
 and "delete" any "UserProfile" records.
 =========================================================================*/
-const schema = a.schema({
-  UserProfile: a
-    .model({
-      userId: a.string().required(),
-      email: a.string(),
-      role: a
-        .string()
-        .default("Client")
-        .authorization((allow) => [
-          allow.ownerDefinedIn("profileOwner").to(["read", "create"]),
-          allow.groups(["Admin"]).to(["read", "update", "create"]),
-        ]),
+const schema = a
+  .schema({
+    UserProfile: a
+      .model({
+        userId: a.string().required(),
+        email: a
+          .string()
+          .authorization((allow) => [
+            allow.group("Admin"),
+            allow.ownerDefinedIn("profileOwner").to(["read"]),
+          ]),
+        userType: a
+          .string()
+          .default("Client")
+          .authorization((allow) => [
+            allow.ownerDefinedIn("profileOwner").to(["read", "create"]),
+            allow.groups(["Admin"]).to(["read", "update", "create"]),
+          ]),
+        // We don't want people to change ownership of their profile
+        profileOwner: a
+          .string()
+          .authorization((allow) => [
+            allow.ownerDefinedIn("profileOwner").to(["read"]),
+            allow.group("Admin"),
+            allow.guest().to(["read"]),
+            allow.authenticated().to(["read"]),
+          ]),
 
-      // Shared fields
-      firstName: a.string(),
-      lastName: a.string(),
-      gender: a.string(),
-      dateOfBirth: a.date(),
-      address: a.string(),
-      city: a.string(),
-      province: a.string(),
-      postalCode: a.string(),
-      emergencyContactFirstName: a.string(),
-      emergencyContactLastName: a.string(),
-      emergencyRelationship: a.string(),
-      emergencyContactPhone: a.string(),
+        // Shared fields
+        firstName: a.string(),
+        lastName: a.string(),
+        // gender: a.string(),
+        // dateOfBirth: a.date(),
+        // address: a.string(),
+        // city: a.string(),
+        // province: a.string(),
+        // postalCode: a.string(),
+        // emergencyContactFirstName: a.string(),
+        // emergencyContactLastName: a.string(),
+        // emergencyRelationship: a.string(),
+        // emergencyContactPhone: a.string(),
+        // // We don't want people to change ownership of their profile
+        // profileOwner: a
+        //   .string()
+        //   .authorization((allow) => [
+        //     allow.ownerDefinedIn("profileOwner").to(["read"]),
+        //     allow.group("Admins"),
+        //     allow.guest().to(["read"]),
+        //     allow.authenticated().to(["read"]),
+        //   ]),
 
-      //Client support fields
-      hasRepSupportPerson: a.boolean(),
-      supportFirstName: a.string(),
-      supportLastName: a.string(),
-      supportRelationship: a.string(),
-      supportContactPhone: a.string(),
+        //Client support fields
+        // hasRepSupportPerson: a.boolean(),
+        // supportFirstName: a.string(),
+        // supportLastName: a.string(),
+        // supportRelationship: a.string(),
+        // supportContactPhone: a.string(),
 
-      //healthcare provider fields
-      //NEED TO ADD FIELDS HERE
-    })
-    .authorization((allow) => [
-      allow.groups(["Admin"]).to(["read", "create", "update", "delete"]),
-      allow.ownerDefinedIn("profileOwner").to(["read", "update", "create"]),
-      allow.authenticated().to(["read", "create"]),
-    ]),
-});
+        //healthcare provider fields
+        //NEED TO ADD FIELDS HERE
+      })
+      // .authorization((allow) => [
+      //   allow.groups(["Admin"]).to(["read", "create", "update", "delete"]),
+      //   allow.ownerDefinedIn("profileOwner").to(["read", "update", "create"]),
+      //   allow.authenticated().to(["read", "create"]),
+      // ]),
+      .authorization((allow) => [
+        allow.ownerDefinedIn("profileOwner").to(["read", "update"]),
+        allow.group("Admin"),
+        allow.guest().to(["read"]),
+        allow.authenticated().to(["read"]),
+      ]),
+  })
+  .authorization((allow) => [allow.resource(postConfirmation)]);
 
 export type Schema = ClientSchema<typeof schema>;
 

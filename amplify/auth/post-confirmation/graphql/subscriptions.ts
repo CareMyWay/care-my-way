@@ -13,30 +13,13 @@ export const onCreateUserProfile = /* GraphQL */ `subscription OnCreateUserProfi
   $profileOwner: String
 ) {
   onCreateUserProfile(filter: $filter, profileOwner: $profileOwner) {
-    address
-    city
     createdAt
-    dateOfBirth
     email
-    emergencyContactFirstName
-    emergencyContactLastName
-    emergencyContactPhone
-    emergencyRelationship
-    firstName
-    gender
-    hasRepSupportPerson
     id
-    lastName
-    postalCode
     profileOwner
-    province
-    role
-    supportContactPhone
-    supportFirstName
-    supportLastName
-    supportRelationship
     updatedAt
     userId
+    userType
     __typename
   }
 }
@@ -49,30 +32,13 @@ export const onDeleteUserProfile = /* GraphQL */ `subscription OnDeleteUserProfi
   $profileOwner: String
 ) {
   onDeleteUserProfile(filter: $filter, profileOwner: $profileOwner) {
-    address
-    city
     createdAt
-    dateOfBirth
     email
-    emergencyContactFirstName
-    emergencyContactLastName
-    emergencyContactPhone
-    emergencyRelationship
-    firstName
-    gender
-    hasRepSupportPerson
     id
-    lastName
-    postalCode
     profileOwner
-    province
-    role
-    supportContactPhone
-    supportFirstName
-    supportLastName
-    supportRelationship
     updatedAt
     userId
+    userType
     __typename
   }
 }
@@ -85,30 +51,13 @@ export const onUpdateUserProfile = /* GraphQL */ `subscription OnUpdateUserProfi
   $profileOwner: String
 ) {
   onUpdateUserProfile(filter: $filter, profileOwner: $profileOwner) {
-    address
-    city
     createdAt
-    dateOfBirth
     email
-    emergencyContactFirstName
-    emergencyContactLastName
-    emergencyContactPhone
-    emergencyRelationship
-    firstName
-    gender
-    hasRepSupportPerson
     id
-    lastName
-    postalCode
     profileOwner
-    province
-    role
-    supportContactPhone
-    supportFirstName
-    supportLastName
-    supportRelationship
     updatedAt
     userId
+    userType
     __typename
   }
 }

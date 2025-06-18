@@ -13,30 +13,13 @@ export const createUserProfile = /* GraphQL */ `mutation CreateUserProfile(
   $input: CreateUserProfileInput!
 ) {
   createUserProfile(condition: $condition, input: $input) {
-    address
-    city
     createdAt
-    dateOfBirth
     email
-    emergencyContactFirstName
-    emergencyContactLastName
-    emergencyContactPhone
-    emergencyRelationship
-    firstName
-    gender
-    hasRepSupportPerson
     id
-    lastName
-    postalCode
     profileOwner
-    province
-    role
-    supportContactPhone
-    supportFirstName
-    supportLastName
-    supportRelationship
     updatedAt
     userId
+    userType
     __typename
   }
 }
@@ -49,30 +32,13 @@ export const deleteUserProfile = /* GraphQL */ `mutation DeleteUserProfile(
   $input: DeleteUserProfileInput!
 ) {
   deleteUserProfile(condition: $condition, input: $input) {
-    address
-    city
     createdAt
-    dateOfBirth
     email
-    emergencyContactFirstName
-    emergencyContactLastName
-    emergencyContactPhone
-    emergencyRelationship
-    firstName
-    gender
-    hasRepSupportPerson
     id
-    lastName
-    postalCode
     profileOwner
-    province
-    role
-    supportContactPhone
-    supportFirstName
-    supportLastName
-    supportRelationship
     updatedAt
     userId
+    userType
     __typename
   }
 }
@@ -85,30 +51,13 @@ export const updateUserProfile = /* GraphQL */ `mutation UpdateUserProfile(
   $input: UpdateUserProfileInput!
 ) {
   updateUserProfile(condition: $condition, input: $input) {
-    address
-    city
     createdAt
-    dateOfBirth
     email
-    emergencyContactFirstName
-    emergencyContactLastName
-    emergencyContactPhone
-    emergencyRelationship
-    firstName
-    gender
-    hasRepSupportPerson
     id
-    lastName
-    postalCode
     profileOwner
-    province
-    role
-    supportContactPhone
-    supportFirstName
-    supportLastName
-    supportRelationship
     updatedAt
     userId
+    userType
     __typename
   }
 }
