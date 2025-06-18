@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface CarouselProps {
@@ -37,6 +37,12 @@ export const Carousel: React.FC<CarouselProps> = ({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const next = useCallback(() => {
+    setCurr((curr) =>
+      curr >= Math.ceil(children.length / visibleSlides) - 1 ? 0 : curr + 1
+    );
+  }, [children.length, visibleSlides]);
+  
   useEffect(() => {
     if (!autoSlide || isHovering) return;
     slideInterval.current = setInterval(() => {
@@ -45,7 +51,7 @@ export const Carousel: React.FC<CarouselProps> = ({
     return () => {
       if (slideInterval.current) clearInterval(slideInterval.current);
     };
-  }, [autoSlide, autoSlideInterval, isHovering, visibleSlides]);
+  }, [autoSlide, autoSlideInterval, isHovering, visibleSlides, next]);
 
   const totalSlides =
     Math.ceil(children.length / visibleSlides) * visibleSlides;
@@ -53,12 +59,6 @@ export const Carousel: React.FC<CarouselProps> = ({
   const prev = () => {
     setCurr((curr) =>
       curr <= 0 ? Math.ceil(children.length / visibleSlides) - 1 : curr - 1
-    );
-  };
-
-  const next = () => {
-    setCurr((curr) =>
-      curr >= Math.ceil(children.length / visibleSlides) - 1 ? 0 : curr + 1
     );
   };
 

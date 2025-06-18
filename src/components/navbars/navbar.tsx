@@ -11,8 +11,13 @@ import { useTransition } from "react";
 export default function NavBar({ isSignedIn }: { isSignedIn: boolean }) {
   const [authCheck, setAuthCheck] = useState(isSignedIn);
   const [isPending, startTransition] = useTransition();
+  const [showLoading, setShowLoading] = useState(false);
+  const router = useRouter(); // <-- Move useRouter to top level
 
-  const router = useRouter();
+  useEffect(() => {
+    setShowLoading(isPending);
+  }, [isPending]);
+
   useEffect(() => {
     const hubListenerCancel = Hub.listen("auth", (data) => {
       switch (data.payload.event) {
@@ -23,7 +28,6 @@ export default function NavBar({ isSignedIn }: { isSignedIn: boolean }) {
           break;
         case "signedOut":
           setAuthCheck(false);
-
           startTransition(() => router.push("/"));
           startTransition(() => router.refresh());
           break;
@@ -32,6 +36,22 @@ export default function NavBar({ isSignedIn }: { isSignedIn: boolean }) {
 
     return () => hubListenerCancel();
   }, [router]);
+
+  const handleLoading = () => {
+    if (showLoading) {
+      return (
+        <div className="loading-indicator">
+          <span>Loading...</span>
+        </div>
+      );
+    }
+    return null;
+  };
+  const loadingIndicator = handleLoading();
+
+  if (loadingIndicator) {
+    return loadingIndicator;
+  }
 
   const signOutSignIn = async () => {
     if (authCheck) {
