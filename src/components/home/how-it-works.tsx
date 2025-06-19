@@ -1,185 +1,120 @@
 import React from "react";
 import OrangeButton from "../buttons/orange-button";
 
-const client_steps = [
+const clientSteps = [
   {
-    id: 1,
-    stepNum: "Step 1",
-    stepTitle: "Browse and Search",
-    content: [
-      "Explore profiles of experienced caregivers.",
-      "Filter by availability, location, services offered, and ratings.",
-      "View caregiver details, including certifications and reviews.",
-    ],
+    step: "Step 1",
+    title: "Tell Us Your Needs",
+    description:
+      "Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.",
   },
   {
-    id: 2,
-    stepNum: "Step 2",
-    stepTitle: "Book Caregiver",
-    content: [
-      "Select a caregiver that fits your needs.",
-      "Send a booking request with your preferred date, time, and care requirements.",
-      "Communicate directly with the caregiver through our secure chat.",
-    ],
+    step: "Step 2",
+    title: "Get Matched",
+    description:
+      "We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.",
   },
   {
-    id: 3,
-    stepNum: "Step 3",
-    stepTitle: "Receive Quality Care",
-    content: [
-      "Confirm your booking and receive personalized care.",
-      "Easily manage and modify bookings from your dashboard.",
-      "Leave a review to help others find great caregivers.",
-    ],
+    step: "Step 3",
+    title: "Book & Begin Care",
+    description:
+      "Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.",
   },
 ];
 
-const provider_steps = [
+const providerSteps = [
   {
-    id: 1,
-    stepNum: "Step 1",
-    stepTitle: "Browse and Search",
-    content: [
-      "Sign up and complete your caregiver profile.",
-      "Add your qualifications, experience, and availability.",
-      "Get verified and approved to start receiving bookings.",
-    ],
+    step: "Step 1",
+    title: "Create Your Profile",
+    description:
+      "Showcase your skills, experience, and availability to potential clients. Highlight your certifications and areas of expertise.",
   },
   {
-    id: 2,
-    stepNum: "Step 2",
-    stepTitle: "Patient Bookings",
-    content: [
-      "Receive booking requests based on your skills and availability.",
-      "Chat securely with clients to understand their needs.",
-      "Accept bookings and confirm your schedule.",
-    ],
+    step: "Step 2",
+    title: "Get Matched",
+    description:
+      "Receive requests from clients who need your expertise. Review their needs and accept the opportunities that fit your schedule.",
   },
   {
-    id: 3,
-    stepNum: "Step 3",
-    stepTitle: "Provide Quality Care",
-    content: [
-      "Deliver quality care and support.",
-      "Get paid securely through our platform.",
-      "Build a strong reputation through client reviews.",
-    ],
+    step: "Step 3",
+    title: "Start Providing Care",
+    description:
+      "Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.",
   },
 ];
+
+const StepBox = ({
+  step,
+  title,
+  description,
+  color,
+}: {
+  step: string;
+  title: string;
+  description: string;
+  color: string;
+}) => (
+  <div
+    className={`flex flex-col items-start bg-white border-2 ${color} rounded-xl p-8 w-full max-w-lg min-h-[270px] mx-auto`}
+  >
+    <span className="text-sm font-bold uppercase tracking-wide mb-2 text-medium-green">{step}</span>
+    <h3 className="text-lg font-semibold mb-2 text-darkest-green">{title}</h3>
+    <p className="text-sm text-gray-700">{description}</p>
+  </div>
+);
 
 export function HowItWorks() {
   return (
-    <section className="md:mx-10 py-16">
-      <div className="container mx-auto px-4">
-        <h2 className="mb-6 text-h3-size md:text-h2-size text-center md:text-start">
+    <section className="py-16 bg-lightest-green">
+      <div className="container mx-auto px-4 max-w-6xl">
+        <h2 className="mb-8 text-3xl md:text-4xl font-bold text-darkest-green text-left">
           How It Works
         </h2>
-        <h4 className="mb-10 text-h4-size text-center md:text-start">
+        {/* For Clients */}
+        <h4 className="mb-6 text-xl font-semibold text-darkest-green text-left">
           For Clients
         </h4>
-        {/* For Clients */}
-        <div className="mb-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {client_steps.map(
-              ({
-                id,
-                stepNum,
-                stepTitle,
-                content,
-              }: {
-                id: number;
-                stepNum: string;
-                stepTitle: string;
-                content: string[];
-              }) => (
-                <div key={id} className="h-full">
-                  <div className="border-2 border-input-border-gray text-darkest-green rounded-lg p-6 flex flex-col h-full min-h-[28rem] w-full max-w-[28rem] ">
-                    {/* Step number and title */}
-                    <div className="text-center font-bold mt-2">
-                      <h5 className="text-h5-size uppercase">{stepNum}</h5>
-                      <h6 className="text-h6-size">{stepTitle}</h6>
-                    </div>
-
-                    {/* Spacer to push ul into center */}
-                    <div className="flex-grow flex items-center justify-center">
-                      <ul className="list-disc list-inside space-y-4 text-body4-size text-start p-2 md:p-10">
-                        {content.map((item, index) => (
-                          <li key={index}>{item}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              )
-            )}
-          </div>
-
-          <div className="w-full mt-8">
-            <p className=" text-darkest-green text-body3-size text-center md:text-start">
-              Not sure where to start?
-            </p>
-            <p className="mb-12 text-darkest-green text-body3-size text-center md:text-start">
-              Take our Health Transition Quiz to find caregivers best suited to
-              your needs.
-            </p>
-            <div className="flex justify-center md:justify-start">
-              <OrangeButton variant="route" href="/" label="Healthcare Quiz" />
-            </div>{" "}
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+          {clientSteps.map((step, idx) => (
+            <StepBox
+              key={idx}
+              step={step.step}
+              title={step.title}
+              description={step.description}
+              color="border-medium-green"
+            />
+          ))}
         </div>
-
-        {/* For Caregivers */}
-        <div>
-          <h4 className="mb-10 text-h4-size text-center md:text-start">
-            For Healthcare Providers
-          </h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {provider_steps.map(
-              ({
-                id,
-                stepNum,
-                stepTitle,
-                content,
-              }: {
-                id: number;
-                stepNum: string;
-                stepTitle: string;
-                content: string[];
-              }) => (
-                <div key={id} className="h-full">
-                  <div className="border-2 border-input-border-gray text-darkest-green rounded-lg p-6 flex flex-col h-full min-h-[28rem] w-full max-w-[28rem] ">
-                    {/* Step number and title */}
-                    <div className="text-center font-bold mt-2">
-                      <h5 className="text-h5-size uppercase">{stepNum}</h5>
-                      <h6 className="text-h6-size">{stepTitle}</h6>
-                    </div>
-
-                    {/* Spacer to push ul into center */}
-                    <div className="flex-grow flex items-center justify-center">
-                      <ul className="list-disc list-inside space-y-4 text-body4-size text-start p-2 md:p-10">
-                        {content.map((item, index) => (
-                          <li key={index}>{item}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              )
-            )}
-          </div>
-          <div className="w-full mt-8">
-            <p className="mb-4 text-darkest-green text-body3-size text-center md:text-start">
-              Join <strong>Care My Way</strong> today and connect with clients
-              looking for trusted caregivers like you.
-            </p>
-            <p className="mb-12  text-darkest-green text-body3-size text-center md:text-start">
-              Set your schedule, showcase your skills, and start making a
-              difference!
-            </p>
-            <div className="flex justify-center md:justify-start">
-              <OrangeButton variant="route" href="/" label="Join Today" />
-            </div>{" "}
-          </div>
+        <div className="flex justify-start mb-12">
+          <OrangeButton
+            variant="route"
+            href="/"
+            label="Find a Healthcare Provider"
+            className="px-6 py-2 text-base"
+          />
+        </div>
+        {/* For Providers */}
+        <h4 className="mb-6 text-xl font-semibold text-darkest-green text-left">
+          For Healthcare Providers
+        </h4>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+          {providerSteps.map((step, idx) => (
+            <StepBox
+              key={idx}
+              step={step.step}
+              title={step.title}
+              description={step.description}
+              color="border-darkest-green"
+            />
+          ))}
+        </div>
+        <div className="flex justify-start">
+          <OrangeButton
+            variant="route"
+            href="/"
+            label="Join as a Provider"
+            className="px-6 py-2 text-base"
+          />
         </div>
       </div>
     </section>
