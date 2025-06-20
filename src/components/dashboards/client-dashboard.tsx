@@ -1,11 +1,30 @@
-import React from "react";
+import { getUserProfile } from "@/actions/getUserProfile";
 
-// Update the import path below if the file is located elsewhere
-import { isAuthenticated } from "@/utils/amplify-server-utils";
-import { redirect } from "next/navigation";
-
-export default async function ClientDashboard() {
-  const loggedIn = await isAuthenticated();
-  if (!loggedIn) redirect("/login");
-  return <div>ClientDashboard</div>;
+interface UserProfilePageProps {
+  params: { id: string };
 }
+
+const ClientDashboard = async ({ params }: UserProfilePageProps) => {
+  const userProfileData = await getUserProfile(params.id);
+  console.log("userProfileData", userProfileData);
+  if (!userProfileData) {
+    return <p>User not found</p>;
+  }
+
+  return (
+    <div>
+      <h1 className="text-3xl font-bold text-gray-800">User Profile</h1>
+
+      <p>
+        <strong>Email:</strong>{" "}
+        {userProfileData.email || "Visible only to profile owner"}
+      </p>
+      <p>
+        <strong>User Type:</strong>{" "}
+        {userProfileData.userType || "Visible only to profile owner"}
+      </p>
+    </div>
+  );
+};
+
+export default ClientDashboard;

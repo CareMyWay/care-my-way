@@ -1,10 +1,16 @@
-import ClientDashboard from "@/components/dashboards/client-dashboard";
 import React from "react";
+import ClientDashboard from "@/components/dashboards/client-dashboard";
+import { getCurrentUserServer } from "@/utils/amplify-server-utils";
 
-export default function dashboard() {
+export default async function ClientDashboardPage() {
+  const currentSignedInUser = await getCurrentUserServer();
+
+  if (!currentSignedInUser) {
+    return <p>You are not signed in.</p>;
+  }
   return (
     <div>
-      <ClientDashboard />
+      <ClientDashboard params={{ id: currentSignedInUser.userId }} />
     </div>
   );
 }

@@ -6,7 +6,7 @@ import Image from "next/image";
 
 import { useFormStatus } from "react-dom";
 import OrangeButton from "@/components/buttons/orange-button";
-import { handleSignIn } from "@/lib/cognitoActions";
+import { handleSignIn } from "@/actions/cognitoActions";
 import CMWStackedHeader from "../headers/cmw-stacked-header";
 
 export default function LoginForm() {

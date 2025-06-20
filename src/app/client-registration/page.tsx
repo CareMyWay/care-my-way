@@ -161,6 +161,7 @@ export default function ClientRegistration() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 py-4 my-4">
+        {/* <main className="w-full h-full mx-auto px-4 py-10 my-4"> */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           {/* Sidebar - hidden on mobile, visible on md+ */}
           <div className="hidden md:block md:col-span-3">

@@ -6,7 +6,7 @@ import Image from "next/image";
 
 import { useFormStatus } from "react-dom";
 import OrangeButton from "@/components/buttons/orange-button";
-import { handleSignUp } from "@/lib/cognitoActions";
+import { handleSignUp } from "@/actions/cognitoActions";
 import { useSearchParams } from "next/navigation";
 import { AuthUser } from "aws-amplify/auth";
 import { withAuthenticator } from "@aws-amplify/ui-react";
@@ -96,7 +96,7 @@ const SignUpForm = ({ user }: { user?: AuthUser }) => {
                   type="password"
                   placeholder="Password"
                   className="std-form-input"
-                  minLength={6}
+                  minLength={8}
                   required
                 />
               </div>
