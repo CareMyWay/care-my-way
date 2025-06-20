@@ -3,7 +3,7 @@ import { signOut } from "aws-amplify/auth";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-import { handleSignOut } from "@/lib/cognitoActions";
+import { handleSignOut } from "@/actions/cognitoActions";
 
 const LogoutForm = () => {
   const router = useRouter();

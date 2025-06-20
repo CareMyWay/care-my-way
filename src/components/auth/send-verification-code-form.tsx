@@ -1,6 +1,6 @@
 "use client";
 
-import { handleSendEmailVerificationCode } from "@/lib/cognitoActions";
+import { handleSendEmailVerificationCode } from "@/actions/cognitoActions";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import OrangeButton from "../buttons/orange-button";

@@ -2,7 +2,7 @@
 import OrangeButton from "@/components/buttons/orange-button";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
-import { handleConfirmSignUp } from "@/lib/cognitoActions";
+import { handleConfirmSignUp } from "@/actions/cognitoActions";
 import SendVerificationCode from "./send-verification-code-form";
 
 export default function ConfirmSignUpForm() {

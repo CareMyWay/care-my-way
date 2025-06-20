@@ -11,6 +11,8 @@ const schema = a
     UserProfile: a
       .model({
         userId: a.string().required(),
+        // We don't want people to change their email directly in the db. Better if we allow them to change it via Cognito, and then update it in the db using a Lambda function.
+        // Also, we don't want other people to see other people's email addresses. Note the use of ownerDefinedIn("profileOwner") in the email field.
         email: a
           .string()
           .authorization((allow) => [
@@ -35,8 +37,8 @@ const schema = a
           ]),
 
         // Shared fields
-        firstName: a.string(),
-        lastName: a.string(),
+        // firstName: a.string(),
+        // lastName: a.string(),
         // gender: a.string(),
         // dateOfBirth: a.date(),
         // address: a.string(),
@@ -67,11 +69,8 @@ const schema = a
         //healthcare provider fields
         //NEED TO ADD FIELDS HERE
       })
-      // .authorization((allow) => [
-      //   allow.groups(["Admin"]).to(["read", "create", "update", "delete"]),
-      //   allow.ownerDefinedIn("profileOwner").to(["read", "update", "create"]),
-      //   allow.authenticated().to(["read", "create"]),
-      // ]),
+      .secondaryIndexes((index) => [index("userId")])
+
       .authorization((allow) => [
         allow.ownerDefinedIn("profileOwner").to(["read", "update"]),
         allow.group("Admin"),

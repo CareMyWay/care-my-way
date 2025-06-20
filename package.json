@@ -24,7 +24,11 @@
 =======
 =======
     "@hookform/resolvers": "^5.1.1",
+<<<<<<< HEAD
 >>>>>>> 3eac1b2 (Add form validation to client registration)
+=======
+    "@preline/toggle-password": "^3.1.0",
+>>>>>>> 2e3d7ee (Complete functionality to fetch user profile data)
     "aws-amplify": "^6.15.0",
 >>>>>>> e55eee9 (Complete reset password functionality)
     "lucide-react": "^0.508.0",
