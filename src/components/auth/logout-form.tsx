@@ -9,15 +9,7 @@ const LogoutForm = () => {
   const router = useRouter();
   return (
     <form action={handleSignOut}>
-      <button
-      // onClick={async () => {
-      //   await signOut();
-      //   router.push("/sign-up");
-      // }}
-      // className="px-2 bg-white text-black"
-      >
-        Logout
-      </button>
+      <button>Logout</button>
     </form>
   );
 };

@@ -9,7 +9,6 @@ import OrangeButton from "@/components/buttons/orange-button";
 import { handleSignUp } from "@/actions/cognitoActions";
 import { useSearchParams } from "next/navigation";
 import { AuthUser } from "aws-amplify/auth";
-import { withAuthenticator } from "@aws-amplify/ui-react";
 
 import CMWStackedHeader from "../headers/cmw-stacked-header";
 

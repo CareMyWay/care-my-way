@@ -138,6 +138,31 @@ export const fetchUserAttributesServer =
     });
   };
 
+export const checkIsInGroup = async (groupName: string): Promise<boolean> => {
+  return await runWithAmplifyServerContext({
+    nextServerContext: { cookies },
+    async operation(contextSpec) {
+      try {
+        const session = await fetchAuthSession(contextSpec);
+        const rawGroups =
+          session.tokens?.accessToken?.payload["cognito:groups"];
+
+        // Safely ensure it's an array before using includes
+        if (Array.isArray(rawGroups)) {
+          return rawGroups.includes(groupName);
+        }
+
+        // 🔄 Some Cognito configurations may return a comma-separated string
+        if (typeof rawGroups === "string") {
+          return rawGroups.split(",").includes(groupName);
+        }
+      } catch {
+        return false;
+      }
+    },
+  });
+};
+
 //Generate strongly typed Amplify Data Client using cookies for auth
 // Used to run queries and mutations against the Amplify Data API
 export const cookieBasedClient = generateServerClientUsingCookies<Schema>({
@@ -145,4 +170,32 @@ export const cookieBasedClient = generateServerClientUsingCookies<Schema>({
   cookies,
   authMode: "userPool",
 });
+<<<<<<< HEAD
 >>>>>>> 2e3d7ee (Complete functionality to fetch user profile data)
+=======
+
+export const getRedirectLinkForGroup = async (): Promise<string> => {
+  return await runWithAmplifyServerContext({
+    nextServerContext: { cookies },
+    async operation(contextSpec) {
+      const session = await fetchAuthSession(contextSpec);
+      const rawGroups = session.tokens?.accessToken?.payload["cognito:groups"];
+
+      if (Array.isArray(rawGroups)) {
+        if (rawGroups.includes("Admin")) return "/admin/dashboard";
+        if (rawGroups.includes("Provider")) return "/provider/dashboard";
+        if (rawGroups.includes("Client")) return "/client/dashboard";
+      }
+
+      if (typeof rawGroups === "string") {
+        const groups = rawGroups.split(",");
+        if (groups.includes("Admin")) return "/admin/dashboard";
+        if (groups.includes("Provider")) return "/provider/dashboard";
+        if (groups.includes("Client")) return "/client/dashboard";
+      }
+
+      return "/unauthorized";
+    },
+  });
+};
+>>>>>>> 86140a8 (Complete functionality for role based registration, display user attributes in dashboard, and clean up code)

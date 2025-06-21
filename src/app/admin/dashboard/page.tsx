@@ -1,9 +1,10 @@
-const AdminDashboardPage = () => {
+import React from "react";
+import AdminDashboard from "@/components/dashboards/admin-dashboard";
+
+export default async function AdminDashboardPage() {
   return (
-    <div className="min-h-screen flex flex-col">
-      <h1 className="text-3xl font-bold text-gray-800 mb-4">Admin Dashboard</h1>
+    <div>
+      <AdminDashboard />
     </div>
   );
-};
-
-export default AdminDashboardPage;
+}
