@@ -1,9 +1,9 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import Link from "next/link";
 import clsx from "clsx";
 
 interface BaseProps {
-  label: string;
+  label: ReactNode;
   href: string;
   className?: string;
 }

@@ -58,11 +58,79 @@
 
 /* Add your global styles here */
 .bg-hero-section {
-    background-image: url('/images/home/hero-section.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: right;
+  background-image: url("/images/home/hero-section.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: right;
 }
+
+/* Dashboard specific styles */
+.dashboard-card {
+  box-shadow: var(--shadow-drop);
+}
+
+.dashboard-button-primary {
+  background-color: var(--color-primary-orange);
+  border-radius: var(--radius-btn-radius);
+  font-size: var(--text-btn-font-size);
+  font-weight: var(--font-weight-btn-font-wgt);
+}
+
+.dashboard-button-primary:hover {
+  background-color: var(--color-hover-orange);
+}
+
+.dashboard-button-secondary {
+  border-color: var(--color-medium-green);
+  color: var(--color-dark-green);
+  border-radius: var(--radius-btn-radius);
+  font-size: var(--text-btn-font-size);
+  font-weight: var(--font-weight-btn-font-wgt);
+}
+
+.dashboard-button-secondary:hover {
+  background-color: var(--color-light-green);
+}
+
+.dashboard-sidebar {
+  background-color: var(--color-darkest-green);
+}
+
+.dashboard-sidebar-active {
+  background-color: var(--color-dark-green);
+}
+
+.dashboard-sidebar-hover:hover {
+  background-color: var(--color-dark-green);
+}
+
+.dashboard-input {
+  border-color: var(--color-input-border-gray);
+  border-radius: 8px;
+}
+
+.dashboard-input:focus {
+  border-color: var(--color-medium-green);
+  box-shadow: 0 0 0 2px rgba(95, 156, 157, 0.2);
+}
+
+.dashboard-text-primary {
+  color: var(--color-dark-green);
+}
+
+.dashboard-text-secondary {
+  color: var(--color-medium-green);
+}
+
+.dashboard-bg-primary {
+  background-color: var(--color-primary-white);
+}
+
+.dashboard-accent {
+  background-color: var(--color-light-green);
+  color: var(--color-darkest-green);
+}
+
 
 /* @layer base {
     h1 {
