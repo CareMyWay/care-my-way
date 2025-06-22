@@ -1,8 +1,10 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import Link from "next/link";
 import clsx from "clsx";
 
 interface BaseProps {
+  label: ReactNode;
+  href: string;
   className?: string;
 }
 
@@ -16,7 +18,7 @@ interface RouteButtonProps extends BaseProps {
 // Action variant
 interface ActionButtonProps
   extends BaseProps,
-    React.ButtonHTMLAttributes<HTMLButtonElement> {
+  React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant: "action";
   children: React.ReactNode;
 }
