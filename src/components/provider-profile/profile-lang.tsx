@@ -21,6 +21,6 @@ const ProfileLanguage = () => {
             </div>
         </div>
     );
-}
+};
 
 export default ProfileLanguage;
