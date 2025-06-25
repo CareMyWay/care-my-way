@@ -86,7 +86,7 @@ const HealthcareProviderCard: React.FC<HealthcareProviderCardProps> = ({
         </div>
         <OrangeButton
           variant="route"
-          href="/" // Replace with actual profile link
+          href="/provider" // Replace with actual profile link
           className="!px-4 !py-1.5 !text-md mt-4"
         >
           View Profile
