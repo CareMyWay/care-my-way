@@ -44,8 +44,6 @@ const features = [
   },
 ];
 
-const TITLE_STYLE =
-  "text-2xl md:text-3xl font-bold text-primary-white mb-4 break-words";
 const DESC_STYLE =
   "text-base md:text-lg lg:text-xl font-medium text-primary-white break-words max-w-full";
 const BOX_SIZE = "w-full h-64 md:w-[370px] md:h-[320px]";

@@ -257,7 +257,7 @@ export default function SchedulePage() {
           <CardHeader>
             <CardTitle className="dashboard-text-primary flex items-center gap-2">
               <Clock className="h-5 w-5" />
-              Today's Schedule
+              Today&#39;s Schedule
             </CardTitle>
           </CardHeader>
           <CardContent>

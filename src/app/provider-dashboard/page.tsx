@@ -202,7 +202,7 @@ export default function DashboardOverview() {
           {/* Today's Schedule */}
           <Card className="border border-gray-200 bg-white rounded-lg">
             <CardHeader className="pb-4">
-              <CardTitle className="text-lg font-semibold dashboard-text-primary">Today's Schedule</CardTitle>
+              <CardTitle className="text-lg font-semibold dashboard-text-primary">Today&#39;s Schedule</CardTitle>
             </CardHeader>
             <CardContent className="pt-0 space-y-4">
               <div className="border border-gray-200 p-4">
