@@ -55,9 +55,15 @@ export default function MarketplacePage() {
             <MarketplaceFilter />
           </div>
           <div className="space-y-6 w-full md:overflow-y-auto">
-            {MOCK_PROVIDERS.map((provider, idx) => (
-              <ProviderCard key={idx} {...provider} />
-            ))}
+            {MOCK_PROVIDERS.length === 0 ? (
+              <div className="text-center text-darkest-green text-lg py-10">
+                There are no matching providers for your search.
+              </div>
+            ) : (
+              MOCK_PROVIDERS.map((provider, idx) => (
+                <ProviderCard key={idx} {...provider} />
+              ))
+            )}
           </div>
         </div>
       </div>
