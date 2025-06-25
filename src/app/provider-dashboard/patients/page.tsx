@@ -14,7 +14,7 @@ export default function PatientsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {patients.map((patientName, index) => (
-          <Card key={index} className="border-gray-200 dashboard-bg-primary rounded-2xl dashboard-card">
+          <Card key={index} className="border-gray-400 dashboard-bg-primary rounded-2xl dashboard-card !shadow-none">
             <CardContent className="p-6">
               <div className="flex items-center gap-4 mb-4">
                 <Avatar>

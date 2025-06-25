@@ -86,9 +86,10 @@ const FeaturesSection = () => {
                   <OrangeButton
                     variant="route"
                     href={buttonHref}
-                    label={buttonLabel}
                     className="mt-4 px-6 py-2 text-base"
-                  />
+                  >
+                    {buttonLabel}
+                  </OrangeButton>
                 </div>
               </div>
               <div className="relative flex items-center justify-center w-full max-w-md">

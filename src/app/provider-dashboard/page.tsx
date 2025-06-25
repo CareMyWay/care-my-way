@@ -1,10 +1,14 @@
 "use client"
 
 import { useState } from "react"
-import { CheckCircle, XCircle } from "lucide-react"
+import { CheckCircle, XCircle, Clock, MapPin, User } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-dashboard-ui/card"
-import { Button } from "@/components/provider-dashboard-ui/button"
 import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav"
+import GreenButton from "@/components/buttons/green-button";
+import OrangeButton from "@/components/buttons/orange-button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar"
+import AppointmentsPage from './appointments/page';
+
 
 export default function DashboardOverview() {
   const [notifications, setNotifications] = useState([
@@ -15,7 +19,7 @@ export default function DashboardOverview() {
       service: "Physical Therapy",
       date: "2024-01-15",
       time: "10:00 AM",
-      message: "New appointment request for Physical Therapy session",
+      message: "Requests Personal Care Assistance on March 1, 2025 @ 8:00 AM - 10:00 AM",
       timestamp: "2 hours ago",
     },
     {
@@ -30,48 +34,43 @@ export default function DashboardOverview() {
     },
   ])
 
-  const appointments = [
-    {
-      id: "1",
-      patientName: "Emma Wilson",
-      date: "2025-01-15",
-      time: "9:00 AM",
-    },
-    {
-      id: "2",
-      patientName: "Robert Davis",
-      date: "2025-01-15",
-      time: "2:00 PM",
-    },
-    {
-      id: "3",
-      patientName: "Lisa Martinez",
-      date: "2025-01-16",
-      time: "11:00 AM",
-    },
-  ]
+  const todayAppointment = {
+    patientName: "Emma Wilson",
+    service: "Physical Therapy",
+    time: "9:00 AM - 11:00 AM",
+    date: "Jan 15, 2025",
+    location: "123 Main Street, San Francisco, CA",
+    notes:
+      "Focus on mobility exercises and strength training. Patient has been making good progress with previous sessions.",
+    avatar: "/placeholder.svg?height=60&width=60",
+  }
 
-  const messages = [
+  const weeklySchedule = [
     {
-      id: "1",
-      patientName: "Emma Wilson",
-      lastMessage: "Thank you for the session today. I feel much better!",
-      timestamp: "1 hour ago",
-      unread: false,
+      day: "21",
+      dayName: "Mon",
+      appointments: [{ time: "8:00 AM - 3:00 PM", client: "Carol Cooper", color: "bg-blue-200" }],
+    },
+    { day: "22", dayName: "Tue", appointments: [] },
+    {
+      day: "23",
+      dayName: "Wed",
+      appointments: [{ time: "Time - Time", client: "Company Name", color: "bg-orange-200" }],
     },
     {
-      id: "2",
-      patientName: "Sarah Johnson",
-      lastMessage: "Can we reschedule tomorrow's appointment?",
-      timestamp: "3 hours ago",
-      unread: true,
+      day: "24",
+      dayName: "Thu",
+      appointments: [
+        { time: "2:00 AM - 11:00 PM", client: "Carla King", color: "bg-green-200" },
+        { time: "Time - Time", client: "Company Name", color: "bg-orange-200" },
+      ],
     },
+    { day: "25", dayName: "Fri", appointments: [] },
+    { day: "26", dayName: "Sat", appointments: [] },
     {
-      id: "3",
-      patientName: "Michael Chen",
-      lastMessage: "Looking forward to our first session next week.",
-      timestamp: "1 day ago",
-      unread: true,
+      day: "27",
+      dayName: "Sun",
+      appointments: [{ time: "8:00 AM - 3:00 PM", client: "Carol Cooper", color: "bg-gray-200" }],
     },
   ]
 
@@ -85,114 +84,144 @@ export default function DashboardOverview() {
 
   return (
     <>
-      <TopNav title="Dashboard" notificationCount={notifications.length} />
+      <TopNav title="My Dashboard" notificationCount={notifications.length} />
 
       <div className="space-y-6">
-        {/* Appointment Requests */}
-        {notifications.length > 0 && (
-          <Card className="border-orange-200 bg-orange-50 mb-6">
-            <CardHeader>
-              <CardTitle className="text-orange-800 flex items-center gap-2">
-                <CheckCircle className="h-5 w-5" />
-                Appointment Requests ({notifications.length})
-              </CardTitle>
+        {/* Weekly Schedule */}
+        <Card className="border border-gray-200 bg-white rounded-lg">
+          <CardHeader className="pb-4">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg font-semibold dashboard-text-primary">Weekly Schedule</CardTitle>
+              <div className="text-sm dashboard-text-secondary border border-gray-300 px-3 py-1">
+                Mar 21 - 27
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <div className="grid grid-cols-7 gap-2">
+              {weeklySchedule.map((day) => (
+                <div key={day.day} className="text-center">
+                  <div className="text-xs dashboard-text-secondary mb-1">{day.dayName}</div>
+                  <div className="text-lg font-semibold dashboard-text-primary mb-2">{day.day}</div>
+                  <div className="space-y-1 min-h-[100px]">
+                    {day.appointments.map((apt, index) => (
+                      <div key={index} className={`${apt.color} p-2 text-xs`}>
+                        <div className="font-medium text-gray-800">{apt.time}</div>
+                        <div className="text-gray-700">{apt.client}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Appoitment requests */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Notifications */}
+          <Card className="border border-gray-200 bg-white rounded-lg">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg font-semibold dashboard-text-primary">Appointment Requests</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="pt-0 space-y-4">
               {notifications.map((notification) => (
-                <div key={notification.id} className="bg-white p-4 rounded-lg border border-orange-200">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <h4 className="font-medium dashboard-text-primary">{notification.patientName}</h4>
-                      <p className="text-sm dashboard-text-secondary">{notification.service}</p>
-                      <p className="text-sm dashboard-text-secondary">
-                        {notification.date} at {notification.time}
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">{notification.timestamp}</p>
+                <div key={notification.id} className="bg-[var(--color-lightest-green,#e6f4f1)] p-4">
+                  <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-3 gap-2">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback className="bg-white text-teal-700">
+                          {notification.patientName
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        {/* <div className="font-medium text-[var(--color-darkest-green)]">Booking Request</div> */}
+                        <div className="font-medium text-[var(--color-darkest-green)]">{notification.patientName}</div>
+                      </div>
                     </div>
-                    <div className="flex gap-2">
-                      <Button
+                    {/* Buttons: stack vertically on mobile */}
+                    <div className="flex flex-col w-full md:w-auto md:flex-row gap-2 md:gap-2">
+                      <GreenButton
                         size="sm"
-                        className="dashboard-button-primary text-primary-white"
+                        variant="action"
+                        label="Accept"
+                        className="bg-[var(--color-darkest-green)] hover:bg-[var(--color-darkest-green)] text-white h-8 px-3 flex items-center justify-center gap-1 text-xs font-medium w-full md:w-auto"
                         onClick={() => handleAcceptAppointment(notification.id)}
+                        aria-label="Accept"
                       >
-                        <CheckCircle className="h-4 w-4 mr-1" />
-                        Accept
-                      </Button>
-                      <Button
+                        <CheckCircle className="h-3 w-3" />
+                        <span className="text-xs text-center">Accept</span>
+                      </GreenButton>
+                      <OrangeButton
+                        label="Decline"
+                        variant="action"
                         size="sm"
-                        variant="outline"
-                        className="border-red-300 text-red-600 hover:bg-red-50"
+                        className="bg-[var(--color-primary-orange)] hover:bg-orange-600 text-white h-8 px-3 flex items-center justify-center gap-1 text-xs font-medium w-full md:w-auto"
                         onClick={() => handleDeclineAppointment(notification.id)}
+                        aria-label="Decline"
                       >
-                        <XCircle className="h-4 w-4 mr-1" />
-                        Decline
-                      </Button>
+                        <XCircle className="h-3 w-3" />
+                        <span className="text-xs text-center">Decline</span>
+                      </OrangeButton>
                     </div>
                   </div>
+                  <p className="text-sm text-[var(--color-darkest-green)]">{notification.message}</p>
                 </div>
               ))}
             </CardContent>
           </Card>
-        )}
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="border-gray-200 dashboard-bg-primary rounded-2xl dashboard-card">
-            <CardContent className="p-8 text-center">
-              <div className="text-4xl font-bold dashboard-text-primary mb-2">2</div>
-              <div className="dashboard-text-secondary">
-                <div>Upcoming</div>
-                <div>Appointments</div>
+          {/* Today's Schedule */}
+          <Card className="border border-gray-200 bg-white rounded-lg">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg font-semibold dashboard-text-primary">Today's Schedule</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0 space-y-4">
+              <div className="border border-gray-200 p-4">
+                <div className="flex items-start gap-3 mb-3">
+                  <Avatar className="h-12 w-12">
+                    <AvatarImage
+                      src={todayAppointment.avatar || "/placeholder.svg"}
+                      alt={todayAppointment.patientName}
+                    />
+                    <AvatarFallback className="bg-teal-100 text-teal-800">
+                      {todayAppointment.patientName
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-sm dashboard-text-secondary">Patient:</span>
+                      <span className="font-medium dashboard-text-primary">{todayAppointment.patientName}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <h3 className="font-semibold dashboard-text-primary mb-2">{todayAppointment.service}</h3>
+                <p className="text-sm dashboard-text-primary mb-3 leading-relaxed">{todayAppointment.notes}</p>
+
+                <div className="space-y-2 text-sm dashboard-text-primary">
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4" />
+                    <span>
+                      {todayAppointment.date} @ {todayAppointment.time}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-4 w-4" />
+                    <span>{todayAppointment.location}</span>
+                  </div>
+                </div>
               </div>
-            </CardContent>
-          </Card>
-          <Card className="border-gray-200 dashboard-bg-primary rounded-2xl dashboard-card">
-            <CardContent className="p-8 text-center">
-              <div className="text-4xl font-bold dashboard-text-primary mb-2">18</div>
-              <div className="dashboard-text-secondary">Completed Visits</div>
-            </CardContent>
-          </Card>
-          <Card className="border-gray-200 dashboard-bg-primary rounded-2xl dashboard-card">
-            <CardContent className="p-8 text-center">
-              <div className="text-4xl font-bold dashboard-text-primary mb-2">
-                {messages.filter((m) => m.unread).length}
-              </div>
-              <div className="dashboard-text-secondary">Messages</div>
             </CardContent>
           </Card>
         </div>
-
-        {/* Today's Appointments Table */}
-        <Card className="border-gray-200 dashboard-bg-primary rounded-2xl dashboard-card">
-          <CardContent className="p-8">
-            <h2 className="text-2xl font-bold dashboard-text-primary mb-6">Upcoming Appointments</h2>
-            <div className="overflow-hidden">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-gray-200">
-                    <th className="text-left py-4 px-2 font-semibold dashboard-text-primary">Client</th>
-                    <th className="text-left py-4 px-2 font-semibold dashboard-text-primary">Date</th>
-                    <th className="text-left py-4 px-2 font-semibold dashboard-text-primary">Time</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {appointments
-                    .filter((apt) => new Date(apt.date) >= new Date())
-                    .slice(0, 5)
-                    .map((appointment, index) => (
-                      <tr key={appointment.id} className={index !== 0 ? "border-t border-gray-100" : ""}>
-                        <td className="py-4 px-2 dashboard-text-primary">{appointment.patientName}</td>
-                        <td className="py-4 px-2 dashboard-text-secondary">{appointment.date}</td>
-                        <td className="py-4 px-2 dashboard-text-secondary">{appointment.time}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </>
   )
 }
-
