@@ -14,7 +14,7 @@ const ProfileDetails = () => {
             <ProfileEducation />
             <ProfileTestimonials />
         </div>
-    )
-}
+    );
+};
 
 export default ProfileDetails;

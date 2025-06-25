@@ -6,14 +6,14 @@ const ProfileTestimonials = () => {
         {
             name: "Darius Coleman",
             date: "2023-10-01",
-            content: `“Nina has become like family to us. Her care, patience, and gentle approach made my mom feel safe and loved every single day.”`,
-            image: '/images/home/meet-providers/person-placeholder-6.jpg',
+            content: "“Nina has become like family to us. Her care, patience, and gentle approach made my mom feel safe and loved every single day.”",
+            image: "/images/home/meet-providers/person-placeholder-6.jpg",
         },
         {
             name: "Jane Smith",
             date: "2023-09-15",
-            content: `“Nina is amazing. Thoughtul, reliable, and truly passionate about what she does. Couldn't have asked for better support.”`,
-            image: '/images/home/meet-providers/person-placeholder-3.jpg',
+            content: "“Nina is amazing. Thoughtul, reliable, and truly passionate about what she does. Couldn't have asked for better support.”",
+            image: "/images/home/meet-providers/person-placeholder-3.jpg",
         },
     ];
 
@@ -37,6 +37,6 @@ const ProfileTestimonials = () => {
             </div>
         </div>
     );
-}
+};
 
 export default ProfileTestimonials;

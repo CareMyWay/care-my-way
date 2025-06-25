@@ -14,7 +14,7 @@ const ProfileTitle = () => {
                 {title}
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default ProfileTitle;

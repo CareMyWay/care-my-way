@@ -25,6 +25,6 @@ const ProfileEducation = () => {
             </div>
         </div>
     );
-}
+};
 
 export default ProfileEducation;

@@ -17,6 +17,6 @@ const ProfileAbout = () => {
             </div>
         </div>
     );
-}
+};
 
 export default ProfileAbout;

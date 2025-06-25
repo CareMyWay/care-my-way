@@ -14,12 +14,17 @@ const eslintConfig = [
     files: ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
     ignores: ["node_modules", "dist", ".next"],
   },
-  ...compat.extends(
-    "next/core-web-vitals",
-    "next/typescript",
-    "next",
-    "prettier"
-  ),
+
+  ...compat.config({
+    extends: ["next/core-web-vitals", "next/typescript", "next", "prettier"],
+    rules: {
+      semi: ["error"],
+      quotes: ["error", "double"],
+      "prefer-arrow-callback": ["error"],
+      "prefer-template": ["error"],
+      "no-unused-vars": ["error"],
+    },
+  }),
 ];
 
 export default eslintConfig;
