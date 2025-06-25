@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { Eye, EyeOff } from "lucide-react";
+
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import OrangeButton from "@/components/buttons/orange-button";
@@ -12,6 +14,7 @@ import CMWStackedHeader from "../headers/cmw-stacked-header";
 
 export default function LoginForm() {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
   const [state, dispatch] = useActionState(handleSignIn, undefined);
 
   useEffect(() => {
@@ -53,19 +56,29 @@ export default function LoginForm() {
             <div className="space-y-2">
               <label
                 htmlFor="password"
-                className="std-form-label text-darkest-green"
+                className="text-darkest-green mb-3 mt-5 std-form-label"
               >
                 Password
               </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Password"
-                className="std-form-input"
-                minLength={6}
-                required
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  className="std-form-input pr-10"
+                  minLength={8}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
             </div>
 
             {state && !state.startsWith("/") && (

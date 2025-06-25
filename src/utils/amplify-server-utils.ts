@@ -120,7 +120,7 @@ export const checkIsAdmin = async (): Promise<boolean> => {
         }
         return isAdmin;
       } catch (error) {
-        return false;
+        return error;
       }
     },
   });
