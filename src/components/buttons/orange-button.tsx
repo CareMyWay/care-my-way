@@ -1,11 +1,11 @@
-import React from "react";
 import Link from "next/link";
 import clsx from "clsx";
 
 interface BaseProps {
-  className?: string;
+  size?: string
+  className?: string
+  children?: React.ReactNode
 }
-
 // Route variant
 interface RouteButtonProps extends BaseProps {
   variant: "route";
@@ -16,7 +16,7 @@ interface RouteButtonProps extends BaseProps {
 // Action variant
 interface ActionButtonProps
   extends BaseProps,
-    React.ButtonHTMLAttributes<HTMLButtonElement> {
+  React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant: "action";
   children: React.ReactNode;
 }
@@ -37,11 +37,12 @@ const OrangeButton: React.FC<ButtonPropTypes> = (props) => {
     );
   }
 
-  //Override the default type of button if needed (e.g. submit)
-  const { type = "button", ...rest } = props;
-
   return (
-    <button type={type} {...rest} className={extraStyles}>
+    <button
+      type="button"
+      className={extraStyles}
+      {...props}
+    >
       {props.children}
     </button>
   );
