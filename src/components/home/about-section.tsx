@@ -35,7 +35,7 @@ const AboutSection = () => {
               We provide a trusted platform where families can connect with
               qualified healthcare aids who match your unique needs.
             </p>
-            <GreenButton href="/provider" variant="route">
+            <GreenButton href="/marketplace" variant="route">
               Find a Healthcare provider
             </GreenButton>
           </div>

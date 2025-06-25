@@ -44,17 +44,17 @@ const MOCK_PROVIDERS = [
 export default function MarketplacePage() {
   return (
     <section className="min-h-screen px-4 py-12 md:px-16 bg-primary-white">
-      <div className="container mx-auto flex flex-col">
+      <div className="container mx-auto flex flex-col md:h-screen">
         <div>
           <div>
             <MarketplaceSearchBar />
           </div>
         </div>
-        <div className="flex flex-col lg:flex-row gap-6">
+        <div className="flex flex-col lg:flex-row gap-6 md:flex-1 md:min-h-0">
           <div>
             <MarketplaceFilter />
           </div>
-          <div className="space-y-6 w-full">
+          <div className="space-y-6 w-full md:overflow-y-auto">
             {MOCK_PROVIDERS.map((provider, idx) => (
               <ProviderCard key={idx} {...provider} />
             ))}

@@ -17,7 +17,7 @@ const HeroSection = () => {
               <br />
               when you least expect it.
             </h1>
-            <OrangeButton variant="route" href="/provider" className="w-fit">
+            <OrangeButton variant="route" href="/marketplace" className="w-fit">
               Find a Healthcare Provider
             </OrangeButton>
           </div>
