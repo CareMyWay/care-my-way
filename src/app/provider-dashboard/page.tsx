@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { CheckCircle, XCircle, Clock, MapPin, User } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-dashboard-ui/card"
-import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav"
+import { useState } from "react";
+import { CheckCircle, XCircle, Clock, MapPin } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-dashboard-ui/card";
+import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav";
 import GreenButton from "@/components/buttons/green-button";
 import OrangeButton from "@/components/buttons/orange-button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar"
-import AppointmentsPage from './appointments/page';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar";
+//import AppointmentsPage from "./appointments/page";
 import { format, startOfWeek, addDays, isSameDay, isSameMonth } from "date-fns";
 import { Button } from "@/components/provider-dashboard-ui/button";
 
@@ -33,7 +33,7 @@ export default function DashboardOverview() {
       message: "Recurring appointment request for weekly OT sessions",
       timestamp: "4 hours ago",
     },
-  ])
+  ]);
 
   const todayAppointment = {
     patientName: "Emma Wilson",
@@ -44,44 +44,15 @@ export default function DashboardOverview() {
     notes:
       "Focus on mobility exercises and strength training. Patient has been making good progress with previous sessions.",
     avatar: "/placeholder.svg?height=60&width=60",
-  }
-
-  const weeklySchedule = [
-    {
-      day: "21",
-      dayName: "Mon",
-      appointments: [{ time: "8:00 AM - 3:00 PM", client: "Carol Cooper", color: "bg-blue-200" }],
-    },
-    { day: "22", dayName: "Tue", appointments: [] },
-    {
-      day: "23",
-      dayName: "Wed",
-      appointments: [{ time: "Time - Time", client: "Company Name", color: "bg-orange-200" }],
-    },
-    {
-      day: "24",
-      dayName: "Thu",
-      appointments: [
-        { time: "2:00 AM - 11:00 PM", client: "Carla King", color: "bg-green-200" },
-        { time: "Time - Time", client: "Company Name", color: "bg-orange-200" },
-      ],
-    },
-    { day: "25", dayName: "Fri", appointments: [] },
-    { day: "26", dayName: "Sat", appointments: [] },
-    {
-      day: "27",
-      dayName: "Sun",
-      appointments: [{ time: "8:00 AM - 3:00 PM", client: "Carol Cooper", color: "bg-gray-200" }],
-    },
-  ]
+  };
 
   const handleAcceptAppointment = (notificationId: string) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== notificationId))
-  }
+    setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
+  };
 
   const handleDeclineAppointment = (notificationId: string) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== notificationId))
-  }
+    setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
+  };
 
   const [currentDate, setCurrentDate] = useState(new Date());
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 }); // Sunday
@@ -277,5 +248,5 @@ export default function DashboardOverview() {
         </div>
       </div>
     </>
-  )
+  );
 }

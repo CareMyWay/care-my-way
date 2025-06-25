@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-dashboard-ui/card"
-import { Button } from "@/components/provider-dashboard-ui/button"
-import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-dashboard-ui/card";
+import { Button } from "@/components/provider-dashboard-ui/button";
+import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav";
 
 export default function SettingsPage() {
   return (
@@ -60,5 +60,5 @@ export default function SettingsPage() {
         <Button className="dashboard-button-primary text-primary-white">Save Settings</Button>
       </div>
     </>
-  )
+  );
 }

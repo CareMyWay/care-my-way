@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { Button } from "@/components/provider-dashboard-ui/button"
-import { Badge } from "@/components/provider-dashboard-ui/badge"
-import { Bell, Info } from "lucide-react"
+import { Button } from "@/components/provider-dashboard-ui/button";
+import { Badge } from "@/components/provider-dashboard-ui/badge";
+import { Bell, Info } from "lucide-react";
 
 interface TopNavProps {
   title: string
@@ -51,5 +51,5 @@ export function TopNav({
       </div>
       {children}
     </div>
-  )
+  );
 }

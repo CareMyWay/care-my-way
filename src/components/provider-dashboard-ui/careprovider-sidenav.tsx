@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Badge } from "@/components/provider-dashboard-ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar"
-import { Calendar, MessageSquare, User, Clock, Settings, Users, LogOut, LayoutDashboard } from "lucide-react"
-import { useRouter } from "next/navigation"
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Badge } from "@/components/provider-dashboard-ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar";
+import { Calendar, MessageSquare, User, Clock, Settings, Users, LogOut, LayoutDashboard } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function SidebarNav() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   const navigationItems = [
     {
@@ -47,7 +47,7 @@ export function SidebarNav() {
       label: "My Patients",
       icon: Users,
     },
-  ]
+  ];
 
   const router = useRouter();
 
@@ -61,7 +61,7 @@ export function SidebarNav() {
 
     // Redirect to home page
     router.push("/");
-  }
+  };
 
   return (
     <nav className="w-64 dashboard-sidebar min-h-screen flex flex-col">
@@ -86,8 +86,8 @@ export function SidebarNav() {
       <div className="flex-1 py-6">
         <div className="space-y-1 px-3">
           {navigationItems.map((item) => {
-            const Icon = item.icon
-            const isActive = pathname === item.href
+            const Icon = item.icon;
+            const isActive = pathname === item.href;
 
             return (
               <Link
@@ -107,7 +107,7 @@ export function SidebarNav() {
                   <Badge className="ml-auto bg-orange-500 text-white text-xs px-2 py-1">{item.badge}</Badge>
                 )}
               </Link>
-            )
+            );
           })}
         </div>
       </div>
@@ -123,5 +123,5 @@ export function SidebarNav() {
         </button>
       </div>
     </nav>
-  )
+  );
 }

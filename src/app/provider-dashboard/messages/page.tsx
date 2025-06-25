@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Search } from "lucide-react"
-import { Card, CardContent, CardHeader } from "@/components/provider-dashboard-ui/card"
-import { Button } from "@/components/provider-dashboard-ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar"
-import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav"
+import { useState } from "react";
+import { Search } from "lucide-react";
+import { Card, CardContent, CardHeader } from "@/components/provider-dashboard-ui/card";
+import { Button } from "@/components/provider-dashboard-ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar";
+import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav";
 
 interface Message {
   id: string
@@ -40,7 +40,7 @@ export default function MessagesPage() {
       timestamp: "1 day ago",
       unread: true,
     },
-  ])
+  ]);
 
   return (
     <>
@@ -96,5 +96,5 @@ export default function MessagesPage() {
         </CardContent>
       </Card>
     </>
-  )
+  );
 }

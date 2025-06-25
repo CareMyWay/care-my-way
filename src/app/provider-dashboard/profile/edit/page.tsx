@@ -1,20 +1,20 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Camera, Save, X, AlertTriangle } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-dashboard-ui/card"
-import { Button } from "@/components/provider-dashboard-ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar"
-import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav"
-import Link from "next/link"
+import { useState } from "react";
+import { Camera, Save, X, AlertTriangle } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-dashboard-ui/card";
+import { Button } from "@/components/provider-dashboard-ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar";
+import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav";
+import Link from "next/link";
 // imported bad-words library from npm to filter profanity for specializations
-import { Filter } from "bad-words"
+import { Filter } from "bad-words";
 
-const filter = new Filter()
+const filter = new Filter();
 
 const LANGUAGES = [
   "English", "Spanish", "French", "Mandarin", "Cantonese", "Tagalog", "Hindi", "Punjabi", "German", "Russian", "Arabic", "Portuguese", "Vietnamese", "Korean", "Italian", "Japanese"
-]
+];
 
 export default function EditProfilePage() {
   const [formData, setFormData] = useState({
@@ -36,80 +36,80 @@ export default function EditProfilePage() {
       "Board Certified in Orthopedic Physical Therapy",
       "CPR/AED Certified",
     ],
-  })
+  });
 
-  const [newSpecialization, setNewSpecialization] = useState("")
-  const [specialtyError, setSpecialtyError] = useState("")
-  const [newLanguage, setNewLanguage] = useState("")
-  const [hourlyRateError, setHourlyRateError] = useState("")
-  const [bioWordCount, setBioWordCount] = useState(formData.bio.split(/\s+/).filter(Boolean).length)
+  const [newSpecialization, setNewSpecialization] = useState("");
+  const [specialtyError, setSpecialtyError] = useState("");
+  const [newLanguage, setNewLanguage] = useState("");
+  const [hourlyRateError, setHourlyRateError] = useState("");
+  const [bioWordCount, setBioWordCount] = useState(formData.bio.split(/\s+/).filter(Boolean).length);
 
   const handleInputChange = (field: string, value: string) => {
     if (field === "hourlyRate") {
       // Restrict hourly rate between 20 and 500
-      const num = Number(value)
+      const num = Number(value);
       if (value === "" || (num >= 20 && num <= 500)) {
-        setHourlyRateError("")
-        setFormData((prev) => ({ ...prev, [field]: value }))
+        setHourlyRateError("");
+        setFormData((prev) => ({ ...prev, [field]: value }));
       } else {
-        setHourlyRateError("Hourly rate must be between $20 and $500")
-        setFormData((prev) => ({ ...prev, [field]: value }))
+        setHourlyRateError("Hourly rate must be between $20 and $500");
+        setFormData((prev) => ({ ...prev, [field]: value }));
       }
     } else {
-      setFormData((prev) => ({ ...prev, [field]: value }))
+      setFormData((prev) => ({ ...prev, [field]: value }));
       if (field === "bio") {
-        setBioWordCount(value.split(/\s+/).filter(Boolean).length)
+        setBioWordCount(value.split(/\s+/).filter(Boolean).length);
       }
     }
-  }
+  };
 
   const addSpecialization = () => {
     if (newSpecialization.trim()) {
       if (filter.isProfane(newSpecialization)) {
-        setSpecialtyError("Specialization contains inappropriate language or violence-related terms.")
-        return
+        setSpecialtyError("Specialization contains inappropriate language or violence-related terms.");
+        return;
       }
       if (newSpecialization.length > 25) {
-        setSpecialtyError("Specialization must be 25 characters or less.")
-        return
+        setSpecialtyError("Specialization must be 25 characters or less.");
+        return;
       }
       setFormData((prev) => ({
         ...prev,
         specializations: [...prev.specializations, newSpecialization.trim()],
-      }))
-      setNewSpecialization("")
-      setSpecialtyError("")
+      }));
+      setNewSpecialization("");
+      setSpecialtyError("");
     }
-  }
+  };
 
   const removeSpecialization = (index: number) => {
     setFormData((prev) => ({
       ...prev,
       specializations: prev.specializations.filter((_, i) => i !== index),
-    }))
-  }
+    }));
+  };
 
   const addLanguage = () => {
     if (newLanguage && !formData.languages.includes(newLanguage)) {
       setFormData((prev) => ({
         ...prev,
         languages: [...prev.languages, newLanguage],
-      }))
-      setNewLanguage("")
+      }));
+      setNewLanguage("");
     }
-  }
+  };
 
   const removeLanguage = (index: number) => {
     setFormData((prev) => ({
       ...prev,
       languages: prev.languages.filter((_, i) => i !== index),
-    }))
-  }
+    }));
+  };
 
   const handleSave = () => {
-    console.log("Saving profile data:", formData)
+    console.log("Saving profile data:", formData);
     // Handle save logic here
-  }
+  };
 
   return (
     <>
@@ -289,8 +289,8 @@ export default function EditProfilePage() {
                   type="text"
                   value={newSpecialization}
                   onChange={(e) => {
-                    setNewSpecialization(e.target.value)
-                    setSpecialtyError("")
+                    setNewSpecialization(e.target.value);
+                    setSpecialtyError("");
                   }}
                   placeholder="Add specialization"
                   className="flex-1 p-2 dashboard-input focus:outline-none rounded-md"
@@ -387,5 +387,5 @@ export default function EditProfilePage() {
         </div>
       </div>
     </>
-    )
+    );
 }

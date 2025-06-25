@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { Star, MapPin, Phone, Mail } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-dashboard-ui/card"
-import { Button } from "@/components/provider-dashboard-ui/button"
-import { Badge } from "@/components/provider-dashboard-ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar"
-import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav"
-import Link from "next/link"
+import { Star, MapPin, Phone, Mail } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-dashboard-ui/card";
+import { Button } from "@/components/provider-dashboard-ui/button";
+import { Badge } from "@/components/provider-dashboard-ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar";
+import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav";
+import Link from "next/link";
 
 export default function ProfilePage() {
   return (
@@ -124,5 +124,5 @@ export default function ProfilePage() {
         </div>
       </div>
     </>
-  )
+  );
 }

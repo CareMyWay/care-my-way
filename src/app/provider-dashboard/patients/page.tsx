@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { Card, CardContent } from "@/components/provider-dashboard-ui/card"
-import { Button } from "@/components/provider-dashboard-ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar"
-import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav"
+import { Card, CardContent } from "@/components/provider-dashboard-ui/card";
+import { Button } from "@/components/provider-dashboard-ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar";
+import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav";
 
 export default function PatientsPage() {
-  const patients = ["Emma Wilson", "Robert Davis", "Lisa Martinez", "Sarah Johnson"]
+  const patients = ["Emma Wilson", "Robert Davis", "Lisa Martinez", "Sarah Johnson"];
 
   return (
     <>
@@ -40,5 +40,5 @@ export default function PatientsPage() {
         ))}
       </div>
     </>
-  )
+  );
 }

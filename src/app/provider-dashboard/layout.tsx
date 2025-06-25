@@ -1,5 +1,5 @@
-import type React from "react"
-import { SidebarNav } from "@/components/provider-dashboard-ui/careprovider-sidenav"
+import type React from "react";
+import { SidebarNav } from "@/components/provider-dashboard-ui/careprovider-sidenav";
 
 export default function DashboardLayout({
   children,
@@ -13,5 +13,5 @@ export default function DashboardLayout({
         <main className="flex-1 p-6">{children}</main>
       </div>
     </div>
-  )
+  );
 }

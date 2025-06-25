@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { ChevronLeft, ChevronRight, Clock, Settings } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-dashboard-ui/card"
-import { Button } from "@/components/provider-dashboard-ui/button"
-import { Badge } from "@/components/provider-dashboard-ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar"
-import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav"
+import { useState } from "react";
+import { ChevronLeft, ChevronRight, Clock, Settings } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-dashboard-ui/card";
+import { Button } from "@/components/provider-dashboard-ui/button";
+import { Badge } from "@/components/provider-dashboard-ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar";
+import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav";
 
 interface Appointment {
   id: string
@@ -27,19 +27,19 @@ const WORKING_HOURS = {
   Wednesday: "9:00 AM - 5:00 PM",
   Thursday: "9:00 AM - 5:00 PM",
   Friday: "9:00 AM - 5:00 PM",
-}
+};
 
 function getDaysInMonth(year: number, month: number) {
-  return new Date(year, month + 1, 0).getDate()
+  return new Date(year, month + 1, 0).getDate();
 }
 
 function getDayOfWeek(year: number, month: number, day: number) {
-  return new Date(year, month, day).getDay()
+  return new Date(year, month, day).getDay();
 }
 
 export default function SchedulePage() {
-    const [currentDate, setCurrentDate] = useState(new Date())
-    const [calendarView, setCalendarView] = useState<"month" | "week">("month")
+    const [currentDate, setCurrentDate] = useState(new Date());
+    const [calendarView, setCalendarView] = useState<"month" | "week">("month");
 
   
 
@@ -67,66 +67,66 @@ export default function SchedulePage() {
       location: "Care My Way Clinic",
       notes: "Post-surgery care assessment",
     },
-  ])
+  ]);
 
   // Helper for calendar
-  const year = currentDate.getFullYear()
-  const month = currentDate.getMonth()
-  const todayStr = new Date().toISOString().split("T")[0]
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  const todayStr = new Date().toISOString().split("T")[0];
 
   // Build calendar grid for month view
-  const daysInMonth = getDaysInMonth(year, month)
-  const firstDayOfWeek = getDayOfWeek(year, month, 1)
-  const calendarDays: { date: string; isToday: boolean; appointments: Appointment[] }[] = []
+  const daysInMonth = getDaysInMonth(year, month);
+  const firstDayOfWeek = getDayOfWeek(year, month, 1);
+  const calendarDays: { date: string; isToday: boolean; appointments: Appointment[] }[] = [];
 
   if (calendarView === "month") {
     for (let i = 0; i < firstDayOfWeek; i++) {
-      calendarDays.push({ date: "", isToday: false, appointments: [] })
+      calendarDays.push({ date: "", isToday: false, appointments: [] });
     }
     for (let day = 1; day <= daysInMonth; day++) {
-      const dateObj = new Date(year, month, day)
-      const dateStr = dateObj.toISOString().split("T")[0]
+      const dateObj = new Date(year, month, day);
+      const dateStr = dateObj.toISOString().split("T")[0];
       calendarDays.push({
         date: dateStr,
         isToday: dateStr === todayStr,
         appointments: appointments.filter((apt) => apt.date === dateStr),
-      })
+      });
     }
   } else {
     // week view: show current week (Sunday to Saturday)
-    const weekStart = new Date(currentDate)
-    weekStart.setDate(currentDate.getDate() - currentDate.getDay())
+    const weekStart = new Date(currentDate);
+    weekStart.setDate(currentDate.getDate() - currentDate.getDay());
     for (let i = 0; i < 7; i++) {
-      const dateObj = new Date(weekStart)
-      dateObj.setDate(weekStart.getDate() + i)
-      const dateStr = dateObj.toISOString().split("T")[0]
+      const dateObj = new Date(weekStart);
+      dateObj.setDate(weekStart.getDate() + i);
+      const dateStr = dateObj.toISOString().split("T")[0];
       calendarDays.push({
         date: dateStr,
         isToday: dateStr === todayStr,
         appointments: appointments.filter((apt) => apt.date === dateStr),
-      })
+      });
     }
   }
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case "confirmed":
-        return "bg-emerald-100 text-emerald-800 border-emerald-200"
+        return "bg-emerald-100 text-emerald-800 border-emerald-200";
       case "pending":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200"
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
       case "completed":
-        return "bg-blue-100 text-blue-800 border-blue-200"
+        return "bg-blue-100 text-blue-800 border-blue-200";
       case "cancelled":
-        return "bg-red-100 text-red-800 border-red-200"
+        return "bg-red-100 text-red-800 border-red-200";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-200"
+        return "bg-gray-100 text-gray-800 border-gray-200";
     }
-  }
+  };
 
   // Today's appointments
   const todayAppointments = appointments.filter(
     (apt) => apt.date === todayStr
-  )
+  );
 
   return (
     <>
@@ -144,13 +144,13 @@ export default function SchedulePage() {
                 variant="ghost"
                 size="sm"
                 onClick={() => {
-                  const newDate = new Date(currentDate)
+                  const newDate = new Date(currentDate);
                   if (calendarView === "month") {
-                    newDate.setMonth(newDate.getMonth() - 1)
+                    newDate.setMonth(newDate.getMonth() - 1);
                   } else {
-                    newDate.setDate(newDate.getDate() - 7)
+                    newDate.setDate(newDate.getDate() - 7);
                   }
-                  setCurrentDate(newDate)
+                  setCurrentDate(newDate);
                 }}
                 aria-label="Previous"
               >
@@ -160,28 +160,28 @@ export default function SchedulePage() {
                 {calendarView === "month"
                   ? currentDate.toLocaleDateString("en-US", { month: "long", year: "numeric" })
                   : (() => {
-                      const weekStart = new Date(currentDate)
-                      weekStart.setDate(currentDate.getDate() - currentDate.getDay())
-                      const weekEnd = new Date(weekStart)
-                      weekEnd.setDate(weekStart.getDate() + 6)
+                      const weekStart = new Date(currentDate);
+                      weekStart.setDate(currentDate.getDate() - currentDate.getDay());
+                      const weekEnd = new Date(weekStart);
+                      weekEnd.setDate(weekStart.getDate() + 6);
                       return (
-                        weekStart.toLocaleDateString("en-US", { month: "short", day: "numeric" }) +
-                        " - " +
-                        weekEnd.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
-                      )
+                        `${weekStart.toLocaleDateString("en-US", { month: "short", day: "numeric" }) 
+                        } - ${ 
+                        weekEnd.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
+                      );
                     })()}
               </h3>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => {
-                  const newDate = new Date(currentDate)
+                  const newDate = new Date(currentDate);
                   if (calendarView === "month") {
-                    newDate.setMonth(newDate.getMonth() + 1)
+                    newDate.setMonth(newDate.getMonth() + 1);
                   } else {
-                    newDate.setDate(newDate.getDate() + 7)
+                    newDate.setDate(newDate.getDate() + 7);
                   }
-                  setCurrentDate(newDate)
+                  setCurrentDate(newDate);
                 }}
                 aria-label="Next"
               >
@@ -319,5 +319,5 @@ export default function SchedulePage() {
         </Card>
       </div>
     </>
-  )
+  );
 }

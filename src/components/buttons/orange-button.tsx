@@ -1,11 +1,11 @@
-import React, { ReactNode } from "react";
 import Link from "next/link";
 import clsx from "clsx";
 
 interface BaseProps {
-  className?: string;
+  size?: string
+  className?: string
+  children?: React.ReactNode
 }
-
 // Route variant
 interface RouteButtonProps extends BaseProps {
   variant: "route";
@@ -46,6 +46,6 @@ const OrangeButton: React.FC<ButtonPropTypes> = (props) => {
       {props.children}
     </button>
   );
-}
+};
 
 export default OrangeButton;
