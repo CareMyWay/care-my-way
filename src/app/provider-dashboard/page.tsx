@@ -8,7 +8,8 @@ import GreenButton from "@/components/buttons/green-button";
 import OrangeButton from "@/components/buttons/orange-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar"
 import AppointmentsPage from './appointments/page';
-
+import { format, startOfWeek, addDays, isSameDay, isSameMonth } from "date-fns";
+import { Button } from "@/components/provider-dashboard-ui/button";
 
 export default function DashboardOverview() {
   const [notifications, setNotifications] = useState([
@@ -82,6 +83,28 @@ export default function DashboardOverview() {
     setNotifications((prev) => prev.filter((n) => n.id !== notificationId))
   }
 
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 }); // Sunday
+  const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
+
+  // Example: appointments for the current week (replace with your real data)
+  const appointments = [
+    {
+      id: "1",
+      date: "2025-06-25",
+      time: "9:00 AM - 10:00 AM",
+      client: "Emma Wilson",
+      color: "bg-blue-200",
+    },
+    {
+      id: "2",
+      date: "2025-06-27",
+      time: "2:00 PM - 3:00 PM",
+      client: "Carol Cooper",
+      color: "bg-green-200",
+    },
+  ];
+
   return (
     <>
       <TopNav title="My Dashboard" notificationCount={notifications.length} />
@@ -91,25 +114,58 @@ export default function DashboardOverview() {
         <Card className="border border-gray-200 bg-white rounded-lg">
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg font-semibold dashboard-text-primary">Weekly Schedule</CardTitle>
+              <CardTitle className="text-lg font-semibold dashboard-text-primary">
+                Weekly Schedule
+              </CardTitle>
               <div className="text-sm dashboard-text-secondary border border-gray-300 px-3 py-1">
-                Mar 21 - 27
+                {format(weekDays[0], "MMM d")} - {format(weekDays[6], "MMM d, yyyy")}
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setCurrentDate(addDays(currentDate, -7))}
+                  aria-label="Previous Week"
+                >
+                  <span>&lt;</span>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setCurrentDate(addDays(currentDate, 7))}
+                  aria-label="Next Week"
+                >
+                  <span>&gt;</span>
+                </Button>
               </div>
             </div>
           </CardHeader>
           <CardContent className="pt-0">
             <div className="grid grid-cols-7 gap-2">
-              {weeklySchedule.map((day) => (
-                <div key={day.day} className="text-center">
-                  <div className="text-xs dashboard-text-secondary mb-1">{day.dayName}</div>
-                  <div className="text-lg font-semibold dashboard-text-primary mb-2">{day.day}</div>
+              {weekDays.map((day) => (
+                <div key={day.toISOString()} className="text-center">
+                  <div className="text-xs dashboard-text-secondary mb-1">
+                    {format(day, "EEE")}
+                  </div>
+                  <div
+                    className={`text-lg font-semibold dashboard-text-primary mb-2 ${isSameDay(day, new Date()) ? "text-green-700" : ""
+                      }`}
+                  >
+                    {format(day, "d")}
+                  </div>
                   <div className="space-y-1 min-h-[100px]">
-                    {day.appointments.map((apt, index) => (
-                      <div key={index} className={`${apt.color} p-2 text-xs`}>
-                        <div className="font-medium text-gray-800">{apt.time}</div>
-                        <div className="text-gray-700">{apt.client}</div>
-                      </div>
-                    ))}
+                    {appointments
+                      .filter(
+                        (apt) =>
+                          isSameDay(new Date(apt.date), day) &&
+                          isSameMonth(new Date(apt.date), currentDate)
+                      )
+                      .map((apt) => (
+                        <div key={apt.id} className={`${apt.color} p-2 text-xs rounded`}>
+                          <div className="font-medium text-gray-800">{apt.time}</div>
+                          <div className="text-gray-700">{apt.client}</div>
+                        </div>
+                      ))}
                   </div>
                 </div>
               ))}
@@ -148,7 +204,7 @@ export default function DashboardOverview() {
                         size="sm"
                         variant="action"
                         label="Accept"
-                        className="bg-[var(--color-darkest-green)] hover:bg-[var(--color-darkest-green)] text-white h-8 px-3 flex items-center justify-center gap-1 text-xs font-medium w-full md:w-auto"
+                        className="bg-[var(--color-dark-green)] hover:bg-[var(--color-darkest-green)] text-white h-8 px-3 flex items-center justify-center gap-1 text-xs font-medium w-full md:w-auto"
                         onClick={() => handleAcceptAppointment(notification.id)}
                         aria-label="Accept"
                       >
@@ -157,7 +213,7 @@ export default function DashboardOverview() {
                       </GreenButton>
                       <OrangeButton
                         variant="action"
-                        className="bg-[var(--color-primary-orange)] hover:bg-[var(--color-darkest-orange)] text-white h-8 px-3 flex items-center justify-center gap-1 text-xs font-medium w-full md:w-auto"
+                        className="bg-[var(--color-primary-orange)] hover:bg-[var(--color-hover-orange)] text-white h-8 px-3 flex items-center justify-center gap-1 text-xs font-medium w-full md:w-auto"
                         onClick={() => handleDeclineAppointment(notification.id)}
                         aria-label="Decline"
                       >
