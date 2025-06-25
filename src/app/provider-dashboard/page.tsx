@@ -156,10 +156,8 @@ export default function DashboardOverview() {
                         <span className="text-xs text-center">Accept</span>
                       </GreenButton>
                       <OrangeButton
-                        label="Decline"
                         variant="action"
-                        size="sm"
-                        className="bg-[var(--color-primary-orange)] hover:bg-orange-600 text-white h-8 px-3 flex items-center justify-center gap-1 text-xs font-medium w-full md:w-auto"
+                        className="bg-[var(--color-primary-orange)] hover:bg-[var(--color-darkest-orange)] text-white h-8 px-3 flex items-center justify-center gap-1 text-xs font-medium w-full md:w-auto"
                         onClick={() => handleDeclineAppointment(notification.id)}
                         aria-label="Decline"
                       >

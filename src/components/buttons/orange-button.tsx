@@ -1,11 +1,9 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import Link from "next/link";
 import clsx from "clsx";
 
-type BaseProps = {
-  size?: string
-  className?: string
-  children?: React.ReactNode
+interface BaseProps {
+  className?: string;
 }
 
 // Route variant
@@ -39,14 +37,15 @@ const OrangeButton: React.FC<ButtonPropTypes> = (props) => {
     );
   }
 
-  //Override the default type of button if needed (e.g. submit)
-  const { type = "button", ...rest } = props;
-
   return (
-    <button type={type} {...rest} className={extraStyles}>
+    <button
+      type="button"
+      className={extraStyles}
+      {...props}
+    >
       {props.children}
     </button>
   );
-}
+};
 
 export default OrangeButton;

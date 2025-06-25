@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import { Badge } from "@/components/provider-dashboard-ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar"
 import { Calendar, MessageSquare, User, Clock, Settings, Users, LogOut, LayoutDashboard } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export function SidebarNav() {
   const pathname = usePathname()
@@ -48,9 +49,18 @@ export function SidebarNav() {
     },
   ]
 
-  const handleSignOut = () => {
-    // Handle sign out logic
-    console.log("Sign out clicked")
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    // Example: Clear authentication tokens from localStorage/sessionStorage
+    localStorage.removeItem("authToken");
+    sessionStorage.removeItem("authToken");
+
+    // Optionally, call your sign out API endpoint if needed
+    // await fetch("/api/auth/signout", { method: "POST" });
+
+    // Redirect to home page
+    router.push("/");
   }
 
   return (
