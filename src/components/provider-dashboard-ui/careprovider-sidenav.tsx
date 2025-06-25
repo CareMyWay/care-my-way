@@ -17,7 +17,7 @@ export function SidebarNav() {
     },
     {
       href: "/provider-dashboard/profile",
-      label: "Manage Profile",
+      label: "Profile",
       icon: User,
     },
     {
@@ -34,7 +34,7 @@ export function SidebarNav() {
       href: "/provider-dashboard/messages",
       label: "Messages",
       icon: MessageSquare,
-      badge: 2, // This would come from your data/API
+      badge: 2,
     },
     {
       href: "/provider-dashboard/appointments",
@@ -83,13 +83,15 @@ export function SidebarNav() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center w-full justify-start h-12 px-4 rounded-md transition-colors ${
-                  isActive
-                    ? "dashboard-sidebar-active text-primary-white"
-                    : "text-green-light dashboard-sidebar-hover hover:text-primary-white"
-                }`}
+                className={`dashboard-sidebar-link flex items-center w-full justify-start h-12 px-4 rounded-md font-medium transition
+                  ${isActive ? "dashboard-sidebar-active" : "dashboard-sidebar-hover"}
+                `}
+                style={{
+                  color: "#fff",
+                  backgroundColor: isActive ? "var(--color-medium-green)" : "transparent",
+                }}
               >
-                <Icon className="mr-3 h-5 w-5" />
+                <Icon className="mr-3 h-5 w-5" color="#fff" />
                 <span className="text-base">{item.label}</span>
                 {item.badge && (
                   <Badge className="ml-auto bg-orange-500 text-white text-xs px-2 py-1">{item.badge}</Badge>
@@ -106,7 +108,7 @@ export function SidebarNav() {
           className="flex items-center w-full justify-start h-12 px-4 rounded-md text-teal-100 hover:bg-teal-700 hover:text-white transition-colors"
           onClick={handleSignOut}
         >
-          <LogOut className="mr-3 h-5 w-5" />
+          <LogOut className="mr-3 h-5 w-5" color="#fff" />
           <span className="text-base">Sign Out</span>
         </button>
       </div>

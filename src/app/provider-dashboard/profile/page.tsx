@@ -6,6 +6,7 @@ import { Button } from "@/components/provider-dashboard-ui/button"
 import { Badge } from "@/components/provider-dashboard-ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar"
 import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav"
+import Link from "next/link"
 
 export default function ProfilePage() {
   return (
@@ -14,7 +15,7 @@ export default function ProfilePage() {
 
       <div className="space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card className="border-gray-200 dashboard-bg-primary rounded-2xl dashboard-card">
+          <Card className="border-gray-400 dashboard-bg-primary rounded-md dashboard-card !shadow-none">
             <CardHeader>
               <CardTitle className="dashboard-text-primary">Personal Information</CardTitle>
             </CardHeader>
@@ -54,7 +55,7 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
 
-          <Card className="border-gray-200 dashboard-bg-primary rounded-2xl dashboard-card">
+          <Card className="border-gray-400 dashboard-bg-primary rounded-md dashboard-card !shadow-none">
             <CardHeader>
               <CardTitle className="dashboard-text-primary">Professional Details</CardTitle>
             </CardHeader>
@@ -93,21 +94,12 @@ export default function ProfilePage() {
           </Card>
         </div>
 
-        <Card className="border-gray-200 dashboard-bg-primary rounded-2xl dashboard-card">
+        <Card className="border-gray-400 dashboard-bg-primary rounded-md dashboard-card !shadow-none">
           <CardHeader>
             <CardTitle className="dashboard-text-primary">Service Areas & Rates</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="font-medium dashboard-text-primary mb-2">Service Areas</h4>
-                <div className="space-y-1">
-                  <p className="text-sm dashboard-text-secondary">• San Francisco, CA</p>
-                  <p className="text-sm dashboard-text-secondary">• Oakland, CA</p>
-                  <p className="text-sm dashboard-text-secondary">• Berkeley, CA</p>
-                  <p className="text-sm dashboard-text-secondary">• Within 25 miles radius</p>
-                </div>
-              </div>
               <div>
                 <h4 className="font-medium dashboard-text-primary mb-2">Hourly Rates</h4>
                 <div className="space-y-1">
@@ -120,11 +112,15 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
 
-        <div className="flex gap-4">
-          <Button className="dashboard-button-primary text-primary-white">Edit Profile</Button>
-          <Button variant="outline" className="dashboard-button-secondary">
-            Update Credentials
-          </Button>
+         <div className="flex gap-4">
+          <Link href="/provider-dashboard/profile/edit">
+            <Button className="dashboard-button-primary text-primary-white">Edit Profile</Button>
+          </Link>
+          <Link href="/provider-dashboard/profile/edit">
+            <Button variant="outline" className="dashboard-button-secondary">
+              Update Credentials
+            </Button>
+          </Link>
         </div>
       </div>
     </>

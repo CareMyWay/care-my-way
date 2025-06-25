@@ -3,9 +3,10 @@ import Link from "next/link";
 import clsx from "clsx";
 
 interface BaseProps {
-  label: ReactNode;
-  href: string;
-  className?: string;
+  size?: string
+  className?: string
+  onClick?: () => void
+  children?: React.ReactNode
 }
 
 //Button variant for navigation
@@ -26,6 +27,19 @@ type ButtonPropTypes = RouteButtonProps | ActionButtonProps;
 const BUTTON_STYLE =
   "bg-dark-green rounded-btn-radius font-btn-font-wgt text-primary-white px-8 py-3 md:text-btn-font-size text-[14px] shadow-md transition-all hover:bg-darkest-green uppercase inline-block";
 
+interface RouteButtonProps extends BaseProps {
+  variant: "route";
+  href: string;
+  label: React.ReactNode;
+}
+
+interface ActionButtonProps extends BaseProps {
+  variant: "action";
+  type?: "button" | "submit" | "reset";
+  onClick?: () => void;
+  label: React.ReactNode;
+}
+
 const GreenButton: React.FC<ButtonPropTypes> = ({
   label,
   className,
@@ -41,10 +55,15 @@ const GreenButton: React.FC<ButtonPropTypes> = ({
     );
   }
 
+  // "action" variant
   return (
-    <Link href={props.href} onClick={props.onClick} className={classes}>
+    <button
+      type={props.type || "button"}
+      onClick={props.onClick}
+      className={clsx("flex items-center justify-center gap-1", className)}
+    >
       {label}
-    </Link>
+    </button>
   );
 };
 
