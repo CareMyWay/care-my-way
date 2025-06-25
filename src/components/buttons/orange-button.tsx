@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import Link from "next/link";
 import clsx from "clsx";
 
@@ -46,6 +46,6 @@ const OrangeButton: React.FC<ButtonPropTypes> = (props) => {
       {props.children}
     </button>
   );
-};
+}
 
 export default OrangeButton;
