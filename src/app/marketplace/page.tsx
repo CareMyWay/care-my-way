@@ -4,6 +4,7 @@ import React from "react";
 import ProviderCard from "@/components/marketplace/healthcare-provider-card";
 import MarketplaceSearchBar from "@/components/marketplace/search-bar";
 import MarketplaceFilter from "@/components/marketplace/filter";
+import NavBar from "@/components/navbars/navbar";
 
 const MOCK_PROVIDERS = [
   {

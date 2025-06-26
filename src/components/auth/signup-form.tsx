@@ -2,20 +2,42 @@
 
 import Link from "next/link";
 import React, { useActionState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 
 import { useFormStatus } from "react-dom";
 import OrangeButton from "@/components/buttons/orange-button";
 import { handleSignUp } from "@/actions/cognitoActions";
 import { useSearchParams } from "next/navigation";
+import { AuthUser } from "aws-amplify/auth";
 
 import CMWStackedHeader from "../headers/cmw-stacked-header";
 
-// const SignUpForm = ({ user }: { user?: AuthUser }) => {
-const SignUpForm = () => {
+const SignUpForm = ({ user }: { user?: AuthUser }) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [password, setPassword] = useState("");
+
   const [errorMessage, dispatch] = useActionState(handleSignUp, undefined);
   const searchParams = useSearchParams();
   const userType = searchParams.get("userType"); // Get from query
+
+  const passwordErrors = [];
+  if (password.length < 8) {
+    passwordErrors.push("At least 8 characters");
+  }
+  if (!/[A-Z]/.test(password)) {
+    passwordErrors.push("At least one uppercase letter");
+  }
+  if (!/[a-z]/.test(password)) {
+    passwordErrors.push("At least one lowercase letter");
+  }
+  if (!/[0-9]/.test(password)) {
+    passwordErrors.push("At least one number");
+  }
+  if (!/[^A-Za-z0-9]/.test(password)) {
+    passwordErrors.push("At least one special character");
+  }
 
   return (
     <main>
@@ -85,28 +107,40 @@ const SignUpForm = () => {
               <div className="space-y-2">
                 <label
                   htmlFor="password"
-                  className=" text-darkest-green mb-3 mt-5 std-form-label"
+                  className="text-darkest-green mb-3 mt-5 std-form-label"
                 >
                   Password
                 </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="Password"
-                  className="std-form-input"
-                  minLength={8}
-                  required
-                />
-              </div>
-              {errorMessage && (
-                <div
-                  className="flex h-8 items-end space-x-1"
-                  aria-live="polite"
-                  aria-atomic="true"
-                >
-                  <p className="text-sm text-red-700">{errorMessage}</p>
+                <div className="relative">
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Password"
+                    className="std-form-input pr-10"
+                    minLength={8}
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
                 </div>
+              </div>
+
+              {password && passwordErrors.length > 0 && (
+                <ul className="text-sm text-red-700 space-y-1 mt-1 list-disc list-inside">
+                  {passwordErrors.map((err, idx) => (
+                    <li key={idx}>{err}</li>
+                  ))}
+                </ul>
               )}
 
               <div className="justify-center flex flex-row self-center">

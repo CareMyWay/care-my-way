@@ -3,9 +3,23 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Badge } from "@/components/provider-dashboard-ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar";
-import { Calendar, MessageSquare, User, Clock, Settings, Users, LogOut, LayoutDashboard } from "lucide-react";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/provider-dashboard-ui/avatar";
+import {
+  Calendar,
+  MessageSquare,
+  User,
+  Clock,
+  Settings,
+  Users,
+  LogOut,
+  LayoutDashboard,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
+import { signOut } from "aws-amplify/auth";
 
 export function SidebarNav() {
   const pathname = usePathname();
@@ -52,16 +66,25 @@ export function SidebarNav() {
   const router = useRouter();
 
   const handleSignOut = async () => {
-    // Example: Clear authentication tokens from localStorage/sessionStorage
-    localStorage.removeItem("authToken");
-    sessionStorage.removeItem("authToken");
-
-    // Optionally, call your sign out API endpoint if needed
-    // await fetch("/api/auth/signout", { method: "POST" });
-
-    // Redirect to home page
-    router.push("/");
+    try {
+      await signOut();
+      router.push("/login");
+    } catch (error) {
+      return error;
+    }
   };
+
+  // const handleSignOut = async () => {
+  //   // Example: Clear authentication tokens from localStorage/sessionStorage
+  //   localStorage.removeItem("authToken");
+  //   sessionStorage.removeItem("authToken");
+
+  //   // Optionally, call your sign out API endpoint if needed
+  //   // await fetch("/api/auth/signout", { method: "POST" });
+
+  //   // Redirect to home page
+  //   router.push("/");
+  // };
 
   return (
     <nav className="w-64 dashboard-sidebar min-h-screen flex flex-col">
@@ -72,8 +95,13 @@ export function SidebarNav() {
         </div>
         <div className="flex items-center gap-3">
           <Avatar className="h-12 w-12">
-            <AvatarImage src="/placeholder.svg?height=48&width=48" alt="Dr. Jane Smith" />
-            <AvatarFallback className="bg-teal-600 text-white text-lg font-semibold">JS</AvatarFallback>
+            <AvatarImage
+              src="/placeholder.svg?height=48&width=48"
+              alt="Dr. Jane Smith"
+            />
+            <AvatarFallback className="bg-teal-600 text-white text-lg font-semibold">
+              JS
+            </AvatarFallback>
           </Avatar>
           <div>
             <p className="text-white font-medium">Dr. Jane Smith</p>
@@ -98,13 +126,17 @@ export function SidebarNav() {
                 `}
                 style={{
                   color: "#fff",
-                  backgroundColor: isActive ? "var(--color-medium-green)" : "transparent",
+                  backgroundColor: isActive
+                    ? "var(--color-medium-green)"
+                    : "transparent",
                 }}
               >
                 <Icon className="mr-3 h-5 w-5" color="#fff" />
                 <span className="text-base">{item.label}</span>
                 {item.badge && (
-                  <Badge className="ml-auto bg-orange-500 text-white text-xs px-2 py-1">{item.badge}</Badge>
+                  <Badge className="ml-auto bg-orange-500 text-white text-xs px-2 py-1">
+                    {item.badge}
+                  </Badge>
                 )}
               </Link>
             );

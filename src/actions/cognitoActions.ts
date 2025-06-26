@@ -97,7 +97,7 @@ export async function handleSignIn(
       await resendSignUpCode({
         username: String(formData.get("email")),
       });
-      return "/sign-up/confirm-sign-up?email=" + formData.get("email");
+      return `/sign-up/confirm-sign-up?email=${formData.get("email")}`;
     }
 
     return "/auth/redirect-after-login";

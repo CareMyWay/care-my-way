@@ -122,7 +122,7 @@ export const getRedirectLinkForGroup = async (): Promise<string> => {
 
       if (Array.isArray(rawGroups)) {
         if (rawGroups.includes("Admin")) return "/admin/dashboard";
-        if (rawGroups.includes("Provider")) return "/provider/dashboard";
+        if (rawGroups.includes("Provider")) return "/provider-dashboard";
         if (rawGroups.includes("Client")) return "/client/dashboard";
       }
 

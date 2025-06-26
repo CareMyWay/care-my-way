@@ -51,7 +51,8 @@ export default function NavBar() {
 
   const defaultRoutes = [
     { href: "/", label: "Home" },
-    { href: "/add", label: "Add Title", loggedIn: true },
+    { href: "/marketplace", label: "Healthcare Directory" },
+    { href: "/provider-dashboard", label: "Dashboard", loggedIn: true },
   ];
 
   const routes = defaultRoutes.filter(
