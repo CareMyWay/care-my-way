@@ -1,11 +1,9 @@
+import React from "react";
 import Link from "next/link";
 import clsx from "clsx";
 
 interface BaseProps {
-  size?: string
-  className?: string
-  onClick?: () => void
-  children?: React.ReactNode
+  className?: string;
 }
 
 // Route variant
@@ -18,7 +16,7 @@ interface RouteButtonProps extends BaseProps {
 // Action variant
 interface ActionButtonProps
   extends BaseProps,
-  React.ButtonHTMLAttributes<HTMLButtonElement> {
+    React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant: "action";
   children: React.ReactNode;
 }
@@ -26,44 +24,24 @@ interface ActionButtonProps
 type ButtonPropTypes = RouteButtonProps | ActionButtonProps;
 
 const BUTTON_STYLE =
-  "bg-dark-green rounded-btn-radius font-btn-font-wgt text-primary-white px-8 py-3 md:text-btn-font-size text-[14px] shadow-md transition-all hover:bg-darkest-green uppercase inline-block";
-
-interface RouteButtonProps extends BaseProps {
-  variant: "route";
-  href: string;
-  label: React.ReactNode;
-}
-
-interface ActionButtonProps extends BaseProps {
-  variant: "action";
-  type?: "button" | "submit" | "reset";
-  onClick?: () => void;
-  label: React.ReactNode;
-}
-
-const GreenButton: React.FC<ButtonPropTypes> = ({
-  label,
-  className,
-  ...props
-}) => {
-  const classes = clsx(BUTTON_STYLE, className);
+  " text-center bg-dark-green rounded-btn-radius font-btn-font-wgt text-primary-white px-8 py-3 md:text-btn-font-size text-[14px] shadow-md transition-all hover:bg-darkest-green uppercase inline-block";
+const GreenButton: React.FC<ButtonPropTypes> = (props) => {
+  const extraStyles = clsx(BUTTON_STYLE, props.className);
 
   if (props.variant === "route") {
     return (
-      <Link href={props.href} className={classes}>
+      <Link href={props.href} className={extraStyles}>
         {props.children}
       </Link>
     );
   }
 
-  // "action" variant
+  //Override the default type of button if needed (e.g. submit)
+  const { type = "button", ...rest } = props;
+
   return (
-    <button
-      type={props.type || "button"}
-      onClick={props.onClick}
-      className={clsx("flex items-center justify-center gap-1", className)}
-    >
-      {label}
+    <button type={type} {...rest} className={extraStyles}>
+      {props.children}
     </button>
   );
 };
