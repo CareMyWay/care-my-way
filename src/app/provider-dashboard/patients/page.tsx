@@ -29,10 +29,10 @@ export default function PatientsPage() {
                 </div>
               </div>
               <div className="space-y-2 text-sm">
-                <p className="dashboard-text-secondary">Last Session: Jan 10, 2024</p>
-                <p className="dashboard-text-secondary">Next Appointment: Jan 15, 2024</p>
+                <p className="dashboard-primary-black">Last Session: Jan 10, 2024</p>
+                <p className="dashboard-primary-black">Next Appointment: Jan 15, 2024</p>
               </div>
-              <Button size="sm" variant="outline" className="w-full mt-4 dashboard-button-secondary">
+              <Button size="sm" variant="outline" className="w-full mt-4 dashboard-button-secondary !rounded-none">
                 View Details
               </Button>
             </CardContent>
