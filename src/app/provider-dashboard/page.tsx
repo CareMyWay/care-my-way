@@ -290,8 +290,7 @@
 // }
 import React from "react";
 import ProviderDashboardComponent from "@/components/dashboards/provider-dashboard";
-// import HomeDashPage from "@/components/provider-dash/home-dash-page";
-// import HomeDashPage from "@/components/provider-dashboard-ui/home-dash-page";
+
 export default function ProviderDashboard() {
   return (
     <div>

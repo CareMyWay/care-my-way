@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
+import Navbar from "@/components/navbars/navbar";
 import ProviderCard from "@/components/marketplace/healthcare-provider-card";
 import MarketplaceSearchBar from "@/components/marketplace/search-bar";
 import MarketplaceFilter from "@/components/marketplace/filter";
-import NavBar from "@/components/navbars/navbar";
 
 const MOCK_PROVIDERS = [
   {
@@ -44,30 +44,33 @@ const MOCK_PROVIDERS = [
 
 export default function MarketplacePage() {
   return (
-    <section className="min-h-screen px-4 py-12 md:px-16 bg-primary-white">
-      <div className="container mx-auto flex flex-col md:h-screen">
-        <div>
+    <div>
+      <Navbar />
+      <section className="min-h-screen px-4 py-12 md:px-16 bg-primary-white">
+        <div className="container mx-auto flex flex-col md:h-screen">
           <div>
-            <MarketplaceSearchBar />
+            <div>
+              <MarketplaceSearchBar />
+            </div>
+          </div>
+          <div className="flex flex-col lg:flex-row gap-6 md:flex-1 md:min-h-0">
+            <div>
+              <MarketplaceFilter />
+            </div>
+            <div className="space-y-6 w-full md:overflow-y-auto">
+              {MOCK_PROVIDERS.length === 0 ? (
+                <div className="text-center text-darkest-green text-lg py-10">
+                  There are no matching providers for your search.
+                </div>
+              ) : (
+                MOCK_PROVIDERS.map((provider, idx) => (
+                  <ProviderCard key={idx} {...provider} />
+                ))
+              )}
+            </div>
           </div>
         </div>
-        <div className="flex flex-col lg:flex-row gap-6 md:flex-1 md:min-h-0">
-          <div>
-            <MarketplaceFilter />
-          </div>
-          <div className="space-y-6 w-full md:overflow-y-auto">
-            {MOCK_PROVIDERS.length === 0 ? (
-              <div className="text-center text-darkest-green text-lg py-10">
-                There are no matching providers for your search.
-              </div>
-            ) : (
-              MOCK_PROVIDERS.map((provider, idx) => (
-                <ProviderCard key={idx} {...provider} />
-              ))
-            )}
-          </div>
-        </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }
