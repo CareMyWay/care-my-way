@@ -14,7 +14,7 @@ const AboutSection = () => {
           qualified healthcare aids who match your unique needs.
         </p>
         <GreenButton
-          href="/"
+          href="/marketplace"
           variant="route"
           className="text-lg px-8 py-3"
           label="Find a Healthcare provider"

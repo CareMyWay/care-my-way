@@ -58,7 +58,7 @@ export function MeetOurProviders() {
 
                   {/* Button outside image */}
                   <div className="p-4 mb-2 flex justify-center">
-                    <GreenButton className="my-2 w-50" href="/" variant="route">
+                    <GreenButton className="my-2 w-50" href="/provider" variant="route">
                       View
                     </GreenButton>
                   </div>
