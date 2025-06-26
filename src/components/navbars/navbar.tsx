@@ -11,28 +11,12 @@ import { useTransition } from "react";
 import { getErrorMessage } from "@/utils/get-error-message";
 import GreenButton from "../buttons/green-button";
 
-<<<<<<< HEAD
-export default function NavBar({ isSignedIn }: { isSignedIn: boolean }) {
-  const [authCheck, setAuthCheck] = useState(isSignedIn);
-  const [isPending, startTransition] = useTransition();
-  const [showLoading, setShowLoading] = useState(false);
-  const router = useRouter(); // <-- Move useRouter to top level
-
-  useEffect(() => {
-    setShowLoading(isPending);
-  }, [isPending]);
-
-<<<<<<< HEAD
-=======
-=======
 // export default function NavBar({ isSignedIn }: { isSignedIn: boolean }) {
 export default function NavBar() {
   const [authCheck, setAuthCheck] = useState<boolean | null>(null);
-  const [isPending, startTransition] = useTransition();
->>>>>>> 2633be0 (Refactor Navbar)
+  const [, startTransition] = useTransition();
   const router = useRouter();
 
->>>>>>> 1b87dd5 (Complete navbar with auth functionality)
   useEffect(() => {
     // Check current user on mount
     getCurrentUser()
@@ -56,46 +40,13 @@ export default function NavBar() {
     return () => hubListenerCancel();
   }, [router]);
 
-<<<<<<< HEAD
-  const handleLoading = () => {
-    if (showLoading) {
-      return (
-        <div className="loading-indicator">
-          <span>Loading...</span>
-        </div>
-      );
-    }
-    return null;
-  };
-  const loadingIndicator = handleLoading();
-
-  if (loadingIndicator) {
-    return loadingIndicator;
-  }
-
-  const signOutSignIn = async () => {
-    if (authCheck) {
-      await signOut();
-    } else {
-      router.push("/signin");
-    }
-=======
   const handleSignOut = async () => {
-<<<<<<< HEAD
-    await signOut();
->>>>>>> 1b87dd5 (Complete navbar with auth functionality)
-=======
     try {
       await signOut();
     } catch (error) {
       console.log(getErrorMessage(error));
     }
-<<<<<<< HEAD
-    redirect("/auth/sign-in");
->>>>>>> c523b7f (Complete sign up, sign in, and logout with authentication)
-=======
     redirect("/login");
->>>>>>> 1a1f036 (Clean up routing for sign up)
   };
 
   const defaultRoutes = [

@@ -1,22 +1,10 @@
 import { createServerRunner } from "@aws-amplify/adapter-nextjs";
-<<<<<<< HEAD
-<<<<<<< HEAD
-import { getCurrentUser } from "aws-amplify/auth";
-=======
-import { getCurrentUser } from "aws-amplify/auth/server";
-<<<<<<< HEAD
-// eslint-disable-next-line no-restricted-imports
->>>>>>> 1b87dd5 (Complete navbar with auth functionality)
-=======
->>>>>>> 94e6bc2 (In progress of adding user to user pool groups)
-=======
 import {
   getCurrentUser,
   fetchAuthSession,
   fetchUserAttributes,
 } from "aws-amplify/auth/server";
 import { FetchUserAttributesOutput } from "aws-amplify/auth";
->>>>>>> 2e3d7ee (Complete functionality to fetch user profile data)
 import config from "../../amplify_outputs.json";
 import { cookies } from "next/headers";
 import { type Schema } from "@/../amplify/data/resource";
@@ -25,33 +13,6 @@ export const { runWithAmplifyServerContext } = createServerRunner({
   config,
 });
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-// export const cookiesClient = generateServerClientUsingCookies<Schema>({
-//   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-//   config,
-//   cookies,
-// });
-
-//check if user is logged in
-
-<<<<<<< HEAD
-export async function GetAuthCurrentUserServer() {
-  try {
-    const currentUser = await runWithAmplifyServerContext({
-      nextServerContext: { cookies },
-      operation: () => getCurrentUser(),
-    });
-    return currentUser;
-  } catch (error) {
-    console.log(error);
-  }
-}
-=======
-export const isAuthenticated = async () =>
-  await runWithAmplifyServerContext({
-=======
-=======
 // Return the current signed-in user
 // Use to return current user information
 export const getCurrentUserServer = async () => {
@@ -64,10 +25,8 @@ export const getCurrentUserServer = async () => {
 };
 
 // Check if the user is authenticated
->>>>>>> 2e3d7ee (Complete functionality to fetch user profile data)
 export const isAuthenticated = async (): Promise<boolean> => {
   const result = await runWithAmplifyServerContext({
->>>>>>> c27aa6c (In process of fixing authentication flow)
     nextServerContext: { cookies },
     async operation(contextSpec) {
       try {
@@ -81,25 +40,8 @@ export const isAuthenticated = async (): Promise<boolean> => {
     },
   });
 
-<<<<<<< HEAD
-// export async function GetAuthCurrentUserServer() {
-//   try {
-//     const currentUser = await runWithAmplifyServerContext({
-//       nextServerContext: { cookies },
-//       operation: (context) => getCurrentUser(context),
-//     });
-//     return currentUser;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
->>>>>>> 1b87dd5 (Complete navbar with auth functionality)
-=======
   return result;
 };
-<<<<<<< HEAD
->>>>>>> c27aa6c (In process of fixing authentication flow)
-=======
 
 //Checks if use belongs to  the Admin group
 // Use for admin-only pages or features
@@ -170,9 +112,6 @@ export const cookieBasedClient = generateServerClientUsingCookies<Schema>({
   cookies,
   authMode: "userPool",
 });
-<<<<<<< HEAD
->>>>>>> 2e3d7ee (Complete functionality to fetch user profile data)
-=======
 
 export const getRedirectLinkForGroup = async (): Promise<string> => {
   return await runWithAmplifyServerContext({
@@ -198,4 +137,3 @@ export const getRedirectLinkForGroup = async (): Promise<string> => {
     },
   });
 };
->>>>>>> 86140a8 (Complete functionality for role based registration, display user attributes in dashboard, and clean up code)
