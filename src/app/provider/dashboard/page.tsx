@@ -1,6 +1,6 @@
 import React from "react";
 import ProviderDashboard from "@/components/dashboards/provider-dashboard";
-import NavBar from "@/components/navbars/navbar";
+import NavBar from "@/components/nav-bars/navbar";
 
 export default async function ProviderDashboardPage() {
   return (

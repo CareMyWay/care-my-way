@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { PersonalInfoSection } from "@/components/user-registration/personal-info-section";
 import { AddressSection } from "@/components/user-registration/address-section";
 import { EmergencyContactSection } from "@/components/user-registration/emergency-contact-section";
-import { RegistrationNavSideBar } from "@/components/navbars/registration-nav-sidebar";
-import NavBar from "@/components/navbars/navbar";
+import { RegistrationNavSideBar } from "@/components/nav-bars/registration-nav-sidebar";
+import NavBar from "@/components/nav-bars/navbar";
 export default function ClientRegistration() {
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const [activeSection, setActiveSection] = useState("personal-info");

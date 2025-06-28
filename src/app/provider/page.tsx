@@ -1,5 +1,5 @@
 import "@/app/globals.css";
-import NavBar from "@/components/navbars/navbar";
+import NavBar from "@/components/nav-bars/navbar";
 import ProfileSummary from "@/components/provider-profile/profile-summary";
 import ProfileDetails from "@/components/provider-profile/profile-details";
 import Link from "next/link";

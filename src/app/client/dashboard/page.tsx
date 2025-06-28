@@ -1,6 +1,6 @@
 import React from "react";
 import ClientDashboard from "@/components/dashboards/client-dashboard";
-import NavBar from "@/components/navbars/navbar";
+import NavBar from "@/components/nav-bars/navbar";
 
 export default async function ClientDashboardPage() {
   return (

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Navbar from "@/components/navbars/navbar";
+import Navbar from "@/components/nav-bars/navbar";
 import ProviderCard from "@/components/marketplace/healthcare-provider-card";
 import MarketplaceSearchBar from "@/components/marketplace/search-bar";
 import MarketplaceFilter from "@/components/marketplace/filter";
