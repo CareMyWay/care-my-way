@@ -9,7 +9,7 @@ const features = [
     description:
       "Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.",
     buttonLabel: "Book Now",
-    buttonHref: "/book",
+    buttonHref: "/",
     bgColor: "bg-medium-green",
     borderColor: "border-medium-green",
     outlineColor: "border-darkest-green",
@@ -22,7 +22,7 @@ const features = [
     description:
       "Every provider is background-checked and verified, so you can trust the care you receive.",
     buttonLabel: "Meet Providers",
-    buttonHref: "/providers",
+    buttonHref: "/marketplace",
     bgColor: "bg-darkest-green",
     borderColor: "border-darkest-green",
     outlineColor: "border-medium-green",
@@ -35,7 +35,7 @@ const features = [
     description:
       "Get matched with providers who fit your unique needs and preferences, every time.",
     buttonLabel: "Find Your Match",
-    buttonHref: "/match",
+    buttonHref: "/",
     bgColor: "bg-medium-green",
     borderColor: "border-medium-green",
     outlineColor: "border-darkest-green",
@@ -59,28 +59,31 @@ const FeaturesSection = () => {
 
       <div className="flex flex-col gap-20">
         {features.map(
-          (
-            {
-              id,
-              title,
-              description,
-              buttonLabel,
-              buttonHref,
-              bgColor,
-              borderColor,
-              outlineColor,
-              icon,
-              reverse,
-            }
-          ) => (
+          ({
+            id,
+            title,
+            description,
+            buttonLabel,
+            buttonHref,
+            bgColor,
+            borderColor,
+            outlineColor,
+            icon,
+            reverse,
+          }) => (
             <div
               key={id}
-              className={`flex ${reverse ? "flex-col md:flex-row-reverse" : "flex-col md:flex-row"
-                } justify-center items-center gap-8 md:gap-16 px-4 max-w-6xl mx-auto`}
+              className={`flex ${
+                reverse
+                  ? "flex-col md:flex-row-reverse"
+                  : "flex-col md:flex-row"
+              } justify-center items-center gap-8 md:gap-16 px-4 max-w-6xl mx-auto`}
             >
               <div className="w-full max-w-md flex items-center justify-center text-center">
                 <div>
-                  <h2 className="text-2xl md:text-3xl font-bold text-darkest-green mb-4">{title}</h2>
+                  <h2 className="text-2xl md:text-3xl font-bold text-darkest-green mb-4">
+                    {title}
+                  </h2>
                   <OrangeButton
                     variant="route"
                     href={buttonHref}
