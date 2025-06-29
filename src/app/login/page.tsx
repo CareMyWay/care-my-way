@@ -1,11 +1,11 @@
 import LoginForm from "@/components/auth/login-form";
-import { LogoStepBar } from "@/components/auth/logo-step-bar";
+import { CMWSideBySideHeader } from "@/components/headers/cmw-side-by-side-header";
 import React from "react";
 
 const Login = () => {
   return (
     <div>
-      <LogoStepBar />
+      <CMWSideBySideHeader />
       <LoginForm />
     </div>
   );

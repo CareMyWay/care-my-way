@@ -1,11 +1,10 @@
-// app/forgot-password/page.tsx
 import ForgotPasswordForm from "@/components/auth/forgot-password-form";
-import { LogoStepBar } from "@/components/auth/logo-step-bar";
+import { CMWSideBySideHeader } from "@/components/headers/cmw-side-by-side-header";
 
 export default function ForgotPasswordPage() {
   return (
     <div>
-      <LogoStepBar />
+      <CMWSideBySideHeader />
       <ForgotPasswordForm />
     </div>
   );

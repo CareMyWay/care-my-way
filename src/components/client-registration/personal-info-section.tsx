@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 "use client";
 
 import { useEffect } from "react";
@@ -20,7 +21,7 @@ const personalInfoSchema = z.object({
 type PersonalInfoFormFields = z.infer<typeof personalInfoSchema>;
 
 interface PersonalInfoSectionProps {
-  onDataChange: (data: PersonalInfoFormFields) => void;
+  onDataChange: (_data: PersonalInfoFormFields) => void;
   isCompleted: boolean;
   defaultValues?: PersonalInfoFormFields; // optional for future default support
 }
@@ -47,7 +48,7 @@ export function PersonalInfoSection({
     resolver: zodResolver(personalInfoSchema),
   });
 
-  const watchedFields = watch();
+  // const watchedFields = watch();
 
   // Track and notify parent of progress
   useEffect(() => {

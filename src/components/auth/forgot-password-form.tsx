@@ -36,12 +36,12 @@ export default function ForgotPasswordForm() {
 
       if (nextStep.resetPasswordStep === "CONFIRM_RESET_PASSWORD_WITH_CODE") {
         setStep("CONFIRM");
-        setMessage(`A confirmation code was sent to your email.`);
+        setMessage("A confirmation code was sent to your email.");
       } else if (nextStep.resetPasswordStep === "DONE") {
         setStep("DONE");
         setMessage("Password reset complete. You can now log in.");
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
       if (error.name === "UserNotFoundException") {
         setMessage("No account found with that email address.");
@@ -60,7 +60,7 @@ export default function ForgotPasswordForm() {
       });
       setStep("DONE");
       setMessage("Password successfully reset. You can now log in.");
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
       setMessage(error.message || "Failed to confirm new password.");
     }

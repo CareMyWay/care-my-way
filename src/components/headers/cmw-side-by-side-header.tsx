@@ -11,12 +11,7 @@ export const CMWSideBySideHeader = () => {
         <div className="flex flex-col items-center">
           <Link href="/" className="flex items-center">
             <div className="relative w-10 h-10 mr-2">
-              <Image
-                src="/svgs/CMW_Logo.svg"
-                alt="logo"
-                fill
-                className="mx-auto"
-              />
+              <Image src={LOGO} alt="logo" fill className="mx-auto" />
             </div>
             <h1 className="text-h4-size font-bold text-darkest-green">
               Care My Way

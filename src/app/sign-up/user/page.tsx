@@ -1,4 +1,4 @@
-import UserTypeSignUp from "@/components/auth/usertype-signup";
+import UserTypeSignUp from "@/components/auth/user-type-signup";
 import React from "react";
 
 export default function User() {

@@ -1,11 +1,44 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { PersonalInfoSection } from "@/components/user-registration/personal-info-section";
-import { AddressSection } from "@/components/user-registration/address-section";
-import { EmergencyContactSection } from "@/components/user-registration/emergency-contact-section";
+import { PersonalInfoSection } from "@/components/client-registration/personal-info-section";
+import { AddressSection } from "@/components/client-registration/address-section";
+import { EmergencyContactSection } from "@/components/client-registration/emergency-contact-section";
 import { RegistrationNavSideBar } from "@/components/nav-bars/registration-nav-sidebar";
 import NavBar from "@/components/nav-bars/navbar";
+
+// Form validation functions
+type PersonalInfoData = {
+  firstName?: string;
+  lastName?: string;
+  gender?: string;
+  dob?: string;
+  email?: string;
+  phone?: string;
+  [key: string]: string | undefined;
+};
+
+type AddressData = {
+  address?: string;
+  city?: string;
+  province?: string;
+  postalCode?: string;
+  [key: string]: string | undefined;
+};
+
+type EmergencyContactData = {
+  contactFirstName?: string;
+  contactLastName?: string;
+  relationship?: string;
+  contactPhone?: string;
+  supportPerson?: boolean | string;
+  supportFirstName?: string;
+  supportLastName?: string;
+  supportRelationship?: string;
+  supportPhone?: string;
+  [key: string]: string | boolean | undefined;
+};
+
 export default function ClientRegistration() {
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const [activeSection, setActiveSection] = useState("personal-info");
@@ -22,8 +55,7 @@ export default function ClientRegistration() {
 
   const sections = ["personal-info", "address", "emergency-contact"];
 
-  // Form validation functions
-  const validatePersonalInfo = (data: any) => {
+  const validatePersonalInfo = (data: PersonalInfoData) => {
     const required = [
       "firstName",
       "lastName",
@@ -33,7 +65,7 @@ export default function ClientRegistration() {
       "phone",
     ];
     const filled = required.filter(
-      (field) => data[field] && data[field].trim() !== ""
+      (field) => data[field] && data[field]?.trim() !== ""
     );
     return {
       progress: (filled.length / required.length) * 100,
@@ -41,10 +73,10 @@ export default function ClientRegistration() {
     };
   };
 
-  const validateAddress = (data: any) => {
+  const validateAddress = (data: AddressData) => {
     const required = ["address", "city", "province", "postalCode"];
     const filled = required.filter(
-      (field) => data[field] && data[field].trim() !== ""
+      (field) => typeof data[field] === "string" && data[field].trim() !== ""
     );
     return {
       progress: (filled.length / required.length) * 100,
@@ -52,7 +84,7 @@ export default function ClientRegistration() {
     };
   };
 
-  const validateEmergencyContact = (data: any) => {
+  const validateEmergencyContact = (data: EmergencyContactData) => {
     const requiredBase = [
       "contactFirstName",
       "contactLastName",
@@ -92,10 +124,13 @@ export default function ClientRegistration() {
     };
   };
 
-  const updateFormData = (section: string, data: any) => {
+  type SectionKey = "personal-info" | "address" | "emergency-contact";
+  type SectionData = PersonalInfoData | AddressData | EmergencyContactData;
+
+  const updateFormData = (section: SectionKey, data: SectionData) => {
     setFormData((prev) => ({
       ...prev,
-      [section]: { ...prev[section as keyof typeof prev], ...data },
+      [section]: { ...prev[section], ...data },
     }));
   };
 
@@ -115,8 +150,8 @@ export default function ClientRegistration() {
   }, [formData]);
 
   const navigateToSection = (sectionId: string) => {
-    const currentIndex = sections.indexOf(activeSection);
-    const targetIndex = sections.indexOf(sectionId);
+    // const currentIndex = sections.indexOf(activeSection);
+    // const targetIndex = sections.indexOf(sectionId);
 
     // Can navigate to completed sections or current section
     if (

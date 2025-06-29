@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 "use client";
 
 import { useEffect } from "react";
@@ -46,7 +47,7 @@ export function AddressSection({
     resolver: zodResolver(addressSchema),
   });
 
-  const watchedFields = watch();
+  // const watchedFields = watch();
 
   // Track and notify parent of progress
   useEffect(() => {

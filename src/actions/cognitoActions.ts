@@ -18,7 +18,8 @@ export async function handleSignUp(
     if (!userType) {
       throw new Error("User type is required");
     }
-    const { isSignUpComplete, userId, nextStep } = await signUp({
+    // const { isSignUpComplete, userId, nextStep } = await signUp({
+    const {} = await signUp({
       username: String(formData.get("email")),
       password: String(formData.get("password")),
       options: {
@@ -88,7 +89,8 @@ export async function handleSignIn(
   formData: FormData
 ) {
   try {
-    const { isSignedIn, nextStep } = await signIn({
+    // const { isSignedIn, nextStep } = await signIn({
+    const { nextStep } = await signIn({
       username: String(formData.get("email")),
       password: String(formData.get("password")),
     });
