@@ -80,8 +80,8 @@ export default function ConfirmSignUpForm() {
         {state && !state.startsWith("/") && (
           <p className="text-h4-size text-red-600 text-center">{state}</p>
         )}
-        <SendVerificationCode />
       </form>
+      <SendVerificationCode email={emailFromQuery} />
     </main>
   );
 }

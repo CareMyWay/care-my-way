@@ -76,13 +76,38 @@ export async function handleConfirmSignUp(
       confirmationCode: code,
     });
 
-    await autoSignIn();
-
-    return "/auth/redirect-after-login";
+    try {
+      await autoSignIn(); // try, but don’t crash if it fails
+      return "/auth/redirect-after-login";
+    } catch {
+      console.log("Auto sign-in failed, redirecting to login.");
+      return "/login?confirmed=true"; // or let them log in manually
+    }
   } catch (error) {
     return error instanceof Error ? error.message : "Unknown error";
   }
 }
+
+// export async function handleConfirmSignUp(
+//   prevState: string | undefined,
+//   formData: FormData
+// ): Promise<string | undefined> {
+//   try {
+//     const email = String(formData.get("email"));
+//     const code = String(formData.get("code"));
+
+//     await confirmSignUp({
+//       username: email,
+//       confirmationCode: code,
+//     });
+
+//     await autoSignIn();
+
+//     return "/auth/redirect-after-login";
+//   } catch (error) {
+//     return error instanceof Error ? error.message : "Unknown error";
+//   }
+// }
 
 export async function handleSignIn(
   prevState: string | undefined,

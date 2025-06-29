@@ -124,13 +124,15 @@ export const getRedirectLinkForGroup = async (): Promise<string> => {
         if (rawGroups.includes("Admin")) return "/admin/dashboard";
         if (rawGroups.includes("Provider")) return "/provider-dashboard";
         if (rawGroups.includes("Client")) return "/client/dashboard";
+        if (rawGroups.includes("Support")) return "/support/dashboard";
       }
 
       if (typeof rawGroups === "string") {
         const groups = rawGroups.split(",");
         if (groups.includes("Admin")) return "/admin/dashboard";
-        if (groups.includes("Provider")) return "/provider/dashboard";
+        if (groups.includes("Provider")) return "/provider-dashboard";
         if (groups.includes("Client")) return "/client/dashboard";
+        if (groups.includes("Support")) return "/support/dashboard";
       }
 
       return "/unauthorized";

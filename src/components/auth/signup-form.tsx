@@ -10,15 +10,16 @@ import { useFormStatus } from "react-dom";
 import OrangeButton from "@/components/buttons/orange-button";
 import { handleSignUp } from "@/actions/cognitoActions";
 import { useSearchParams } from "next/navigation";
-import { AuthUser } from "aws-amplify/auth";
+// import { AuthUser } from "aws-amplify/auth";
 
 import CMWStackedHeader from "../headers/cmw-stacked-header";
 
-const SignUpForm = ({ user }: { user?: AuthUser }) => {
+// const SignUpForm = ({ user }: { user?: AuthUser }) => {
+const SignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
 
-  const [errorMessage, dispatch] = useActionState(handleSignUp, undefined);
+  const [, dispatch] = useActionState(handleSignUp, undefined);
   const searchParams = useSearchParams();
   const userType = searchParams.get("userType"); // Get from query
 
