@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface CarouselProps {
@@ -42,6 +42,7 @@ export const Carousel: React.FC<CarouselProps> = ({
       curr >= Math.ceil(children.length / visibleSlides) - 1 ? 0 : curr + 1
     );
   }, [children.length, visibleSlides]);
+
 
   useEffect(() => {
     if (!autoSlide || isHovering) return;
@@ -95,9 +96,8 @@ export const Carousel: React.FC<CarouselProps> = ({
       <div
         className="flex transition-transform duration-500 ease-out"
         style={{
-          transform: `translateX(-${
-            (100 * curr * visibleSlides) / totalSlides
-          }%)`,
+          transform: `translateX(-${(100 * curr * visibleSlides) / totalSlides
+            }%)`,
           width: `${(totalSlides / visibleSlides) * 100}%`,
         }}
       >
@@ -120,9 +120,8 @@ export const Carousel: React.FC<CarouselProps> = ({
           }).map((_, i) => (
             <div
               key={i}
-              className={`transition-all w-2 h-2 bg-white rounded-full cursor-pointer ${
-                curr === i ? "p-1.5" : "bg-opacity-50"
-              }`}
+              className={`transition-all w-2 h-2 bg-white rounded-full cursor-pointer ${curr === i ? "p-1.5" : "bg-opacity-50"
+                }`}
               onClick={() => goToSlide(i)}
             />
           ))}

@@ -1,120 +1,134 @@
 import React from "react";
 import OrangeButton from "../buttons/orange-button";
-
-const TITLE_STYLE =
-  "flex text-body2-size md:text-h3-size font-medium text-darkest-green mb-10";
-const DESC_STYLE =
-  "text-body4-size md:text-body3-size lg:text-body2-size p-6 md:p-10 font-medium";
+import { CalendarCheck, ShieldCheck, Users } from "lucide-react"; // Example Lucide icons
 
 const features = [
   {
     id: 1,
-    title: "Healthcare Transition Quiz",
+    title: "Effortless Booking",
     description:
-      "Don't know what level of help you need?\n\nTake this Transition Quiz that will guide you through the process of identifying the right level of care based on your loved one's current health situation.",
-    buttonLabel: "Health Quiz",
+      "Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.",
+    buttonLabel: "Book Now",
     buttonHref: "/",
     bgColor: "bg-medium-green",
-    shadowColor: "bg-darkest-green",
+    borderColor: "border-medium-green",
+    outlineColor: "border-darkest-green",
+    icon: <CalendarCheck size={48} className="text-primary-white mb-4" />,
     reverse: false,
   },
   {
     id: 2,
-    title: "Personalized Healthcare Directory",
+    title: "Verified Professionals",
     description:
-      "Don't know what level of help you need?\n\nTake this Transition Quiz that will guide you through the process of identifying the right level of care based on your loved one's current health situation.",
-    buttonLabel: "Directory",
-    buttonHref: "/",
+      "Every provider is background-checked and verified, so you can trust the care you receive.",
+    buttonLabel: "Meet Providers",
+    buttonHref: "/marketplace",
     bgColor: "bg-darkest-green",
-    shadowColor: "bg-medium-green",
+    borderColor: "border-darkest-green",
+    outlineColor: "border-medium-green",
+    icon: <ShieldCheck size={48} className="text-primary-white mb-4" />,
     reverse: true,
   },
   {
     id: 3,
-    title: "Healthcare Resources Hub",
+    title: "Personalized Matches",
     description:
-      "Want to learn more about your health?\n\nBrowse dozens of healthcare topics in several languages.",
-    buttonLabel: "Resources",
+      "Get matched with providers who fit your unique needs and preferences, every time.",
+    buttonLabel: "Find Your Match",
     buttonHref: "/",
     bgColor: "bg-medium-green",
-    shadowColor: "bg-darkest-green",
+    borderColor: "border-medium-green",
+    outlineColor: "border-darkest-green",
+    icon: <Users size={48} className="text-primary-white mb-4" />,
     reverse: false,
   },
 ];
 
+const DESC_STYLE =
+  "text-base md:text-lg lg:text-xl font-medium text-primary-white break-words max-w-full";
+const BOX_SIZE = "w-full h-64 md:w-[370px] md:h-[320px]";
+
 const FeaturesSection = () => {
   return (
-    <div className="my-20">
+    <section className="py-24 bg-white">
       <div className="px-4 flex justify-center">
-        <h1 className="text-darkest-green text-body1-size md:text-h3-size mb-20  text-center w-full max-w-6xl font-medium">
+        <h1 className="text-darkest-green text-3xl md:text-4xl font-bold mb-16 text-center w-full max-w-6xl">
           Our Features
         </h1>
       </div>
 
-      {features.map(
-        ({
-          id,
-          title,
-          description,
-          buttonLabel,
-          buttonHref,
-          bgColor,
-          shadowColor,
-          reverse,
-        }) => (
-          // index
-          <div
-            key={id}
-            className={`flex ${
-              reverse ? "flex-col md:flex-row-reverse" : "flex-col md:flex-row"
-            } justify-center items-center gap-4 px-4`}
-            // className={`${reverse ? "flex-col-reverse" : ""} ${COL_STYLE}`}
-          >
-            <div className="aspect-square w-full max-w-lg flex items-center justify-center text-center">
-              <div>
-                <h2 className={TITLE_STYLE}>
-                  {title.split("\n").map((line, i) => (
-                    <React.Fragment key={i}>
-                      {line}
-                      <br />
-                    </React.Fragment>
-                  ))}
-                </h2>
-                <OrangeButton variant="route" href={buttonHref}>
-                  {buttonLabel}
-                </OrangeButton>
-              </div>
-            </div>
-            <div className="relative aspect-square w-full max-w-lg">
-              {/* Shadow block - hidden in mobile */}
-              <div
-                className={`sm:block hidden absolute inset-0 ${
-                  reverse
-                    ? "-translate-x-3 translate-y-3"
-                    : "translate-x-3 translate-y-3"
-                } ${shadowColor}  z-0`}
-              ></div>
-
-              {/* Content block */}
-              <div
-                className={`relative z-10 text-primary-white ${bgColor} h-full w-full flex items-center justify-center text-center`}
-              >
+      <div className="flex flex-col gap-20">
+        {features.map(
+          ({
+            id,
+            title,
+            description,
+            buttonLabel,
+            buttonHref,
+            bgColor,
+            borderColor,
+            outlineColor,
+            icon,
+            reverse,
+          }) => (
+            <div
+              key={id}
+              className={`flex ${
+                reverse
+                  ? "flex-col md:flex-row-reverse"
+                  : "flex-col md:flex-row"
+              } justify-center items-center gap-8 md:gap-16 px-4 max-w-6xl mx-auto`}
+            >
+              <div className="w-full max-w-md flex items-center justify-center text-center">
                 <div>
-                  <p className={DESC_STYLE}>
-                    {description.split("\n").map((line, i) => (
-                      <React.Fragment key={i}>
-                        {line}
-                        <br />
-                      </React.Fragment>
-                    ))}
-                  </p>
+                  <h2 className="text-2xl md:text-3xl font-bold text-darkest-green mb-4">
+                    {title}
+                  </h2>
+                  <OrangeButton
+                    variant="route"
+                    href={buttonHref}
+                    className="mt-4 px-6 py-2 text-base"
+                  >
+                    {buttonLabel}
+                  </OrangeButton>
+                </div>
+              </div>
+              <div className="relative flex items-center justify-center w-full max-w-md">
+                {/* Outline box behind, offset on the bottom */}
+                <div
+                  className={`
+                    absolute
+                    ${reverse ? "-bottom-4 -left-4" : "-bottom-4 -right-4"}
+                    ${BOX_SIZE}
+                    rounded-2xl
+                    border-4
+                    ${outlineColor}
+                    z-0
+                  `}
+                  aria-hidden="true"
+                ></div>
+                {/* Main feature box */}
+                <div
+                  className={`
+                    relative z-10
+                    ${bgColor}
+                    ${borderColor}
+                    border-4
+                    rounded-2xl
+                    flex flex-col items-center justify-center
+                    p-8 md:p-10
+                    ${BOX_SIZE}
+                  `}
+                >
+                  {icon}
+                  <div className={DESC_STYLE}>{description}</div>
                 </div>
               </div>
             </div>
-          </div>
-        )
-      )}
-    </div>
+          )
+        )}
+      </div>
+    </section>
   );
 };
 
