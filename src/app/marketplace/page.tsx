@@ -1,17 +1,13 @@
 "use client";
 
 import React, {useState} from "react";
-import React, {useState} from "react";
 import Navbar from "@/components/nav-bars/navbar";
 import ProviderCard from "@/components/marketplace/healthcare-provider-card";
 import MarketplaceSearchBar from "@/components/marketplace/search-bar";
 import MarketplaceFilter from "@/components/marketplace/filter";
 import {fetchProviders} from "@/actions/fetchProviderMarketPlace";
 import Loading from "../loading";
-import {fetchProviders} from "@/actions/fetchProviderMarketPlace";
-import Loading from "../loading";
 
-const demo_data = [
 const demo_data = [
   {
     name: "Nina Nguyen",
@@ -54,6 +50,7 @@ export interface Provider {
   title: string;
   location: string;
   experience: string;
+  testimonials: number;
   languages: string[];
   services: string[];
   hourlyRate: number;
@@ -76,7 +73,7 @@ export default function MarketplacePage() {
   const [experience, setExperience] = useState<number>(0);
   const [specialty, setSpecialty] = useState<string[]>([]);
 
-  const [languagePreference, setLanguagePreference] = useState<string[]>([]);
+  const [languagePreference, setLanguagePreference] = useState<string[]>(["English"]);
 
   const [fetchedProviders, setFetchedProviders] = useState<Provider[]>([]);
   const [pageDoneLoading, setPageDoneLoading] = useState<boolean>(true);
@@ -100,7 +97,8 @@ export default function MarketplacePage() {
             name: ele.firstName.concat(" ".concat(ele.lastName)),
             title: ele.title,
             location: ele.location,
-            experience: ele.experience,
+            experience: String(ele.experience%12).concat("+ year").concat(ele.experience%12 === 1 ? " " : "s"),
+            testimonials: ele.testimonials.length,
             languages: Array.from(ele.languages.values()),
             services: Array.from(ele.services.values()),
             hourlyRate: ele.hourlyRate,
@@ -133,23 +131,28 @@ export default function MarketplacePage() {
 
         <div className="flex flex-col flex-auto lg:flex-row gap-6 md:flex-1 md:min-h-0">
           <div>
-            <MarketplaceFilter
-              minPrice={minPrice}
-              maxPrice={maxPrice}
-              availability={availability}
-              experience={experience}
-              specialty={specialty}
-              languagePreference={languagePreference}
-              setMinPrice={setMinPrice}
-              setMaxPrice={setMaxPrice}
-              setAvailability={setAvailability}
-              setExperience={setExperience}
-              setSpecialty={setSpecialty}
-              setLanguagePreference={setLanguagePreference}
-              triggerFetch={triggerFetch} />
+            <div>
+              <MarketplaceSearchBar searchKey={searchKey} setSearchKey={setSearchKey} triggerFetch={triggerFetch} />
+            </div>
           </div>
-          <div className={"flex-auto overflow-y-auto"}>
-            <div className="space-y-6 w-full  md:overflow-auto">
+          <div className="flex flex-col lg:flex-row gap-6 md:flex-1 md:min-h-0">
+            <div>
+              <MarketplaceFilter
+                minPrice={minPrice}
+                maxPrice={maxPrice}
+                availability={availability}
+                experience={experience}
+                specialty={specialty}
+                languagePreference={languagePreference}
+                setMinPrice={setMinPrice}
+                setMaxPrice={setMaxPrice}
+                setAvailability={setAvailability}
+                setExperience={setExperience}
+                setSpecialty={setSpecialty}
+                setLanguagePreference={setLanguagePreference}
+                triggerFetch={triggerFetch} />
+            </div>
+            <div className="space-y-6 w-full md:overflow-y-auto">
               {
                 pageDoneLoading ? (
                   fetchedProviders.length === 0 ? (
