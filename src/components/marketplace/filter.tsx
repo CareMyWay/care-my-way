@@ -6,9 +6,6 @@ import { useState } from "react";
 import {RangeSlider} from "@/components/slider/range-slider";
 import {Input} from "@/components/inputs/input";
 import GreenButton from "@/components/buttons/green-button";
-import {MultipleSelect} from "@/components/select/multipleSelect";
-import {Availability} from "@/components/calendar/availability";
-import {Select} from "@/components/select/standardSelect";
 
 const MarketplaceFilter = ({
                              minPrice,
@@ -46,42 +43,41 @@ const MarketplaceFilter = ({
    * const [languagePreference, setLanguagePreference] = useState<string[]>(["English"]);
    * */
 
-  // const [inputLanName, setInputLanName] = useState("");
-  // const [isOpen, setIsOpen] = useState(false);
+  const [inputLanName, setInputLanName] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
-  // const handleAvlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setAvailability([e.target.value]); // Fatal: to-do fix update rather than replace
-  // };
+  const handleAvlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAvailability([e.target.value]); // Fatal: to-do fix update rather than replace
+  };
 
-  const handleExpChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleExpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setExperience(Number(e.target.value));
   };
 
-  // const handleSpcChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setSpecialty([e.target.value]); // Fatal: to-do fix update rather than replace
-  // };
+  const handleSpcChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSpecialty([e.target.value]); // Fatal: to-do fix update rather than replace
+  };
 
   const languagePool = ["English","French","Mandarin","Cantonese","Punjabi","Spanish","Arabic","Tagalog","Italian","Persian","Hindi"];
-  const servicePool = ["Dementia Care", "Personal Care", "Health Monitoring", "Housekeeping", "Companionship", "Mobility Assistance", "Wound Care", "Medication Management", "Health Education"];
 
-  // const updSelectedLanguage = (lanName : string , isAdding: boolean) =>{
-  //
-  //   if (languagePreference.some((item) => lanName === item)){
-  //     if(isAdding){
-  //       return;
-  //     } else {
-  //       const index = languagePreference.indexOf(lanName);
-  //       setLanguagePreference(languagePreference.filter((_, idx) => idx !== index));
-  //     }
-  //   } else {
-  //     if(isAdding){
-  //       setLanguagePreference([...languagePreference, lanName.trim()]);
-  //     } else {
-  //       return;
-  //     }
-  //   }
-  //
-  // };
+  const updSelectedLanguage = (lanName : string , isAdding: boolean) =>{
+
+    if (languagePreference.some((item) => lanName === item)){
+      if(isAdding){
+        return;
+      } else {
+        const index = languagePreference.indexOf(lanName);
+        setLanguagePreference(languagePreference.filter((_, idx) => idx !== index));
+      }
+    } else {
+      if(isAdding){
+        setLanguagePreference([...languagePreference, lanName.trim()]);
+      } else {
+        return;
+      }
+    }
+
+  };
 
   const handleSliderChange = (value: number[]) => {
     setPriceRange(value);
@@ -105,16 +101,17 @@ const MarketplaceFilter = ({
     }
   };
 
-  // const filteredOptions = languagePool.filter(option =>
-  //   option.toLowerCase().includes(inputLanName.toLowerCase())
-  // );
-  //
-  // const handleBlur = () => {
-  //   // Delay, so onClick on list items can fire first
-  //   setTimeout(() => setIsOpen(false), 100);
-  // };
+  const filteredOptions = languagePool.filter(option =>
+    option.toLowerCase().includes(inputLanName.toLowerCase())
+  );
+
+  const handleBlur = () => {
+    // Delay, so onClick on list items can fire first
+    setTimeout(() => setIsOpen(false), 100);
+  };
 
   const handleApply = () => {
+    triggerFetch();
     triggerFetch();
   };
 
