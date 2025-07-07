@@ -1,88 +1,119 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, {useState} from "react";
 import Navbar from "@/components/nav-bars/navbar";
 import ProviderCard from "@/components/marketplace/healthcare-provider-card";
 import MarketplaceSearchBar from "@/components/marketplace/search-bar";
 import MarketplaceFilter from "@/components/marketplace/filter";
-import { getPublicProviderProfiles, transformProviderForMarketplace } from "@/actions/providerProfileActions";
-import toast from "react-hot-toast";
+import {fetchProviders} from "@/actions/fetchProviderMarketPlace";
+import Loading from "../loading";
+
+const demo_data = [
+  {
+    name: "Nina Nguyen",
+    title: "Health Care Aide",
+    location: "Calgary, AB",
+    experience: "5+ years",
+    testimonials: 10,
+    languages: ["English", "French", "Urdu"],
+    services: ["Dementia Care", "Personal Care", "Health Monitoring"],
+    hourlyRate: 20,
+    imageSrc: "/images/home/meet-providers/person-placeholder-1.png",
+  },
+  {
+    name: "Kenji Yamamoto",
+    title: "Live-in Caregiver",
+    location: "Calgary, AB",
+    experience: "2+ years",
+    testimonials: 18,
+    languages: ["English", "French", "Urdu"],
+    services: ["Housekeeping", "Companionship", "Mobility Assistance"],
+    hourlyRate: 31,
+    imageSrc: "/images/home/meet-providers/person-placeholder-2.jpg",
+  },
+  {
+    name: "Jamal Osborne",
+    title: "Registered Nurse",
+    location: "Calgary, AB",
+    experience: "10+ years",
+    testimonials: 5,
+    languages: ["English", "French", "Urdu"],
+    services: ["Wound Care", "Medication Management", "Health Education"],
+    hourlyRate: 56,
+    imageSrc: "/images/home/meet-providers/person-placeholder-6.jpg",
+  },
+];
+console.info("demo_data", demo_data);
+
+export interface Provider {
+  name: string;
+  title: string;
+  location: string;
+  experience: string;
+  testimonials: number;
+  languages: string[];
+  services: string[];
+  hourlyRate: number;
+  imageSrc: string;
+}
+
+const landingProviders: Provider[] = [];
+// MOCK_PROVIDERS.push(... demo_data);
 
 export default function MarketplacePage() {
-  const [providers, setProviders] = useState<ReturnType<typeof transformProviderForMarketplace>[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const thisSliderMinValue = 0;
+  const thisSliderMaxValue = 200;
 
-  useEffect(() => {
-    const loadProviders = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
+  const [searchKey, setSearchKey] = useState<string>("");
 
-        const profiles = await getPublicProviderProfiles();
-        const transformedProviders = profiles.map(transformProviderForMarketplace);
-        setProviders(transformedProviders);
+  const [minPrice, setMinPrice] = useState(thisSliderMinValue);
+  const [maxPrice, setMaxPrice] = useState(thisSliderMaxValue);
 
-        if (transformedProviders.length === 0) {
-          console.log("No public provider profiles found");
-        }
-      } catch (error) {
-        console.error("Error loading provider profiles:", error);
-        setError("Failed to load provider profiles. Please try again.");
-        toast.error("Failed to load providers");
-      } finally {
-        setIsLoading(false);
+  const [availability, setAvailability] = useState<string[]>([]);
+  const [experience, setExperience] = useState<number>(0);
+  const [specialty, setSpecialty] = useState<string[]>([]);
+
+  const [languagePreference, setLanguagePreference] = useState<string[]>(["English"]);
+
+  const [fetchedProviders, setFetchedProviders] = useState<Provider[]>([]);
+  const [pageDoneLoading, setPageDoneLoading] = useState<boolean>(true);
+
+  const triggerFetch = () => {
+    setPageDoneLoading(false);
+    landingProviders.length = 0;
+
+    const tmpSearchKeySet: string[] = [];
+    searchKey.split(" ").map((word: string) => {
+      if (word.length > 0) {
+        tmpSearchKeySet.push(word);
       }
-    };
+    });
 
-    loadProviders();
-  }, []);
+    fetchProviders(languagePreference,availability,experience,specialty,minPrice,maxPrice, tmpSearchKeySet).then(r => {
+      r.map(ele => {
 
-  const renderContent = () => {
-    if (isLoading) {
-      return (
-        <div className="flex items-center justify-center py-20">
-          <div className="text-center space-y-4">
-            <div className="animate-spin rounded-full h-12 w-12 border-4 border-medium-green border-t-transparent mx-auto"></div>
-            <p className="text-darkest-green text-lg">Loading caregivers...</p>
-          </div>
-        </div>
-      );
-    }
-
-    if (error) {
-      return (
-        <div className="text-center py-20">
-          <div className="text-red-500 text-lg mb-4">{error}</div>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-6 py-2 bg-medium-green text-white rounded-lg hover:bg-darkest-green transition-colors"
-          >
-            Try Again
-          </button>
-        </div>
-      );
-    }
-
-    if (providers.length === 0) {
-      return (
-        <div className="text-center text-darkest-green text-lg py-20">
-          <div className="space-y-4">
-            <h3 className="text-xl font-semibold">No Caregivers Available</h3>
-            <p className="text-gray-600">
-              There are currently no caregivers with completed profiles available in the marketplace.
-            </p>
-            <p className="text-sm text-gray-500">
-              Check back later as new caregivers join our platform!
-            </p>
-          </div>
-        </div>
-      );
-    }
-
-    return providers.map((provider, idx) => (
-      <ProviderCard key={provider.id || idx} {...provider} />
-    ));
+        landingProviders.push(
+          {
+            name: ele.firstName.concat(" ".concat(ele.lastName)),
+            title: ele.title,
+            location: ele.location,
+            experience: String(ele.experience%12).concat("+ year").concat(ele.experience%12 === 1 ? " " : "s"),
+            testimonials: ele.testimonials.length,
+            languages: Array.from(ele.languages.values()),
+            services: Array.from(ele.services.values()),
+            hourlyRate: ele.hourlyRate,
+            imageSrc: ele.imageSrc,
+          });
+      });
+    }).then(
+      () => {
+        console.info("front rst cnt: ", Object.values(landingProviders).length, landingProviders);
+        setFetchedProviders(landingProviders);
+        setPageDoneLoading(true);
+      }
+    ).catch(e => {
+      console.log(e);
+    });
   };
 
   return (
@@ -92,15 +123,40 @@ export default function MarketplacePage() {
         <div className="container mx-auto flex flex-col md:h-screen">
           <div>
             <div>
-              <MarketplaceSearchBar />
+              <MarketplaceSearchBar searchKey={searchKey} setSearchKey={setSearchKey} triggerFetch={triggerFetch} />
             </div>
           </div>
           <div className="flex flex-col lg:flex-row gap-6 md:flex-1 md:min-h-0">
             <div>
-              <MarketplaceFilter />
+              <MarketplaceFilter
+                minPrice={minPrice}
+                maxPrice={maxPrice}
+                availability={availability}
+                experience={experience}
+                specialty={specialty}
+                languagePreference={languagePreference}
+                setMinPrice={setMinPrice}
+                setMaxPrice={setMaxPrice}
+                setAvailability={setAvailability}
+                setExperience={setExperience}
+                setSpecialty={setSpecialty}
+                setLanguagePreference={setLanguagePreference}
+                triggerFetch={triggerFetch} />
             </div>
             <div className="space-y-6 w-full md:overflow-y-auto">
-              {renderContent()}
+              {
+                pageDoneLoading ? (
+                  fetchedProviders.length === 0 ? (
+                    <div className="text-center text-darkest-green text-lg py-10">
+                      There are no matching providers for your search.
+                    </div>
+                  ) : (
+                    fetchedProviders.map((provider, idx) => (
+                      <ProviderCard key={idx} {...provider} />
+                    ))
+                  )
+                ) : <Loading />
+              }
             </div>
           </div>
         </div>
