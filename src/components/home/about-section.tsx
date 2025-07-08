@@ -17,7 +17,6 @@ const AboutSection = () => {
           href="/marketplace"
           variant="route"
           className="text-lg px-8 py-3"
-          label="Find a Healthcare provider"
         >
           Find a Healthcare provider
         </GreenButton>
