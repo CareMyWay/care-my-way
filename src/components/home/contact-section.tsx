@@ -56,10 +56,7 @@ export default function ContactSection() {
     return input
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#x27;")
       .replace(/\//g, "&#x2F;");
-    // Note: Removed .trim() to allow spaces during typing
   };
 
   // Advanced profanity and inappropriate content detection
