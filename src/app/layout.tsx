@@ -3,6 +3,7 @@ import { Manrope } from "next/font/google";
 import "@/app/globals.css";
 import ConfigureAmplifyClientSide from "@/app/amplify-config";
 import AuthProvider from "@/components/auth/auth";
+import Footer from "@/components/footer/footer";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -39,6 +40,7 @@ export default async function RootLayout({
         <AuthProvider>
           <ConfigureAmplifyClientSide />
           {children}
+          <Footer />
         </AuthProvider>
       </body>
     </html>

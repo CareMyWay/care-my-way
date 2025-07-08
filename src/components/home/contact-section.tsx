@@ -371,7 +371,7 @@ export default function ContactSection() {
             <div className="grid md:grid-cols-2 gap-6 text-dark-green">
               <div>
                 <h4 className="font-weight-semibold mb-2">Email Support</h4>
-                <p className="text-body5-size">support@caremyway.com</p>
+                <p className="text-body5-size">caremyway@gmail.com</p>
               </div>
               <div>
                 <h4 className="font-weight-semibold mb-2">Phone Support</h4>
