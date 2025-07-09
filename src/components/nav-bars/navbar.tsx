@@ -142,6 +142,7 @@ import { Menu, X } from "lucide-react"; // for hamburger icon
 
 export default function NavBar() {
   const [authCheck, setAuthCheck] = useState<boolean | null>(null);
+
   const [menuOpen, setMenuOpen] = useState(false); // mobile menu toggle
   const [, startTransition] = useTransition();
   const router = useRouter();
@@ -179,7 +180,8 @@ export default function NavBar() {
   const defaultRoutes = [
     { href: "/", label: "Home" },
     { href: "/marketplace", label: "Healthcare Directory" },
-    { href: "/provider-dashboard", label: "My Dashboard", loggedIn: true },
+    { href: "/client-dashboard", label: "My Dashboard", loggedIn: true },
+    // { href: "/settings", label: "Settings", loggedIn: true },
   ];
 
   const routes = defaultRoutes.filter(

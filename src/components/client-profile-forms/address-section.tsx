@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 "use client";
 
+import { getCanadianProvinces } from "@/utils/canadian-provinces";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,7 +11,7 @@ import { z } from "zod";
 const addressSchema = z.object({
   address: z.string().min(10, "Street address is required"),
   city: z.string().min(2, "City is required"),
-  province: z.string().min(5, "Province is required"),
+  province: z.string().min(2, "Province is required"),
   postalCode: z
     .string()
     .regex(
@@ -18,6 +19,8 @@ const addressSchema = z.object({
       "Postal code must be a valid Alberta postal code (e.g., T2N 1N4)"
     ),
 });
+
+const provinces = getCanadianProvinces();
 
 type AddressFormFields = z.infer<typeof addressSchema>;
 
@@ -38,16 +41,14 @@ export function AddressSection({
     formState: { errors },
   } = useForm<AddressFormFields>({
     mode: "onChange",
+    resolver: zodResolver(addressSchema),
     defaultValues: defaultValues || {
       address: "",
       city: "",
       province: "",
       postalCode: "",
     },
-    resolver: zodResolver(addressSchema),
   });
-
-  // const watchedFields = watch();
 
   // Track and notify parent of progress
   useEffect(() => {
@@ -127,12 +128,18 @@ export function AddressSection({
               <label htmlFor="province" className="std-form-label">
                 Province *
               </label>
-              <input
+              <select
                 id="province"
                 {...register("province")}
                 className="std-form-input"
-                placeholder="Enter province"
-              />
+              >
+                <option value="">Select province</option>
+                {provinces.map((province) => (
+                  <option key={province.shortCode} value={province.shortCode}>
+                    {province.name}
+                  </option>
+                ))}
+              </select>
               {errors.province && (
                 <p className="text-sm text-red-600">
                   {errors.province.message}

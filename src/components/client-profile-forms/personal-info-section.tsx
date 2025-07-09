@@ -48,7 +48,7 @@ export function PersonalInfoSection({
     resolver: zodResolver(personalInfoSchema),
   });
 
-  // const watchedFields = watch();
+  //const watchedFields = watch();
 
   // Track and notify parent of progress
   useEffect(() => {
@@ -87,7 +87,7 @@ export function PersonalInfoSection({
               Personal Information
             </h2>
             <p className="text-sm text-gray-600">
-              Please provide your basic details
+              Please provide your person information
             </p>
           </div>
         </div>

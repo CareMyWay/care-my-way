@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { PersonalInfoSection } from "@/components/client-registration/personal-info-section";
-import { AddressSection } from "@/components/client-registration/address-section";
-import { EmergencyContactSection } from "@/components/client-registration/emergency-contact-section";
+import Link from "next/link";
+import { PersonalInfoSection } from "@/components/client-profile-forms/personal-info-section";
+import { AddressSection } from "@/components/client-profile-forms/address-section";
+import { EmergencyContactSection } from "@/components/client-profile-forms/emergency-contact-section";
 import { RegistrationNavSideBar } from "@/components/nav-bars/registration-nav-sidebar";
-import NavBar from "@/components/nav-bars/navbar";
+import toast from "react-hot-toast";
 
 // Form validation functions
 type PersonalInfoData = {
@@ -39,8 +40,9 @@ type EmergencyContactData = {
   [key: string]: string | boolean | undefined;
 };
 
-export default function ClientRegistration() {
+export default function CompleteClientProfile() {
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
   const [activeSection, setActiveSection] = useState("personal-info");
   const [formData, setFormData] = useState({
     "personal-info": {},
@@ -150,9 +152,6 @@ export default function ClientRegistration() {
   }, [formData]);
 
   const navigateToSection = (sectionId: string) => {
-    // const currentIndex = sections.indexOf(activeSection);
-    // const targetIndex = sections.indexOf(sectionId);
-
     // Can navigate to completed sections or current section
     if (
       sectionCompletion[sectionId as keyof typeof sectionCompletion]
@@ -185,15 +184,19 @@ export default function ClientRegistration() {
     if (
       Object.values(sectionCompletion).every((section) => section.completed)
     ) {
-      alert("Registration submitted successfully!");
+      setSubmitSuccess(true);
+      setSubmitSuccess(true);
+
+      toast.success("Profile completed successfully!", {
+        duration: 4000,
+      });
+      // alert("Registration submitted successfully!");
       console.log("Form data:", formData);
     }
   };
 
   return (
     <div className="min-h-screen bg-primary-white">
-      <NavBar />
-
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 py-4 my-4">
         {/* <main className="w-full h-full mx-auto px-4 py-10 my-4"> */}
@@ -241,6 +244,7 @@ export default function ClientRegistration() {
                       updateFormData("personal-info", data)
                     }
                     isCompleted={sectionCompletion["personal-info"].completed}
+                    defaultValues={formData["personal-info"]}
                   />
                 )}
 
@@ -248,6 +252,7 @@ export default function ClientRegistration() {
                   <AddressSection
                     onDataChange={(data) => updateFormData("address", data)}
                     isCompleted={sectionCompletion.address.completed}
+                    defaultValues={formData["address"]}
                   />
                 )}
 
@@ -330,6 +335,17 @@ export default function ClientRegistration() {
           </div>
         </div>
       </main>
+      {submitSuccess && (
+        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white border border-green-300 text-green-800 px-6 py-4 rounded-lg shadow-md flex flex-col items-center gap-2 z-50">
+          <p className="font-semibold">🎉 Your profile has been completed!</p>
+          <Link
+            href="/client/dashboard"
+            className="mt-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm transition"
+          >
+            View your Profile
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
