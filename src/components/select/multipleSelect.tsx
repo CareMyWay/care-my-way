@@ -42,7 +42,7 @@ const MultipleSelect = (
 
   const handleBlur = () => {
     // Delay, so onClick on list items can fire first
-    setTimeout(() => setIsOpen(false), 250);
+    setTimeout(() => setIsOpen(false), 100);
   };
 
   const filteredOptions = optionsPool.filter(option =>
