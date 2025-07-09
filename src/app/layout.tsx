@@ -3,6 +3,7 @@ import { Manrope } from "next/font/google";
 import "@/app/globals.css";
 import ConfigureAmplifyClientSide from "@/app/amplify-config";
 import AuthProvider from "@/components/auth/auth";
+import { Toaster } from "react-hot-toast";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -36,6 +37,8 @@ export default async function RootLayout({
         className={`${manrope.variable} overflow-x-hidden font-manrope flex-col size-full min-h-screen bg-primary-white antialiased`}
         suppressHydrationWarning
       >
+        <Toaster position="top-right" />
+
         <AuthProvider>
           <ConfigureAmplifyClientSide />
           {children}
