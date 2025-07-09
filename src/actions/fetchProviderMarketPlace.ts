@@ -4,19 +4,6 @@ import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { dbConn } from "./dynamoConfig";
 import { ScanCommand } from "@aws-sdk/client-dynamodb";
 
-/**
- *   "firstName": "Kenji",
- *   "lastName": "Yamamoto",
- *   "title": "Live-in Caregiver",
- *   "location": "Calgary, AB",
- *   "experience": 32,
- *   "testimonials": {}, <---- ??
- *   "languages": {}, <------- ??
- *   "hourlyRate": 36,
- *   "services": {}, <-------- ??
- *   "imageSrc": "/images/home/meet-providers/person-placeholder-2.png",
- * */
-
 export interface Provider {
   lastName: string;
   firstName: string;
@@ -29,15 +16,6 @@ export interface Provider {
   hourlyRate: number;
   imageSrc: string;
 }
-
-/**
- *       `language:${  languagePreference  }\r\n` +
- *       `availability:${  availability  }\r\n` +
- *       `experience:${  experience  }\r\n` +
- *       `specialty:${  specialty  }\r\n` +
- *       `minPrice:${  minPrice  }\r\n` +
- *       `maxPrice:${  maxPrice}`);
- * */
 
 export const fetchProviders = async (
   language: string[],
@@ -99,11 +77,11 @@ export const fetchProviders = async (
     tmpCondition.length = 0;
     specialty.map((spec, i) => {
       params.ExpressionAttributeValues[`:specialty${i}`] = {S: spec};
-      tmpCondition.push(` contains (specialty, :specialty${i}) `);
+      tmpCondition.push(` contains (services, :specialty${i}) `);
     });
     if (tmpCondition.length > 0) {params.FilterExpression += ` AND ( ${tmpCondition.join(" OR ")} ) `;}
 
-    // console.info("params: ", params);
+    console.info("params: ", params);
 
     const response = await dbConn.send(new ScanCommand(params));
 
