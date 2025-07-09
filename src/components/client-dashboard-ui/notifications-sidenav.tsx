@@ -105,7 +105,11 @@ export default function NotificationsSideNav() {
                 key={item.href}
                 href={item.href}
                 className={`dashboard-sidebar-link flex items-center w-full justify-start h-12 px-4 rounded-md font-medium transition
-                  ${isActive ? "dashboard-sidebar-active" : "dashboard-sidebar-hover"}
+                  ${
+                    isActive
+                      ? "dashboard-sidebar-active"
+                      : "dashboard-sidebar-hover"
+                  }
                 `}
                 style={{
                   color: "#fff",
