@@ -6,6 +6,7 @@ import { useState } from "react";
 import {RangeSlider} from "@/components/slider/range-slider";
 import {Input} from "@/components/inputs/input";
 import GreenButton from "@/components/buttons/green-button";
+import {MultipleSelect} from "@/components/select/multipleSelect";
 
 const MarketplaceFilter = ({
                              minPrice,
@@ -43,8 +44,8 @@ const MarketplaceFilter = ({
    * const [languagePreference, setLanguagePreference] = useState<string[]>(["English"]);
    * */
 
-  const [inputLanName, setInputLanName] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+  // const [inputLanName, setInputLanName] = useState("");
+  // const [isOpen, setIsOpen] = useState(false);
 
   const handleAvlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAvailability([e.target.value]); // Fatal: to-do fix update rather than replace
@@ -54,30 +55,31 @@ const MarketplaceFilter = ({
     setExperience(Number(e.target.value));
   };
 
-  const handleSpcChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSpecialty([e.target.value]); // Fatal: to-do fix update rather than replace
-  };
+  // const handleSpcChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setSpecialty([e.target.value]); // Fatal: to-do fix update rather than replace
+  // };
 
   const languagePool = ["English","French","Mandarin","Cantonese","Punjabi","Spanish","Arabic","Tagalog","Italian","Persian","Hindi"];
+  const servicePool = ["Dementia Care", "Personal Care", "Health Monitoring", "Housekeeping", "Companionship", "Mobility Assistance", "Wound Care", "Medication Management", "Health Education"];
 
-  const updSelectedLanguage = (lanName : string , isAdding: boolean) =>{
-
-    if (languagePreference.some((item) => lanName === item)){
-      if(isAdding){
-        return;
-      } else {
-        const index = languagePreference.indexOf(lanName);
-        setLanguagePreference(languagePreference.filter((_, idx) => idx !== index));
-      }
-    } else {
-      if(isAdding){
-        setLanguagePreference([...languagePreference, lanName.trim()]);
-      } else {
-        return;
-      }
-    }
-
-  };
+  // const updSelectedLanguage = (lanName : string , isAdding: boolean) =>{
+  //
+  //   if (languagePreference.some((item) => lanName === item)){
+  //     if(isAdding){
+  //       return;
+  //     } else {
+  //       const index = languagePreference.indexOf(lanName);
+  //       setLanguagePreference(languagePreference.filter((_, idx) => idx !== index));
+  //     }
+  //   } else {
+  //     if(isAdding){
+  //       setLanguagePreference([...languagePreference, lanName.trim()]);
+  //     } else {
+  //       return;
+  //     }
+  //   }
+  //
+  // };
 
   const handleSliderChange = (value: number[]) => {
     setPriceRange(value);
@@ -101,14 +103,14 @@ const MarketplaceFilter = ({
     }
   };
 
-  const filteredOptions = languagePool.filter(option =>
-    option.toLowerCase().includes(inputLanName.toLowerCase())
-  );
-
-  const handleBlur = () => {
-    // Delay, so onClick on list items can fire first
-    setTimeout(() => setIsOpen(false), 100);
-  };
+  // const filteredOptions = languagePool.filter(option =>
+  //   option.toLowerCase().includes(inputLanName.toLowerCase())
+  // );
+  //
+  // const handleBlur = () => {
+  //   // Delay, so onClick on list items can fire first
+  //   setTimeout(() => setIsOpen(false), 100);
+  // };
 
   const handleApply = () => {
     triggerFetch();
@@ -157,13 +159,19 @@ const MarketplaceFilter = ({
             <Input type="text" value={experience} onChange={handleExpChange} placeholder="Years of experience" className="w-full h-[41px]" />
           </div>
 
-          {/* Specialty */}
+          {/* Specialty
           <div className="mb-6">
             <h3 className="text-[16px] text-darkest-green mb-3">Specialty</h3>
             <Input type="text" value={specialty} onChange={handleSpcChange} placeholder="Select specialties" className="w-full h-[41px]" />
           </div>
+          */}
 
-          {/* Language */}
+          {/* Specialty v2 */}
+          <MultipleSelect itemOptions={servicePool} subTitle={"Specialty"} selectedItems={specialty} setSelectedItems={setSpecialty} />
+
+          {/* Language v2 */}
+          <MultipleSelect itemOptions={languagePool} subTitle={"Language"} selectedItems={languagePreference} setSelectedItems={setLanguagePreference} />
+          {/* Language
           <div>
             <h3 className="text-[16px] text-darkest-green mb-3">Language</h3>
             <div className="flex flex-wrap gap-2 mb-3">
@@ -214,6 +222,7 @@ const MarketplaceFilter = ({
               )}
             </div>
           </div>
+           */}
           <div className="flex items-center justify-center">
             <GreenButton variant="action" className={"mt-6"} onClick={handleApply}>Apply</GreenButton>
           </div>
