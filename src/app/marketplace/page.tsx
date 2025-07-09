@@ -73,7 +73,7 @@ export default function MarketplacePage() {
   const [experience, setExperience] = useState<number>(0);
   const [specialty, setSpecialty] = useState<string[]>([]);
 
-  const [languagePreference, setLanguagePreference] = useState<string[]>(["English"]);
+  const [languagePreference, setLanguagePreference] = useState<string[]>([]);
 
   const [fetchedProviders, setFetchedProviders] = useState<Provider[]>([]);
   const [pageDoneLoading, setPageDoneLoading] = useState<boolean>(true);
@@ -89,7 +89,7 @@ export default function MarketplacePage() {
       }
     });
 
-    fetchProviders(languagePreference,availability,experience,specialty,minPrice,maxPrice, tmpSearchKeySet).then(r => {
+    fetchProviders(languagePreference,availability,experience * 12,specialty,minPrice,maxPrice, tmpSearchKeySet).then(r => {
       r.map(ele => {
 
         landingProviders.push(
@@ -97,7 +97,7 @@ export default function MarketplacePage() {
             name: ele.firstName.concat(" ".concat(ele.lastName)),
             title: ele.title,
             location: ele.location,
-            experience: String(ele.experience%12).concat("+ year").concat(ele.experience%12 === 1 ? " " : "s"),
+            experience: String(Math.trunc(ele.experience/12)).concat("+ year").concat(ele.experience%12 === 1 ? " " : "s"),
             testimonials: ele.testimonials.length,
             languages: Array.from(ele.languages.values()),
             services: Array.from(ele.services.values()),
