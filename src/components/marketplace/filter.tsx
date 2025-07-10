@@ -7,6 +7,7 @@ import {RangeSlider} from "@/components/slider/range-slider";
 import {Input} from "@/components/inputs/input";
 import GreenButton from "@/components/buttons/green-button";
 import {MultipleSelect} from "@/components/select/multipleSelect";
+import {Availability} from "@/components/calendar/availability";
 
 const MarketplaceFilter = ({
                              minPrice,
@@ -47,9 +48,9 @@ const MarketplaceFilter = ({
   // const [inputLanName, setInputLanName] = useState("");
   // const [isOpen, setIsOpen] = useState(false);
 
-  const handleAvlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAvailability([e.target.value]); // Fatal: to-do fix update rather than replace
-  };
+  // const handleAvlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setAvailability([e.target.value]); // Fatal: to-do fix update rather than replace
+  // };
 
   const handleExpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setExperience(Number(e.target.value));
@@ -147,11 +148,13 @@ const MarketplaceFilter = ({
             </div>
           </div>
 
-          {/* Availability */}
+          {/* Availability
           <div className="mb-6">
             <h3 className="text-[16px] text-darkest-green mb-3">Availability</h3>
             <Input type="text" value={availability} onChange={handleAvlChange} placeholder="Select days and times" className="w-full h-[41px]" />
-          </div>
+          </div> */}
+          {/* Availability v2 */}
+          <Availability subtitle={"Availability"} selectedAvailability={availability} setSelectedAvailability = {setAvailability}/>
 
           {/* Experience */}
           <div className="mb-6">
