@@ -77,6 +77,25 @@ const schema = a
         allow.guest().to(["read"]),
         allow.authenticated().to(["read"]),
       ]),
+
+      // Booking schema
+      Booking: a
+      .model({
+        id: a.string().required(),
+        // providerId: a.string().required(), // Include this field after DynamoDB is set up to record provider ID
+        providerName: a.string().required(),
+        // providerTitle: a.string().required(),
+        providerRate: a.string().required(),
+        date: a.string().required(),
+        time: a.string().required(),
+        clientId: a.string(),
+        // clientName: a.string(),
+      })
+      .authorization((allow) => [
+        allow.authenticated().to(["create", "read"]),
+        allow.group("Admin"),
+        allow.guest().to(["create", "read"]), // ✅ Add this line
+      ]),
   })
   .authorization((allow) => [allow.resource(postConfirmation)]);
 
