@@ -211,6 +211,7 @@
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /* Hide scrollbar utility */
 .scrollbar-hide {
   -ms-overflow-style: none;
@@ -223,6 +224,8 @@
   display: none;
   /* Safari and Chrome */
 =======
+=======
+>>>>>>> 70c4d7c (Booking modal working with dynamoDB)
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -302,5 +305,8 @@
   body {
     @apply bg-background text-foreground;
   }
+<<<<<<< HEAD
 >>>>>>> 500e226 (Booking modal working with dynamoDB)
+=======
+>>>>>>> 70c4d7c (Booking modal working with dynamoDB)
 }
