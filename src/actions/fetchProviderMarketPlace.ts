@@ -72,14 +72,14 @@ export const fetchProviders = async (
       params.ExpressionAttributeValues[`:availability${i}`] = {S: avail};
       tmpCondition.push(` contains (availability, :availability${i}) `);
     });
-    if (tmpCondition.length > 0) {params.FilterExpression += ` AND ( ${tmpCondition.join(" OR ")} ) `;}
+    if (tmpCondition.length > 0) {params.FilterExpression += ` AND ( ${tmpCondition.join(" AND ")} ) `;}
 
     tmpCondition.length = 0;
     specialty.map((spec, i) => {
       params.ExpressionAttributeValues[`:specialty${i}`] = {S: spec};
       tmpCondition.push(` contains (services, :specialty${i}) `);
     });
-    if (tmpCondition.length > 0) {params.FilterExpression += ` AND ( ${tmpCondition.join(" OR ")} ) `;}
+    if (tmpCondition.length > 0) {params.FilterExpression += ` AND ( ${tmpCondition.join(" AND ")} ) `;}
 
     console.info("params: ", params);
 
