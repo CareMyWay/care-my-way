@@ -1,0 +1,260 @@
+"use client";
+
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ChevronLeft, ChevronRight, Clock } from "lucide-react";
+import { generateClient } from "aws-amplify/data";
+import type { Schema } from "amplify/data/resource";
+import { v4 as uuidv4 } from "uuid";
+
+const client = generateClient<Schema>();
+
+const mockAvailability = {
+  "2025-07-10": ["9:00 AM", "2:00 PM", "4:00 PM"],
+  "2025-07-11": ["10:00 AM", "1:00 PM"],
+  "2025-07-12": ["9:00 AM", "11:00 AM", "3:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM"],
+  "2025-07-15": ["8:00 AM", "2:00 PM"],
+  "2025-07-18": ["10:00 AM", "4:00 PM"],
+  "2025-07-20": ["9:00 AM", "1:00 PM", "5:00 PM"],
+  "2025-07-22": ["9:00 AM", "2:00 PM"],
+  "2025-07-24": ["10:00 AM", "3:00 PM"],
+  "2025-07-26": ["8:00 AM", "1:00 PM", "4:00 PM"],
+  "2025-07-28": ["9:00 AM", "2:00 PM"],
+  "2025-07-30": ["10:00 AM", "1:00 PM"],
+  "2025-07-31": ["9:00 AM", "3:00 PM", "5:00 PM"],
+};
+
+interface BookingModalProps {
+  isOpen: boolean;
+  onOpenChange: (_: boolean) => void;
+  providerName: string;
+  providerTitle: string;
+  providerRate: string;
+}
+
+export default function BookingModal({
+  isOpen,
+  onOpenChange,
+  providerName,
+  providerRate,
+}: BookingModalProps) {
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June", "July",
+    "August", "September", "October", "November", "December",
+  ];
+
+  const getDaysInMonth = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+
+    const days: (number | null)[] = [];
+
+    for (let i = 0; i < startingDayOfWeek; i++) days.push(null);
+    for (let day = 1; day <= daysInMonth; day++) days.push(day);
+
+    return days;
+  };
+
+  const formatDateKey = (year: number, month: number, day: number) =>
+    `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+  const isDateAvailable = (year: number, month: number, day: number) => {
+    const key = formatDateKey(year, month, day);
+    return mockAvailability[key]?.length > 0;
+  };
+
+  const getAvailableSlots = (dateKey: string) => mockAvailability[dateKey] || [];
+
+  const handleDateSelect = (day: number) => {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+    const key = formatDateKey(year, month, day);
+    if (isDateAvailable(year, month, day)) {
+      setSelectedDate(key);
+      setSelectedTime(null);
+    }
+  };
+
+  const handleMonthChange = (dir: "prev" | "next") => {
+    setCurrentMonth((prev) => {
+      const updated = new Date(prev);
+      updated.setMonth(prev.getMonth() + (dir === "next" ? 1 : -1));
+      return updated;
+    });
+    setSelectedDate(null);
+    setSelectedTime(null);
+  };
+
+  const handleBooking = async () => {
+    if (selectedDate && selectedTime) {
+      try {
+        // Temporarily comment out Auth user fetching:
+        // const user = await Auth.currentAuthenticatedUser();
+        // const clientId = user.attributes.sub;
+
+        // Use dummy clientId or omit if not required
+        const clientId = "anonymous-client";
+
+        const result = await client.models.Booking.create({
+          id: uuidv4(),
+          providerName,
+          providerRate,
+          date: selectedDate,
+          time: selectedTime,
+          clientId,
+        });
+
+        console.log("Booking created:", result);
+        alert(`Booking confirmed for ${selectedDate} at ${selectedTime}`);
+        onOpenChange(false);
+        setSelectedDate(null);
+        setSelectedTime(null);
+      } catch (err) {
+        console.error("Booking error:", err);
+        alert(`Failed to book: ${(err as Error).message}`);
+      }
+    }
+  };
+
+  const days = getDaysInMonth(currentMonth);
+  const currentYear = currentMonth.getFullYear();
+  const currentMonthIndex = currentMonth.getMonth();
+
+  const today = new Date();
+  const maxDate = new Date(today.getFullYear(), today.getMonth() + 6, 1);
+  const maxMonth = maxDate.getMonth();
+  const maxYear = maxDate.getFullYear();
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Book with {providerName}</DialogTitle>
+        </DialogHeader>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          {/* Calendar Section */}
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold">
+                {monthNames[currentMonthIndex]} {currentYear}
+              </h3>
+              <div className="flex gap-1">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleMonthChange("prev")}
+                  disabled={
+                    currentMonthIndex === today.getMonth() &&
+                    currentYear === today.getFullYear()
+                  }
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleMonthChange("next")}
+                  disabled={currentMonthIndex === maxMonth && currentYear === maxYear}
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-7 gap-1 mb-4">
+              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
+                <div
+                  key={d}
+                  className="text-center text-sm font-medium text-muted-foreground p-2"
+                >
+                  {d}
+                </div>
+              ))}
+              {days.map((day, index) => {
+                if (day === null) return <div key={`empty-${index}`} className="p-2" />;
+                const dateKey = formatDateKey(currentYear, currentMonthIndex, day);
+                const isAvailable = isDateAvailable(currentYear, currentMonthIndex, day);
+                const isSelected = selectedDate === dateKey;
+
+                return (
+                  <button
+                    key={dateKey}
+                    onClick={() => handleDateSelect(day)}
+                    disabled={!isAvailable}
+                    className={`p-2 text-sm rounded-md transition-colors
+                      ${isAvailable ? "hover:bg-orange-100 cursor-pointer" : "text-muted-foreground cursor-not-allowed"}
+                      ${isSelected ? "bg-primary-orange text-white" : ""}
+                      ${isAvailable && !isSelected ? "bg-green-50 text-green-700 border border-green-200" : ""}
+                    `}
+                  >
+                    {day}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Time Slots Section */}
+          <div>
+            <h3 className="font-semibold mb-4">
+              {selectedDate ? "Available Times" : "Select a date to see available times"}
+            </h3>
+
+            {selectedDate && (
+              <div className="space-y-2">
+                {getAvailableSlots(selectedDate).map((time) => (
+                  <button
+                    key={time}
+                    onClick={() => setSelectedTime(time)}
+                    className={`w-full p-3 text-left rounded-md border transition-colors
+                      ${
+                        selectedTime === time
+                          ? "bg-primary-orange text-white border-primary-orange"
+                          : "bg-white hover:bg-orange-50 border-gray-200 hover:border-orange-200"
+                      }
+                    `}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4" />
+                      {time}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {selectedDate && selectedTime && (
+              <div className="mt-6 p-4 bg-gray-50 rounded-md">
+                <h4 className="font-medium mb-2">Booking Summary</h4>
+                <div className="text-sm space-y-1">
+                  <p><strong>Date:</strong> {selectedDate}</p>
+                  <p><strong>Time:</strong> {selectedTime}</p>
+                  <p><strong>Rate:</strong> {providerRate}</p>
+                  <p><strong>Provider:</strong> {providerName}</p>
+                </div>
+              </div>
+            )}
+
+            <Button
+              onClick={handleBooking}
+              disabled={!selectedDate || !selectedTime}
+              className="w-full mt-4 bg-primary-orange hover:bg-primary-orange disabled:bg-gray-300"
+            >
+              Confirm Booking
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
