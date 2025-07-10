@@ -7,6 +7,7 @@ import {RangeSlider} from "@/components/slider/range-slider";
 import {Input} from "@/components/inputs/input";
 import GreenButton from "@/components/buttons/green-button";
 import {MultipleSelect} from "@/components/select/multipleSelect";
+import {Availability} from "@/components/calendar/availability";
 
 const MarketplaceFilter = ({
                              minPrice,
@@ -47,9 +48,9 @@ const MarketplaceFilter = ({
   // const [inputLanName, setInputLanName] = useState("");
   // const [isOpen, setIsOpen] = useState(false);
 
-  const handleAvlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAvailability([e.target.value]); // Fatal: to-do fix update rather than replace
-  };
+  // const handleAvlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setAvailability([e.target.value]); // Fatal: to-do fix update rather than replace
+  // };
 
   const handleExpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setExperience(Number(e.target.value));
