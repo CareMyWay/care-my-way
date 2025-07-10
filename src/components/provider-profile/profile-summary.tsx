@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Image from "next/image";
 import OrangeButton from "../buttons/orange-button";
 import { type ProviderProfileData } from "@/actions/providerProfileActions";

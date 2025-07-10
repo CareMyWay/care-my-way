@@ -76,6 +76,7 @@ const schema = a
         allow.authenticated().to(["read"]),
       ]),
 
+<<<<<<< HEAD
     ProviderProfile: a
       .model({
         userId: a.string().required(),
@@ -148,6 +149,25 @@ const schema = a
         allow.authenticated().to(["read"]),
         // Guests can read profiles (for marketplace browsing)
         allow.guest().to(["read"]),
+=======
+      // Booking schema
+      Booking: a
+      .model({
+        id: a.string().required(),
+        // providerId: a.string().required(), // Include this field after DynamoDB is set up to record provider ID
+        providerName: a.string().required(),
+        // providerTitle: a.string().required(),
+        providerRate: a.string().required(),
+        date: a.string().required(),
+        time: a.string().required(),
+        clientId: a.string(),
+        // clientName: a.string(),
+      })
+      .authorization((allow) => [
+        allow.authenticated().to(["create", "read"]),
+        allow.group("Admin"),
+        allow.guest().to(["create", "read"]), // ✅ Add this line
+>>>>>>> 500e226 (Booking modal working with dynamoDB)
       ]),
   })
   .authorization((allow) => [allow.resource(postConfirmation)]);

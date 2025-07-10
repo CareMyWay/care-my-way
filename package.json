@@ -17,11 +17,19 @@
     "@preline/toggle-password": "^3.1.0",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-dialog": "^1.1.14",
+<<<<<<< HEAD
+=======
+    "@radix-ui/react-slot": "^1.2.3",
+>>>>>>> 500e226 (Booking modal working with dynamoDB)
     "@radix-ui/react-tabs": "^1.1.12",
     "aws-amplify": "^6.15.0",
     "bad-words": "^4.0.0",
     "class-variance-authority": "^0.7.1",
+<<<<<<< HEAD
     "country-region-data": "^3.1.0",
+=======
+    "clsx": "^2.1.1",
+>>>>>>> 500e226 (Booking modal working with dynamoDB)
     "date-fns": "^4.1.0",
     "iso-639-1": "^3.1.5",
     "jwt-decode": "^4.0.0",
@@ -36,7 +44,11 @@
     "react-icons": "^5.5.0",
     "tailwind": "^4.0.0",
     "tailwind-merge": "^3.3.1",
+<<<<<<< HEAD
     "use-places-autocomplete": "^4.0.1",
+=======
+    "uuid": "^11.1.0",
+>>>>>>> 500e226 (Booking modal working with dynamoDB)
     "zod": "^3.25.62"
   },
   "devDependencies": {
@@ -60,6 +72,7 @@
     "eslint-plugin-react": "^7.37.5",
     "tailwindcss": "^4",
     "tsx": "^4.19.4",
+    "tw-animate-css": "^1.3.5",
     "typescript": "^5.8.3"
   },
   "overrides": {
