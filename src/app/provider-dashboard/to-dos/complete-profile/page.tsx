@@ -49,11 +49,34 @@ type ProfessionalSummaryData = {
     [key: string]: string | string[] | undefined;
 };
 
+type EducationEntry = {
+    institution?: string;
+    degree?: string;
+    fieldOfStudy?: string;
+    graduationYear?: string;
+};
+
+type CertificationEntry = {
+    certificationName?: string;
+    issuingOrganization?: string;
+    issueDate?: string;
+    expiryDate?: string;
+    licenseNumber?: string;
+};
+
+type WorkExperienceEntry = {
+    employer?: string;
+    jobTitle?: string;
+    startDate?: string;
+    endDate?: string;
+    description?: string;
+};
+
 type CredentialsData = {
-    education?: string;
-    certifications?: string;
-    certificateFiles?: File[];
-    [key: string]: string | File[] | undefined;
+    education?: EducationEntry[];
+    certifications?: CertificationEntry[];
+    workExperience?: WorkExperienceEntry[];
+    [key: string]: EducationEntry[] | CertificationEntry[] | WorkExperienceEntry[] | undefined;
 };
 
 export default function CompleteProviderProfile() {
@@ -153,13 +176,58 @@ export default function CompleteProviderProfile() {
     };
 
     const validateCredentials = (data: CredentialsData) => {
-        const required = ["education", "certifications"];
-        const filled = required.filter(
-            (field) => data[field] && data[field]!.toString().trim() !== ""
-        );
+        // Since credentials section is completely optional, it's always considered completed
+        // Users can add as many or as few entries as they want
+
+        // Calculate progress based on how much content they've added
+        let totalFields = 0;
+        let filledFields = 0;
+
+        // Count education entries
+        if (data.education && data.education.length > 0) {
+            data.education.forEach(entry => {
+                const educationFields = ['institution', 'degree', 'fieldOfStudy', 'graduationYear'];
+                educationFields.forEach(field => {
+                    totalFields++;
+                    if (entry[field as keyof EducationEntry] && entry[field as keyof EducationEntry]!.trim() !== '') {
+                        filledFields++;
+                    }
+                });
+            });
+        }
+
+        // Count certification entries
+        if (data.certifications && data.certifications.length > 0) {
+            data.certifications.forEach(entry => {
+                const certFields = ['certificationName', 'issuingOrganization', 'issueDate'];
+                certFields.forEach(field => {
+                    totalFields++;
+                    if (entry[field as keyof CertificationEntry] && entry[field as keyof CertificationEntry]!.trim() !== '') {
+                        filledFields++;
+                    }
+                });
+            });
+        }
+
+        // Count work experience entries
+        if (data.workExperience && data.workExperience.length > 0) {
+            data.workExperience.forEach(entry => {
+                const workFields = ['employer', 'jobTitle', 'startDate'];
+                workFields.forEach(field => {
+                    totalFields++;
+                    if (entry[field as keyof WorkExperienceEntry] && entry[field as keyof WorkExperienceEntry]!.trim() !== '') {
+                        filledFields++;
+                    }
+                });
+            });
+        }
+
+        // If no entries exist, show 100% progress (section is optional)
+        const progress = totalFields === 0 ? 100 : (filledFields / totalFields) * 100;
+
         return {
-            progress: (filled.length / required.length) * 100,
-            completed: filled.length === required.length,
+            progress: Math.round(progress),
+            completed: true, // Always completed since it's optional
         };
     };
 
@@ -331,17 +399,11 @@ export default function CompleteProviderProfile() {
                             )}
 
                             {activeSection === "credentials" && (
-                                <div className="h-full bg-white rounded-lg border shadow-sm p-6">
-                                    <h2 className="text-2xl font-bold text-darkest-green mb-4">
-                                        Credentials & Work History
-                                    </h2>
-                                    <p className="text-gray-600 mb-6">
-                                        This section will contain the Credentials & Work History form.
-                                    </p>
-                                    <div className="text-center text-gray-500">
-                                        Form component will be added later
-                                    </div>
-                                </div>
+                                <CredentialsSection
+                                    onDataChange={(data) => updateFormData("credentials", data)}
+                                    isCompleted={sectionCompletion.credentials.completed}
+                                    defaultValues={formData.credentials}
+                                />
                             )}
 
                             {/* Navigation buttons */}
