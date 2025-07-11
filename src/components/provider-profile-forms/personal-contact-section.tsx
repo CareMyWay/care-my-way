@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import ISO6391 from "iso-639-1";
 
 const personalContactSchema = z.object({
     firstName: z.string().min(1, "First name is required"),
@@ -29,29 +30,8 @@ interface PersonalContactSectionProps {
     defaultValues?: Partial<PersonalContactFormFields>;
 }
 
-// Available languages list
-const availableLanguages = [
-    "English",
-    "French",
-    "Spanish",
-    "Mandarin",
-    "Cantonese",
-    "Arabic",
-    "Tagalog",
-    "Italian",
-    "German",
-    "Portuguese",
-    "Polish",
-    "Ukrainian",
-    "Russian",
-    "Korean",
-    "Japanese",
-    "Hindi",
-    "Urdu",
-    "Vietnamese",
-    "Tamil",
-    "Other"
-];
+// Get comprehensive list of languages from ISO 639-1 standard
+const availableLanguages = [...ISO6391.getAllNames().sort(), "Other"];
 
 const contactMethods = [
     "Phone Call",
@@ -70,6 +50,8 @@ export function PersonalContactSection({
         defaultValues?.languages || []
     );
     const [profilePhotoPreview, setProfilePhotoPreview] = useState<string>("");
+    const [languageFilter, setLanguageFilter] = useState<string>("");
+    const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState<boolean>(false);
 
     const {
         register,
@@ -92,6 +74,11 @@ export function PersonalContactSection({
         resolver: zodResolver(personalContactSchema),
     });
 
+    // Filter languages based on search input
+    const filteredLanguages = availableLanguages.filter((language) =>
+        language.toLowerCase().includes(languageFilter.toLowerCase())
+    );
+
     // Handle language selection
     const handleLanguageToggle = (language: string) => {
         const updatedLanguages = selectedLanguages.includes(language)
@@ -100,6 +87,29 @@ export function PersonalContactSection({
 
         setSelectedLanguages(updatedLanguages);
         setValue("languages", updatedLanguages);
+
+        // Clear search and close dropdown when selecting
+        if (!selectedLanguages.includes(language)) {
+            setLanguageFilter("");
+            setIsLanguageDropdownOpen(false);
+        }
+    };
+
+    // Handle removing language
+    const handleRemoveLanguage = (language: string) => {
+        const updatedLanguages = selectedLanguages.filter((lang) => lang !== language);
+        setSelectedLanguages(updatedLanguages);
+        setValue("languages", updatedLanguages);
+    };
+
+    // Handle backspace to remove last language
+    const handleLanguageInputKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Backspace" && languageFilter === "" && selectedLanguages.length > 0) {
+            handleRemoveLanguage(selectedLanguages[selectedLanguages.length - 1]);
+        }
+        if (e.key === "Escape") {
+            setIsLanguageDropdownOpen(false);
+        }
     };
 
     // Handle profile photo upload
@@ -136,8 +146,8 @@ export function PersonalContactSection({
                 <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-3">
                     <div
                         className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-bold ${isCompleted
-                                ? "border-green-500 bg-green-500 text-white"
-                                : "border-[#4A9B9B] bg-[#4A9B9B] text-white"
+                            ? "border-green-500 bg-green-500 text-white"
+                            : "border-[#4A9B9B] bg-[#4A9B9B] text-white"
                             }`}
                     >
                         {isCompleted ? (
@@ -250,25 +260,97 @@ export function PersonalContactSection({
                         <label className="std-form-label">
                             Languages Spoken *
                             <span className="text-sm text-gray-500 font-normal">
-                                (Select all that apply)
+                                (Search and select)
                             </span>
                         </label>
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 max-h-40 overflow-y-auto border rounded-md p-3">
-                            {availableLanguages.map((language) => (
-                                <label
-                                    key={language}
-                                    className="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-1 rounded"
-                                >
+
+                        {/* Modern Language Selector */}
+                        <div className="relative">
+                            {/* Main Input Container */}
+                            <div
+                                className={`std-form-input min-h-[42px] flex items-center cursor-text ${isLanguageDropdownOpen ? '!ring-2 !ring-[black] !border-[black]' : ''
+                                    }`}
+                                onClick={() => setIsLanguageDropdownOpen(true)}
+                            >
+                                <div className="flex flex-wrap gap-1 items-center">
+                                    {/* Selected Language Chips */}
+                                    {selectedLanguages.map((language) => (
+                                        <span
+                                            key={language}
+                                            className="inline-flex items-center px-2 py-1 rounded-md text-s font-medium bg-[#4A9B9B] text-white"
+                                        >
+                                            {language}
+                                            <button
+                                                type="button"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleRemoveLanguage(language);
+                                                }}
+                                                className="ml-1 inline-flex items-center justify-center w-3 h-3 rounded-full text-[#4A9B9B] bg-white hover:bg-gray-100"
+                                            >
+                                                <svg className="w-2 h-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
+                                        </span>
+                                    ))}
+
+                                    {/* Search Input */}
                                     <input
-                                        type="checkbox"
-                                        checked={selectedLanguages.includes(language)}
-                                        onChange={() => handleLanguageToggle(language)}
-                                        className="rounded border-gray-300 text-[#4A9B9B] focus:ring-[#4A9B9B]"
+                                        type="text"
+                                        placeholder={selectedLanguages.length === 0 ? "Select languages" : "   Search more..."}
+                                        value={languageFilter}
+                                        onChange={(e) => {
+                                            setLanguageFilter(e.target.value);
+                                            setIsLanguageDropdownOpen(true);
+                                        }}
+                                        onFocus={() => setIsLanguageDropdownOpen(true)}
+                                        onKeyDown={handleLanguageInputKeyDown}
+                                        className="flex-1 min-w-[120px] outline-none bg-transparent text-sm text-gray-900"
                                     />
-                                    <span className="text-sm text-gray-700">{language}</span>
-                                </label>
-                            ))}
+                                </div>
+                            </div>
+
+                            {/* Dropdown */}
+                            {isLanguageDropdownOpen && (
+                                <>
+                                    {/* Backdrop to close dropdown */}
+                                    <div
+                                        className="fixed inset-0 z-10"
+                                        onClick={() => setIsLanguageDropdownOpen(false)}
+                                    />
+
+                                    {/* Language Options Dropdown */}
+                                    <div className="absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                                        {filteredLanguages.length > 0 ? (
+                                            <div className="py-1">
+                                                {filteredLanguages.map((language) => (
+                                                    <button
+                                                        key={language}
+                                                        type="button"
+                                                        onClick={() => handleLanguageToggle(language)}
+                                                        className={`w-full px-3 py-2 text-left text-sm hover:bg-gray-100 flex items-center justify-between ${selectedLanguages.includes(language) ? 'bg-blue-50 text-blue-700' : 'text-gray-900'
+                                                            }`}
+                                                    >
+                                                        <span>{language}</span>
+                                                        {selectedLanguages.includes(language) && (
+                                                            <svg className="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                            </svg>
+                                                        )}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div className="px-3 py-4 text-center text-gray-500 text-sm">
+                                                No languages found matching "{languageFilter}"
+                                            </div>
+                                        )}
+                                    </div>
+                                </>
+                            )}
                         </div>
+
                         {errors.languages && (
                             <p className="text-sm text-red-600">
                                 {errors.languages.message}
