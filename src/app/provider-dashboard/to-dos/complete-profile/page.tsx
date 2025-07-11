@@ -6,6 +6,8 @@ import { ProviderRegistrationNavSideBar } from "@/components/nav-bars/provider-r
 import { PersonalContactSection } from "@/components/provider-profile-forms/personal-contact-section";
 import { AddressSection } from "@/components/provider-profile-forms/address-section";
 import { EmergencyContactSection } from "@/components/provider-profile-forms/emergency-contact-section";
+import { ProfessionalSummarySection } from "@/components/provider-profile-forms/professional-summary-section";
+import { CredentialsSection } from "@/components/provider-profile-forms/credentials-section";
 import toast from "react-hot-toast";
 
 // Type definitions for form data
@@ -321,17 +323,11 @@ export default function CompleteProviderProfile() {
                             )}
 
                             {activeSection === "professional-summary" && (
-                                <div className="h-full bg-white rounded-lg border shadow-sm p-6">
-                                    <h2 className="text-2xl font-bold text-darkest-green mb-4">
-                                        Professional Summary
-                                    </h2>
-                                    <p className="text-gray-600 mb-6">
-                                        This section will contain the Professional Summary form.
-                                    </p>
-                                    <div className="text-center text-gray-500">
-                                        Form component will be added later
-                                    </div>
-                                </div>
+                                <ProfessionalSummarySection
+                                    onDataChange={(data) => updateFormData("professional-summary", data)}
+                                    isCompleted={sectionCompletion["professional-summary"].completed}
+                                    defaultValues={formData["professional-summary"]}
+                                />
                             )}
 
                             {activeSection === "credentials" && (
