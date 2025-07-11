@@ -297,166 +297,163 @@ export default function CompleteProviderProfile() {
 
     return (
         <div className="min-h-screen bg-primary-white">
-            {/* Mobile sidebar overlay */}
-            {showMobileSidebar && (
-                <div className="fixed inset-0 z-40 lg:hidden">
-                    <div className="fixed inset-0 bg-black bg-opacity-50" />
-                    <div className="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl">
-                        <div className="flex items-center justify-between p-4 border-b">
-                            <h2 className="text-lg font-semibold text-gray-900">
-                                Complete Profile
-                            </h2>
-                            <button
-                                onClick={() => setShowMobileSidebar(false)}
-                                className="text-gray-400 hover:text-gray-600"
-                            >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
-                        <div className="p-4">
-                            <ProviderRegistrationNavSideBar
-                                activeSection={activeSection}
-                                onSectionClick={navigateToSection}
-                                sectionCompletion={sectionCompletion}
-                            />
-                        </div>
-                    </div>
-                </div>
-            )}
-
             {/* Main Content */}
-            <div className="flex h-screen">
-                {/* Desktop Sidebar */}
-                <div className="hidden lg:flex lg:w-80 lg:flex-col lg:border-r lg:bg-white">
-                    <div className="flex h-16 items-center px-6 border-b">
-                        <h1 className="text-xl font-bold text-gray-900">
-                            Complete Your Provider Profile
-                        </h1>
-                    </div>
-                    <div className="flex-1 overflow-y-auto p-6">
+            <main className="max-w-7xl mx-auto px-4 py-4 my-4">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                    {/* Sidebar - hidden on mobile, visible on md+ */}
+                    <div className="hidden md:block md:col-span-3">
                         <ProviderRegistrationNavSideBar
                             activeSection={activeSection}
                             onSectionClick={navigateToSection}
                             sectionCompletion={sectionCompletion}
                         />
                     </div>
-                </div>
 
-                {/* Main content area */}
-                <div className="flex flex-1 flex-col overflow-hidden">
-                    {/* Mobile header */}
-                    <div className="flex h-16 items-center justify-between border-b bg-white px-4 lg:hidden">
+                    {/* Mobile Toggle for Sidebar */}
+                    <div className="block md:hidden mb-4">
                         <button
-                            onClick={() => setShowMobileSidebar(true)}
-                            className="text-gray-500 hover:text-gray-700"
+                            onClick={() => setShowMobileSidebar((prev) => !prev)}
+                            className="w-full bg-[#4A9B9B] text-white font-semibold py-2 rounded-md shadow-sm"
                         >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
+                            {showMobileSidebar ? "Hide" : "Show"} Sections
                         </button>
-                        <h1 className="text-lg font-semibold text-gray-900">
-                            Complete Profile
-                        </h1>
-                        <div className="w-6" />
+
+                        {showMobileSidebar && (
+                            <div className="mt-2">
+                                <ProviderRegistrationNavSideBar
+                                    activeSection={activeSection}
+                                    onSectionClick={(section) => {
+                                        navigateToSection(section);
+                                        setShowMobileSidebar(false); // Auto-close after selection
+                                    }}
+                                    sectionCompletion={sectionCompletion}
+                                />
+                            </div>
+                        )}
                     </div>
 
-                    {/* Form content */}
-                    <div className="flex-1 overflow-y-auto p-6">
-                        <div className="mx-auto max-w-4xl">
-                            {/* Form sections */}
-                            {activeSection === "personal-contact" && (
-                                <PersonalContactSection
-                                    onDataChange={(data) => updateFormData("personal-contact", data)}
-                                    isCompleted={sectionCompletion["personal-contact"].completed}
-                                    defaultValues={formData["personal-contact"]}
-                                />
-                            )}
+                    {/* Form Content */}
+                    <div className="col-span-1 md:col-span-9">
+                        <div className="h-full flex flex-col">
+                            {/* Form Section */}
+                            <div className="flex-1 overflow-hidden">
+                                {activeSection === "personal-contact" && (
+                                    <PersonalContactSection
+                                        onDataChange={(data) => updateFormData("personal-contact", data)}
+                                        isCompleted={sectionCompletion["personal-contact"].completed}
+                                        defaultValues={formData["personal-contact"]}
+                                    />
+                                )}
 
-                            {activeSection === "address" && (
-                                <AddressSection
-                                    onDataChange={(data) => updateFormData("address", data)}
-                                    isCompleted={sectionCompletion.address.completed}
-                                    defaultValues={formData.address}
-                                />
-                            )}
+                                {activeSection === "address" && (
+                                    <AddressSection
+                                        onDataChange={(data) => updateFormData("address", data)}
+                                        isCompleted={sectionCompletion.address.completed}
+                                        defaultValues={formData.address}
+                                    />
+                                )}
 
-                            {activeSection === "emergency-contact" && (
-                                <EmergencyContactSection
-                                    onDataChange={(data) => updateFormData("emergency-contact", data)}
-                                    isCompleted={sectionCompletion["emergency-contact"].completed}
-                                    defaultValues={formData["emergency-contact"]}
-                                />
-                            )}
+                                {activeSection === "emergency-contact" && (
+                                    <EmergencyContactSection
+                                        onDataChange={(data) => updateFormData("emergency-contact", data)}
+                                        isCompleted={sectionCompletion["emergency-contact"].completed}
+                                        defaultValues={formData["emergency-contact"]}
+                                    />
+                                )}
 
-                            {activeSection === "professional-summary" && (
-                                <ProfessionalSummarySection
-                                    onDataChange={(data) => updateFormData("professional-summary", data)}
-                                    isCompleted={sectionCompletion["professional-summary"].completed}
-                                    defaultValues={formData["professional-summary"]}
-                                />
-                            )}
+                                {activeSection === "professional-summary" && (
+                                    <ProfessionalSummarySection
+                                        onDataChange={(data) => updateFormData("professional-summary", data)}
+                                        isCompleted={sectionCompletion["professional-summary"].completed}
+                                        defaultValues={formData["professional-summary"]}
+                                    />
+                                )}
 
-                            {activeSection === "credentials" && (
-                                <CredentialsSection
-                                    onDataChange={(data) => updateFormData("credentials", data)}
-                                    isCompleted={sectionCompletion.credentials.completed}
-                                    defaultValues={formData.credentials}
-                                />
-                            )}
+                                {activeSection === "credentials" && (
+                                    <CredentialsSection
+                                        onDataChange={(data) => updateFormData("credentials", data)}
+                                        isCompleted={sectionCompletion.credentials.completed}
+                                        defaultValues={formData.credentials}
+                                    />
+                                )}
+                            </div>
 
-                            {/* Navigation buttons */}
-                            <div className="mt-8 flex justify-between">
+                            {/* Compact Action Buttons */}
+                            <div className="mt-4 flex flex-wrap justify-between items-center gap-4 bg-white p-4 rounded-lg border shadow-sm">
                                 <button
                                     onClick={handleBack}
                                     disabled={sections.indexOf(activeSection) === 0}
-                                    className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                                 >
-                                    Back
+                                    ← Back
                                 </button>
 
-                                <div className="flex gap-4">
-                                    {sections.indexOf(activeSection) === sections.length - 1 ? (
-                                        <button
-                                            onClick={handleSubmit}
-                                            disabled={!Object.values(sectionCompletion).every((section) => section.completed)}
-                                            className="px-6 py-2 bg-[#4A9B9B] text-white rounded-md hover:bg-[#3a7a7a] disabled:opacity-50 disabled:cursor-not-allowed"
-                                        >
-                                            Complete Profile
-                                        </button>
-                                    ) : (
-                                        <button
-                                            onClick={handleNext}
-                                            disabled={!sectionCompletion[activeSection as keyof typeof sectionCompletion]?.completed}
-                                            className="px-6 py-2 bg-[#4A9B9B] text-white rounded-md hover:bg-[#3a7a7a] disabled:opacity-50 disabled:cursor-not-allowed"
-                                        >
-                                            Next
-                                        </button>
-                                    )}
-                                </div>
-                            </div>
-
-                            {/* Success message */}
-                            {submitSuccess && (
-                                <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-md">
-                                    <div className="flex items-center">
-                                        <svg className="w-5 h-5 text-green-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                        </svg>
-                                        <p className="text-green-800">
-                                            Profile completed successfully! You can now{" "}
-                                            <Link href="/provider-dashboard" className="font-medium underline">
-                                                return to your dashboard
-                                            </Link>
-                                        </p>
+                                <div className="flex-1 text-center min-w-[120px]">
+                                    <div className="text-sm text-gray-600 mb-1">
+                                        Step {sections.indexOf(activeSection) + 1} of{" "}
+                                        {sections.length}
+                                    </div>
+                                    <div className="text-xs text-gray-500">
+                                        {
+                                            Object.values(sectionCompletion).filter(
+                                                (s) => s.completed
+                                            ).length
+                                        }{" "}
+                                        completed
                                     </div>
                                 </div>
-                            )}
+
+                                {activeSection === "credentials" ? (
+                                    <button
+                                        onClick={handleSubmit}
+                                        disabled={
+                                            !Object.values(sectionCompletion).every(
+                                                (section) => section.completed
+                                            )
+                                        }
+                                        className={`px-6 py-2 text-sm font-semibold rounded-md transition-all duration-200 ${Object.values(sectionCompletion).every(
+                                            (section) => section.completed
+                                        )
+                                                ? "bg-[#CC5034] hover:bg-[#B84529] text-white shadow-md hover:shadow-lg"
+                                                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                            }`}
+                                    >
+                                        Complete Profile
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={handleNext}
+                                        disabled={
+                                            !sectionCompletion[
+                                                activeSection as keyof typeof sectionCompletion
+                                            ]?.completed
+                                        }
+                                        className={`px-4 py-2 text-sm font-semibold rounded-md transition-all duration-200 ${sectionCompletion[
+                                                activeSection as keyof typeof sectionCompletion
+                                            ]?.completed
+                                                ? "bg-[#4A9B9B] hover:bg-[#3A8B8B] text-white"
+                                                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                            }`}
+                                    >
+                                        Next →
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </main>
+            {submitSuccess && (
+                <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white border border-green-300 text-green-800 px-6 py-4 rounded-lg shadow-md flex flex-col items-center gap-2 z-50">
+                    <p className="font-semibold">🎉 Your provider profile has been completed!</p>
+                    <Link
+                        href="/provider-dashboard"
+                        className="mt-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm transition"
+                    >
+                        View your Dashboard
+                    </Link>
+                </div>
+            )}
         </div>
     );
 } 
