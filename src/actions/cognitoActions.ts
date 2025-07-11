@@ -19,14 +19,15 @@ export async function handleSignUp(
       throw new Error("User type is required");
     }
     // const { isSignUpComplete, userId, nextStep } = await signUp({
-    const {} = await signUp({
+    const { } = await signUp({
       username: String(formData.get("email")),
       password: String(formData.get("password")),
       options: {
         userAttributes: {
           email: String(formData.get("email")),
-          name: String(formData.get("name")),
-          "custom:userType": String(formData.get("userType")), // e.g., "Caregiver"
+          given_name: String(formData.get("firstName")),
+          family_name: String(formData.get("lastName")),
+          "custom:userType": String(formData.get("userType")), // e.g., "Provider"
         },
         // optional
         autoSignIn: true,
