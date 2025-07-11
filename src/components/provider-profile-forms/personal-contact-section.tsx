@@ -479,7 +479,7 @@ export function PersonalContactSection({
                                     {profilePhotoPreview ? "Change Photo" : "Upload Photo"}
                                 </label>
                                 <p className="text-xs text-gray-500 mt-1">
-                                    JPG, PNG or GIF (max 5MB)
+                                    JPG or PNG only (max 5MB)
                                 </p>
                             </div>
                         </div>
