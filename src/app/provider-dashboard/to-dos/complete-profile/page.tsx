@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ProviderRegistrationNavSideBar } from "@/components/nav-bars/provider-registration-nav-sidebar";
+import { PersonalContactSection } from "@/components/provider-profile-forms/personal-contact-section";
 import toast from "react-hot-toast";
 
 // Type definitions for form data
@@ -292,19 +293,13 @@ export default function CompleteProviderProfile() {
                     {/* Form content */}
                     <div className="flex-1 overflow-y-auto p-6">
                         <div className="mx-auto max-w-4xl">
-                            {/* Placeholder for form sections - we'll add these as we build each component */}
+                            {/* Form sections */}
                             {activeSection === "personal-contact" && (
-                                <div className="h-full bg-white rounded-lg border shadow-sm p-6">
-                                    <h2 className="text-2xl font-bold text-darkest-green mb-4">
-                                        Personal & Contact Information
-                                    </h2>
-                                    <p className="text-gray-600 mb-6">
-                                        This section will contain the Personal & Contact Information form.
-                                    </p>
-                                    <div className="text-center text-gray-500">
-                                        Form component will be added in the next step
-                                    </div>
-                                </div>
+                                <PersonalContactSection
+                                    onDataChange={(data) => updateFormData("personal-contact", data)}
+                                    isCompleted={sectionCompletion["personal-contact"].completed}
+                                    defaultValues={formData["personal-contact"]}
+                                />
                             )}
 
                             {activeSection === "address" && (
