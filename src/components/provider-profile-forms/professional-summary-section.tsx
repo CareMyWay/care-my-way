@@ -344,7 +344,7 @@ export function ProfessionalSummarySection({
                                     {selectedServices.map((service) => (
                                         <span
                                             key={service}
-                                            className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-[#4A9B9B] text-white"
+                                            className="inline-flex items-center px-2 py-1 rounded-md text-s font-medium bg-[#4A9B9B] text-white"
                                         >
                                             {service}
                                             <button

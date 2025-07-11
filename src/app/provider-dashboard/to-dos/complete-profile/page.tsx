@@ -9,6 +9,14 @@ import { EmergencyContactSection } from "@/components/provider-profile-forms/eme
 import { ProfessionalSummarySection } from "@/components/provider-profile-forms/professional-summary-section";
 import { CredentialsSection } from "@/components/provider-profile-forms/credentials-section";
 import toast from "react-hot-toast";
+import { getCurrentUser } from "aws-amplify/auth";
+import {
+    getProviderProfile,
+    createProviderProfile,
+    updateProviderProfile,
+    transformFormDataToProfile,
+    type ProviderProfileData
+} from "@/actions/providerProfileActions";
 
 // Type definitions for form data
 type PersonalContactData = {
@@ -44,6 +52,7 @@ type ProfessionalSummaryData = {
     bio?: string;
     yearsExperience?: string;
     askingRate?: string;
+    rateType?: string;
     responseTime?: string;
     servicesOffered?: string[];
     [key: string]: string | string[] | undefined;
@@ -83,6 +92,11 @@ export default function CompleteProviderProfile() {
     const [showMobileSidebar, setShowMobileSidebar] = useState(false);
     const [submitSuccess, setSubmitSuccess] = useState(false);
     const [activeSection, setActiveSection] = useState("personal-contact");
+    const [isLoading, setIsLoading] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);
+    const [existingProfile, setExistingProfile] = useState<ProviderProfileData | null>(null);
+    const [currentUser, setCurrentUser] = useState<any>(null);
+
     const [formData, setFormData] = useState({
         "personal-contact": {},
         address: {},
@@ -105,6 +119,77 @@ export default function CompleteProviderProfile() {
         "professional-summary",
         "credentials"
     ];
+
+    // Load existing profile data on mount
+    useEffect(() => {
+        const loadProfileData = async () => {
+            try {
+                setIsLoading(true);
+
+                // Get current user
+                const user = await getCurrentUser();
+                setCurrentUser(user);
+                console.log("Current user:", user);
+
+                // Try to load existing provider profile
+                if (user?.userId) {
+                    const profile = await getProviderProfile(user.userId);
+                    console.log("Existing profile:", profile);
+
+                    if (profile) {
+                        setExistingProfile(profile);
+
+                        // Pre-populate form data from existing profile
+                        setFormData({
+                            "personal-contact": {
+                                firstName: profile.firstName || "",
+                                lastName: profile.lastName || "",
+                                dob: profile.dob || "",
+                                gender: profile.gender || "",
+                                languages: profile.languages || [],
+                                phone: profile.phone || "",
+                                email: profile.email || "",
+                                preferredContact: profile.preferredContact || "",
+                                profilePhoto: profile.profilePhoto || "",
+                            },
+                            address: {
+                                address: profile.address || "",
+                                city: profile.city || "",
+                                province: profile.province || "",
+                                postalCode: profile.postalCode || "",
+                            },
+                            "emergency-contact": {
+                                contactName: profile.emergencyContactName || "",
+                                contactPhone: profile.emergencyContactPhone || "",
+                                relationship: profile.emergencyContactRelationship || "",
+                            },
+                            "professional-summary": {
+                                profileTitle: profile.profileTitle || "",
+                                bio: profile.bio || "",
+                                yearsExperience: profile.yearsExperience || "",
+                                askingRate: profile.askingRate || "",
+                                rateType: profile.rateType || "",
+                                responseTime: profile.responseTime || "",
+                                servicesOffered: profile.servicesOffered || [],
+                            },
+                            credentials: {
+                                education: profile.education || [],
+                                certifications: profile.certifications || [],
+                                workExperience: profile.workExperience || [],
+                            },
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error("Error loading profile data:", error);
+                toast.error("Failed to load existing profile data");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadProfileData();
+    }, []);
 
     // Validation functions (placeholder - we'll build these as we create each section)
     const validatePersonalContact = (data: PersonalContactData) => {
@@ -159,6 +244,7 @@ export default function CompleteProviderProfile() {
             "bio",
             "yearsExperience",
             "askingRate",
+            "rateType",
             "responseTime",
             "servicesOffered",
         ];
@@ -177,8 +263,6 @@ export default function CompleteProviderProfile() {
 
     const validateCredentials = (data: CredentialsData) => {
         // Since credentials section is completely optional, it's always considered completed
-        // Users can add as many or as few entries as they want
-
         // Calculate progress based on how much content they've added
         let totalFields = 0;
         let filledFields = 0;
@@ -285,15 +369,64 @@ export default function CompleteProviderProfile() {
         }
     };
 
-    const handleSubmit = () => {
-        if (Object.values(sectionCompletion).every((section) => section.completed)) {
-            setSubmitSuccess(true);
-            toast.success("Provider profile completed successfully!", {
-                duration: 4000,
-            });
-            console.log("Provider form data:", formData);
+    const handleSubmit = async () => {
+        if (!Object.values(sectionCompletion).every((section) => section.completed)) {
+            toast.error("Please complete all required sections before submitting");
+            return;
+        }
+
+        if (!currentUser?.userId) {
+            toast.error("User not found. Please try logging in again.");
+            return;
+        }
+
+        setIsSaving(true);
+
+        try {
+            // Transform form data to database format
+            const profileOwner = `${currentUser.userId}::${currentUser.username}`;
+            const profileData = transformFormDataToProfile(formData, currentUser.userId, profileOwner);
+
+            console.log("Saving profile data:", profileData);
+
+            let result;
+            if (existingProfile?.id) {
+                // Update existing profile
+                result = await updateProviderProfile(existingProfile.id, profileData);
+                toast.success("Provider profile updated successfully!");
+            } else {
+                // Create new profile
+                result = await createProviderProfile(profileData);
+                toast.success("Provider profile created successfully!");
+            }
+
+            if (result) {
+                setExistingProfile(result);
+                setSubmitSuccess(true);
+                console.log("Profile saved successfully:", result);
+            } else {
+                throw new Error("Failed to save profile");
+            }
+
+        } catch (error) {
+            console.error("Error saving profile:", error);
+            toast.error("Failed to save profile. Please try again.");
+        } finally {
+            setIsSaving(false);
         }
     };
+
+    // Show loading state
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-primary-white flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4A9B9B] mx-auto mb-4"></div>
+                    <p className="text-gray-600">Loading your profile...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-primary-white">
@@ -409,16 +542,16 @@ export default function CompleteProviderProfile() {
                                         disabled={
                                             !Object.values(sectionCompletion).every(
                                                 (section) => section.completed
-                                            )
+                                            ) || isSaving
                                         }
                                         className={`px-6 py-2 text-sm font-semibold rounded-md transition-all duration-200 ${Object.values(sectionCompletion).every(
                                             (section) => section.completed
-                                        )
-                                                ? "bg-[#CC5034] hover:bg-[#B84529] text-white shadow-md hover:shadow-lg"
-                                                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                        ) && !isSaving
+                                            ? "bg-[#CC5034] hover:bg-[#B84529] text-white shadow-md hover:shadow-lg"
+                                            : "bg-gray-300 text-gray-500 cursor-not-allowed"
                                             }`}
                                     >
-                                        Complete Profile
+                                        {isSaving ? "Saving..." : existingProfile ? "Update Profile" : "Complete Profile"}
                                     </button>
                                 ) : (
                                     <button
@@ -429,10 +562,10 @@ export default function CompleteProviderProfile() {
                                             ]?.completed
                                         }
                                         className={`px-4 py-2 text-sm font-semibold rounded-md transition-all duration-200 ${sectionCompletion[
-                                                activeSection as keyof typeof sectionCompletion
-                                            ]?.completed
-                                                ? "bg-[#4A9B9B] hover:bg-[#3A8B8B] text-white"
-                                                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                            activeSection as keyof typeof sectionCompletion
+                                        ]?.completed
+                                            ? "bg-[#4A9B9B] hover:bg-[#3A8B8B] text-white"
+                                            : "bg-gray-300 text-gray-500 cursor-not-allowed"
                                             }`}
                                     >
                                         Next →
@@ -445,7 +578,7 @@ export default function CompleteProviderProfile() {
             </main>
             {submitSuccess && (
                 <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white border border-green-300 text-green-800 px-6 py-4 rounded-lg shadow-md flex flex-col items-center gap-2 z-50">
-                    <p className="font-semibold">🎉 Your provider profile has been completed!</p>
+                    <p className="font-semibold">🎉 Your provider profile has been {existingProfile ? 'updated' : 'completed'}!</p>
                     <Link
                         href="/provider-dashboard"
                         className="mt-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm transition"
