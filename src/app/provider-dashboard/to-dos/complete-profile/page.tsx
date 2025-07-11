@@ -12,7 +12,6 @@ import toast from "react-hot-toast";
 import { getCurrentUser } from "aws-amplify/auth";
 import {
     getProviderProfile,
-    createProviderProfile,
     updateProviderProfile,
     transformFormDataToProfile,
     type ProviderProfileData
@@ -387,29 +386,30 @@ export default function CompleteProviderProfile() {
             const profileOwner = `${currentUser.userId}::${currentUser.username}`;
             const profileData = transformFormDataToProfile(formData, currentUser.userId, profileOwner);
 
-            console.log("Saving profile data:", profileData);
+            // Set profile as complete
+            profileData.isProfileComplete = true;
+            profileData.isPubliclyVisible = true;
 
-            let result;
-            if (existingProfile?.id) {
-                // Update existing profile
-                result = await updateProviderProfile(existingProfile.id, profileData);
-                toast.success("Provider profile updated successfully!");
-            } else {
-                // Create new profile
-                result = await createProviderProfile(profileData);
-                toast.success("Provider profile created successfully!");
+            console.log("Updating profile data:", profileData);
+
+            if (!existingProfile?.id) {
+                throw new Error("No existing profile found. Please try refreshing the page.");
             }
+
+            // Always update the existing profile
+            const result = await updateProviderProfile(existingProfile.id, profileData);
 
             if (result) {
                 setExistingProfile(result);
                 setSubmitSuccess(true);
-                console.log("Profile saved successfully:", result);
+                toast.success("Provider profile completed successfully!");
+                console.log("Profile completed successfully:", result);
             } else {
-                throw new Error("Failed to save profile");
+                throw new Error("Failed to update profile");
             }
 
         } catch (error) {
-            console.error("Error saving profile:", error);
+            console.error("Error updating profile:", error);
             toast.error("Failed to save profile. Please try again.");
         } finally {
             setIsSaving(false);
@@ -551,7 +551,7 @@ export default function CompleteProviderProfile() {
                                             : "bg-gray-300 text-gray-500 cursor-not-allowed"
                                             }`}
                                     >
-                                        {isSaving ? "Saving..." : existingProfile ? "Update Profile" : "Complete Profile"}
+                                        {isSaving ? "Saving..." : "Complete Profile"}
                                     </button>
                                 ) : (
                                     <button
@@ -578,7 +578,7 @@ export default function CompleteProviderProfile() {
             </main>
             {submitSuccess && (
                 <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white border border-green-300 text-green-800 px-6 py-4 rounded-lg shadow-md flex flex-col items-center gap-2 z-50">
-                    <p className="font-semibold">🎉 Your provider profile has been {existingProfile ? 'updated' : 'completed'}!</p>
+                    <p className="font-semibold">🎉 Your provider profile has been completed!</p>
                     <Link
                         href="/provider-dashboard"
                         className="mt-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm transition"

@@ -1,16 +1,12 @@
 import { generateClient } from "aws-amplify/data";
-import { getCurrentUser } from "aws-amplify/auth";
 import type { Schema } from "../../amplify/data/resource";
 
-// Generate client for client-side usage
 const client = generateClient<Schema>();
 
-export interface ProviderProfileData {
+export type ProviderProfileData = {
     id?: string;
     userId: string;
     profileOwner: string;
-
-    // Personal & Contact Information
     firstName?: string;
     lastName?: string;
     dob?: string;
@@ -20,19 +16,13 @@ export interface ProviderProfileData {
     email?: string;
     preferredContact?: string;
     profilePhoto?: string;
-
-    // Address Information
     address?: string;
     city?: string;
     province?: string;
     postalCode?: string;
-
-    // Emergency Contact
     emergencyContactName?: string;
     emergencyContactPhone?: string;
     emergencyContactRelationship?: string;
-
-    // Professional Summary
     profileTitle?: string;
     bio?: string;
     yearsExperience?: string;
@@ -40,121 +30,78 @@ export interface ProviderProfileData {
     rateType?: string;
     responseTime?: string;
     servicesOffered?: string[];
-
-    // Credentials & Work History (stored as JSON)
-    education?: any;
-    certifications?: any;
-    workExperience?: any;
-
-    // Profile completion status
+    education?: any[];
+    certifications?: any[];
+    workExperience?: any[];
     isProfileComplete?: boolean;
     isPubliclyVisible?: boolean;
+};
 
-    // Timestamps (managed by Amplify)
-    createdAt?: string;
-    updatedAt?: string;
-}
-
-// Get existing provider profile by userId
-export const getProviderProfile = async (userId: string): Promise<ProviderProfileData | null> => {
-    console.log("Getting ProviderProfile for userId:", userId);
-
+// Get provider profile by userId
+export async function getProviderProfile(userId: string): Promise<ProviderProfileData | null> {
     try {
-        // Check if user is authenticated
-        await getCurrentUser();
+        console.log("getProviderProfile called for userId:", userId);
 
-        const { data, errors } = await client.models.ProviderProfile.list({
+        const response = await client.models.ProviderProfile.list({
             filter: { userId: { eq: userId } }
         });
 
-        if (errors) {
-            console.error("Error fetching ProviderProfile:", errors);
-            return null;
+        if (response.errors) {
+            console.error("Error fetching provider profile:", response.errors);
+            throw new Error("Failed to fetch provider profile");
         }
 
-        if (data && data.length > 0) {
-            console.log("Found existing ProviderProfile:", data[0]);
-            return data[0] as ProviderProfileData;
+        if (response.data && response.data.length > 0) {
+            const rawProfile = response.data[0];
+            console.log("Raw profile data:", rawProfile);
+
+            // Transform the raw profile data to match our expected format
+            const profile: ProviderProfileData = {
+                ...(rawProfile as any),
+                // Parse JSON fields if they exist and are strings
+                education: rawProfile.education ? (
+                    typeof rawProfile.education === 'string'
+                        ? JSON.parse(rawProfile.education)
+                        : rawProfile.education
+                ) : [],
+                certifications: rawProfile.certifications ? (
+                    typeof rawProfile.certifications === 'string'
+                        ? JSON.parse(rawProfile.certifications)
+                        : rawProfile.certifications
+                ) : [],
+                workExperience: rawProfile.workExperience ? (
+                    typeof rawProfile.workExperience === 'string'
+                        ? JSON.parse(rawProfile.workExperience)
+                        : rawProfile.workExperience
+                ) : [],
+                // Ensure arrays are properly handled
+                languages: rawProfile.languages || [],
+                servicesOffered: rawProfile.servicesOffered || [],
+            };
+
+            console.log("Transformed profile data:", profile);
+            return profile;
         }
 
-        console.log("No ProviderProfile found for userId:", userId);
+        console.log("No profile found for userId:", userId);
         return null;
     } catch (error) {
         console.error("Error in getProviderProfile:", error);
-        return null;
+        throw error;
     }
-};
+}
 
-// Create new provider profile
-export const createProviderProfile = async (
-    profileData: Omit<ProviderProfileData, 'id' | 'createdAt' | 'updatedAt'>
-): Promise<ProviderProfileData | null> => {
-    console.log("Creating ProviderProfile", profileData);
-
+// Update provider profile
+export async function updateProviderProfile(profileId: string, profileData: Partial<ProviderProfileData>): Promise<ProviderProfileData | null> {
     try {
-        // Check if user is authenticated
-        await getCurrentUser();
+        console.log("updateProviderProfile called with:", { profileId, profileData });
 
-        const { data, errors } = await client.models.ProviderProfile.create({
-            userId: profileData.userId,
-            profileOwner: profileData.profileOwner,
-            firstName: profileData.firstName,
-            lastName: profileData.lastName,
-            dob: profileData.dob,
-            gender: profileData.gender,
-            languages: profileData.languages,
-            phone: profileData.phone,
-            email: profileData.email,
-            preferredContact: profileData.preferredContact,
-            profilePhoto: profileData.profilePhoto,
-            address: profileData.address,
-            city: profileData.city,
-            province: profileData.province,
-            postalCode: profileData.postalCode,
-            emergencyContactName: profileData.emergencyContactName,
-            emergencyContactPhone: profileData.emergencyContactPhone,
-            emergencyContactRelationship: profileData.emergencyContactRelationship,
-            profileTitle: profileData.profileTitle,
-            bio: profileData.bio,
-            yearsExperience: profileData.yearsExperience,
-            askingRate: profileData.askingRate,
-            rateType: profileData.rateType,
-            responseTime: profileData.responseTime,
-            servicesOffered: profileData.servicesOffered,
-            education: profileData.education,
-            certifications: profileData.certifications,
-            workExperience: profileData.workExperience,
-            isProfileComplete: profileData.isProfileComplete,
-            isPubliclyVisible: profileData.isPubliclyVisible,
-        });
+        // Build update object with proper types
+        const updateInput: any = {
+            id: profileId,
+        };
 
-        if (errors) {
-            console.error("Error creating ProviderProfile:", errors);
-            return null;
-        }
-
-        console.log("ProviderProfile created successfully:", data);
-        return data as ProviderProfileData;
-    } catch (error) {
-        console.error("Error in createProviderProfile:", error);
-        return null;
-    }
-};
-
-// Update existing provider profile
-export const updateProviderProfile = async (
-    id: string,
-    profileData: Partial<ProviderProfileData>
-): Promise<ProviderProfileData | null> => {
-    console.log("Updating ProviderProfile", id, profileData);
-
-    try {
-        // Check if user is authenticated
-        await getCurrentUser();
-
-        const updateInput: any = { id };
-
-        // Only add fields that are defined to avoid overwriting with undefined
+        // Only include defined fields to avoid overwriting with undefined
         if (profileData.firstName !== undefined) updateInput.firstName = profileData.firstName;
         if (profileData.lastName !== undefined) updateInput.lastName = profileData.lastName;
         if (profileData.dob !== undefined) updateInput.dob = profileData.dob;
@@ -178,75 +125,99 @@ export const updateProviderProfile = async (
         if (profileData.rateType !== undefined) updateInput.rateType = profileData.rateType;
         if (profileData.responseTime !== undefined) updateInput.responseTime = profileData.responseTime;
         if (profileData.servicesOffered !== undefined) updateInput.servicesOffered = profileData.servicesOffered;
-        if (profileData.education !== undefined) updateInput.education = profileData.education;
-        if (profileData.certifications !== undefined) updateInput.certifications = profileData.certifications;
-        if (profileData.workExperience !== undefined) updateInput.workExperience = profileData.workExperience;
+
+        // Handle JSON fields - only add them if they have actual content
+        if (profileData.education !== undefined) {
+            if (profileData.education && profileData.education.length > 0) {
+                updateInput.education = profileData.education;
+                console.log("Setting education:", profileData.education);
+            } else {
+                console.log("Education is empty, setting to null");
+                updateInput.education = null;
+            }
+        }
+        if (profileData.certifications !== undefined) {
+            if (profileData.certifications && profileData.certifications.length > 0) {
+                updateInput.certifications = profileData.certifications;
+                console.log("Setting certifications:", profileData.certifications);
+            } else {
+                console.log("Certifications is empty, setting to null");
+                updateInput.certifications = null;
+            }
+        }
+        if (profileData.workExperience !== undefined) {
+            if (profileData.workExperience && profileData.workExperience.length > 0) {
+                updateInput.workExperience = profileData.workExperience;
+                console.log("Setting workExperience:", profileData.workExperience);
+            } else {
+                console.log("WorkExperience is empty, setting to null");
+                updateInput.workExperience = null;
+            }
+        }
+
         if (profileData.isProfileComplete !== undefined) updateInput.isProfileComplete = profileData.isProfileComplete;
         if (profileData.isPubliclyVisible !== undefined) updateInput.isPubliclyVisible = profileData.isPubliclyVisible;
 
-        const { data, errors } = await client.models.ProviderProfile.update(updateInput);
+        console.log("Final update input:", JSON.stringify(updateInput, null, 2));
 
-        if (errors) {
-            console.error("Error updating ProviderProfile:", errors);
-            return null;
+        const response = await client.models.ProviderProfile.update(updateInput);
+
+        if (response.errors) {
+            console.error("GraphQL errors in updateProviderProfile:", JSON.stringify(response.errors, null, 2));
+            throw new Error(`GraphQL errors: ${JSON.stringify(response.errors)}`);
         }
 
-        console.log("ProviderProfile updated successfully:", data);
-        return data as ProviderProfileData;
+        console.log("ProviderProfile updated successfully:", response.data);
+        return response.data as unknown as ProviderProfileData;
     } catch (error) {
         console.error("Error in updateProviderProfile:", error);
-        return null;
+        throw error;
     }
-};
+}
 
-// Transform form data to profile format
-export const transformFormDataToProfile = (
+// Transform form data to database format
+export function transformFormDataToProfile(
     formData: any,
     userId: string,
     profileOwner: string
-): Omit<ProviderProfileData, 'id' | 'createdAt' | 'updatedAt'> => {
+): ProviderProfileData {
     return {
         userId,
         profileOwner,
-
         // Personal & Contact Information
-        firstName: formData["personal-contact"]?.firstName,
-        lastName: formData["personal-contact"]?.lastName,
-        dob: formData["personal-contact"]?.dob,
-        gender: formData["personal-contact"]?.gender,
-        languages: formData["personal-contact"]?.languages,
-        phone: formData["personal-contact"]?.phone,
-        email: formData["personal-contact"]?.email,
-        preferredContact: formData["personal-contact"]?.preferredContact,
-        profilePhoto: formData["personal-contact"]?.profilePhoto,
+        firstName: formData["personal-contact"]?.firstName || "",
+        lastName: formData["personal-contact"]?.lastName || "",
+        dob: formData["personal-contact"]?.dob || "",
+        gender: formData["personal-contact"]?.gender || "",
+        languages: formData["personal-contact"]?.languages || [],
+        phone: formData["personal-contact"]?.phone || "",
+        email: formData["personal-contact"]?.email || "",
+        preferredContact: formData["personal-contact"]?.preferredContact || "",
+        profilePhoto: formData["personal-contact"]?.profilePhoto || "",
 
         // Address Information
-        address: formData.address?.address,
-        city: formData.address?.city,
-        province: formData.address?.province,
-        postalCode: formData.address?.postalCode,
+        address: formData.address?.address || "",
+        city: formData.address?.city || "",
+        province: formData.address?.province || "",
+        postalCode: formData.address?.postalCode || "",
 
         // Emergency Contact
-        emergencyContactName: formData["emergency-contact"]?.contactName,
-        emergencyContactPhone: formData["emergency-contact"]?.contactPhone,
-        emergencyContactRelationship: formData["emergency-contact"]?.relationship,
+        emergencyContactName: formData["emergency-contact"]?.contactName || "",
+        emergencyContactPhone: formData["emergency-contact"]?.contactPhone || "",
+        emergencyContactRelationship: formData["emergency-contact"]?.relationship || "",
 
         // Professional Summary
-        profileTitle: formData["professional-summary"]?.profileTitle,
-        bio: formData["professional-summary"]?.bio,
-        yearsExperience: formData["professional-summary"]?.yearsExperience,
-        askingRate: formData["professional-summary"]?.askingRate,
-        rateType: formData["professional-summary"]?.rateType,
-        responseTime: formData["professional-summary"]?.responseTime,
-        servicesOffered: formData["professional-summary"]?.servicesOffered,
+        profileTitle: formData["professional-summary"]?.profileTitle || "",
+        bio: formData["professional-summary"]?.bio || "",
+        yearsExperience: formData["professional-summary"]?.yearsExperience || "",
+        askingRate: formData["professional-summary"]?.askingRate || "",
+        rateType: formData["professional-summary"]?.rateType || "",
+        responseTime: formData["professional-summary"]?.responseTime || "",
+        servicesOffered: formData["professional-summary"]?.servicesOffered || [],
 
         // Credentials & Work History
-        education: formData.credentials?.education,
-        certifications: formData.credentials?.certifications,
-        workExperience: formData.credentials?.workExperience,
-
-        // Profile completion status
-        isProfileComplete: true,
-        isPubliclyVisible: true,
+        education: formData.credentials?.education || [],
+        certifications: formData.credentials?.certifications || [],
+        workExperience: formData.credentials?.workExperience || [],
     };
-}; 
+} 
