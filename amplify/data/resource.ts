@@ -26,7 +26,6 @@ const schema = a
             allow.ownerDefinedIn("profileOwner").to(["read", "create"]),
             allow.groups(["Admin"]).to(["read", "update", "create"]),
           ]),
-        // We don't want people to change ownership of their profile
         profileOwner: a
           .string()
           .authorization((allow) => [
@@ -70,12 +69,75 @@ const schema = a
         //NEED TO ADD FIELDS HERE
       })
       .secondaryIndexes((index) => [index("userId")])
-
       .authorization((allow) => [
         allow.ownerDefinedIn("profileOwner").to(["read", "update"]),
         allow.group("Admin"),
         allow.guest().to(["read"]),
         allow.authenticated().to(["read"]),
+      ]),
+
+    ProviderProfile: a
+      .model({
+        userId: a.string().required(),
+        profileOwner: a.string().required(),
+
+        // Personal & Contact Information
+        firstName: a.string(),
+        lastName: a.string(),
+        dob: a.date(),
+        gender: a.string(),
+        languages: a.string().array(), // Array of language names
+        phone: a.string(),
+        email: a.string(),
+        preferredContact: a.string(),
+        profilePhoto: a.string(), // Base64 or URL
+
+        // Address Information
+        address: a.string(),
+        city: a.string(),
+        province: a.string(),
+        postalCode: a.string(),
+
+        // Emergency Contact
+        emergencyContactName: a.string(),
+        emergencyContactPhone: a.string(),
+        emergencyContactRelationship: a.string(),
+
+        // Professional Summary
+        profileTitle: a.string(),
+        bio: a.string(),
+        yearsExperience: a.string(),
+        askingRate: a.string(),
+        rateType: a.string(),
+        responseTime: a.string(),
+        servicesOffered: a.string().array(), // Array of service names
+
+        // Credentials & Work History (stored as JSON strings)
+        education: a.json(), // Array of education objects
+        certifications: a.json(), // Array of certification objects
+        workExperience: a.json(), // Array of work experience objects
+
+        // Profile completion status
+        isProfileComplete: a.boolean().default(false),
+        lastUpdated: a.timestamp(),
+
+        // Public visibility settings
+        isPubliclyVisible: a.boolean().default(true),
+      })
+      .secondaryIndexes((index) => [
+        index("userId"),
+        index("city"),
+        index("province")
+      ])
+      .authorization((allow) => [
+        // Provider owns their profile - full access
+        allow.ownerDefinedIn("profileOwner").to(["create", "read", "update", "delete"]),
+        // Admins have full access
+        allow.group("Admin").to(["create", "read", "update", "delete"]),
+        // Authenticated users can read profiles (for marketplace)
+        allow.authenticated().to(["read"]),
+        // Guests can read profiles (for marketplace browsing)
+        allow.guest().to(["read"]),
       ]),
   })
   .authorization((allow) => [allow.resource(postConfirmation)]);
@@ -97,7 +159,7 @@ Go to your frontend source code. From your client-side code, generate a
 Data client to make CRUDL requests to your table. (THIS SNIPPET WILL ONLY
 WORK IN THE FRONTEND CODE FILE.)
 
-Using JavaScript or Next.js React Server Components, Middleware, Server 
+Using JavaScript or Next.js React Server Components, Middleware, Server
 Actions or Pages Router? Review how to generate Data clients for those use
 cases: https://docs.amplify.aws/gen2/build-a-backend/data/connect-to-API/
 =========================================================================*/
