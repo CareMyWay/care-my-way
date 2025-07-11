@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ProviderRegistrationNavSideBar } from "@/components/nav-bars/provider-registration-nav-sidebar";
 import { PersonalContactSection } from "@/components/provider-profile-forms/personal-contact-section";
+import { AddressSection } from "@/components/provider-profile-forms/address-section";
+import { EmergencyContactSection } from "@/components/provider-profile-forms/emergency-contact-section";
 import toast from "react-hot-toast";
 
 // Type definitions for form data
@@ -303,31 +305,19 @@ export default function CompleteProviderProfile() {
                             )}
 
                             {activeSection === "address" && (
-                                <div className="h-full bg-white rounded-lg border shadow-sm p-6">
-                                    <h2 className="text-2xl font-bold text-darkest-green mb-4">
-                                        Address Information
-                                    </h2>
-                                    <p className="text-gray-600 mb-6">
-                                        This section will contain the Address Information form.
-                                    </p>
-                                    <div className="text-center text-gray-500">
-                                        Form component will be added later
-                                    </div>
-                                </div>
+                                <AddressSection
+                                    onDataChange={(data) => updateFormData("address", data)}
+                                    isCompleted={sectionCompletion.address.completed}
+                                    defaultValues={formData.address}
+                                />
                             )}
 
                             {activeSection === "emergency-contact" && (
-                                <div className="h-full bg-white rounded-lg border shadow-sm p-6">
-                                    <h2 className="text-2xl font-bold text-darkest-green mb-4">
-                                        Emergency Contact
-                                    </h2>
-                                    <p className="text-gray-600 mb-6">
-                                        This section will contain the Emergency Contact form.
-                                    </p>
-                                    <div className="text-center text-gray-500">
-                                        Form component will be added later
-                                    </div>
-                                </div>
+                                <EmergencyContactSection
+                                    onDataChange={(data) => updateFormData("emergency-contact", data)}
+                                    isCompleted={sectionCompletion["emergency-contact"].completed}
+                                    defaultValues={formData["emergency-contact"]}
+                                />
                             )}
 
                             {activeSection === "professional-summary" && (
