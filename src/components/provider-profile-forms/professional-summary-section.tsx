@@ -365,7 +365,7 @@ export function ProfessionalSummarySection({
                                     {/* Search Input */}
                                     <input
                                         type="text"
-                                        placeholder={selectedServices.length === 0 ? "Select services" : "Search more..."}
+                                        placeholder={selectedServices.length === 0 ? "Select services" : " Search more..."}
                                         value={serviceFilter}
                                         onChange={(e) => handleServiceInputChange(e.target.value)}
                                         onFocus={() => setIsServiceDropdownOpen(true)}
