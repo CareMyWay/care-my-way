@@ -96,6 +96,7 @@ export default function CompleteProviderProfile() {
     const [isSaving, setIsSaving] = useState(false);
     const [existingProfile, setExistingProfile] = useState<ProviderProfileData | null>(null);
     const [currentUser, setCurrentUser] = useState<any>(null);
+    const [visitedSections, setVisitedSections] = useState<Set<string>>(new Set(["personal-contact"]));
 
     const [formData, setFormData] = useState({
         "personal-contact": {},
@@ -263,7 +264,17 @@ export default function CompleteProviderProfile() {
     };
 
     const validateCredentials = (data: CredentialsData) => {
-        // Since credentials section is completely optional, it's always considered completed
+        // Only mark as completed if the user has visited the credentials section
+        const hasVisitedCredentials = visitedSections.has("credentials");
+
+        if (!hasVisitedCredentials) {
+            return {
+                progress: 0,
+                completed: false,
+            };
+        }
+
+        // Since credentials section is completely optional, once visited it's considered completed
         // Calculate progress based on how much content they've added
         let totalFields = 0;
         let filledFields = 0;
@@ -307,12 +318,12 @@ export default function CompleteProviderProfile() {
             });
         }
 
-        // If no entries exist, show 100% progress (section is optional)
+        // If no entries exist, show 100% progress (section is optional but visited)
         const progress = totalFields === 0 ? 100 : (filledFields / totalFields) * 100;
 
         return {
             progress: Math.round(progress),
-            completed: true, // Always completed since it's optional
+            completed: true, // Completed once visited since it's optional
         };
     };
 
@@ -341,7 +352,14 @@ export default function CompleteProviderProfile() {
             "professional-summary": professionalValidation,
             credentials: credentialsValidation,
         });
-    }, [formData]);
+    }, [formData, visitedSections]);
+
+    // Automatically mark credentials section as visited when user reaches it
+    useEffect(() => {
+        if (activeSection === "credentials" && !visitedSections.has("credentials")) {
+            setVisitedSections(prev => new Set([...prev, "credentials"]));
+        }
+    }, [activeSection, visitedSections]);
 
     const navigateToSection = (sectionId: string) => {
         // Can navigate to completed sections or current section
@@ -350,6 +368,8 @@ export default function CompleteProviderProfile() {
             sectionId === activeSection
         ) {
             setActiveSection(sectionId);
+            // Mark section as visited
+            setVisitedSections(prev => new Set([...prev, sectionId]));
         }
     };
 
@@ -359,14 +379,20 @@ export default function CompleteProviderProfile() {
             currentIndex < sections.length - 1 &&
             sectionCompletion[activeSection as keyof typeof sectionCompletion]?.completed
         ) {
-            setActiveSection(sections[currentIndex + 1]);
+            const nextSection = sections[currentIndex + 1];
+            setActiveSection(nextSection);
+            // Mark next section as visited
+            setVisitedSections(prev => new Set([...prev, nextSection]));
         }
     };
 
     const handleBack = () => {
         const currentIndex = sections.indexOf(activeSection);
         if (currentIndex > 0) {
-            setActiveSection(sections[currentIndex - 1]);
+            const prevSection = sections[currentIndex - 1];
+            setActiveSection(prevSection);
+            // Mark previous section as visited (should already be visited, but just in case)
+            setVisitedSections(prev => new Set([...prev, prevSection]));
         }
     };
 
