@@ -2,24 +2,24 @@
 
 import { useState } from "react";
 import { MapPin } from "lucide-react";
-import { Card, CardContent } from "@/components/provider-dashboard-ui/card";
-import { Button } from "@/components/provider-dashboard-ui/button";
-import { Badge } from "@/components/provider-dashboard-ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/provider-dashboard-ui/tabs";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav";
 
 interface Appointment {
-  id: string
-  patientName: string
-  patientAvatar?: string
-  service: string
-  date: string
-  time: string
-  status: "confirmed" | "pending" | "completed" | "cancelled"
-  type: "one-time" | "recurring"
-  location: string
-  notes?: string
+  id: string;
+  patientName: string;
+  patientAvatar?: string;
+  service: string;
+  date: string;
+  time: string;
+  status: "confirmed" | "pending" | "completed" | "cancelled";
+  type: "one-time" | "recurring";
+  location: string;
+  notes?: string;
 }
 
 export default function AppointmentsPage() {
@@ -105,8 +105,12 @@ export default function AppointmentsPage() {
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <h4 className="font-medium dashboard-text-primary">{appointment.patientName}</h4>
-                        <p className="text-sm dashboard-text-secondary">{appointment.service}</p>
+                        <h4 className="font-medium dashboard-text-primary">
+                          {appointment.patientName}
+                        </h4>
+                        <p className="text-sm dashboard-text-secondary">
+                          {appointment.service}
+                        </p>
                         <p className="text-sm dashboard-text-secondary">
                           {appointment.date} at {appointment.time}
                         </p>
@@ -115,13 +119,20 @@ export default function AppointmentsPage() {
                           {appointment.location}
                         </p>
                         {appointment.notes && (
-                          <p className="text-sm dashboard-text-secondary mt-1">Notes: {appointment.notes}</p>
+                          <p className="text-sm dashboard-text-secondary mt-1">
+                            Notes: {appointment.notes}
+                          </p>
                         )}
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge className={getStatusColor(appointment.status)}>{appointment.status}</Badge>
-                      <Badge variant="outline" className="text-teal-700 border-teal-300">
+                      <Badge className={getStatusColor(appointment.status)}>
+                        {appointment.status}
+                      </Badge>
+                      <Badge
+                        variant="outline"
+                        className="text-teal-700 border-teal-300"
+                      >
                         {appointment.type}
                       </Badge>
                     </div>
@@ -151,21 +162,34 @@ export default function AppointmentsPage() {
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <h4 className="font-medium dashboard-text-primary">{appointment.patientName}</h4>
-                        <p className="text-sm dashboard-text-secondary">{appointment.service}</p>
-                        <p className="text-sm dashboard-text-secondary">{appointment.time}</p>
+                        <h4 className="font-medium dashboard-text-primary">
+                          {appointment.patientName}
+                        </h4>
+                        <p className="text-sm dashboard-text-secondary">
+                          {appointment.service}
+                        </p>
+                        <p className="text-sm dashboard-text-secondary">
+                          {appointment.time}
+                        </p>
                         <p className="text-sm dashboard-text-secondary flex items-center gap-1">
                           <MapPin className="h-3 w-3" />
                           {appointment.location}
                         </p>
                         {appointment.notes && (
-                          <p className="text-sm dashboard-text-secondary mt-1">Notes: {appointment.notes}</p>
+                          <p className="text-sm dashboard-text-secondary mt-1">
+                            Notes: {appointment.notes}
+                          </p>
                         )}
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge className={getStatusColor(appointment.status)}>{appointment.status}</Badge>
-                      <Button size="sm" className="dashboard-button-primary text-primary-white">
+                      <Badge className={getStatusColor(appointment.status)}>
+                        {appointment.status}
+                      </Badge>
+                      <Button
+                        size="sm"
+                        className="dashboard-button-primary text-primary-white"
+                      >
                         Start Session
                       </Button>
                     </div>
@@ -177,7 +201,9 @@ export default function AppointmentsPage() {
         <TabsContent value="past">
           <Card>
             <CardContent className="p-6 text-center">
-              <p className="dashboard-text-secondary">No past appointments to display.</p>
+              <p className="dashboard-text-secondary">
+                No past appointments to display.
+              </p>
             </CardContent>
           </Card>
         </TabsContent>
