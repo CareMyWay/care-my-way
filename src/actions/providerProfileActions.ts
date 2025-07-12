@@ -186,39 +186,44 @@ export function transformFormDataToProfile(formData: any, userId: string, profil
         userId,
         profileOwner,
         // Personal & Contact Information
-        firstName: formData["personal-contact"]?.firstName || "",
-        lastName: formData["personal-contact"]?.lastName || "",
-        dob: formData["personal-contact"]?.dob || "",
-        gender: formData["personal-contact"]?.gender || "",
-        languages: formData["personal-contact"]?.languages || [],
-        phone: formData["personal-contact"]?.phone || "",
-        email: formData["personal-contact"]?.email || "",
-        preferredContact: formData["personal-contact"]?.preferredContact || "",
-        profilePhoto: formData["personal-contact"]?.profilePhoto || "",
+        firstName: formData['personal-contact']?.firstName,
+        lastName: formData['personal-contact']?.lastName,
+        dob: formData['personal-contact']?.dob,
+        gender: formData['personal-contact']?.gender,
+        languages: formData['personal-contact']?.languages,
+        phone: formData['personal-contact']?.phone,
+        email: formData['personal-contact']?.email,
+        preferredContact: formData['personal-contact']?.preferredContact,
+        profilePhoto: formData['personal-contact']?.profilePhoto,
 
         // Address Information
-        address: formData.address?.address || "",
-        city: formData.address?.city || "",
-        province: formData.address?.province || "",
-        postalCode: formData.address?.postalCode || "",
+        address: formData.address?.address,
+        city: formData.address?.city,
+        province: formData.address?.province,
+        postalCode: formData.address?.postalCode,
 
         // Emergency Contact
-        emergencyContactName: formData["emergency-contact"]?.contactName || "",
-        emergencyContactPhone: formData["emergency-contact"]?.contactPhone || "",
-        emergencyContactRelationship: formData["emergency-contact"]?.relationship || "",
+        emergencyContactName,
+        emergencyContactPhone: formData['emergency-contact']?.contactPhone,
+        emergencyContactRelationship: formData['emergency-contact']?.relationship,
 
         // Professional Summary
-        profileTitle: formData["professional-summary"]?.profileTitle || "",
-        bio: formData["professional-summary"]?.bio || "",
-        yearsExperience: formData["professional-summary"]?.yearsExperience || "",
-        askingRate: formData["professional-summary"]?.askingRate || "",
-        rateType: formData["professional-summary"]?.rateType || "",
-        responseTime: formData["professional-summary"]?.responseTime || "",
-        servicesOffered: formData["professional-summary"]?.servicesOffered || [],
+        profileTitle: formData['professional-summary']?.profileTitle,
+        bio: formData['professional-summary']?.bio,
+        yearsExperience: formData['professional-summary']?.yearsExperience,
+        askingRate: formData['professional-summary']?.askingRate,
+        rateType: formData['professional-summary']?.rateType,
+        responseTime: formData['professional-summary']?.responseTime,
+        servicesOffered: formData['professional-summary']?.servicesOffered,
 
-        // Credentials & Work History
-        education: formData.credentials?.education || [],
-        certifications: formData.credentials?.certifications || [],
-        workExperience: formData.credentials?.workExperience || [],
+        // Credentials
+        education: formData.credentials?.education || null,
+        certifications: formData.credentials?.certifications || null,
+        workExperience: formData.credentials?.workExperience || null,
+
+        // Profile completion status
+        isProfileComplete: false, // Will be set to true when submitting
+        isPubliclyVisible: false, // Will be set to true when submitting
+        lastUpdated: new Date().toISOString(),
     };
 } 
