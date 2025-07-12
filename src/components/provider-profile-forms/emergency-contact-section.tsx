@@ -7,7 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 const emergencyContactSchema = z.object({
-    contactName: z.string().min(1, "Full name is required"),
+    contactFirstName: z.string().min(1, "First name is required"),
+    contactLastName: z.string().min(1, "Last name is required"),
     contactPhone: z
         .string()
         .min(9, "Phone number must be at least 9 digits")
@@ -47,7 +48,8 @@ export function EmergencyContactSection({
     } = useForm<EmergencyContactFormFields>({
         mode: "onChange",
         defaultValues: {
-            contactName: defaultValues?.contactName || "",
+            contactFirstName: defaultValues?.contactFirstName || "",
+            contactLastName: defaultValues?.contactLastName || "",
             contactPhone: defaultValues?.contactPhone || "",
             relationship: defaultValues?.relationship || "",
         },
@@ -69,8 +71,8 @@ export function EmergencyContactSection({
                 <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-3">
                     <div
                         className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-bold ${isCompleted
-                                ? "border-green-500 bg-green-500 text-white"
-                                : "border-[#4A9B9B] bg-[#4A9B9B] text-white"
+                            ? "border-green-500 bg-green-500 text-white"
+                            : "border-[#4A9B9B] bg-[#4A9B9B] text-white"
                             }`}
                     >
                         {isCompleted ? (
@@ -97,22 +99,41 @@ export function EmergencyContactSection({
 
                 {/* Form */}
                 <form className="flex-1 overflow-y-auto space-y-6">
-                    {/* Contact Full Name */}
-                    <div className="space-y-2">
-                        <label htmlFor="contactName" className="std-form-label">
-                            Full Name *
-                        </label>
-                        <input
-                            id="contactName"
-                            {...register("contactName")}
-                            className="std-form-input"
-                            placeholder="Enter emergency contact's full name"
-                        />
-                        {errors.contactName && (
-                            <p className="text-sm text-red-600">
-                                {errors.contactName.message}
-                            </p>
-                        )}
+                    {/* Contact Name Fields */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <label htmlFor="contactFirstName" className="std-form-label">
+                                First Name *
+                            </label>
+                            <input
+                                id="contactFirstName"
+                                {...register("contactFirstName")}
+                                className="std-form-input"
+                                placeholder="Enter first name"
+                            />
+                            {errors.contactFirstName && (
+                                <p className="text-sm text-red-600">
+                                    {errors.contactFirstName.message}
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="space-y-2">
+                            <label htmlFor="contactLastName" className="std-form-label">
+                                Last Name *
+                            </label>
+                            <input
+                                id="contactLastName"
+                                {...register("contactLastName")}
+                                className="std-form-input"
+                                placeholder="Enter last name"
+                            />
+                            {errors.contactLastName && (
+                                <p className="text-sm text-red-600">
+                                    {errors.contactLastName.message}
+                                </p>
+                            )}
+                        </div>
                     </div>
 
                     {/* Contact Phone and Relationship */}
