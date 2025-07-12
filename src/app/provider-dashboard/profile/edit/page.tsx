@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { Camera, Save, X, AlertTriangle } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-dashboard-ui/card";
-import { Button } from "@/components/provider-dashboard-ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav";
 import Link from "next/link";
 // imported bad-words library from npm to filter profanity for specializations
@@ -13,7 +13,22 @@ import { Filter } from "bad-words";
 const filter = new Filter();
 
 const LANGUAGES = [
-  "English", "Spanish", "French", "Mandarin", "Cantonese", "Tagalog", "Hindi", "Punjabi", "German", "Russian", "Arabic", "Portuguese", "Vietnamese", "Korean", "Italian", "Japanese"
+  "English",
+  "Spanish",
+  "French",
+  "Mandarin",
+  "Cantonese",
+  "Tagalog",
+  "Hindi",
+  "Punjabi",
+  "German",
+  "Russian",
+  "Arabic",
+  "Portuguese",
+  "Vietnamese",
+  "Korean",
+  "Italian",
+  "Japanese",
 ];
 
 export default function EditProfilePage() {
@@ -27,7 +42,11 @@ export default function EditProfilePage() {
     state: "CA",
     zipCode: "94102",
     bio: "Licensed Physical Therapist with 8 years of experience specializing in sports rehabilitation and geriatric care.",
-    specializations: ["Physical Therapy", "Sports Rehabilitation", "Geriatric Care"],
+    specializations: [
+      "Physical Therapy",
+      "Sports Rehabilitation",
+      "Geriatric Care",
+    ],
     languages: ["English", "Spanish"],
     hourlyRate: "85",
     serviceRadius: "25",
@@ -42,7 +61,9 @@ export default function EditProfilePage() {
   const [specialtyError, setSpecialtyError] = useState("");
   const [newLanguage, setNewLanguage] = useState("");
   const [hourlyRateError, setHourlyRateError] = useState("");
-  const [bioWordCount, setBioWordCount] = useState(formData.bio.split(/\s+/).filter(Boolean).length);
+  const [bioWordCount, setBioWordCount] = useState(
+    formData.bio.split(/\s+/).filter(Boolean).length
+  );
 
   const handleInputChange = (field: string, value: string) => {
     if (field === "hourlyRate") {
@@ -66,7 +87,9 @@ export default function EditProfilePage() {
   const addSpecialization = () => {
     if (newSpecialization.trim()) {
       if (filter.isProfane(newSpecialization)) {
-        setSpecialtyError("Specialization contains inappropriate language or violence-related terms.");
+        setSpecialtyError(
+          "Specialization contains inappropriate language or violence-related terms."
+        );
         return;
       }
       if (newSpecialization.length > 25) {
@@ -113,19 +136,28 @@ export default function EditProfilePage() {
 
   return (
     <>
-      <TopNav title="Edit Profile" subtitle="Update your professional information" notificationCount={2} />
+      <TopNav
+        title="Edit Profile"
+        subtitle="Update your professional information"
+        notificationCount={2}
+      />
 
       <div className="space-y-6">
         {/* Profile Photo */}
         <Card className="border border-gray-200 bg-white rounded-lg">
           <CardHeader>
-            <CardTitle className="text-lg font-semibold dashboard-text-primary">Profile Photo</CardTitle>
+            <CardTitle className="text-lg font-semibold dashboard-text-primary">
+              Profile Photo
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-6">
               <div className="relative">
                 <Avatar className="h-24 w-24">
-                  <AvatarImage src="/placeholder.svg?height=96&width=96" alt="Profile" />
+                  <AvatarImage
+                    src="/placeholder.svg?height=96&width=96"
+                    alt="Profile"
+                  />
                   <AvatarFallback className="bg-teal-100 text-teal-800 text-2xl">
                     {formData.firstName[0]}
                     {formData.lastName[0]}
@@ -142,8 +174,14 @@ export default function EditProfilePage() {
                 <h3 className="font-medium dashboard-text-primary mb-1">
                   Dr. {formData.firstName} {formData.lastName}
                 </h3>
-                <p className="text-sm dashboard-text-secondary mb-2">Licensed Physical Therapist</p>
-                <Button variant="outline" size="sm" className="dashboard-button-secondary">
+                <p className="text-sm dashboard-text-secondary mb-2">
+                  Licensed Physical Therapist
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="dashboard-button-secondary"
+                >
                   Change Photo
                 </Button>
               </div>
@@ -154,32 +192,44 @@ export default function EditProfilePage() {
         {/* Personal Information */}
         <Card className="border border-gray-200 bg-white rounded-lg">
           <CardHeader>
-            <CardTitle className="text-lg font-semibold dashboard-text-primary">Personal Information</CardTitle>
+            <CardTitle className="text-lg font-semibold dashboard-text-primary">
+              Personal Information
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium dashboard-text-primary mb-2">First Name</label>
+                <label className="block text-sm font-medium dashboard-text-primary mb-2">
+                  First Name
+                </label>
                 <input
                   type="text"
                   value={formData.firstName}
-                  onChange={(e) => handleInputChange("firstName", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("firstName", e.target.value)
+                  }
                   className="w-full p-3 dashboard-input focus:outline-none rounded-md"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium dashboard-text-primary mb-2">Last Name</label>
+                <label className="block text-sm font-medium dashboard-text-primary mb-2">
+                  Last Name
+                </label>
                 <input
                   type="text"
                   value={formData.lastName}
-                  onChange={(e) => handleInputChange("lastName", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("lastName", e.target.value)
+                  }
                   className="w-full p-3 dashboard-input focus:outline-none rounded-md"
                 />
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium dashboard-text-primary mb-2">Email</label>
+                <label className="block text-sm font-medium dashboard-text-primary mb-2">
+                  Email
+                </label>
                 <input
                   type="email"
                   value={formData.email}
@@ -188,7 +238,9 @@ export default function EditProfilePage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium dashboard-text-primary mb-2">Phone</label>
+                <label className="block text-sm font-medium dashboard-text-primary mb-2">
+                  Phone
+                </label>
                 <input
                   type="tel"
                   value={formData.phone}
@@ -198,7 +250,9 @@ export default function EditProfilePage() {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium dashboard-text-primary mb-2">Bio</label>
+              <label className="block text-sm font-medium dashboard-text-primary mb-2">
+                Bio
+              </label>
               <textarea
                 value={formData.bio}
                 onChange={(e) => handleInputChange("bio", e.target.value)}
@@ -206,7 +260,9 @@ export default function EditProfilePage() {
                 className="w-full p-3 dashboard-input focus:outline-none rounded-md resize-none"
                 placeholder="Tell patients about your experience and approach..."
               />
-              <div className="text-xs text-gray-500 mt-1">{bioWordCount} words</div>
+              <div className="text-xs text-gray-500 mt-1">
+                {bioWordCount} words
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -214,11 +270,15 @@ export default function EditProfilePage() {
         {/* Address Information */}
         <Card className="border border-gray-200 bg-white rounded-lg">
           <CardHeader>
-            <CardTitle className="text-lg font-semibold dashboard-text-primary">Address</CardTitle>
+            <CardTitle className="text-lg font-semibold dashboard-text-primary">
+              Address
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="block text-sm font-medium dashboard-text-primary mb-2">Street Address</label>
+              <label className="block text-sm font-medium dashboard-text-primary mb-2">
+                Street Address
+              </label>
               <input
                 type="text"
                 value={formData.address}
@@ -228,7 +288,9 @@ export default function EditProfilePage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium dashboard-text-primary mb-2">City</label>
+                <label className="block text-sm font-medium dashboard-text-primary mb-2">
+                  City
+                </label>
                 <input
                   type="text"
                   value={formData.city}
@@ -237,7 +299,9 @@ export default function EditProfilePage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium dashboard-text-primary mb-2">State</label>
+                <label className="block text-sm font-medium dashboard-text-primary mb-2">
+                  State
+                </label>
                 <select
                   value={formData.state}
                   onChange={(e) => handleInputChange("state", e.target.value)}
@@ -250,7 +314,9 @@ export default function EditProfilePage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium dashboard-text-primary mb-2">ZIP Code</label>
+                <label className="block text-sm font-medium dashboard-text-primary mb-2">
+                  ZIP Code
+                </label>
                 <input
                   type="text"
                   value={formData.zipCode}
@@ -265,12 +331,16 @@ export default function EditProfilePage() {
         {/* Professional Details */}
         <Card className="border border-gray-200 bg-white rounded-lg">
           <CardHeader>
-            <CardTitle className="text-lg font-semibold dashboard-text-primary">Professional Details</CardTitle>
+            <CardTitle className="text-lg font-semibold dashboard-text-primary">
+              Professional Details
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Specializations */}
             <div>
-              <label className="block text-sm font-medium dashboard-text-primary mb-2">Specializations</label>
+              <label className="block text-sm font-medium dashboard-text-primary mb-2">
+                Specializations
+              </label>
               <div className="flex flex-wrap gap-2 mb-3">
                 {formData.specializations.map((spec, index) => (
                   <div
@@ -278,7 +348,10 @@ export default function EditProfilePage() {
                     className="bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-sm flex items-center gap-2"
                   >
                     {spec}
-                    <button onClick={() => removeSpecialization(index)} className="text-teal-600 hover:text-teal-800">
+                    <button
+                      onClick={() => removeSpecialization(index)}
+                      className="text-teal-600 hover:text-teal-800"
+                    >
                       <X className="h-3 w-3" />
                     </button>
                   </div>
@@ -296,12 +369,17 @@ export default function EditProfilePage() {
                   className="flex-1 p-2 dashboard-input focus:outline-none rounded-md"
                   maxLength={25}
                 />
-                <Button onClick={addSpecialization} className="dashboard-button-primary text-primary-white">
+                <Button
+                  onClick={addSpecialization}
+                  className="dashboard-button-primary text-primary-white"
+                >
                   Add
                 </Button>
               </div>
               <div className="flex items-center gap-2 mt-1">
-                <span className={`text-xs ${newSpecialization.length > 25 ? "text-red-500" : "text-gray-500"}`}>
+                <span
+                  className={`text-xs ${newSpecialization.length > 25 ? "text-red-500" : "text-gray-500"}`}
+                >
                   {newSpecialization.length}/25
                 </span>
                 {specialtyError && (
@@ -314,7 +392,9 @@ export default function EditProfilePage() {
 
             {/* Languages */}
             <div>
-              <label className="block text-sm font-medium dashboard-text-primary mb-2">Languages</label>
+              <label className="block text-sm font-medium dashboard-text-primary mb-2">
+                Languages
+              </label>
               <div className="flex flex-wrap gap-2 mb-3">
                 {formData.languages.map((lang, index) => (
                   <div
@@ -322,7 +402,10 @@ export default function EditProfilePage() {
                     className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm flex items-center gap-2"
                   >
                     {lang}
-                    <button onClick={() => removeLanguage(index)} className="text-green-600 hover:text-green-800">
+                    <button
+                      onClick={() => removeLanguage(index)}
+                      className="text-green-600 hover:text-green-800"
+                    >
                       <X className="h-3 w-3" />
                     </button>
                   </div>
@@ -335,11 +418,19 @@ export default function EditProfilePage() {
                   className="flex-1 p-2 dashboard-input focus:outline-none rounded-md"
                 >
                   <option value="">Select language</option>
-                  {LANGUAGES.filter(l => !formData.languages.includes(l)).map((lang) => (
-                    <option key={lang} value={lang}>{lang}</option>
-                  ))}
+                  {LANGUAGES.filter((l) => !formData.languages.includes(l)).map(
+                    (lang) => (
+                      <option key={lang} value={lang}>
+                        {lang}
+                      </option>
+                    )
+                  )}
                 </select>
-                <Button onClick={addLanguage} className="dashboard-button-primary text-primary-white" disabled={!newLanguage}>
+                <Button
+                  onClick={addLanguage}
+                  className="dashboard-button-primary text-primary-white"
+                  disabled={!newLanguage}
+                >
                   Add
                 </Button>
               </div>
@@ -349,43 +440,56 @@ export default function EditProfilePage() {
 
         {/* Service Details */}
         <Card className="border border-gray-200 bg-white rounded-lg">
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold dashboard-text-primary">Service Details</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium dashboard-text-primary mb-2">Hourly Rate ($)</label>
-              <input
-                type="number"
-                value={formData.hourlyRate}
-                min={20}
-                max={500}
-                onChange={(e) => handleInputChange("hourlyRate", e.target.value)}
-                className="w-full p-3 dashboard-input focus:outline-none rounded-md"
-              />
-              {hourlyRateError && (
-                <div className="text-xs text-red-600 mt-1">{hourlyRateError}</div>
-              )}
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold dashboard-text-primary">
+              Service Details
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium dashboard-text-primary mb-2">
+                  Hourly Rate ($)
+                </label>
+                <input
+                  type="number"
+                  value={formData.hourlyRate}
+                  min={20}
+                  max={500}
+                  onChange={(e) =>
+                    handleInputChange("hourlyRate", e.target.value)
+                  }
+                  className="w-full p-3 dashboard-input focus:outline-none rounded-md"
+                />
+                {hourlyRateError && (
+                  <div className="text-xs text-red-600 mt-1">
+                    {hourlyRateError}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
-
+          </CardContent>
+        </Card>
 
         {/* Save Button */}
         <div className="flex justify-end gap-4">
           <Link href="/provider-dashboard/profile">
-            <Button variant="outline" className="dashboard-button-secondary px-6">
+            <Button
+              variant="outline"
+              className="dashboard-button-secondary px-6"
+            >
               Cancel
             </Button>
           </Link>
-          <Button onClick={handleSave} className="dashboard-button-primary text-primary-white px-6">
+          <Button
+            onClick={handleSave}
+            className="dashboard-button-primary text-primary-white px-6"
+          >
             <Save className="h-4 w-4 mr-2" />
             Save Changes
           </Button>
         </div>
       </div>
     </>
-    );
+  );
 }

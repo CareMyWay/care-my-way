@@ -2,22 +2,13 @@
 
 import { useState } from "react";
 import { Clock, MapPin } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/provider-dashboard-ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav";
 import GreenButton from "@/components/buttons/green-button";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/provider-dashboard-ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 //import AppointmentsPage from "./appointments/page";
 import { format, startOfWeek, addDays, isSameDay, isSameMonth } from "date-fns";
-import { Button } from "@/components/provider-dashboard-ui/button";
+import { Button } from "@/components/ui/button";
 
 export default function HomeDashPage() {
   const todos = [

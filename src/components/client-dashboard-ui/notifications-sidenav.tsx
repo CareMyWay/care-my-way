@@ -2,12 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Badge } from "@/components/provider-dashboard-ui/badge";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/provider-dashboard-ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Calendar,
   MessageSquare,

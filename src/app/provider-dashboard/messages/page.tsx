@@ -2,18 +2,18 @@
 
 import { useState } from "react";
 import { Search } from "lucide-react";
-import { Card, CardContent, CardHeader } from "@/components/provider-dashboard-ui/card";
-import { Button } from "@/components/provider-dashboard-ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav";
 
 interface Message {
-  id: string
-  patientName: string
-  patientAvatar?: string
-  lastMessage: string
-  timestamp: string
-  unread: boolean
+  id: string;
+  patientName: string;
+  patientAvatar?: string;
+  lastMessage: string;
+  timestamp: string;
+  unread: boolean;
 }
 
 export default function MessagesPage() {
@@ -68,7 +68,10 @@ export default function MessagesPage() {
               >
                 <div className="flex items-center gap-4">
                   <Avatar className="h-12 w-12">
-                    <AvatarImage src={message.patientAvatar || "/placeholder.svg"} alt={message.patientName} />
+                    <AvatarImage
+                      src={message.patientAvatar || "/placeholder.svg"}
+                      alt={message.patientName}
+                    />
                     <AvatarFallback className="bg-teal-100 text-teal-800">
                       {message.patientName
                         .split(" ")
@@ -78,14 +81,26 @@ export default function MessagesPage() {
                   </Avatar>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
-                      <h4 className="font-medium dashboard-text-primary">{message.patientName}</h4>
-                      <span className="text-xs dashboard-text-secondary">{message.timestamp}</span>
+                      <h4 className="font-medium dashboard-text-primary">
+                        {message.patientName}
+                      </h4>
+                      <span className="text-xs dashboard-text-secondary">
+                        {message.timestamp}
+                      </span>
                     </div>
-                    <p className="text-sm dashboard-text-secondary">{message.lastMessage}</p>
+                    <p className="text-sm dashboard-text-secondary">
+                      {message.lastMessage}
+                    </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    {message.unread && <div className="w-3 h-3 bg-orange-500 rounded-full"></div>}
-                    <Button size="sm" variant="outline" className="border-teal-300 text-teal-700 hover:bg-teal-50">
+                    {message.unread && (
+                      <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+                    )}
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-teal-300 text-teal-700 hover:bg-teal-50"
+                    >
                       Reply
                     </Button>
                   </div>

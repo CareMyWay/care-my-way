@@ -50,6 +50,18 @@ interface EmergencyContactSectionProps {
   isCompleted: boolean;
 }
 
+// Common relationship options
+const relationshipOptions = [
+  "Spouse/Partner",
+  "Parent",
+  "Child",
+  "Sibling",
+  "Other Family Member",
+  "Friend",
+  "Colleague",
+  "Other",
+];
+
 export function EmergencyContactSection({
   onDataChange,
   isCompleted,
@@ -178,12 +190,18 @@ export function EmergencyContactSection({
                 <label htmlFor="relationship" className="std-form-label">
                   Relationship *
                 </label>
-                <input
+                <select
                   id="relationship"
                   {...register("relationship")}
                   className="std-form-input"
-                  placeholder="e.g., Spouse, Parent, Sibling"
-                />
+                >
+                  <option value="">Select relationship</option>
+                  {relationshipOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
                 {errors.relationship && (
                   <p className="text-sm text-red-600">
                     {errors.relationship.message}
@@ -310,12 +328,18 @@ export function EmergencyContactSection({
                       >
                         Relationship with Support Person*
                       </label>
-                      <input
+                      <select
                         id="supportRelationship"
                         {...register("supportRelationship")}
                         className="std-form-input"
-                        placeholder="e.g., Spouse, Parent, Sibling"
-                      />
+                      >
+                        <option value="">Select relationship</option>
+                        {relationshipOptions.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
                       {errors.supportRelationship && (
                         <p className="text-sm text-red-600">
                           {errors.supportRelationship.message}
