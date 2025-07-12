@@ -34,39 +34,6 @@ const schema = a
             allow.guest().to(["read"]),
             allow.authenticated().to(["read"]),
           ]),
-
-        // Shared fields
-        // firstName: a.string(),
-        // lastName: a.string(),
-        // gender: a.string(),
-        // dateOfBirth: a.date(),
-        // address: a.string(),
-        // city: a.string(),
-        // province: a.string(),
-        // postalCode: a.string(),
-        // emergencyContactFirstName: a.string(),
-        // emergencyContactLastName: a.string(),
-        // emergencyRelationship: a.string(),
-        // emergencyContactPhone: a.string(),
-        // // We don't want people to change ownership of their profile
-        // profileOwner: a
-        //   .string()
-        //   .authorization((allow) => [
-        //     allow.ownerDefinedIn("profileOwner").to(["read"]),
-        //     allow.group("Admins"),
-        //     allow.guest().to(["read"]),
-        //     allow.authenticated().to(["read"]),
-        //   ]),
-
-        //Client support fields
-        // hasRepSupportPerson: a.boolean(),
-        // supportFirstName: a.string(),
-        // supportLastName: a.string(),
-        // supportRelationship: a.string(),
-        // supportContactPhone: a.string(),
-
-        //healthcare provider fields
-        //NEED TO ADD FIELDS HERE
       })
       .secondaryIndexes((index) => [index("userId")])
       .authorization((allow) => [
@@ -141,7 +108,9 @@ const schema = a
       ])
       .authorization((allow) => [
         // Provider owns their profile - full access
-        allow.ownerDefinedIn("profileOwner").to(["create", "read", "update", "delete"]),
+        allow
+          .ownerDefinedIn("profileOwner")
+          .to(["create", "read", "update", "delete"]),
         // Admins have full access
         allow.group("Admin").to(["create", "read", "update", "delete"]),
         // Authenticated users can read profiles (for marketplace)
@@ -149,9 +118,9 @@ const schema = a
         // Guests can read profiles (for marketplace browsing)
         allow.guest().to(["read"]),
       ]),
-      
-      // Booking schema
-      Booking: a
+
+    // Booking schema
+    Booking: a
       .model({
         id: a.string().required(),
         providerId: a.string().required(), // Include this field after DynamoDB is set up to record provider ID
