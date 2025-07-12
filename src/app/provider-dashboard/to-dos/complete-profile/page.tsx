@@ -40,7 +40,8 @@ type AddressData = {
 };
 
 type EmergencyContactData = {
-    contactName?: string;
+    contactFirstName?: string;
+    contactLastName?: string;
     contactPhone?: string;
     relationship?: string;
     [key: string]: string | undefined;
@@ -158,7 +159,8 @@ export default function CompleteProviderProfile() {
                                 postalCode: profile.postalCode || "",
                             },
                             "emergency-contact": {
-                                contactName: profile.emergencyContactName || "",
+                                contactFirstName: profile.emergencyContactName ? profile.emergencyContactName.split(' ')[0] : '',
+                                contactLastName: profile.emergencyContactName ? profile.emergencyContactName.split(' ').slice(1).join(' ') : '',
                                 contactPhone: profile.emergencyContactPhone || "",
                                 relationship: profile.emergencyContactRelationship || "",
                             },
@@ -227,7 +229,7 @@ export default function CompleteProviderProfile() {
     };
 
     const validateEmergencyContact = (data: EmergencyContactData) => {
-        const required = ["contactName", "contactPhone", "relationship"];
+        const required = ["contactFirstName", "contactLastName", "contactPhone", "relationship"];
         const filled = required.filter(
             (field) => data[field] && data[field]!.trim() !== ""
         );
@@ -577,15 +579,74 @@ export default function CompleteProviderProfile() {
                 </div>
             </main>
             {submitSuccess && (
-                <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white border border-green-300 text-green-800 px-6 py-4 rounded-lg shadow-md flex flex-col items-center gap-2 z-50">
-                    <p className="font-semibold">🎉 Your provider profile has been completed!</p>
-                    <Link
-                        href="/provider-dashboard"
-                        className="mt-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm transition"
+                <>
+                    {/* Modal Backdrop */}
+                    <div
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                        style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
                     >
-                        View your Dashboard
-                    </Link>
-                </div>
+                        {/* Modal Content */}
+                        <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden animate-in fade-in duration-300">
+                            {/* Success Header */}
+                            <div className="bg-gradient-to-r from-[#4A9B9B] to-[#5CAB9B] px-6 py-8 text-center">
+                                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg className="w-8 h-8 text-[#4A9B9B]" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                    </svg>
+                                </div>
+                                <h2 className="text-2xl font-bold text-white mb-2">Profile Completed!</h2>
+                                <p className="text-white/90 text-sm">
+                                    Congratulations! Your provider profile is now complete and ready to be discovered by clients.
+                                </p>
+                            </div>
+
+                            {/* Modal Body */}
+                            <div className="px-6 py-6">
+                                <div className="space-y-4">
+                                    {/* Success Message */}
+                                    <div className="text-center">
+                                        <h3 className="text-lg font-semibold text-darkest-green mb-2">
+                                            What's Next?
+                                        </h3>
+                                        <p className="text-gray-600 text-sm leading-relaxed">
+                                            Your profile is now live in our marketplace. Clients can find and connect with you based on your services and location.
+                                        </p>
+                                    </div>
+
+                                    {/* Quick Stats */}
+                                    <div className="bg-gray-50 rounded-lg p-4">
+                                        <div className="grid grid-cols-2 gap-4 text-center">
+                                            <div>
+                                                <div className="text-2xl font-bold text-[#4A9B9B]">✓</div>
+                                                <div className="text-xs text-gray-600">Profile Complete</div>
+                                            </div>
+                                            <div>
+                                                <div className="text-2xl font-bold text-[#4A9B9B]">🌟</div>
+                                                <div className="text-xs text-gray-600">Now Discoverable</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Modal Actions */}
+                            <div className="px-6 pb-6 space-y-3">
+                                <Link
+                                    href="/provider-dashboard"
+                                    className="w-full bg-[#CC5034] hover:bg-[#B84529] text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg text-center block"
+                                >
+                                    Go to Dashboard
+                                </Link>
+                                <button
+                                    onClick={() => setSubmitSuccess(false)}
+                                    className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg transition-all duration-200 text-center"
+                                >
+                                    Stay Here
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </>
             )}
         </div>
     );
