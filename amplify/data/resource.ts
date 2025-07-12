@@ -35,39 +35,6 @@ const schema = a
             allow.guest().to(["read"]),
             allow.authenticated().to(["read"]),
           ]),
-
-        // Shared fields
-        // firstName: a.string(),
-        // lastName: a.string(),
-        // gender: a.string(),
-        // dateOfBirth: a.date(),
-        // address: a.string(),
-        // city: a.string(),
-        // province: a.string(),
-        // postalCode: a.string(),
-        // emergencyContactFirstName: a.string(),
-        // emergencyContactLastName: a.string(),
-        // emergencyRelationship: a.string(),
-        // emergencyContactPhone: a.string(),
-        // // We don't want people to change ownership of their profile
-        // profileOwner: a
-        //   .string()
-        //   .authorization((allow) => [
-        //     allow.ownerDefinedIn("profileOwner").to(["read"]),
-        //     allow.group("Admins"),
-        //     allow.guest().to(["read"]),
-        //     allow.authenticated().to(["read"]),
-        //   ]),
-
-        //Client support fields
-        // hasRepSupportPerson: a.boolean(),
-        // supportFirstName: a.string(),
-        // supportLastName: a.string(),
-        // supportRelationship: a.string(),
-        // supportContactPhone: a.string(),
-
-        //healthcare provider fields
-        //NEED TO ADD FIELDS HERE
       })
       .secondaryIndexes((index) => [index("userId")])
 
@@ -76,6 +43,32 @@ const schema = a
         allow.group("Admin"),
         allow.guest().to(["read"]),
         allow.authenticated().to(["read"]),
+      ]),
+
+    Client: a
+      .model({
+        firstName: a.string(),
+        lastName: a.string(),
+        gender: a.string(),
+        dateOfBirth: a.date(),
+        address: a.string(),
+        city: a.string(),
+        province: a.string(),
+        postalCode: a.string(),
+        emergencyContactFirstName: a.string(),
+        emergencyContactLastName: a.string(),
+        emergencyRelationship: a.string(),
+        emergencyContactPhone: a.string(),
+        hasRepSupportPerson: a.boolean(),
+        supportFirstName: a.string(),
+        supportLastName: a.string(),
+        supportRelationship: a.string(),
+        supportContactPhone: a.string(),
+      })
+      .authorization((allow) => [
+        allow.group("Admin").to(["read", "update", "create", "delete"]),
+        allow.ownerDefinedIn("profileOwner").to(["read", "update", "create"]),
+        allow.authenticated().to(["read", "create"]),
       ]),
   })
   .authorization((allow) => [allow.resource(postConfirmation)]);
