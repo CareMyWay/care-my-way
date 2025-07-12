@@ -2,23 +2,23 @@
 
 import { useState } from "react";
 import { ChevronLeft, ChevronRight, Clock, Settings } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-dashboard-ui/card";
-import { Button } from "@/components/provider-dashboard-ui/button";
-import { Badge } from "@/components/provider-dashboard-ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav";
 
 interface Appointment {
-  id: string
-  patientName: string
-  patientAvatar?: string
-  service: string
-  date: string // format: YYYY-MM-DD
-  time: string
-  status: "confirmed" | "pending" | "completed" | "cancelled"
-  type: "one-time" | "recurring"
-  location: string
-  notes?: string
+  id: string;
+  patientName: string;
+  patientAvatar?: string;
+  service: string;
+  date: string; // format: YYYY-MM-DD
+  time: string;
+  status: "confirmed" | "pending" | "completed" | "cancelled";
+  type: "one-time" | "recurring";
+  location: string;
+  notes?: string;
 }
 
 const WORKING_HOURS = {
@@ -38,10 +38,8 @@ function getDayOfWeek(year: number, month: number, day: number) {
 }
 
 export default function SchedulePage() {
-    const [currentDate, setCurrentDate] = useState(new Date());
-    const [calendarView, setCalendarView] = useState<"month" | "week">("month");
-
-  
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [calendarView, setCalendarView] = useState<"month" | "week">("month");
 
   const [appointments] = useState<Appointment[]>([
     {
@@ -77,7 +75,11 @@ export default function SchedulePage() {
   // Build calendar grid for month view
   const daysInMonth = getDaysInMonth(year, month);
   const firstDayOfWeek = getDayOfWeek(year, month, 1);
-  const calendarDays: { date: string; isToday: boolean; appointments: Appointment[] }[] = [];
+  const calendarDays: {
+    date: string;
+    isToday: boolean;
+    appointments: Appointment[];
+  }[] = [];
 
   if (calendarView === "month") {
     for (let i = 0; i < firstDayOfWeek; i++) {
@@ -124,15 +126,12 @@ export default function SchedulePage() {
   };
 
   // Today's appointments
-  const todayAppointments = appointments.filter(
-    (apt) => apt.date === todayStr
-  );
+  const todayAppointments = appointments.filter((apt) => apt.date === todayStr);
 
   return (
     <>
       <TopNav title="Schedule" notificationCount={2}>
-        <div className="flex gap-2">
-        </div>
+        <div className="flex gap-2"></div>
       </TopNav>
 
       {/* Calendar */}
@@ -158,17 +157,25 @@ export default function SchedulePage() {
               </Button>
               <h3 className="text-2xl font-bold dashboard-text-primary tracking-tight">
                 {calendarView === "month"
-                  ? currentDate.toLocaleDateString("en-US", { month: "long", year: "numeric" })
+                  ? currentDate.toLocaleDateString("en-US", {
+                      month: "long",
+                      year: "numeric",
+                    })
                   : (() => {
                       const weekStart = new Date(currentDate);
-                      weekStart.setDate(currentDate.getDate() - currentDate.getDay());
+                      weekStart.setDate(
+                        currentDate.getDate() - currentDate.getDay()
+                      );
                       const weekEnd = new Date(weekStart);
                       weekEnd.setDate(weekStart.getDate() + 6);
-                      return (
-                        `${weekStart.toLocaleDateString("en-US", { month: "short", day: "numeric" }) 
-                        } - ${ 
-                        weekEnd.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
-                      );
+                      return `${weekStart.toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      })} - ${weekEnd.toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}`;
                     })()}
               </h3>
               <Button
@@ -191,7 +198,9 @@ export default function SchedulePage() {
             <div>
               <select
                 value={calendarView}
-                onChange={e => setCalendarView(e.target.value as "month" | "week")}
+                onChange={(e) =>
+                  setCalendarView(e.target.value as "month" | "week")
+                }
                 className="border border-gray-300 rounded px-2 py-1 text-xs bg-white focus:outline-none"
                 aria-label="Calendar View"
               >
@@ -203,7 +212,12 @@ export default function SchedulePage() {
           {/* Calendar grid */}
           <div className="border-gray-200 grid grid-cols-7 gap-2 text-center p-4 shadow-sm ">
             {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
-              <div key={d} className="font-semibold text-xs text-gray-500 pb-2 uppercase tracking-wide">{d}</div>
+              <div
+                key={d}
+                className="font-semibold text-xs text-gray-500 pb-2 uppercase tracking-wide"
+              >
+                {d}
+              </div>
             ))}
             {calendarDays.map((day, idx) =>
               day.date ? (
@@ -215,7 +229,9 @@ export default function SchedulePage() {
                     cursor-pointer
                   `}
                 >
-                  <div className={`text-base font-semibold mb-1 ${day.isToday ? "text-green-700" : "text-gray-800"}`}>
+                  <div
+                    className={`text-base font-semibold mb-1 ${day.isToday ? "text-green-700" : "text-gray-800"}`}
+                  >
                     {new Date(day.date).getDate()}
                   </div>
                   {day.appointments.length > 0 && (
@@ -226,7 +242,8 @@ export default function SchedulePage() {
                           className={`w-full text-[11px] px-1 py-0.5 mt-1 ${getStatusColor(apt.status)} border`}
                           variant="outline"
                         >
-                          <span className="font-semibold">{apt.time}</span> <span className="truncate">{apt.patientName}</span>
+                          <span className="font-semibold">{apt.time}</span>{" "}
+                          <span className="truncate">{apt.patientName}</span>
                         </Badge>
                       ))}
                     </div>
@@ -235,8 +252,12 @@ export default function SchedulePage() {
                   {day.appointments.length > 0 && (
                     <div className="absolute left-1/2 z-10 hidden group-hover:flex flex-col bg-white border border-gray-300 rounded shadow-lg p-2 min-w-[160px] -translate-x-1/2 top-14">
                       {day.appointments.map((apt) => (
-                        <div key={apt.id} className="text-xs text-left mb-1 last:mb-0">
-                          <span className="font-semibold">{apt.time}</span> - {apt.patientName}
+                        <div
+                          key={apt.id}
+                          className="text-xs text-left mb-1 last:mb-0"
+                        >
+                          <span className="font-semibold">{apt.time}</span> -{" "}
+                          {apt.patientName}
                           <div className="text-gray-500">{apt.service}</div>
                         </div>
                       ))}
@@ -246,7 +267,7 @@ export default function SchedulePage() {
               ) : (
                 <div key={idx}></div>
               )
-            )}  
+            )}
           </div>
         </CardContent>
       </Card>
@@ -263,11 +284,18 @@ export default function SchedulePage() {
           <CardContent>
             <div className="space-y-4">
               {todayAppointments.length === 0 && (
-                <div className="text-gray-400 text-center py-8">No appointments today.</div>
+                <div className="text-gray-400 text-center py-8">
+                  No appointments today.
+                </div>
               )}
               {todayAppointments.map((appointment) => (
-                <div key={appointment.id} className="flex items-center gap-4 p-3 border border-gray-200 rounded-lg">
-                  <div className="text-sm font-medium dashboard-text-primary min-w-[80px]">{appointment.time}</div>
+                <div
+                  key={appointment.id}
+                  className="flex items-center gap-4 p-3 border border-gray-200 rounded-lg"
+                >
+                  <div className="text-sm font-medium dashboard-text-primary min-w-[80px]">
+                    {appointment.time}
+                  </div>
                   <Avatar className="h-8 w-8">
                     <AvatarImage
                       src={appointment.patientAvatar || "/placeholder.svg"}
@@ -281,10 +309,17 @@ export default function SchedulePage() {
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
-                    <h4 className="font-medium dashboard-text-primary">{appointment.patientName}</h4>
-                    <p className="text-sm dashboard-text-secondary">{appointment.service}</p>
+                    <h4 className="font-medium dashboard-text-primary">
+                      {appointment.patientName}
+                    </h4>
+                    <p className="text-sm dashboard-text-secondary">
+                      {appointment.service}
+                    </p>
                   </div>
-                  <Badge className={getStatusColor(appointment.status)} variant="outline">
+                  <Badge
+                    className={getStatusColor(appointment.status)}
+                    variant="outline"
+                  >
                     {appointment.status}
                   </Badge>
                 </div>
@@ -295,14 +330,21 @@ export default function SchedulePage() {
 
         <Card className="border-gray-400 dashboard-bg-primary rounded-2xl dashboard-card mb-6 !shadow-none">
           <CardHeader>
-            <CardTitle className="dashboard-text-primary">Availability Settings</CardTitle>
+            <CardTitle className="dashboard-text-primary">
+              Availability Settings
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <h4 className="font-medium dashboard-text-primary mb-3">Working Hours</h4>
+              <h4 className="font-medium dashboard-text-primary mb-3">
+                Working Hours
+              </h4>
               <div className="space-y-2">
                 {Object.entries(WORKING_HOURS).map(([day, hours]) => (
-                  <div key={day} className="flex items-center justify-between p-2 border border-gray-200 rounded">
+                  <div
+                    key={day}
+                    className="flex items-center justify-between p-2 border border-gray-200 rounded"
+                  >
                     <span className="text-sm font-medium">{day}</span>
                     <div className="flex items-center gap-2 text-sm dashboard-text-secondary">
                       <span>{hours}</span>
@@ -314,7 +356,9 @@ export default function SchedulePage() {
                 ))}
               </div>
             </div>
-            <Button className="dashboard-button-primary text-primary-white">Update Availability</Button>
+            <Button className="dashboard-button-primary text-primary-white">
+              Update Availability
+            </Button>
           </CardContent>
         </Card>
       </div>
