@@ -176,11 +176,12 @@ export async function updateProviderProfile(profileId: string, profileData: Part
 }
 
 // Transform form data to database format
-export function transformFormDataToProfile(
-    formData: any,
-    userId: string,
-    profileOwner: string
-): ProviderProfileData {
+export function transformFormDataToProfile(formData: any, userId: string, profileOwner: string) {
+    // Combine emergency contact first and last name
+    const emergencyContactName = formData['emergency-contact']?.contactFirstName && formData['emergency-contact']?.contactLastName
+        ? `${formData['emergency-contact'].contactFirstName} ${formData['emergency-contact'].contactLastName}`
+        : undefined;
+
     return {
         userId,
         profileOwner,
