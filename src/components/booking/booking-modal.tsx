@@ -42,10 +42,23 @@ export default function BookingModal({
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [selectedDuration, setSelectedDuration] = useState<string | null>(null);
 
   const monthNames = [
     "January", "February", "March", "April", "May", "June", "July",
     "August", "September", "October", "November", "December",
+  ];
+
+  const durationOptions = [
+    { value: "0.5", label: "30 minutes" },
+    { value: "1", label: "1 hour" },
+    { value: "1.5", label: "1.5 hours" },
+    { value: "2", label: "2 hours" },
+    { value: "2.5", label: "2.5 hours" },
+    { value: "3", label: "3 hours" },
+    { value: "4", label: "4 hours" },
+    { value: "6", label: "6 hours" },
+    { value: "8", label: "8 hours" },
   ];
 
   const getDaysInMonth = (date: Date) => {
@@ -81,6 +94,7 @@ export default function BookingModal({
     if (isDateAvailable(year, month, day)) {
       setSelectedDate(key);
       setSelectedTime(null);
+      setSelectedDuration(null);
     }
   };
 
@@ -101,9 +115,10 @@ export default function BookingModal({
         // const user = await Auth.currentAuthenticatedUser();
         // const clientId = user.attributes.sub;
 
-        // Use dummy clientId or omit if not required
+        // Use dummy clientId
         const clientId = "anonymous-client";
 
+        // TODO: Create duration in dynamoDB
         const result = await client.models.Booking.create({
           id: uuidv4(),
           providerName,
@@ -114,10 +129,12 @@ export default function BookingModal({
         });
 
         console.log("Booking created:", result);
-        alert(`Booking confirmed for ${selectedDate} at ${selectedTime}`);
+        const duration = durationOptions.find((d) => d.value === selectedDuration)?.label;
+        alert(`Booking confirmed for ${selectedDate} at ${selectedTime} for ${duration}.`);
         onOpenChange(false);
         setSelectedDate(null);
         setSelectedTime(null);
+        setSelectedDuration(null);
       } catch (err) {
         console.error("Booking error:", err);
         alert(`Failed to book: ${(err as Error).message}`);
@@ -136,14 +153,14 @@ export default function BookingModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-full md:max-w-[600px] lg:max-w-[600px] xl:max-w-[800px] max-h-[90vh] overflow-hidden mx-auto">
         <DialogHeader>
           <DialogTitle>Book with {providerName}</DialogTitle>
         </DialogHeader>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] md:gap-6">
           {/* Calendar Section */}
-          <div>
+          <div className="w-full md:w-[300px] lg:w-[400px] ml-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold">
                 {monthNames[currentMonthIndex]} {currentYear}
@@ -157,14 +174,16 @@ export default function BookingModal({
                     currentMonthIndex === today.getMonth() &&
                     currentYear === today.getFullYear()
                   }
+                  className="cursor-pointer"
                 >
-                  <ChevronLeft className="w-4 h-4" />
+                  <ChevronLeft className="w-4 h-4"/>
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => handleMonthChange("next")}
                   disabled={currentMonthIndex === maxMonth && currentYear === maxYear}
+                  className="cursor-pointer"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </Button>
@@ -205,7 +224,7 @@ export default function BookingModal({
           </div>
 
           {/* Time Slots Section */}
-          <div>
+          <div className="overflow-y-auto max-h-[70vh] pr-1">
             <h3 className="font-semibold mb-4">
               {selectedDate ? "Available Times" : "Select a date to see available times"}
             </h3>
@@ -216,7 +235,7 @@ export default function BookingModal({
                   <button
                     key={time}
                     onClick={() => setSelectedTime(time)}
-                    className={`w-full p-3 text-left rounded-md border transition-colors
+                    className={`w-full p-3 text-left rounded-md border transition-colors cursor-pointer
                       ${
                         selectedTime === time
                           ? "bg-primary-orange text-white border-primary-orange"
@@ -233,13 +252,39 @@ export default function BookingModal({
               </div>
             )}
 
-            {selectedDate && selectedTime && (
+            {selectedTime && (
+              <div className="mb-6">
+                <h4 className="mt-6 font-semibold mb-3">Select Duration</h4>
+                <div className="grid grid-cols-2 gap-2">
+                  {durationOptions.map((duration) => (
+                    <button
+                      key={duration.value}
+                      onClick={() => setSelectedDuration(duration.value)}
+                      className={`
+                        p-2 text-sm rounded-md border transition-colors cursor-pointer
+                        ${
+                          selectedDuration === duration.value
+                            ? "bg-primary-orange text-white border-primary-orange"
+                            : "bg-white hover:bg-orange-50 border-gray-200 hover:border-orange-200"
+                        }
+                      `}
+                    >
+                      {duration.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {selectedDate && selectedTime && selectedDuration && (
               <div className="mt-6 p-4 bg-gray-50 rounded-md">
                 <h4 className="font-medium mb-2">Booking Summary</h4>
                 <div className="text-sm space-y-1">
                   <p><strong>Date:</strong> {selectedDate}</p>
                   <p><strong>Time:</strong> {selectedTime}</p>
+                  <p><strong>Duration:</strong> {durationOptions.find((d) => d.value === selectedDuration)?.label}</p>
                   <p><strong>Rate:</strong> {providerRate}</p>
+                  <p><strong>Total Cost:</strong> ${(20 * Number.parseFloat(selectedDuration)).toFixed(2)}</p>
                   <p><strong>Provider:</strong> {providerName}</p>
                 </div>
               </div>
@@ -247,8 +292,8 @@ export default function BookingModal({
 
             <Button
               onClick={handleBooking}
-              disabled={!selectedDate || !selectedTime}
-              className="w-full mt-4 bg-primary-orange hover:bg-primary-orange disabled:bg-gray-300"
+              disabled={!selectedDate || !selectedTime || !selectedDuration}
+              className="w-full mt-4 bg-primary-orange cursor-pointer hover:bg-primary-orange disabled:bg-gray-500 disabled:cursor-not-allowed"
             >
               Confirm Booking
             </Button>
