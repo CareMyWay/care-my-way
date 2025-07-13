@@ -8,6 +8,7 @@ import {Input} from "@/components/inputs/input";
 import GreenButton from "@/components/buttons/green-button";
 import {MultipleSelect} from "@/components/select/multipleSelect";
 import {Availability} from "@/components/calendar/availability";
+import {Select} from "@/components/select/standardSelect";
 
 const MarketplaceFilter = ({
                              minPrice,
@@ -52,7 +53,7 @@ const MarketplaceFilter = ({
   //   setAvailability([e.target.value]); // Fatal: to-do fix update rather than replace
   // };
 
-  const handleExpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleExpChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setExperience(Number(e.target.value));
   };
 
@@ -159,7 +160,13 @@ const MarketplaceFilter = ({
           {/* Experience */}
           <div className="mb-6">
             <h3 className="text-[16px] text-darkest-green mb-3">Experience</h3>
-            <Input type="text" value={experience} onChange={handleExpChange} placeholder="Years of experience" className="w-full h-[41px]" />
+            {/*<Input type="text" placeholder="Years of experience" className="w-full h-[41px]" />*/}
+            <Select className="mt-4" value={experience} onChange={handleExpChange} >
+              <option value="0">0+ years</option>
+              <option value="1">1+ years</option>
+              <option value="3">3+ years</option>
+              <option value="5">5+ years</option>
+            </Select>
           </div>
 
           {/* Specialty

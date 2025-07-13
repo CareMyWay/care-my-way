@@ -7,7 +7,6 @@ interface HealthcareProviderCardProps {
   title: string;
   location: string;
   experience: string;
-  testimonials: number;
   languages: string[];
   services: string[];
   hourlyRate: number;
@@ -19,7 +18,6 @@ const HealthcareProviderCard: React.FC<HealthcareProviderCardProps> = ({
   title,
   location,
   experience,
-  testimonials,
   languages,
   services,
   hourlyRate,
@@ -49,7 +47,7 @@ const HealthcareProviderCard: React.FC<HealthcareProviderCardProps> = ({
               {title} | {location}
             </p>
             <p className="text-body4-size text-darkest-green mt-1">
-              {experience} | {testimonials} testimonials
+              {experience}
             </p>
             <p className="text-body4-size text-darkest-green">
               {languages.join(", ")}
