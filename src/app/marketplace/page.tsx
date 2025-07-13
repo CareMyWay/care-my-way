@@ -50,7 +50,6 @@ export interface Provider {
   title: string;
   location: string;
   experience: string;
-  testimonials: number;
   languages: string[];
   services: string[];
   hourlyRate: number;
@@ -89,7 +88,7 @@ export default function MarketplacePage() {
       }
     });
 
-    fetchProviders(languagePreference,availability,experience * 12,specialty,minPrice,maxPrice, tmpSearchKeySet).then(r => {
+    fetchProviders(languagePreference,availability,experience,specialty,minPrice,maxPrice, tmpSearchKeySet).then(r => {
       r.map(ele => {
 
         landingProviders.push(
@@ -97,8 +96,7 @@ export default function MarketplacePage() {
             name: ele.firstName.concat(" ".concat(ele.lastName)),
             title: ele.title,
             location: ele.location,
-            experience: String(Math.trunc(ele.experience/12)).concat("+ year").concat(ele.experience%12 === 1 ? " " : "s"),
-            testimonials: ele.testimonials.length,
+            experience: ele.experience,
             languages: Array.from(ele.languages.values()),
             services: Array.from(ele.services.values()),
             hourlyRate: ele.hourlyRate,
@@ -117,33 +115,37 @@ export default function MarketplacePage() {
   };
 
   return (
-    <div>
-      <Navbar />
-      <section className="min-h-screen px-4 py-12 md:px-16 bg-primary-white">
-        <div className="container mx-auto flex flex-col md:h-screen">
+    <div className={"w-[100%] h-[100%] flex flex-col"}>
+      <div className={"w-[100%] h-[70px]"}>
+        <div className={"w-[100%]"}>
+          <Navbar />
+        </div>
+      </div>
+
+      <div className="w-full flex flex-col h-[calc(100%_-_75px)]">
+        <div className={"flex-initial"}>
+          <MarketplaceSearchBar searchKey={searchKey} setSearchKey={setSearchKey} triggerFetch={triggerFetch} />
+        </div>
+
+        <div className="flex flex-col flex-auto lg:flex-row gap-6 md:flex-1 md:min-h-0">
           <div>
-            <div>
-              <MarketplaceSearchBar searchKey={searchKey} setSearchKey={setSearchKey} triggerFetch={triggerFetch} />
-            </div>
+            <MarketplaceFilter
+              minPrice={minPrice}
+              maxPrice={maxPrice}
+              availability={availability}
+              experience={experience}
+              specialty={specialty}
+              languagePreference={languagePreference}
+              setMinPrice={setMinPrice}
+              setMaxPrice={setMaxPrice}
+              setAvailability={setAvailability}
+              setExperience={setExperience}
+              setSpecialty={setSpecialty}
+              setLanguagePreference={setLanguagePreference}
+              triggerFetch={triggerFetch} />
           </div>
-          <div className="flex flex-col lg:flex-row gap-6 md:flex-1 md:min-h-0">
-            <div>
-              <MarketplaceFilter
-                minPrice={minPrice}
-                maxPrice={maxPrice}
-                availability={availability}
-                experience={experience}
-                specialty={specialty}
-                languagePreference={languagePreference}
-                setMinPrice={setMinPrice}
-                setMaxPrice={setMaxPrice}
-                setAvailability={setAvailability}
-                setExperience={setExperience}
-                setSpecialty={setSpecialty}
-                setLanguagePreference={setLanguagePreference}
-                triggerFetch={triggerFetch} />
-            </div>
-            <div className="space-y-6 w-full md:overflow-y-auto">
+          <div className={"flex-auto overflow-y-auto"}>
+            <div className="space-y-6 w-full  md:overflow-auto">
               {
                 pageDoneLoading ? (
                   fetchedProviders.length === 0 ? (
@@ -160,7 +162,7 @@ export default function MarketplacePage() {
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 }
