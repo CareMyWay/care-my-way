@@ -1,16 +1,11 @@
-
-// import { isAuthenticated } from "@/utils/amplify-server-utils";
-import { unmarshall } from "@aws-sdk/util-dynamodb";
-import { dbConn } from "./dynamoConfig";
-import { ScanCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoClient } from "./dynamoConfig";
 
 export interface Provider {
   lastName: string;
   firstName: string;
   title: string;
   location: string;
-  experience: number;
-  testimonials: number[];
+  experience: string;
   languages: string[];
   services: string[];
   hourlyRate: number;
@@ -18,76 +13,83 @@ export interface Provider {
 }
 
 export const fetchProviders = async (
-  language: string[],
-  availability: string[],
+  languageItems: string[],
+  availabilityItems: string[],
   experience: number,
-  specialty: string[],
+  specialtyItems: string[],
   minPrice: number,
   maxPrice: number,
-  searchKey: string[]
+  searchNameKeys: string[]
 ): Promise<Provider[]> => {
 
   const providers: Provider[] = [];
-  console.info("searchKey: ", searchKey.join(",") );
+  console.info("searchKey: ", searchNameKeys.join(",") );
 
   try {
-    const params = {
-      ExpressionAttributeValues: {
-        // ":searchKey1": {S: "Kenji"},
-        // ":language1": {S: "English"}, // to-do: get dynamic languages conditions based on the input array.
-        // ":availability1": {S: "2025:32:3:12"}, // to-do: get dynamic language conditions based on the input array. AND add attr (as string[]) to the item
-        // ":specialty1": {S: "Personal Care"}, // to-do: get dynamic specialty conditions based on the input array.
-        ":experience": {N: experience.toString()},
-        ":minPrice": {N: minPrice.toString()},
-        ":maxPrice": {N: maxPrice.toString()},
-      },
-      KeyConditionExpression: "",
-      FilterExpression:
-        // " contains (firstName, :searchKey1) " +
-        // " AND ( contains (languages, :language1) OR contains (languages, :language1) )" +
-        // " AND ( contains (availability, :availability1) OR contains (availability, :availability1) ) " +
-        // " AND ( contains (services, :specialty1) OR contains (services, :specialty1) ) " +
-        " experience >= :experience " +
-        " AND (hourlyRate BETWEEN :minPrice and :maxPrice) " +
-        "",
-      TableName: "helloTableName",
-    };
+    // const resultD0 = await DynamoClient.models.ProviderProfile.delete({id: "90add315-05ec-4b83-ab5f-b565934c35d1"}); console.info("-->: ", resultD0);
+    // const resultD1 = await DynamoClient.models.ProviderProfile.delete({id: "d65c88d3-4017-416f-8305-c59436ef5ab4"}); console.info("-->: ", resultD1);
+    // const resultD2 = await DynamoClient.models.ProviderProfile.delete({id: "71521873-0484-4e52-9d66-d1ed7ded8e10"}); console.info("-->: ", resultD2);
+    // const resultD3 = await DynamoClient.models.ProviderProfile.delete({id: "179c9690-1981-4dfe-8191-27faccfc53ba"}); console.info("-->: ", resultD3);
+    // const resultD4 = await DynamoClient.models.ProviderProfile.delete({id: "673666fb-1bd8-44a9-96d9-0128d6e5a7c2"}); console.info("-->: ", resultD4);
+    // const result0 = await DynamoClient.models.ProviderProfile.create(DemoData[0]);    console.info("-->: ", result0);
+    // const result1 = await DynamoClient.models.ProviderProfile.create(DemoData[1]);    console.info("-->: ", result1);
+    // const result2 = await DynamoClient.models.ProviderProfile.create(DemoData[2]);    console.info("-->: ", result2);
+    // const result3 = await DynamoClient.models.ProviderProfile.create(DemoData[3]);    console.info("-->: ", result3);
+    // const result4 = await DynamoClient.models.ProviderProfile.create(DemoData[4]);    console.info("-->: ", result4);
 
-    const tmpCondition: string[] = [];
-    searchKey.map((sk, i) => {
-      params.ExpressionAttributeValues[`:searchKey${i}`] = {S: sk};
-      tmpCondition.push(` contains (firstName, :searchKey${i}) OR contains (lastName, :searchKey${i}) `);
-    });
-    if (tmpCondition.length > 0) {params.FilterExpression += ` AND ( ${tmpCondition.join(" OR ")} ) `;}
+    const attrFilter = { filter: { and: [] } };
+    /*
+      Filter Demo:
+      {
+        filter: {
+          and: [
+            { col_1: { eq: 1 } },
+            { col_2: { gt: 2 } },
+            { or: [ { col_1: { eq: 1 } }, { col_2: { gt: 2 } } ]} ]
+        }
+      }
+    */
 
-    tmpCondition.length = 0;
-    language.map((lang, i) => {
-      params.ExpressionAttributeValues[`:language${i}`] = {S: lang};
-      tmpCondition.push(` contains (languages, :language${i}) `);
-    });
-    if (tmpCondition.length > 0) {params.FilterExpression += ` AND ( ${tmpCondition.join(" OR ")} ) `;}
+    attrFilter.filter.and.push( { yearsExperienceFloat: { gt: experience } } );
+    attrFilter.filter.and.push( { askingRate: { between: [minPrice, maxPrice] } } );
 
-    tmpCondition.length = 0;
-    availability.map((avail, i) => {
-      params.ExpressionAttributeValues[`:availability${i}`] = {S: avail};
-      tmpCondition.push(` contains (availability, :availability${i}) `);
-    });
-    if (tmpCondition.length > 0) {params.FilterExpression += ` AND ( ${tmpCondition.join(" AND ")} ) `;}
+    const nameCondAnd = {and:[]};
+    const langCondOr = {or:[]};
+    const availCondAnd = {and:[]};
+    const specCondAnd = {and:[]};
 
-    tmpCondition.length = 0;
-    specialty.map((spec, i) => {
-      params.ExpressionAttributeValues[`:specialty${i}`] = {S: spec};
-      tmpCondition.push(` contains (services, :specialty${i}) `);
-    });
-    if (tmpCondition.length > 0) {params.FilterExpression += ` AND ( ${tmpCondition.join(" AND ")} ) `;}
+    searchNameKeys.map((sk) => {nameCondAnd.and.push({ or: [ { firstNameLower: { contains: sk } }, { lastNameLower: { contains: sk } } ] });});
 
-    console.info("params: ", params);
+    languageItems.map((lang) => {langCondOr.or.push({ languages: { contains: lang } });});
 
-    const response = await dbConn.send(new ScanCommand(params));
+    availabilityItems.map((avail) => {availCondAnd.and.push({ availability: { contains: avail } });});
 
-    if (response.Items) {
-      response.Items.map((item) => {
-        providers.push(<Provider>unmarshall(item));
+    specialtyItems.map((spec) => {specCondAnd.and.push({ servicesOffered: { contains: spec } });});
+
+
+    if (nameCondAnd.and.length > 0) {attrFilter.filter.and.push(nameCondAnd);}
+    if (langCondOr.or.length > 0) {attrFilter.filter.and.push(langCondOr);}
+    if (availCondAnd.and.length > 0) {attrFilter.filter.and.push(availCondAnd);}
+    if (specCondAnd.and.length > 0) {attrFilter.filter.and.push(specCondAnd);}
+
+    console.info("attrFilter: ", attrFilter);
+
+    const response = await DynamoClient.models.ProviderProfile.list( attrFilter );
+
+    if (response.data) {
+      response.data.map((item) => {
+        console.info("-=> item: ", item.id);
+        providers.push({
+          lastName:item.lastName,
+          firstName: item.firstName,
+          title: item.profileTitle,
+          location: item.city.concat( ", ").concat(item.province),
+          experience: item.yearsExperience,
+          languages: item.languages,
+          services: item.servicesOffered,
+          hourlyRate: item.askingRate, // ?
+          imageSrc: item.profilePhoto
+        });
       });
     }
   } catch (error) {

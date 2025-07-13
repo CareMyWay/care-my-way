@@ -69,7 +69,7 @@ const HealthcareProviderCard: React.FC<HealthcareProviderCardProps> = ({
               {title} | {location}
             </p>
             <p className="text-body4-size text-darkest-green mt-1">
-              {experience} experience
+              {experience}
             </p>
             <p className="text-body4-size text-darkest-green">
               {languages.join(", ")}
