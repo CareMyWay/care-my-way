@@ -8,6 +8,7 @@ import {Input} from "@/components/inputs/input";
 import GreenButton from "@/components/buttons/green-button";
 import {MultipleSelect} from "@/components/select/multipleSelect";
 import {Availability} from "@/components/calendar/availability";
+import {Select} from "@/components/select/standardSelect";
 
 const MarketplaceFilter = ({
                              minPrice,
@@ -52,7 +53,7 @@ const MarketplaceFilter = ({
   //   setAvailability([e.target.value]); // Fatal: to-do fix update rather than replace
   // };
 
-  const handleExpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleExpChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setExperience(Number(e.target.value));
   };
 
