@@ -32,10 +32,7 @@ const experienceOptions = [
     "Less than 1 year",
     "1-2 years",
     "3-5 years",
-    "6-10 years",
-    "11-15 years",
-    "16-20 years",
-    "More than 20 years"
+    "5+ years",
 ];
 
 // Rate types
