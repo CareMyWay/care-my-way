@@ -27,6 +27,7 @@ const mockAvailability = {
 
 interface BookingModalProps {
   isOpen: boolean;
+  // eslint-disable-next-line no-unused-vars
   onOpenChange: (_: boolean) => void;
   providerName: string;
   providerTitle: string;
@@ -111,14 +112,14 @@ export default function BookingModal({
   const handleBooking = async () => {
     if (selectedDate && selectedTime) {
       try {
-        // Temporarily comment out Auth user fetching:
+        // Temporarily commented out Auth user fetching:
         // const user = await Auth.currentAuthenticatedUser();
         // const clientId = user.attributes.sub;
 
         // Use dummy clientId
         const clientId = "anonymous-client";
 
-        // TODO: Create duration in dynamoDB
+        // TODO: Create duration in dynamoDB and status
         const result = await client.models.Booking.create({
           id: uuidv4(),
           providerName,
