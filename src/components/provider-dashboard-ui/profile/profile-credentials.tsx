@@ -30,8 +30,8 @@ export function ProfileCredentials({ profileData }: ProfileCredentialsProps) {
 
                                 <div className="bg-indigo-50 rounded-xl p-4 hover:bg-indigo-100 transition-colors duration-200">
                                     <div className="flex items-start gap-3 mb-3">
-                                        <div className="p-2 bg-indigo-100 rounded-lg">
-                                            <GraduationCap className="h-4 w-4 text-indigo-600" />
+                                        <div className="p-2 bg-gray-100 rounded-lg">
+                                            <GraduationCap className="h-4 w-4 text-gray-600" />
                                         </div>
                                         <div className="flex-1">
                                             <h4 className="font-bold text-gray-900 text-lg mb-1">{edu.degree}</h4>
@@ -74,8 +74,8 @@ export function ProfileCredentials({ profileData }: ProfileCredentialsProps) {
 
                                 <div className="bg-emerald-50 rounded-xl p-4 hover:bg-emerald-100 transition-colors duration-200">
                                     <div className="flex items-start gap-3 mb-3">
-                                        <div className="p-2 bg-emerald-100 rounded-lg">
-                                            <Award className="h-4 w-4 text-emerald-600" />
+                                        <div className="p-2 bg-gray-100 rounded-lg">
+                                            <Award className="h-4 w-4 text-gray-600" />
                                         </div>
                                         <div className="flex-1">
                                             <h4 className="font-bold text-gray-900 text-lg mb-1">{cert.certificationName}</h4>
@@ -129,8 +129,8 @@ export function ProfileCredentials({ profileData }: ProfileCredentialsProps) {
 
                                 <div className="bg-blue-50 rounded-xl p-4 hover:bg-blue-100 transition-colors duration-200">
                                     <div className="flex items-start gap-3 mb-3">
-                                        <div className="p-2 bg-blue-100 rounded-lg">
-                                            <Building className="h-4 w-4 text-blue-600" />
+                                        <div className="p-2 bg-gray-100 rounded-lg">
+                                            <Building className="h-4 w-4 text-gray-600" />
                                         </div>
                                         <div className="flex-1">
                                             <h4 className="font-bold text-gray-900 text-lg mb-1">{work.jobTitle}</h4>
