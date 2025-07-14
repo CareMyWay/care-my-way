@@ -1,4 +1,5 @@
 "use client";
+<<<<<<< HEAD
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useAuthenticator } from "@aws-amplify/ui-react";
@@ -10,10 +11,16 @@ import { Calendar, Clock, User, CheckCircle, Home } from "lucide-react";
 =======
 import Link from "next/link";
 >>>>>>> 0099742 (Completed booking status update)
+=======
+
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+>>>>>>> 2b77d97 (Fixed booking model file structure and implemented stripe hosted checkout page)
 
 export default function SuccessPage() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
+<<<<<<< HEAD
   const [status, setStatus] = useState("loading");
   const { authStatus } = useAuthenticator((context) => [context.authStatus]);
 <<<<<<< HEAD
@@ -236,6 +243,23 @@ export default function SuccessPage() {
         Go back to the homepage
       </Link>
 >>>>>>> 0099742 (Completed booking status update)
+=======
+  const [message, setMessage] = useState("Loading...");
+
+  useEffect(() => {
+    if (sessionId) {
+      // Optionally: fetch session details from your backend here
+      setMessage(`Payment successful! Session ID: ${sessionId}`);
+    } else {
+      setMessage("No session ID found.");
+    }
+  }, [sessionId]);
+
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Thank you for your payment!</h1>
+      <p>{message}</p>
+>>>>>>> 2b77d97 (Fixed booking model file structure and implemented stripe hosted checkout page)
     </div>
   );
 }

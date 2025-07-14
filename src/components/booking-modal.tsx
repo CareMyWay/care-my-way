@@ -1,5 +1,6 @@
 "use client";
 
+<<<<<<< HEAD
 import React, { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -11,6 +12,15 @@ import { getCurrentUser } from "@aws-amplify/auth";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import Calendar from "./ui/calendar";
 import { formatDateKey } from "@/utils/calendar-date-format";
+=======
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ChevronLeft, ChevronRight, Clock } from "lucide-react";
+import { generateClient } from "aws-amplify/data";
+import type { Schema } from "amplify/data/resource";
+import { v4 as uuidv4 } from "uuid";
+>>>>>>> 2b77d97 (Fixed booking model file structure and implemented stripe hosted checkout page)
 
 const client = generateClient<Schema>();
 
@@ -29,6 +39,7 @@ const mockAvailability = {
   "2025-07-31": ["9:00 AM", "3:00 PM", "5:00 PM"],
 };
 
+<<<<<<< HEAD
 function getEndTime(start: string, duration: number): string {
   const [time, meridian] = start.trim().split(" ");
   const [hourStr, minuteStr] = time.split(":");
@@ -60,6 +71,8 @@ function getEndTime(start: string, duration: number): string {
 
 
 
+=======
+>>>>>>> 2b77d97 (Fixed booking model file structure and implemented stripe hosted checkout page)
 interface BookingModalProps {
   isOpen: boolean;
   // eslint-disable-next-line no-unused-vars
@@ -67,10 +80,13 @@ interface BookingModalProps {
   providerName: string;
   providerTitle: string;
   providerRate: string;
+<<<<<<< HEAD
   providerId?: string;
   providerPhoto?: string;
   providerRateFloat?: number;
   providerLocation?: string;
+=======
+>>>>>>> 2b77d97 (Fixed booking model file structure and implemented stripe hosted checkout page)
 }
 
 export default function BookingModal({
@@ -78,17 +94,28 @@ export default function BookingModal({
   onOpenChange,
   providerName,
   providerRate,
+<<<<<<< HEAD
   providerRateFloat,
   providerId,
   providerPhoto,
   providerTitle,
   providerLocation,
+=======
+>>>>>>> 2b77d97 (Fixed booking model file structure and implemented stripe hosted checkout page)
 }: BookingModalProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [selectedDuration, setSelectedDuration] = useState<string | null>(null);
 
+<<<<<<< HEAD
+=======
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June", "July",
+    "August", "September", "October", "November", "December",
+  ];
+
+>>>>>>> 2b77d97 (Fixed booking model file structure and implemented stripe hosted checkout page)
   const durationOptions = [
     { value: "0.5", label: "30 minutes" },
     { value: "1", label: "1 hour" },
@@ -101,6 +128,7 @@ export default function BookingModal({
     { value: "8", label: "8 hours" },
   ];
 
+<<<<<<< HEAD
   const availableDates = useMemo(() => {
     return new Set(
       Object.entries(mockAvailability)
@@ -108,6 +136,26 @@ export default function BookingModal({
         .map(([date]) => date)
     );
   }, [mockAvailability]);
+=======
+  const getDaysInMonth = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+
+    const days: (number | null)[] = [];
+
+    for (let i = 0; i < startingDayOfWeek; i++) days.push(null);
+    for (let day = 1; day <= daysInMonth; day++) days.push(day);
+
+    return days;
+  };
+
+  const formatDateKey = (year: number, month: number, day: number) =>
+    `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+>>>>>>> 2b77d97 (Fixed booking model file structure and implemented stripe hosted checkout page)
 
   const isDateAvailable = (year: number, month: number, day: number) => {
     const key = formatDateKey(year, month, day);
@@ -140,6 +188,7 @@ export default function BookingModal({
   const handleBooking = async () => {
     if (selectedDate && selectedTime) {
       try {
+<<<<<<< HEAD
         const user = await getCurrentUser();
         const clientId = user.userId;
 <<<<<<< HEAD
@@ -151,11 +200,24 @@ export default function BookingModal({
         const bookingId = uuidv4();
         const result = await client.models.Booking.create({
           id: bookingId,
+=======
+        // Temporarily commented out Auth user fetching:
+        // const user = await Auth.currentAuthenticatedUser();
+        // const clientId = user.attributes.sub;
+
+        // Use dummy clientId
+        const clientId = "anonymous-client";
+
+        // TODO: Create duration in dynamoDB and status
+        const result = await client.models.Booking.create({
+          id: uuidv4(),
+>>>>>>> 2b77d97 (Fixed booking model file structure and implemented stripe hosted checkout page)
           providerName,
           providerRate,
           date: selectedDate,
           time: selectedTime,
           clientId,
+<<<<<<< HEAD
           clientName: [user.username],
           duration: Number.parseFloat(selectedDuration),
           totalCost: totalCost,
@@ -200,6 +262,13 @@ export default function BookingModal({
         }
 
         console.log("Booking result:", JSON.stringify(result, null, 2));
+=======
+        });
+
+        console.log("Booking created:", result);
+        const duration = durationOptions.find((d) => d.value === selectedDuration)?.label;
+        alert(`Booking confirmed for ${selectedDate} at ${selectedTime} for ${duration}.`);
+>>>>>>> 2b77d97 (Fixed booking model file structure and implemented stripe hosted checkout page)
         onOpenChange(false);
         setSelectedDate(null);
         setSelectedTime(null);
@@ -211,16 +280,34 @@ export default function BookingModal({
     }
   };
 
+<<<<<<< HEAD
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="w-full md:max-w-[600px] lg:max-w-[600px] xl:max-w-[800px] max-h-[90vh] overflow-hidden mx-auto rounded-none">
         <DialogHeader>
           <DialogTitle>Book with {providerName}</DialogTitle>
           <DialogDescription>Please select a date, time, and duration for your appointment.</DialogDescription>
+=======
+  const days = getDaysInMonth(currentMonth);
+  const currentYear = currentMonth.getFullYear();
+  const currentMonthIndex = currentMonth.getMonth();
+
+  const today = new Date();
+  const maxDate = new Date(today.getFullYear(), today.getMonth() + 6, 1);
+  const maxMonth = maxDate.getMonth();
+  const maxYear = maxDate.getFullYear();
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="w-full md:max-w-[600px] lg:max-w-[600px] xl:max-w-[800px] max-h-[90vh] overflow-hidden mx-auto">
+        <DialogHeader>
+          <DialogTitle>Book with {providerName}</DialogTitle>
+>>>>>>> 2b77d97 (Fixed booking model file structure and implemented stripe hosted checkout page)
         </DialogHeader>
 
         <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] md:gap-6">
           {/* Calendar Section */}
+<<<<<<< HEAD
           <div className="border-r pr-4">
             <Calendar
               currentMonth={currentMonth}
@@ -229,6 +316,69 @@ export default function BookingModal({
               onDateSelect={handleDateSelect}
               availableDates={availableDates}
             />
+=======
+          <div className="w-full md:w-[300px] lg:w-[400px] ml-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold">
+                {monthNames[currentMonthIndex]} {currentYear}
+              </h3>
+              <div className="flex gap-1">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleMonthChange("prev")}
+                  disabled={
+                    currentMonthIndex === today.getMonth() &&
+                    currentYear === today.getFullYear()
+                  }
+                  className="cursor-pointer"
+                >
+                  <ChevronLeft className="w-4 h-4"/>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleMonthChange("next")}
+                  disabled={currentMonthIndex === maxMonth && currentYear === maxYear}
+                  className="cursor-pointer"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-7 gap-1 mb-4">
+              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
+                <div
+                  key={d}
+                  className="text-center text-sm font-medium text-muted-foreground p-2"
+                >
+                  {d}
+                </div>
+              ))}
+              {days.map((day, index) => {
+                if (day === null) return <div key={`empty-${index}`} className="p-2" />;
+                const dateKey = formatDateKey(currentYear, currentMonthIndex, day);
+                const isAvailable = isDateAvailable(currentYear, currentMonthIndex, day);
+                const isSelected = selectedDate === dateKey;
+
+                return (
+                  <button
+                    key={dateKey}
+                    onClick={() => handleDateSelect(day)}
+                    disabled={!isAvailable}
+                    className={`p-2 text-sm rounded-md transition-colors
+                      ${isAvailable ? "hover:bg-orange-100 cursor-pointer" : "text-muted-foreground cursor-not-allowed"}
+                      ${isSelected ? "bg-primary-orange text-white" : ""}
+                      ${isAvailable && !isSelected ? "bg-green-50 text-green-700 border border-green-200" : ""}
+                    `}
+                  >
+                    {day}
+                  </button>
+                );
+              })}
+            </div>
+>>>>>>> 2b77d97 (Fixed booking model file structure and implemented stripe hosted checkout page)
           </div>
 
           {/* Time Slots Section */}
@@ -289,6 +439,7 @@ export default function BookingModal({
                 <h4 className="font-medium mb-2">Booking Summary</h4>
                 <div className="text-sm space-y-1">
                   <p><strong>Date:</strong> {selectedDate}</p>
+<<<<<<< HEAD
                   <p><strong>Start Time:</strong> {selectedTime}</p>
                   <p>
                     <strong>End Time:</strong>{" "}
@@ -296,6 +447,12 @@ export default function BookingModal({
                   </p>
                   <p><strong>Rate:</strong> {providerRate}</p>
                   <p><strong>Total Cost:</strong> ${((providerRateFloat) * Number.parseFloat(selectedDuration)).toFixed(2)}</p>
+=======
+                  <p><strong>Time:</strong> {selectedTime}</p>
+                  <p><strong>Duration:</strong> {durationOptions.find((d) => d.value === selectedDuration)?.label}</p>
+                  <p><strong>Rate:</strong> {providerRate}</p>
+                  <p><strong>Total Cost:</strong> ${(20 * Number.parseFloat(selectedDuration)).toFixed(2)}</p>
+>>>>>>> 2b77d97 (Fixed booking model file structure and implemented stripe hosted checkout page)
                   <p><strong>Provider:</strong> {providerName}</p>
                 </div>
               </div>
@@ -304,7 +461,11 @@ export default function BookingModal({
             <Button
               onClick={handleBooking}
               disabled={!selectedDate || !selectedTime || !selectedDuration}
+<<<<<<< HEAD
               className="w-full mt-4 bg-primary-orange cursor-pointer hover:bg-primary-orange disabled:bg-gray-500 disabled:cursor-not-allowed rounded-full"
+=======
+              className="w-full mt-4 bg-primary-orange cursor-pointer hover:bg-primary-orange disabled:bg-gray-500 disabled:cursor-not-allowed"
+>>>>>>> 2b77d97 (Fixed booking model file structure and implemented stripe hosted checkout page)
             >
               Confirm Booking
             </Button>

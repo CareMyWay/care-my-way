@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import OrangeButton from "../buttons/orange-button";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { type ProviderProfileData } from "@/actions/providerProfileActions";
 import BookingModal from "../booking-modal";
 import { useRouter } from "next/navigation";
@@ -11,6 +12,9 @@ import { getCurrentUser } from "@aws-amplify/auth";
 =======
 import BookingModal from "../booking/booking-modal";
 >>>>>>> 70c4d7c (Booking modal working with dynamoDB)
+=======
+import BookingModal from "../booking-modal";
+>>>>>>> 2b77d97 (Fixed booking model file structure and implemented stripe hosted checkout page)
 
 interface ProfileSummaryProps {
     profileData: ProviderProfileData;
