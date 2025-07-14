@@ -19,23 +19,6 @@ const ProfileSummary: React.FC<ProfileSummaryProps> = ({ profileData }) => {
         return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
     };
 
-<<<<<<< HEAD
-    // Helper function to format location
-    const getLocation = () => {
-        const parts = [profileData.city, profileData.province].filter(Boolean);
-        return parts.length > 0 ? parts.join(", ") : "Location not specified";
-    };
-
-    const providerName = [profileData.firstName, profileData.lastName].filter(Boolean).join(" ") || "Unknown Provider";
-    const providerTitle = profileData.profileTitle || "Healthcare Provider";
-    const location = getLocation();
-
-    const infoRows = [
-        { label: "Working Experience", value: profileData.yearsExperience || "Not specified" },
-        { label: "Starting Rate", value: profileData.askingRate ? `$${profileData.askingRate}/hour` : "Rate on request" },
-        { label: "Response Time", value: profileData.responseTime || "Not specified" },
-    ];
-=======
 const ProfileSummary = () => {
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const router = useRouter();
@@ -56,7 +39,6 @@ const ProfileSummary = () => {
             }
         }
     };
->>>>>>> 0099742 (Completed booking status update)
 
     return (
         <div className="flex flex-col items-center border-solid border-1 rounded-md border-input-border-gray pb-7 w-full md:w-[320px] xl:w-[400px]">
@@ -98,15 +80,12 @@ const ProfileSummary = () => {
                             </span>
                         </div>
                     ))}
-<<<<<<< HEAD
-=======
                     </div>   
                 </div>
                 <div className="mt-5">
                     <OrangeButton variant="action" onClick={handleBookingClick} className="w-full">
                         REQUEST TO BOOK
                     </OrangeButton>
->>>>>>> 0099742 (Completed booking status update)
                 </div>
             </div>
             <div className="mt-5">
