@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-vars */
 "use client";
 
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useFormSection } from "@/hooks/useFormSection";
+import { FormSectionHeader } from "./form-section-header";
+import { EmergencyContactData, BaseFormSectionProps } from "@/types/provider-profile-form";
 
 const emergencyContactSchema = z.object({
     contactFirstName: z.string().min(1, "First name is required"),
@@ -18,11 +18,7 @@ const emergencyContactSchema = z.object({
 
 type EmergencyContactFormFields = z.infer<typeof emergencyContactSchema>;
 
-interface EmergencyContactSectionProps {
-    onDataChange: (_data: EmergencyContactFormFields) => void;
-    isCompleted: boolean;
-    defaultValues?: Partial<EmergencyContactFormFields>;
-}
+interface EmergencyContactSectionProps extends BaseFormSectionProps<EmergencyContactData> { }
 
 // Common relationship options
 const relationshipOptions = [
@@ -43,59 +39,27 @@ export function EmergencyContactSection({
 }: EmergencyContactSectionProps) {
     const {
         register,
-        watch,
         formState: { errors },
-    } = useForm<EmergencyContactFormFields>({
-        mode: "onChange",
+    } = useFormSection({
+        schema: emergencyContactSchema,
         defaultValues: {
             contactFirstName: defaultValues?.contactFirstName || "",
             contactLastName: defaultValues?.contactLastName || "",
             contactPhone: defaultValues?.contactPhone || "",
             relationship: defaultValues?.relationship || "",
         },
-        resolver: zodResolver(emergencyContactSchema),
+        onDataChange: onDataChange as any,
     });
-
-    // Track and notify parent of progress
-    useEffect(() => {
-        const subscription = watch((value) => {
-            onDataChange(value as EmergencyContactFormFields);
-        });
-        return () => subscription.unsubscribe();
-    }, [watch, onDataChange]);
 
     return (
         <div className="h-full bg-white rounded-lg border shadow-sm overflow-hidden">
             <div className="p-6 h-full flex flex-col">
-                {/* Header */}
-                <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                    <div
-                        className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-bold ${isCompleted
-                            ? "border-green-500 bg-green-500 text-white"
-                            : "border-[#4A9B9B] bg-[#4A9B9B] text-white"
-                            }`}
-                    >
-                        {isCompleted ? (
-                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path
-                                    fillRule="evenodd"
-                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                    clipRule="evenodd"
-                                />
-                            </svg>
-                        ) : (
-                            "3"
-                        )}
-                    </div>
-                    <div>
-                        <h2 className="text-2xl font-bold text-darkest-green">
-                            Emergency Contact
-                        </h2>
-                        <p className="text-sm text-gray-600">
-                            Please provide details for someone to contact in case of emergency
-                        </p>
-                    </div>
-                </div>
+                <FormSectionHeader
+                    stepNumber={3}
+                    title="Emergency Contact"
+                    subtitle="Please provide details for someone to contact in case of emergency"
+                    isCompleted={isCompleted}
+                />
 
                 {/* Form */}
                 <form className="flex-1 overflow-y-auto space-y-6">

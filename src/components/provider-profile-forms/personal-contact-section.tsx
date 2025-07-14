@@ -1,11 +1,12 @@
 /* eslint-disable no-unused-vars */
 "use client";
 
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 import ISO6391 from "iso-639-1";
+import { useFormSection } from "@/hooks/useFormSection";
+import { FormSectionHeader } from "./form-section-header";
+import { PersonalContactData, BaseFormSectionProps } from "@/types/provider-profile-form";
 
 const personalContactSchema = z.object({
     firstName: z.string().min(1, "First name is required"),
@@ -24,11 +25,7 @@ const personalContactSchema = z.object({
 
 type PersonalContactFormFields = z.infer<typeof personalContactSchema>;
 
-interface PersonalContactSectionProps {
-    onDataChange: (_data: PersonalContactFormFields) => void;
-    isCompleted: boolean;
-    defaultValues?: Partial<PersonalContactFormFields>;
-}
+interface PersonalContactSectionProps extends BaseFormSectionProps<PersonalContactData> { }
 
 // Get comprehensive list of languages from ISO 639-1 standard
 const availableLanguages = [...ISO6391.getAllNames().sort(), "Other"];
@@ -58,8 +55,8 @@ export function PersonalContactSection({
         watch,
         setValue,
         formState: { errors },
-    } = useForm<PersonalContactFormFields>({
-        mode: "onChange",
+    } = useFormSection({
+        schema: personalContactSchema,
         defaultValues: {
             firstName: defaultValues?.firstName || "",
             lastName: defaultValues?.lastName || "",
@@ -71,7 +68,7 @@ export function PersonalContactSection({
             preferredContact: defaultValues?.preferredContact || "",
             profilePhoto: defaultValues?.profilePhoto || "",
         },
-        resolver: zodResolver(personalContactSchema),
+        onDataChange: onDataChange as any,
     });
 
     // Filter languages based on search input
@@ -126,14 +123,6 @@ export function PersonalContactSection({
         }
     };
 
-    // Track and notify parent of progress
-    useEffect(() => {
-        const subscription = watch((value) => {
-            onDataChange(value as PersonalContactFormFields);
-        });
-        return () => subscription.unsubscribe();
-    }, [watch, onDataChange]);
-
     // Update languages when selectedLanguages changes
     useEffect(() => {
         setValue("languages", selectedLanguages);
@@ -142,35 +131,12 @@ export function PersonalContactSection({
     return (
         <div className="h-full bg-white rounded-lg border shadow-sm overflow-hidden">
             <div className="p-6 h-full flex flex-col">
-                {/* Header */}
-                <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                    <div
-                        className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-bold ${isCompleted
-                            ? "border-green-500 bg-green-500 text-white"
-                            : "border-[#4A9B9B] bg-[#4A9B9B] text-white"
-                            }`}
-                    >
-                        {isCompleted ? (
-                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path
-                                    fillRule="evenodd"
-                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                    clipRule="evenodd"
-                                />
-                            </svg>
-                        ) : (
-                            "1"
-                        )}
-                    </div>
-                    <div>
-                        <h2 className="text-2xl font-bold text-darkest-green">
-                            Personal & Contact Information
-                        </h2>
-                        <p className="text-sm text-gray-600">
-                            Please provide your personal details and contact preferences
-                        </p>
-                    </div>
-                </div>
+                <FormSectionHeader
+                    stepNumber={1}
+                    title="Personal & Contact Information"
+                    subtitle="Please provide your personal details and contact preferences"
+                    isCompleted={isCompleted}
+                />
 
                 {/* Form */}
                 <form className="flex-1 overflow-y-auto space-y-6">

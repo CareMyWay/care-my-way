@@ -2,9 +2,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useFormSection } from "@/hooks/useFormSection";
+import { FormSectionHeader } from "./form-section-header";
+import { AddressData, BaseFormSectionProps } from "@/types/provider-profile-form";
 
 const addressSchema = z.object({
     address: z.string().min(1, "Street address is required"),
@@ -18,11 +19,7 @@ const addressSchema = z.object({
 
 type AddressFormFields = z.infer<typeof addressSchema>;
 
-interface AddressSectionProps {
-    onDataChange: (_data: AddressFormFields) => void;
-    isCompleted: boolean;
-    defaultValues?: Partial<AddressFormFields>;
-}
+interface AddressSectionProps extends BaseFormSectionProps<AddressData> { }
 
 // Canadian provinces and territories
 const canadianProvinces = [
@@ -68,18 +65,17 @@ export function AddressSection({
     const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
     const {
         register,
-        watch,
         setValue,
         formState: { errors },
-    } = useForm<AddressFormFields>({
-        mode: "onChange",
+    } = useFormSection({
+        schema: addressSchema,
         defaultValues: {
             address: defaultValues?.address || "",
             city: defaultValues?.city || "",
             province: defaultValues?.province || "",
             postalCode: defaultValues?.postalCode || "",
         },
-        resolver: zodResolver(addressSchema),
+        onDataChange: onDataChange as any,
     });
 
     // Search addresses using OpenStreetMap Nominatim API
@@ -178,13 +174,7 @@ export function AddressSection({
         setSearchTimeout(timeout);
     };
 
-    // Track and notify parent of progress
-    useEffect(() => {
-        const subscription = watch((value) => {
-            onDataChange(value as AddressFormFields);
-        });
-        return () => subscription.unsubscribe();
-    }, [watch, onDataChange]);
+
 
     // Cleanup timeout on unmount
     useEffect(() => {
@@ -198,35 +188,12 @@ export function AddressSection({
     return (
         <div className="h-full bg-white rounded-lg border shadow-sm overflow-hidden">
             <div className="p-6 h-full flex flex-col">
-                {/* Header */}
-                <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                    <div
-                        className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-bold ${isCompleted
-                            ? "border-green-500 bg-green-500 text-white"
-                            : "border-[#4A9B9B] bg-[#4A9B9B] text-white"
-                            }`}
-                    >
-                        {isCompleted ? (
-                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path
-                                    fillRule="evenodd"
-                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                    clipRule="evenodd"
-                                />
-                            </svg>
-                        ) : (
-                            "2"
-                        )}
-                    </div>
-                    <div>
-                        <h2 className="text-2xl font-bold text-darkest-green">
-                            Address Information
-                        </h2>
-                        <p className="text-sm text-gray-600">
-                            Please provide your residential address details
-                        </p>
-                    </div>
-                </div>
+                <FormSectionHeader
+                    stepNumber={2}
+                    title="Address Information"
+                    subtitle="Please provide your residential address details"
+                    isCompleted={isCompleted}
+                />
 
                 {/* Form */}
                 <form className="flex-1 overflow-y-auto space-y-6">

@@ -2,9 +2,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useFieldArray } from "react-hook-form";
 import { z } from "zod";
+import { useFormSection } from "@/hooks/useFormSection";
+import { FormSectionHeader } from "./form-section-header";
+import { CredentialsData, BaseFormSectionProps } from "@/types/provider-profile-form";
 
 // Individual entry schemas - all optional
 const educationEntrySchema = z.object({
@@ -45,11 +47,7 @@ type EducationEntry = z.infer<typeof educationEntrySchema>;
 type CertificationEntry = z.infer<typeof certificationEntrySchema>;
 type WorkExperienceEntry = z.infer<typeof workExperienceEntrySchema>;
 
-interface CredentialsSectionProps {
-    onDataChange: (_data: CredentialsFormFields) => void;
-    isCompleted: boolean;
-    defaultValues?: Partial<CredentialsFormFields>;
-}
+interface CredentialsSectionProps extends BaseFormSectionProps<CredentialsData> { }
 
 // Graduation year options (last 50 years)
 const currentYear = new Date().getFullYear();
@@ -67,18 +65,17 @@ export function CredentialsSection({
 
     const {
         register,
-        watch,
         control,
         setValue,
         formState: { errors },
-    } = useForm<CredentialsFormFields>({
-        mode: "onChange",
+    } = useFormSection({
+        schema: credentialsSchema,
         defaultValues: {
             education: defaultValues?.education || [],
             certifications: defaultValues?.certifications || [],
             workExperience: defaultValues?.workExperience || [],
         },
-        resolver: zodResolver(credentialsSchema),
+        onDataChange: onDataChange as any,
     });
 
     // Field arrays for dynamic entries
@@ -302,46 +299,17 @@ export function CredentialsSection({
         </div>
     );
 
-    // Track and notify parent of progress
-    useEffect(() => {
-        const subscription = watch((value) => {
-            onDataChange(value as CredentialsFormFields);
-        });
-        return () => subscription.unsubscribe();
-    }, [watch, onDataChange]);
+
 
     return (
         <div className="h-full bg-white rounded-lg border shadow-sm overflow-hidden">
             <div className="p-6 h-full flex flex-col">
-                {/* Header */}
-                <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                    <div
-                        className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-bold ${isCompleted
-                            ? "border-green-500 bg-green-500 text-white"
-                            : "border-[#4A9B9B] bg-[#4A9B9B] text-white"
-                            }`}
-                    >
-                        {isCompleted ? (
-                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path
-                                    fillRule="evenodd"
-                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                    clipRule="evenodd"
-                                />
-                            </svg>
-                        ) : (
-                            "5"
-                        )}
-                    </div>
-                    <div>
-                        <h2 className="text-2xl font-bold text-darkest-green">
-                            Credentials & Work History
-                        </h2>
-                        <p className="text-sm text-gray-600">
-                            Optional: Add your education, certifications, and work experience to build client trust
-                        </p>
-                    </div>
-                </div>
+                <FormSectionHeader
+                    stepNumber={5}
+                    title="Credentials & Work History"
+                    subtitle="Optional: Add your education, certifications, and work experience to build client trust"
+                    isCompleted={isCompleted}
+                />
 
                 {/* Form */}
                 <form className="flex-1 overflow-y-auto space-y-8">

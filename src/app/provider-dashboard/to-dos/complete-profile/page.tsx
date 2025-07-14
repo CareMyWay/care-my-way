@@ -16,77 +16,24 @@ import {
     transformFormDataToProfile,
     type ProviderProfileData
 } from "@/actions/providerProfileActions";
+import {
+    CompleteProfileFormData,
+    SectionCompletionState,
+    SectionKey,
+    PersonalContactData,
+    AddressData,
+    EmergencyContactData,
+    ProfessionalSummaryData,
+    CredentialsData,
+    EducationEntry,
+    CertificationEntry,
+    WorkExperienceEntry
+} from "@/types/provider-profile-form";
+import { SECTION_VALIDATORS } from "@/utils/profile-form-config";
+import { useFormAutoSave } from "@/hooks/useFormAutoSave";
+import { useNavigationGuard } from "@/hooks/useNavigationGuard";
 
-// Type definitions for form data
-type PersonalContactData = {
-    firstName?: string;
-    lastName?: string;
-    dob?: string;
-    gender?: string;
-    languages?: string[];
-    phone?: string;
-    email?: string;
-    preferredContact?: string;
-    profilePhoto?: string;
-    [key: string]: string | string[] | undefined;
-};
 
-type AddressData = {
-    address?: string;
-    city?: string;
-    province?: string;
-    postalCode?: string;
-    [key: string]: string | undefined;
-};
-
-type EmergencyContactData = {
-    contactFirstName?: string;
-    contactLastName?: string;
-    contactPhone?: string;
-    relationship?: string;
-    [key: string]: string | undefined;
-};
-
-type ProfessionalSummaryData = {
-    profileTitle?: string;
-    bio?: string;
-    yearsExperience?: string;
-    askingRate?: string;
-    rateType?: string;
-    responseTime?: string;
-    servicesOffered?: string[];
-    [key: string]: string | string[] | undefined;
-};
-
-type EducationEntry = {
-    institution?: string;
-    degree?: string;
-    fieldOfStudy?: string;
-    graduationYear?: string;
-};
-
-type CertificationEntry = {
-    certificationName?: string;
-    issuingOrganization?: string;
-    issueDate?: string;
-    expiryDate?: string;
-    licenseNumber?: string;
-};
-
-type WorkExperienceEntry = {
-    employer?: string;
-    jobTitle?: string;
-    startDate?: string;
-    endDate?: string;
-    description?: string;
-};
-
-type CredentialsData = {
-    education?: EducationEntry[];
-    certifications?: CertificationEntry[];
-    workExperience?: WorkExperienceEntry[];
-    [key: string]: EducationEntry[] | CertificationEntry[] | WorkExperienceEntry[] | undefined;
-};
 
 export default function CompleteProviderProfile() {
     const [showMobileSidebar, setShowMobileSidebar] = useState(false);
@@ -98,14 +45,14 @@ export default function CompleteProviderProfile() {
     const [currentUser, setCurrentUser] = useState<any>(null);
     const [visitedSections, setVisitedSections] = useState<Set<string>>(new Set(["personal-contact"]));
 
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<CompleteProfileFormData>({
         "personal-contact": {},
         address: {},
         "emergency-contact": {},
         "professional-summary": {},
         credentials: {},
     });
-    const [sectionCompletion, setSectionCompletion] = useState({
+    const [sectionCompletion, setSectionCompletion] = useState<SectionCompletionState>({
         "personal-contact": { completed: false, progress: 0 },
         address: { completed: false, progress: 0 },
         "emergency-contact": { completed: false, progress: 0 },
@@ -132,55 +79,66 @@ export default function CompleteProviderProfile() {
                 setCurrentUser(user);
                 console.log("Current user:", user);
 
-                // Try to load existing provider profile
+                // Try to load existing provider profile first
+                let profileFromDB = null;
                 if (user?.userId) {
-                    const profile = await getProviderProfile(user.userId);
-                    console.log("Existing profile:", profile);
+                    profileFromDB = await getProviderProfile(user.userId);
+                    console.log("Existing profile:", profileFromDB);
 
-                    if (profile) {
-                        setExistingProfile(profile);
-
-                        // Pre-populate form data from existing profile
-                        setFormData({
-                            "personal-contact": {
-                                firstName: profile.firstName || "",
-                                lastName: profile.lastName || "",
-                                dob: profile.dob || "",
-                                gender: profile.gender || "",
-                                languages: profile.languages || [],
-                                phone: profile.phone || "",
-                                email: profile.email || "",
-                                preferredContact: profile.preferredContact || "",
-                                profilePhoto: profile.profilePhoto || "",
-                            },
-                            address: {
-                                address: profile.address || "",
-                                city: profile.city || "",
-                                province: profile.province || "",
-                                postalCode: profile.postalCode || "",
-                            },
-                            "emergency-contact": {
-                                contactFirstName: profile.emergencyContactName ? profile.emergencyContactName.split(' ')[0] : '',
-                                contactLastName: profile.emergencyContactName ? profile.emergencyContactName.split(' ').slice(1).join(' ') : '',
-                                contactPhone: profile.emergencyContactPhone || "",
-                                relationship: profile.emergencyContactRelationship || "",
-                            },
-                            "professional-summary": {
-                                profileTitle: profile.profileTitle || "",
-                                bio: profile.bio || "",
-                                yearsExperience: profile.yearsExperience || "",
-                                askingRate: profile.askingRate || "",
-                                rateType: profile.rateType || "",
-                                responseTime: profile.responseTime || "",
-                                servicesOffered: profile.servicesOffered || [],
-                            },
-                            credentials: {
-                                education: profile.education || [],
-                                certifications: profile.certifications || [],
-                                workExperience: profile.workExperience || [],
-                            },
-                        });
+                    if (profileFromDB) {
+                        setExistingProfile(profileFromDB);
                     }
+                }
+
+                // Try to load auto-saved data
+                const autoSavedData = loadFromStorage();
+
+                if (autoSavedData) {
+                    console.log("Loading auto-saved form data - this takes priority");
+                    setFormData(autoSavedData as CompleteProfileFormData);
+                    toast.success("Restored your previous progress!", { duration: 3000 });
+                } else if (profileFromDB) {
+                    console.log("No auto-saved data found, using profile from database");
+                    // Only populate from database if no auto-saved data exists
+                    setFormData({
+                        "personal-contact": {
+                            firstName: profileFromDB.firstName || "",
+                            lastName: profileFromDB.lastName || "",
+                            dob: profileFromDB.dob || "",
+                            gender: profileFromDB.gender || "",
+                            languages: profileFromDB.languages || [],
+                            phone: profileFromDB.phone || "",
+                            email: profileFromDB.email || "",
+                            preferredContact: profileFromDB.preferredContact || "",
+                            profilePhoto: profileFromDB.profilePhoto || "",
+                        },
+                        address: {
+                            address: profileFromDB.address || "",
+                            city: profileFromDB.city || "",
+                            province: profileFromDB.province || "",
+                            postalCode: profileFromDB.postalCode || "",
+                        },
+                        "emergency-contact": {
+                            contactFirstName: profileFromDB.emergencyContactName ? profileFromDB.emergencyContactName.split(' ')[0] : '',
+                            contactLastName: profileFromDB.emergencyContactName ? profileFromDB.emergencyContactName.split(' ').slice(1).join(' ') : '',
+                            contactPhone: profileFromDB.emergencyContactPhone || "",
+                            relationship: profileFromDB.emergencyContactRelationship || "",
+                        },
+                        "professional-summary": {
+                            profileTitle: profileFromDB.profileTitle || "",
+                            bio: profileFromDB.bio || "",
+                            yearsExperience: profileFromDB.yearsExperience || "",
+                            askingRate: profileFromDB.askingRate || "",
+                            rateType: profileFromDB.rateType || "",
+                            responseTime: profileFromDB.responseTime || "",
+                            servicesOffered: profileFromDB.servicesOffered || [],
+                        },
+                        credentials: {
+                            education: profileFromDB.education || [],
+                            certifications: profileFromDB.certifications || [],
+                            workExperience: profileFromDB.workExperience || [],
+                        },
+                    });
                 }
             } catch (error) {
                 console.error("Error loading profile data:", error);
@@ -193,144 +151,18 @@ export default function CompleteProviderProfile() {
         loadProfileData();
     }, []);
 
-    // Validation functions (placeholder - we'll build these as we create each section)
-    const validatePersonalContact = (data: PersonalContactData) => {
-        const required = [
-            "firstName",
-            "lastName",
-            "dob",
-            "gender",
-            "languages",
-            "phone",
-            "email",
-            "preferredContact",
-        ];
-        const filled = required.filter((field) => {
-            const value = data[field];
-            if (Array.isArray(value)) {
-                return value.length > 0;
-            }
-            return value && value.toString().trim() !== "";
-        });
-        return {
-            progress: (filled.length / required.length) * 100,
-            completed: filled.length === required.length,
-        };
-    };
+    // Auto-save functionality
+    const { loadFromStorage, clearAutoSave } = useFormAutoSave(formData, !existingProfile?.isProfileComplete);
 
-    const validateAddress = (data: AddressData) => {
-        const required = ["address", "city", "province", "postalCode"];
-        const filled = required.filter(
-            (field) => data[field] && data[field]!.trim() !== ""
-        );
-        return {
-            progress: (filled.length / required.length) * 100,
-            completed: filled.length === required.length,
-        };
-    };
+    // Navigation guard to warn about unsaved changes
+    const hasUnsavedChanges = Object.values(sectionCompletion).some(s => s.progress > 0 && !s.completed);
+    const { guardedNavigate } = useNavigationGuard({
+        isEnabled: true,
+        hasUnsavedChanges: hasUnsavedChanges && !isSaving,
+        message: "You have unsaved progress in your profile. Are you sure you want to leave? Your progress will be auto-saved."
+    });
 
-    const validateEmergencyContact = (data: EmergencyContactData) => {
-        const required = ["contactFirstName", "contactLastName", "contactPhone", "relationship"];
-        const filled = required.filter(
-            (field) => data[field] && data[field]!.trim() !== ""
-        );
-        return {
-            progress: (filled.length / required.length) * 100,
-            completed: filled.length === required.length,
-        };
-    };
-
-    const validateProfessionalSummary = (data: ProfessionalSummaryData) => {
-        const required = [
-            "profileTitle",
-            "bio",
-            "yearsExperience",
-            "askingRate",
-            "rateType",
-            "responseTime",
-            "servicesOffered",
-        ];
-        const filled = required.filter((field) => {
-            const value = data[field];
-            if (Array.isArray(value)) {
-                return value.length > 0;
-            }
-            return value && value.toString().trim() !== "";
-        });
-        return {
-            progress: (filled.length / required.length) * 100,
-            completed: filled.length === required.length,
-        };
-    };
-
-    const validateCredentials = (data: CredentialsData) => {
-        // Only mark as completed if the user has visited the credentials section
-        const hasVisitedCredentials = visitedSections.has("credentials");
-
-        if (!hasVisitedCredentials) {
-            return {
-                progress: 0,
-                completed: false,
-            };
-        }
-
-        // Since credentials section is completely optional, once visited it's considered completed
-        // Calculate progress based on how much content they've added
-        let totalFields = 0;
-        let filledFields = 0;
-
-        // Count education entries
-        if (data.education && data.education.length > 0) {
-            data.education.forEach(entry => {
-                const educationFields = ['institution', 'degree', 'fieldOfStudy', 'graduationYear'];
-                educationFields.forEach(field => {
-                    totalFields++;
-                    if (entry[field as keyof EducationEntry] && entry[field as keyof EducationEntry]!.trim() !== '') {
-                        filledFields++;
-                    }
-                });
-            });
-        }
-
-        // Count certification entries
-        if (data.certifications && data.certifications.length > 0) {
-            data.certifications.forEach(entry => {
-                const certFields = ['certificationName', 'issuingOrganization', 'issueDate'];
-                certFields.forEach(field => {
-                    totalFields++;
-                    if (entry[field as keyof CertificationEntry] && entry[field as keyof CertificationEntry]!.trim() !== '') {
-                        filledFields++;
-                    }
-                });
-            });
-        }
-
-        // Count work experience entries
-        if (data.workExperience && data.workExperience.length > 0) {
-            data.workExperience.forEach(entry => {
-                const workFields = ['employer', 'jobTitle', 'startDate'];
-                workFields.forEach(field => {
-                    totalFields++;
-                    if (entry[field as keyof WorkExperienceEntry] && entry[field as keyof WorkExperienceEntry]!.trim() !== '') {
-                        filledFields++;
-                    }
-                });
-            });
-        }
-
-        // If no entries exist, show 100% progress (section is optional but visited)
-        const progress = totalFields === 0 ? 100 : (filledFields / totalFields) * 100;
-
-        return {
-            progress: Math.round(progress),
-            completed: true, // Completed once visited since it's optional
-        };
-    };
-
-    type SectionKey = keyof typeof formData;
-    type SectionData = PersonalContactData | AddressData | EmergencyContactData | ProfessionalSummaryData | CredentialsData;
-
-    const updateFormData = (section: SectionKey, data: SectionData) => {
+    const updateFormData = (section: SectionKey, data: any) => {
         setFormData((prev) => ({
             ...prev,
             [section]: { ...prev[section], ...data },
@@ -338,20 +170,14 @@ export default function CompleteProviderProfile() {
     };
 
     useEffect(() => {
-        // Update completion status when form data changes
-        const personalContactValidation = validatePersonalContact(formData["personal-contact"]);
-        const addressValidation = validateAddress(formData.address);
-        const emergencyValidation = validateEmergencyContact(formData["emergency-contact"]);
-        const professionalValidation = validateProfessionalSummary(formData["professional-summary"]);
-        const credentialsValidation = validateCredentials(formData.credentials);
+        // Update completion status when form data changes using configuration-driven validation
+        const newCompletion = Object.keys(formData).reduce((acc, sectionKey) => {
+            const validator = SECTION_VALIDATORS[sectionKey as SectionKey];
+            acc[sectionKey as SectionKey] = validator(formData[sectionKey as SectionKey], visitedSections);
+            return acc;
+        }, {} as SectionCompletionState);
 
-        setSectionCompletion({
-            "personal-contact": personalContactValidation,
-            address: addressValidation,
-            "emergency-contact": emergencyValidation,
-            "professional-summary": professionalValidation,
-            credentials: credentialsValidation,
-        });
+        setSectionCompletion(newCompletion);
     }, [formData, visitedSections]);
 
     // Automatically mark credentials section as visited when user reaches it
@@ -430,6 +256,10 @@ export default function CompleteProviderProfile() {
             if (result) {
                 setExistingProfile(result);
                 setSubmitSuccess(true);
+
+                // Clear auto-saved data since profile is now complete
+                clearAutoSave();
+
                 toast.success("Provider profile completed successfully!");
                 console.log("Profile completed successfully:", result);
             } else {

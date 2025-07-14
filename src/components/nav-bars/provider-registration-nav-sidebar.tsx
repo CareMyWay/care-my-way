@@ -1,10 +1,12 @@
 "use client";
 
+import { SectionCompletionState } from "@/types/provider-profile-form";
+
 interface ProviderRegistrationNavSideBarProps {
     activeSection: string;
     // eslint-disable-next-line no-unused-vars
     onSectionClick: (sectionId: string) => void;
-    sectionCompletion: Record<string, { completed: boolean; progress: number }>;
+    sectionCompletion: SectionCompletionState;
 }
 
 export function ProviderRegistrationNavSideBar({
