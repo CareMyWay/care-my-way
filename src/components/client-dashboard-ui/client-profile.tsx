@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import OrangeButton from "@/components/buttons/orange-button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -26,8 +27,6 @@ import {
   Upload,
   Trash2,
   Edit,
-  Menu,
-  X,
 } from "lucide-react";
 
 export default function UserProfilePage() {
@@ -75,12 +74,12 @@ export default function UserProfilePage() {
         return <EmergencySupportContent />;
       case "medical-info":
         return <MedicalInfoContent />;
-      case "functional-cognitive":
-        return <FunctionalCognitiveContent />;
-      case "notifications":
-        return <NotificationsContent />;
-      case "preferences":
-        return <PreferencesContent />;
+      // case "functional-cognitive":
+      //   return <FunctionalCognitiveContent />;
+      // case "notifications":
+      //   return <NotificationsContent />;
+      // case "preferences":
+      //   return <PreferencesContent />;
       default:
         return <AccountSettingsContent />;
     }
@@ -88,53 +87,6 @@ export default function UserProfilePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 px-4 py-3">
-        <div className="flex items-center justify-between max-w-7xl mx-auto">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="lg:hidden"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-            >
-              {sidebarOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Menu className="h-5 w-5" />
-              )}
-            </Button>
-            <div className="flex items-center gap-2">
-              <Heart className="h-6 w-6 text-teal-600" />
-              <span className="font-semibold text-lg">Care My Way</span>
-            </div>
-          </div>
-          <nav className="hidden md:flex items-center gap-6 text-sm">
-            <a href="#" className="text-gray-600 hover:text-gray-900">
-              Dashboard
-            </a>
-            <a href="#" className="text-gray-600 hover:text-gray-900">
-              Health Care Quiz
-            </a>
-            <a href="#" className="text-gray-600 hover:text-gray-900">
-              Find a Caregiver
-            </a>
-            <a href="#" className="text-gray-600 hover:text-gray-900">
-              Schedule
-            </a>
-            <a href="#" className="text-gray-600 hover:text-gray-900">
-              Messages
-            </a>
-            <a href="#" className="text-teal-600 font-medium">
-              Settings
-            </a>
-          </nav>
-          <Button className="bg-teal-600 hover:bg-teal-700 text-white">
-            LOGOUT
-          </Button>
-        </div>
-      </header>
-
       <div className="flex max-w-7xl mx-auto">
         {/* Sidebar */}
         <aside
@@ -153,7 +105,7 @@ export default function UserProfilePage() {
                   {section.items.map((item) => {
                     const Icon = item.icon;
                     return (
-                      <button
+                      <Button
                         key={item.id}
                         onClick={() => {
                           setActiveSection(item.id);
@@ -170,7 +122,7 @@ export default function UserProfilePage() {
                       >
                         <Icon className="h-4 w-4" />
                         {item.label}
-                      </button>
+                      </Button>
                     );
                   })}
                 </nav>
@@ -220,14 +172,14 @@ function AccountSettingsContent() {
               <p className="text-sm text-gray-600">Profile picture</p>
               <p className="text-xs text-gray-500">JPG, GIF or PNG. 1MB max.</p>
               <div className="flex gap-2">
-                <Button size="sm" className="bg-orange-500 hover:bg-orange-600">
+                <OrangeButton variant="action">
                   <Upload className="h-4 w-4 mr-2" />
                   UPLOAD NEW PICTURE
-                </Button>
-                <Button size="sm" variant="outline">
+                </OrangeButton>
+                <OrangeButton variant="action">
                   <Trash2 className="h-4 w-4 mr-2" />
                   DELETE
-                </Button>
+                </OrangeButton>
               </div>
             </div>
           </div>
@@ -283,16 +235,12 @@ function AccountSettingsContent() {
                 type="email"
                 placeholder="james.anderson@gmail.com"
               />
-              <Button size="sm" className="bg-orange-500 hover:bg-orange-600">
-                CHANGE EMAIL
-              </Button>
+              <OrangeButton variant="action">CHANGE EMAIL</OrangeButton>
             </div>
             <div className="space-y-2">
               <Label htmlFor="phone">Phone Number</Label>
               <Input id="phone" type="tel" placeholder="(555) 123-4567" />
-              <Button size="sm" className="bg-orange-500 hover:bg-orange-600">
-                CHANGE PHONE NUMBER
-              </Button>
+              <OrangeButton variant="action">CHANGE PHONE NUMBER</OrangeButton>
             </div>
           </div>
 
@@ -304,9 +252,7 @@ function AccountSettingsContent() {
               type="password"
               placeholder="Password (minimum 8 characters)"
             />
-            <Button size="sm" className="bg-orange-500 hover:bg-orange-600">
-              CHANGE PASSWORD
-            </Button>
+            <OrangeButton variant="action">CHANGE PASSWORD</OrangeButton>
           </div>
         </CardContent>
       </Card>
@@ -335,10 +281,10 @@ function AccountSettingsContent() {
               </SelectContent>
             </Select>
           </div>
-          <Button className="bg-orange-500 hover:bg-orange-600">
+          <OrangeButton variant="action">
             <Edit className="h-4 w-4 mr-2" />
             EDIT
-          </Button>
+          </OrangeButton>
         </CardContent>
       </Card>
     </div>
@@ -419,10 +365,10 @@ function EmergencySupportContent() {
               </Label>
             </div>
           </div>
-          <Button className="bg-orange-500 hover:bg-orange-600">
+          <OrangeButton variant="action">
             <Edit className="h-4 w-4 mr-2" />
             EDIT
-          </Button>
+          </OrangeButton>
         </CardContent>
       </Card>
     </div>
@@ -442,10 +388,10 @@ function MedicalInfoContent() {
             placeholder="Enter your medical history details..."
             className="min-h-[120px]"
           />
-          <Button className="bg-orange-500 hover:bg-orange-600">
+          <OrangeButton variant="action">
             <Edit className="h-4 w-4 mr-2" />
             EDIT
-          </Button>
+          </OrangeButton>
         </CardContent>
       </Card>
 
@@ -470,70 +416,70 @@ function MedicalInfoContent() {
             <Label>Sleep-related Issues</Label>
             <Textarea placeholder="Describe any sleep issues..." />
           </div>
-          <Button className="bg-orange-500 hover:bg-orange-600">
+          <OrangeButton variant="action">
             <Edit className="h-4 w-4 mr-2" />
             EDIT
-          </Button>
+          </OrangeButton>
         </CardContent>
       </Card>
     </div>
   );
 }
 
-function FunctionalCognitiveContent() {
-  return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">
-        Functional & Cognitive Abilities
-      </h1>
-      <Card>
-        <CardHeader>
-          <CardTitle>Mobility Status</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Textarea placeholder="Describe mobility status..." />
-          <div className="space-y-2">
-            <Label>Experiences with memory or cognitive issues</Label>
-            <Textarea placeholder="Enter relevant information..." />
-          </div>
-          <div className="space-y-2">
-            <Label>Sensory Impairments</Label>
-            <Textarea placeholder="Describe any sensory impairments..." />
-          </div>
-          <Button className="bg-orange-500 hover:bg-orange-600">
-            <Edit className="h-4 w-4 mr-2" />
-            EDIT
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+// function FunctionalCognitiveContent() {
+//   return (
+//     <div className="space-y-6">
+//       <h1 className="text-2xl font-bold text-gray-900">
+//         Functional & Cognitive Abilities
+//       </h1>
+//       <Card>
+//         <CardHeader>
+//           <CardTitle>Mobility Status</CardTitle>
+//         </CardHeader>
+//         <CardContent className="space-y-4">
+//           <Textarea placeholder="Describe mobility status..." />
+//           <div className="space-y-2">
+//             <Label>Experiences with memory or cognitive issues</Label>
+//             <Textarea placeholder="Enter relevant information..." />
+//           </div>
+//           <div className="space-y-2">
+//             <Label>Sensory Impairments</Label>
+//             <Textarea placeholder="Describe any sensory impairments..." />
+//           </div>
+//           <OrangeButton variant="action">
+//             <Edit className="h-4 w-4 mr-2" />
+//             EDIT
+//           </OrangeButton>
+//         </CardContent>
+//       </Card>
+//     </div>
+//   );
+// }
 
-function NotificationsContent() {
-  return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Notifications</h1>
-      <Card>
-        <CardContent className="p-6">
-          <p className="text-gray-600">
-            Notification preferences would go here...
-          </p>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+// function NotificationsContent() {
+//   return (
+//     <div className="space-y-6">
+//       <h1 className="text-2xl font-bold text-gray-900">Notifications</h1>
+//       <Card>
+//         <CardContent className="p-6">
+//           <p className="text-gray-600">
+//             Notification preferences would go here...
+//           </p>
+//         </CardContent>
+//       </Card>
+//     </div>
+//   );
+// }
 
-function PreferencesContent() {
-  return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Preferences</h1>
-      <Card>
-        <CardContent className="p-6">
-          <p className="text-gray-600">User preferences would go here...</p>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+// function PreferencesContent() {
+//   return (
+//     <div className="space-y-6">
+//       <h1 className="text-2xl font-bold text-gray-900">Preferences</h1>
+//       <Card>
+//         <CardContent className="p-6">
+//           <p className="text-gray-600">User preferences would go here...</p>
+//         </CardContent>
+//       </Card>
+//     </div>
+//   );
+// }

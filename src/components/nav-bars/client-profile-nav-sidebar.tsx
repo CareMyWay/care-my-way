@@ -1,17 +1,17 @@
 "use client";
 
-interface RegistrationNavSideBarProps {
+interface ClientProfileNavSideBarProps {
   activeSection: string;
   // eslint-disable-next-line no-unused-vars
   onSectionClick: (sectionId: string) => void;
   sectionCompletion: Record<string, { completed: boolean; progress: number }>;
 }
 
-export function RegistrationNavSideBar({
+export function ClientProfileNavSideBar({
   activeSection,
   onSectionClick,
   sectionCompletion,
-}: RegistrationNavSideBarProps) {
+}: ClientProfileNavSideBarProps) {
   const sections = [
     {
       id: "personal-info",

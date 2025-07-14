@@ -3,7 +3,7 @@
 import React from "react";
 
 import { useState } from "react";
-import { RangeSlider } from "@/components/slider/range-slider";
+import { RangeSlider } from "@/components/ui/range-slider";
 import { Input } from "@/components/ui/input";
 import GreenButton from "@/components/buttons/green-button";
 
