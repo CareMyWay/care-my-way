@@ -126,10 +126,10 @@ export async function updateProviderProfile(profileId: string, profileData: Part
         if (profileData.responseTime !== undefined) updateInput.responseTime = profileData.responseTime;
         if (profileData.servicesOffered !== undefined) updateInput.servicesOffered = profileData.servicesOffered;
 
-        // Handle JSON fields - only add them if they have actual content
+        // Handle JSON fields - stringify before sending to GraphQL since schema expects JSON strings
         if (profileData.education !== undefined) {
             if (profileData.education && profileData.education.length > 0) {
-                updateInput.education = profileData.education;
+                updateInput.education = JSON.stringify(profileData.education);
                 console.log("Setting education:", profileData.education);
             } else {
                 console.log("Education is empty, setting to null");
@@ -138,7 +138,7 @@ export async function updateProviderProfile(profileId: string, profileData: Part
         }
         if (profileData.certifications !== undefined) {
             if (profileData.certifications && profileData.certifications.length > 0) {
-                updateInput.certifications = profileData.certifications;
+                updateInput.certifications = JSON.stringify(profileData.certifications);
                 console.log("Setting certifications:", profileData.certifications);
             } else {
                 console.log("Certifications is empty, setting to null");
@@ -147,7 +147,7 @@ export async function updateProviderProfile(profileId: string, profileData: Part
         }
         if (profileData.workExperience !== undefined) {
             if (profileData.workExperience && profileData.workExperience.length > 0) {
-                updateInput.workExperience = profileData.workExperience;
+                updateInput.workExperience = JSON.stringify(profileData.workExperience);
                 console.log("Setting workExperience:", profileData.workExperience);
             } else {
                 console.log("WorkExperience is empty, setting to null");
@@ -175,12 +175,35 @@ export async function updateProviderProfile(profileId: string, profileData: Part
     }
 }
 
+// Clean up credentials data by removing empty documents arrays
+function cleanCredentialsData(credentialsArray: any[]) {
+    if (!credentialsArray || credentialsArray.length === 0) {
+        return null;
+    }
+
+    return credentialsArray.map(item => {
+        const cleanedItem = { ...item };
+
+        // Remove documents field if it's empty or undefined
+        if (!cleanedItem.documents || cleanedItem.documents.length === 0) {
+            delete cleanedItem.documents;
+        }
+
+        return cleanedItem;
+    });
+}
+
 // Transform form data to database format
 export function transformFormDataToProfile(formData: any, userId: string, profileOwner: string) {
     // Combine emergency contact first and last name
     const emergencyContactName = formData['emergency-contact']?.contactFirstName && formData['emergency-contact']?.contactLastName
         ? `${formData['emergency-contact'].contactFirstName} ${formData['emergency-contact'].contactLastName}`
         : undefined;
+
+    // Clean up credentials data
+    const education = cleanCredentialsData(formData.credentials?.education);
+    const certifications = cleanCredentialsData(formData.credentials?.certifications);
+    const workExperience = cleanCredentialsData(formData.credentials?.workExperience);
 
     return {
         userId,
@@ -216,10 +239,10 @@ export function transformFormDataToProfile(formData: any, userId: string, profil
         responseTime: formData['professional-summary']?.responseTime,
         servicesOffered: formData['professional-summary']?.servicesOffered,
 
-        // Credentials
-        education: formData.credentials?.education || null,
-        certifications: formData.credentials?.certifications || null,
-        workExperience: formData.credentials?.workExperience || null,
+        // Credentials (cleaned)
+        education,
+        certifications,
+        workExperience,
 
         // Profile completion status
         isProfileComplete: false, // Will be set to true when submitting
