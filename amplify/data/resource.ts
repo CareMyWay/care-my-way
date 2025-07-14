@@ -31,7 +31,6 @@ const schema = a
           .authorization((allow) => [
             allow.ownerDefinedIn("profileOwner").to(["read"]),
             allow.group("Admin"),
-            allow.guest().to(["read"]),
             allow.authenticated().to(["read"]),
           ]),
       })
