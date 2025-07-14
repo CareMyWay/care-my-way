@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+// app/api/create-checkout-session/route.ts
+>>>>>>> f29aef9 (Fixed booking model file structure and implemented stripe hosted checkout page)
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import Stripe from "stripe";
@@ -11,9 +15,15 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
+<<<<<<< HEAD
     const { name, amount, quantity, bookingId, providerId, providerPhoto, providerName, providerTitle, providerLocation, providerRate, date, time, duration } = body;
 
     if (!name || !amount || !quantity || !bookingId || !providerId) {
+=======
+    const { name, amount, quantity } = body;
+
+    if (!name || !amount || !quantity) {
+>>>>>>> f29aef9 (Fixed booking model file structure and implemented stripe hosted checkout page)
       return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
     }
 
@@ -24,15 +34,21 @@ export async function POST(req: Request) {
             currency: "cad",
             product_data: {
               name: name,
+<<<<<<< HEAD
               images: providerPhoto ? [providerPhoto] : [],
             },
             unit_amount: Math.round(amount * 100),
+=======
+            },
+            unit_amount: Math.round(amount * 100), // amount in cents
+>>>>>>> f29aef9 (Fixed booking model file structure and implemented stripe hosted checkout page)
           },
           quantity,
         },
       ],
       mode: "payment",
       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
+<<<<<<< HEAD
       cancel_url: `${origin}/provider/${providerId}?cancelled=true&bookingId=${bookingId}`,
       metadata: {
         bookingId,
@@ -44,6 +60,9 @@ export async function POST(req: Request) {
         time,
         duration,
       },
+=======
+      cancel_url: `${origin}/checkout?canceled=true`,
+>>>>>>> f29aef9 (Fixed booking model file structure and implemented stripe hosted checkout page)
     });
 
     return NextResponse.json({ url: session.url });
