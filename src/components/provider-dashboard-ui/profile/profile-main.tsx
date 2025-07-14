@@ -112,7 +112,7 @@ export function ProfileMain() {
             <TopNav title="Profile" subtitle="Manage your professional profile and credentials." notificationCount={2} />
 
             <div className="min-h-screen bg-gray-50/50">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+                <div className="max-w-full mx-auto px-6 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-8 space-y-8">
 
                     {/* Profile Header */}
                     <ProfileHeader profileData={profileData} />
