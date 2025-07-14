@@ -26,7 +26,7 @@ export default function NotificationsSideNav() {
       icon: LayoutDashboard,
     },
     {
-      href: "/provider-dashboard/profile",
+      href: "/client-dashboard/profile",
       label: "Profile",
       icon: User,
     },

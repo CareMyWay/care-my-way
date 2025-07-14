@@ -1,13 +1,20 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
+// import Link from "next/link";
 import { PersonalInfoSection } from "@/components/client-profile-forms/personal-info-section";
 import { AddressSection } from "@/components/client-profile-forms/address-section";
 import { EmergencyContactSection } from "@/components/client-profile-forms/emergency-contact-section";
-import { RegistrationNavSideBar } from "@/components/nav-bars/registration-nav-sidebar";
+import { ClientProfileNavSideBar } from "@/components/nav-bars/client-profile-nav-sidebar";
+import { getCurrentUser } from "aws-amplify/auth";
+import { useRouter } from "next/navigation";
+
+import { generateClient } from "aws-amplify/data";
+import type { Schema } from "@/../amplify/data/resource";
+
 import toast from "react-hot-toast";
 
+const client = generateClient<Schema>();
 // Form validation functions
 type PersonalInfoData = {
   firstName?: string;
@@ -42,7 +49,7 @@ type EmergencyContactData = {
 
 export default function CompleteClientProfile() {
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
+  // const [submitSuccess, setSubmitSuccess] = useState(false);
   const [activeSection, setActiveSection] = useState("personal-info");
   const [formData, setFormData] = useState({
     "personal-info": {},
@@ -180,20 +187,79 @@ export default function CompleteClientProfile() {
     }
   };
 
-  const handleSubmit = () => {
+  const router = useRouter();
+
+  const handleSubmit = async () => {
     if (
       Object.values(sectionCompletion).every((section) => section.completed)
     ) {
-      setSubmitSuccess(true);
-      setSubmitSuccess(true);
+      try {
+        const currentUser = await getCurrentUser();
+        const userId = currentUser?.userId;
 
-      toast.success("Profile completed successfully!", {
-        duration: 4000,
-      });
-      // alert("Registration submitted successfully!");
-      console.log("Form data:", formData);
+        if (!userId) throw new Error("User is not authenticated");
+
+        const personalInfo = formData["personal-info"] as PersonalInfoData;
+        const addressInfo = formData.address as AddressData;
+        const emergencyInfo = formData[
+          "emergency-contact"
+        ] as EmergencyContactData;
+
+        const input = {
+          userId,
+          userType: "Client",
+          firstName: personalInfo.firstName,
+          lastName: personalInfo.lastName,
+          gender: personalInfo.gender,
+          dateOfBirth: personalInfo.dob,
+          address: addressInfo.address,
+          city: addressInfo.city,
+          province: addressInfo.province,
+          postalCode: addressInfo.postalCode,
+          emergencyContactFirstName: emergencyInfo.contactFirstName,
+          emergencyContactLastName: emergencyInfo.contactLastName,
+          emergencyRelationship: emergencyInfo.relationship,
+          emergencyContactPhone: emergencyInfo.contactPhone,
+          hasRepSupportPerson:
+            emergencyInfo.supportPerson?.toString().toLowerCase() === "yes" ||
+            emergencyInfo.supportPerson === true,
+          supportFirstName: emergencyInfo.supportFirstName,
+          supportLastName: emergencyInfo.supportLastName,
+          supportRelationship: emergencyInfo.supportRelationship,
+          supportContactPhone: emergencyInfo.supportPhone,
+        };
+
+        const result = await client.models.ClientProfile.create(input);
+
+        if (result.errors) {
+          console.error("Error creating ClientProfile:", result.errors);
+          toast.error("Failed to complete profile. Please try again.");
+          return;
+        }
+
+        console.log("Form data saved:", result.data);
+        router.push("/client-dashboard/profile-completed"); //  Redirect here
+      } catch (error) {
+        console.error("Submission error:", error);
+        toast.error("Something went wrong!");
+      }
     }
   };
+
+  // const handleSubmit = () => {
+  //   if (
+  //     Object.values(sectionCompletion).every((section) => section.completed)
+  //   ) {
+  //     setSubmitSuccess(true);
+  //     setSubmitSuccess(true);
+
+  //     toast.success("Profile completed successfully!", {
+  //       duration: 4000,
+  //     });
+  //     // alert("Registration submitted successfully!");
+  //     console.log("Form data:", formData);
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-primary-white">
@@ -203,7 +269,7 @@ export default function CompleteClientProfile() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           {/* Sidebar - hidden on mobile, visible on md+ */}
           <div className="hidden md:block md:col-span-3">
-            <RegistrationNavSideBar
+            <ClientProfileNavSideBar
               activeSection={activeSection}
               onSectionClick={navigateToSection}
               sectionCompletion={sectionCompletion}
@@ -221,7 +287,7 @@ export default function CompleteClientProfile() {
 
             {showMobileSidebar && (
               <div className="mt-2">
-                <RegistrationNavSideBar
+                <ClientProfileNavSideBar
                   activeSection={activeSection}
                   onSectionClick={(section) => {
                     navigateToSection(section);
@@ -335,7 +401,7 @@ export default function CompleteClientProfile() {
           </div>
         </div>
       </main>
-      {submitSuccess && (
+      {/* {submitSuccess && (
         <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white border border-green-300 text-green-800 px-6 py-4 rounded-lg shadow-md flex flex-col items-center gap-2 z-50">
           <p className="font-semibold">🎉 Your profile has been completed!</p>
           <Link
@@ -345,7 +411,7 @@ export default function CompleteClientProfile() {
             View your Profile
           </Link>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

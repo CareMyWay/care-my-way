@@ -1,4 +1,3 @@
-// components/layouts/ClientDashboardLayout.tsx
 import {
   getCurrentUserServer,
   checkIsInGroup,

@@ -26,31 +26,39 @@ const schema = a
             allow.ownerDefinedIn("profileOwner").to(["read", "create"]),
             allow.groups(["Admin"]).to(["read", "update", "create"]),
           ]),
-        // We don't want people to change ownership of their profile
         profileOwner: a
           .string()
           .authorization((allow) => [
             allow.ownerDefinedIn("profileOwner").to(["read"]),
             allow.group("Admin"),
-            allow.guest().to(["read"]),
             allow.authenticated().to(["read"]),
           ]),
       })
       .secondaryIndexes((index) => [index("userId")])
 
       .authorization((allow) => [
-        allow.ownerDefinedIn("profileOwner").to(["read", "update"]),
+        // allow.ownerDefinedIn("profileOwner").to(["read", "update"]),
         allow.group("Admin"),
         allow.guest().to(["read"]),
         allow.authenticated().to(["read"]),
       ]),
 
-    Client: a
+    ClientProfile: a
       .model({
+        userId: a.string().required(),
+        userType: a.string().default("Client"),
+        profileOwner: a
+          .string()
+          .authorization((allow) => [
+            allow.ownerDefinedIn("profileOwner").to(["read"]),
+            allow.group("Admin").to(["read", "update"]),
+          ]),
         firstName: a.string(),
         lastName: a.string(),
         gender: a.string(),
         dateOfBirth: a.date(),
+        email: a.string(),
+        phoneNumber: a.string(),
         address: a.string(),
         city: a.string(),
         province: a.string(),
@@ -66,9 +74,9 @@ const schema = a
         supportContactPhone: a.string(),
       })
       .authorization((allow) => [
-        allow.group("Admin").to(["read", "update", "create", "delete"]),
         allow.ownerDefinedIn("profileOwner").to(["read", "update", "create"]),
-        allow.authenticated().to(["read", "create"]),
+        allow.groups(["Admin"]).to(["read", "update", "create", "delete"]),
+        allow.authenticated().to(["read", "create"]), // Add "create" for regular users
       ]),
   })
   .authorization((allow) => [allow.resource(postConfirmation)]);
