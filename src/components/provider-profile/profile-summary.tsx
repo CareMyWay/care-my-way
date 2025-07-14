@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import OrangeButton from "../buttons/orange-button";
-import BookingModal from "../booking/booking-modal";
+import BookingModal from "../booking-modal";
 
 // Need to fetch data from dynamoDB when ready
 // const fetchProvider = async () => {
