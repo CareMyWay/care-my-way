@@ -76,7 +76,7 @@ export function ProfileHeader({ profileData }: ProfileHeaderProps) {
                                 )}
                             </div>
 
-                            {/* Smaller Services and Languages */}
+                            {/* Services and Languages */}
                             <div className="space-y-3">
                                 {profileData.servicesOffered && profileData.servicesOffered.length > 0 && (
                                     <div>
