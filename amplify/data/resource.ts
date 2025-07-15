@@ -36,7 +36,7 @@ const schema = a
       })
       .secondaryIndexes((index) => [index("userId")])
       .authorization((allow) => [
-        // allow.ownerDefinedIn("profileOwner").to(["read", "update"]),
+        allow.ownerDefinedIn("profileOwner").to(["read", "update"]),
         allow.group("Admin"),
         allow.guest().to(["read"]),
         allow.authenticated().to(["read"]),

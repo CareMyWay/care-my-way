@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { fetchUserAttributes } from "aws-amplify/auth";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/../amplify/data/resource";
+
 // import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -47,6 +48,7 @@ export default function CompletedClientProfile() {
         const attributes = await fetchUserAttributes();
         const userId = attributes.sub;
 
+        // Query ClientProfile where userId == Cognito sub
         const { data, errors } = await client.models.ClientProfile.list({
           filter: { userId: { eq: userId } },
           selectionSet: [
@@ -76,11 +78,21 @@ export default function CompletedClientProfile() {
           ],
         });
 
-        if (errors) throw new Error("GraphQL error");
-        setProfile(data?.[0] ?? null);
+        if (errors) {
+          console.error("GraphQL errors:", errors);
+          setError("Failed to load profile due to server error.");
+          return;
+        }
+
+        if (data.length > 0) {
+          console.log("Loaded profile:", data[0]);
+          setProfile(data[0]);
+        } else {
+          setError("No profile found.");
+        }
       } catch (err) {
-        console.error("Error:", err);
-        setError("Failed to load profile.");
+        console.error("Error loading profile:", err);
+        setError("Unable to load profile.");
       } finally {
         setLoading(false);
       }
@@ -89,7 +101,12 @@ export default function CompletedClientProfile() {
     loadProfile();
   }, []);
 
-  if (loading) return <div className="text-xl p-10">Loading profile...</div>;
+  if (loading)
+    return (
+      <div className="text-darkest-green text-3xl justify-center items-center">
+        Loading profile...
+      </div>
+    );
   if (error || !profile)
     return (
       <div className="text-red-600 p-4">{error || "Profile not found."}</div>
@@ -99,7 +116,6 @@ export default function CompletedClientProfile() {
     {
       category: "GENERAL",
       items: [
-        // { id: "account-settings", label: "Account Settings", icon: User },
         { id: "personal-info", label: "Personal", icon: User },
         { id: "address-info", label: "Address", icon: MapPin },
         {
@@ -120,57 +136,6 @@ export default function CompletedClientProfile() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* <div className="flex max-w-7xl mx-auto ">
-        <aside
-          className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-200 ease-in-out
-          ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
-        >
-          <div className="p-4 pt-20 lg:pt-4">
-            {navigationItems.map((section) => (
-              <div key={section.category} className="mb-6">
-                <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
-                  {section.category}
-                </h3>
-                <nav className="space-y-1">
-                  {section.items.map((item) => {
-                    const Icon = item.icon;
-                    return (
-                      <Button
-                        key={item.id}
-                        onClick={() => {
-                          setActiveSection(item.id);
-                          setSidebarOpen(false);
-                        }}
-                        className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-colors
-                          ${
-                            activeSection === item.id
-                              ? "bg-teal-50 text-teal-700 border-r-2 border-teal-600"
-                              : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                          }`}
-                      >
-                        <Icon className="h-4 w-4" />
-                        {item.label}
-                      </Button>
-                    );
-                  })}
-                </nav>
-              </div>
-            ))}
-          </div>
-        </aside>
-
-        {sidebarOpen && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
-
-        <main className="flex-1 p-4 lg:p-6">
-          {renderContent(activeSection, profile)}
-        </main>
-      </div>
-    </div> */}
       <div className="flex max-w-7xl mx-auto">
         {/* Sidebar */}
         <aside
@@ -246,11 +211,107 @@ function renderContent(
   }
 }
 
+// function PersonalInfoContent({
+//   profile,
+// }: {
+//   profile: Schema["ClientProfile"]["type"];
+// }) {
+//   return (
+//     <div className="space-y-6">
+//       <h1 className="text-2xl font-bold text-darkest-green">
+//         Profile Information
+//       </h1>
+//       <Card>
+//         <CardHeader>
+//           <CardTitle>Personal Details</CardTitle>
+//         </CardHeader>
+//         <CardContent className="space-y-6">
+//           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+//             <div className="space-y-2">
+//               <Label htmlFor="firstName">First Name</Label>
+//               <Input id="firstName" defaultValue={profile.firstName ?? ""} />
+//             </div>
+//             <div className="space-y-2">
+//               <Label htmlFor="lastName">Last Name</Label>
+//               <Input id="lastName" defaultValue={profile.lastName ?? ""} />
+//             </div>
+//           </div>
+//           <div className="space-y-2">
+//             <Label htmlFor="email">Email</Label>
+//             <Input id="email" type="email" defaultValue={profile.email ?? ""} />
+//           </div>
+//           <div className="space-y-2">
+//             <Label htmlFor="email">Phone Number</Label>
+//             <Input id="phoneNumber" defaultValue={profile.phoneNumber ?? ""} />
+//           </div>
+//           <div>
+//             <Label htmlFor="dateOfBirth">Date of Birth</Label>
+//             <Input
+//               id="date"
+//               type="date"
+//               defaultValue={profile.dateOfBirth ?? ""}
+//             />
+//           </div>
+//           <div>
+//             <Label htmlFor="gender">Gender</Label>
+//             <Input
+//               id="gender"
+//               type="gender"
+//               defaultValue={profile.gender ?? ""}
+//             />
+//           </div>
+//         </CardContent>
+//       </Card>
+//     </div>
+//   );
+// }
+
+import OrangeButton from "@/components/buttons/orange-button";
+import { Button } from "@/components/ui/button";
 function PersonalInfoContent({
   profile,
 }: {
   profile: Schema["ClientProfile"]["type"];
 }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: profile.firstName ?? "",
+    lastName: profile.lastName ?? "",
+    email: profile.email ?? "",
+    phoneNumber: profile.phoneNumber ?? "",
+    dateOfBirth: profile.dateOfBirth ?? "",
+    gender: profile.gender ?? "",
+  });
+
+  const handleChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleCancel = () => {
+    setFormData({
+      firstName: profile.firstName ?? "",
+      lastName: profile.lastName ?? "",
+      email: profile.email ?? "",
+      phoneNumber: profile.phoneNumber ?? "",
+      dateOfBirth: profile.dateOfBirth ?? "",
+      gender: profile.gender ?? "",
+    });
+    setIsEditing(false);
+  };
+
+  const handleSave = async () => {
+    try {
+      await client.models.ClientProfile.update({
+        id: profile.id,
+        ...formData,
+      });
+      setIsEditing(false);
+      // Optionally: show a toast
+    } catch (err) {
+      console.error("Failed to update profile", err);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-darkest-green">
@@ -264,36 +325,77 @@ function PersonalInfoContent({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="firstName">First Name</Label>
-              <Input id="firstName" defaultValue={profile.firstName ?? ""} />
+              <Input
+                id="firstName"
+                value={formData.firstName}
+                onChange={(e) => handleChange("firstName", e.target.value)}
+                disabled={!isEditing}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="lastName">Last Name</Label>
-              <Input id="lastName" defaultValue={profile.lastName ?? ""} />
+              <Input
+                id="lastName"
+                value={formData.lastName}
+                onChange={(e) => handleChange("lastName", e.target.value)}
+                disabled={!isEditing}
+              />
             </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" defaultValue={profile.email ?? ""} />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="email">Phone Number</Label>
-            <Input id="phoneNumber" defaultValue={profile.phoneNumber ?? ""} />
-          </div>
-          <div>
-            <Label htmlFor="dateOfBirth">Date of Birth</Label>
             <Input
-              id="date"
-              type="date"
-              defaultValue={profile.dateOfBirth ?? ""}
+              id="email"
+              type="email"
+              value={formData.email}
+              onChange={(e) => handleChange("email", e.target.value)}
+              disabled={!isEditing}
             />
           </div>
-          <div>
+          <div className="space-y-2">
+            <Label htmlFor="phoneNumber">Phone Number</Label>
+            <Input
+              id="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={(e) => handleChange("phoneNumber", e.target.value)}
+              disabled={!isEditing}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="dateOfBirth">Date of Birth</Label>
+            <Input
+              id="dateOfBirth"
+              type="date"
+              value={formData.dateOfBirth}
+              onChange={(e) => handleChange("dateOfBirth", e.target.value)}
+              disabled={!isEditing}
+            />
+          </div>
+          <div className="space-y-2">
             <Label htmlFor="gender">Gender</Label>
             <Input
               id="gender"
-              type="gender"
-              defaultValue={profile.gender ?? ""}
+              value={formData.gender}
+              onChange={(e) => handleChange("gender", e.target.value)}
+              disabled={!isEditing}
             />
+          </div>
+
+          <div className="flex gap-2 mt-4">
+            {isEditing ? (
+              <>
+                <OrangeButton variant="action" onClick={handleSave}>
+                  Save
+                </OrangeButton>
+                <Button variant="ghost" onClick={handleCancel}>
+                  Cancel
+                </Button>
+              </>
+            ) : (
+              <OrangeButton variant="action" onClick={() => setIsEditing(true)}>
+                Edit
+              </OrangeButton>
+            )}
           </div>
         </CardContent>
       </Card>

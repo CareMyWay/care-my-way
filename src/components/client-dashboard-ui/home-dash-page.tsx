@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Clock, MapPin } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav";
@@ -9,6 +9,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 //import AppointmentsPage from "./appointments/page";
 import { format, startOfWeek, addDays, isSameDay, isSameMonth } from "date-fns";
 import { Button } from "@/components/ui/button";
+
+import { getCurrentUser } from "aws-amplify/auth";
+import { generateClient } from "aws-amplify/data";
+import type { Schema } from "@/../amplify/data/resource";
+
+const client = generateClient<Schema>();
 
 export default function HomeDashPage() {
   const todos = [
@@ -20,7 +26,8 @@ export default function HomeDashPage() {
       dueDate: "Jan 20, 2025",
       dueTime: "8:00 AM - 10:00 AM",
       completed: false,
-      description: "Provide personal care assistance for Sarah Johnson.",
+      description:
+        "Complete Client Profile by providing all necessary information.",
       createdAt: "2024-01-15T10:00:00Z",
     },
     {
@@ -31,7 +38,7 @@ export default function HomeDashPage() {
       dueDate: "Jan 20, 2025",
       dueTime: "8:00 AM - 10:00 AM",
       completed: false,
-      description: "Provide personal care assistance for Sarah Johnson.",
+      description: "Something.",
       createdAt: "2024-01-15T10:00:00Z",
     },
     {
@@ -69,6 +76,8 @@ export default function HomeDashPage() {
   };
 
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [profileCompleted, setProfileCompleted] = useState(false);
+
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 }); // Sunday
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
@@ -89,6 +98,33 @@ export default function HomeDashPage() {
       color: "bg-green-200",
     },
   ];
+
+  useEffect(() => {
+    const checkProfileCompletion = async () => {
+      try {
+        const user = await getCurrentUser();
+        const userId = user?.userId;
+        if (!userId) return;
+
+        const { data: profiles } = await client.models.ClientProfile.list({
+          filter: {
+            profileOwner: { eq: userId },
+          },
+        });
+
+        if (profiles.length > 0) {
+          setProfileCompleted(true);
+          console.log("✅ Client profile found:", profiles[0]);
+        } else {
+          console.log("❌ No profile found for user");
+        }
+      } catch (err) {
+        console.error("Error checking profile:", err);
+      }
+    };
+
+    checkProfileCompletion();
+  }, []);
 
   return (
     <>
@@ -122,18 +158,15 @@ export default function HomeDashPage() {
                       </div>
                     </div>
                     <div className="flex w-full md:w-auto justify-center md:justify-end">
-                      {!task.completed ? (
-                        <GreenButton
-                          variant="route"
-                          // href={`client-dashboard/to-dos/${task.id}`}
-                          href={task.href}
-                        >
-                          <span className="text-xs text-center">Start</span>
-                        </GreenButton>
-                      ) : (
-                        <span className="text-sm text-muted-foreground">
+                      {task.taskTitle === "Complete User Profile" &&
+                      profileCompleted ? (
+                        <span className="text-md uppercase text-center text-bold ">
                           Completed
                         </span>
+                      ) : (
+                        <GreenButton variant="route" href={task.href}>
+                          <span className="text-sm text-center">Start</span>
+                        </GreenButton>
                       )}
                     </div>
                   </div>
