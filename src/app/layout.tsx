@@ -3,10 +3,7 @@ import { Manrope } from "next/font/google";
 import "@/app/globals.css";
 import ConfigureAmplifyClientSide from "@/app/amplify-config";
 import AuthProvider from "@/components/auth/auth";
-<<<<<<< HEAD
 import { Toaster } from "react-hot-toast";
-=======
->>>>>>> 2b77d97 (Fixed booking model file structure and implemented stripe hosted checkout page)
 import StripeProvider from "@/components/stripe/stripe-provider";
 
 const manrope = Manrope({
