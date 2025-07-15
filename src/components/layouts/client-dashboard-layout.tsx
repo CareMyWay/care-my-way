@@ -31,6 +31,12 @@ export default async function ClientDashboardLayout({
         <header className="w-full border-b border-gray-200 bg-white z-10">
           <NavBar />
         </header>
+        <p>
+          <strong>Email:</strong> {userProfileData.email}
+        </p>
+        <p>
+          <strong>User Type:</strong> {userProfileData.userType}
+        </p>
 
         <main className="flex-1 p-6 overflow-y-auto">{children}</main>
       </div>
