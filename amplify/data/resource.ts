@@ -45,9 +45,13 @@ const schema = a
     ProviderProfile: a
       .model({
         userId: a.string().required(),
-        profileOwner: a.string().required(),
-
-        // Personal & Contact Information
+        userType: a.string().default("Client"),
+        profileOwner: a
+          .string()
+          .authorization((allow) => [
+            allow.ownerDefinedIn("profileOwner").to(["read", "create"]),
+            allow.group("Admin").to(["read", "update"]),
+          ]),
         firstName: a.string(),
         lastName: a.string(),
         // Lowercase versions for case-insensitive search
