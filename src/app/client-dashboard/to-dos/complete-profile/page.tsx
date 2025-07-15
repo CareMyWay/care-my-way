@@ -196,6 +196,7 @@ export default function CompleteClientProfile() {
       try {
         const currentUser = await getCurrentUser();
         const userId = currentUser?.userId;
+        console.log("UserId used in create:", userId);
 
         if (!userId) throw new Error("User is not authenticated");
 
@@ -208,6 +209,9 @@ export default function CompleteClientProfile() {
         const input = {
           userId,
           userType: "Client",
+          profileOwner: userId, // Required for owner authorization
+          email: personalInfo.email,
+          phoneNumber: personalInfo.phone,
           firstName: personalInfo.firstName,
           lastName: personalInfo.lastName,
           gender: personalInfo.gender,
@@ -230,9 +234,13 @@ export default function CompleteClientProfile() {
         };
 
         const result = await client.models.ClientProfile.create(input);
+        console.log("Create result:", result);
 
         if (result.errors) {
-          console.error("Error creating ClientProfile:", result.errors);
+          console.error(
+            "Error creating ClientProfile:",
+            JSON.stringify(result.errors, null, 2)
+          );
           toast.error("Failed to complete profile. Please try again.");
           return;
         }
@@ -245,21 +253,6 @@ export default function CompleteClientProfile() {
       }
     }
   };
-
-  // const handleSubmit = () => {
-  //   if (
-  //     Object.values(sectionCompletion).every((section) => section.completed)
-  //   ) {
-  //     setSubmitSuccess(true);
-  //     setSubmitSuccess(true);
-
-  //     toast.success("Profile completed successfully!", {
-  //       duration: 4000,
-  //     });
-  //     // alert("Registration submitted successfully!");
-  //     console.log("Form data:", formData);
-  //   }
-  // };
 
   return (
     <div className="min-h-screen bg-primary-white">

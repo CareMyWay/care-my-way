@@ -37,7 +37,7 @@ const schema = a
       .secondaryIndexes((index) => [index("userId")])
 
       .authorization((allow) => [
-        // allow.ownerDefinedIn("profileOwner").to(["read", "update"]),
+        allow.ownerDefinedIn("profileOwner").to(["read", "update"]),
         allow.group("Admin"),
         allow.guest().to(["read"]),
         allow.authenticated().to(["read"]),
@@ -50,7 +50,7 @@ const schema = a
         profileOwner: a
           .string()
           .authorization((allow) => [
-            allow.ownerDefinedIn("profileOwner").to(["read"]),
+            allow.ownerDefinedIn("profileOwner").to(["read", "create"]),
             allow.group("Admin").to(["read", "update"]),
           ]),
         firstName: a.string(),
