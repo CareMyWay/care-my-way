@@ -42,9 +42,7 @@ export default async function RootLayout({
 
         <AuthProvider>
           <ConfigureAmplifyClientSide />
-          <StripeProvider>
           {children}
-          </StripeProvider>
         </AuthProvider>
       </body>
     </html>
