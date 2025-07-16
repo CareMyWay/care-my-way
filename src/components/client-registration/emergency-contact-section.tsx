@@ -99,7 +99,14 @@ export function EmergencyContactSection({
       setValue("supportRelationship", "");
       setValue("supportPhone", "");
     }
-  }, [sameAsEmergency]);
+  }, [
+    sameAsEmergency,
+    setValue,
+    watchedFields.contactFirstName,
+    watchedFields.contactLastName,
+    watchedFields.contactPhone,
+    watchedFields.relationship,
+  ]);
 
   return (
     <div className="h-full bg-white rounded-lg border shadow-sm overflow-hidden">
