@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-vars */
 // Base interface for all form sections
 export interface BaseFormSectionProps<T> {
-    onDataChange: (data: T) => void;
+    onDataChange: (_data: T) => void;
     isCompleted: boolean;
     defaultValues?: Partial<T>;
 }

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect } from "react";
 import { useForm, UseFormProps, FieldValues, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -6,7 +7,7 @@ import { z } from "zod";
 interface UseFormSectionProps<T extends FieldValues> {
     schema: z.ZodSchema<T>;
     defaultValues?: Partial<T>;
-    onDataChange: (data: T) => void;
+    onDataChange: (_data: T) => void;
 }
 
 export function useFormSection<T extends FieldValues>({

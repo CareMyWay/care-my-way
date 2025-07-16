@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
     SectionKey,
     FormSectionConfig
@@ -86,16 +87,16 @@ export const FORM_SECTIONS: FormSectionConfig[] = [
 
 // Validation function factory
 export function createSectionValidator(sectionKey: SectionKey) {
-    return (data: Record<string, unknown>, visitedSections?: Set<string>): ValidationResult => {
+    return (_data: Record<string, unknown>, _visitedSections?: Set<string>): ValidationResult => {
         // Handle optional credentials section
         if (sectionKey === "credentials") {
-            const hasVisited = visitedSections?.has("credentials") ?? false;
-            return validateOptionalSection(hasVisited, data);
+            const hasVisited = _visitedSections?.has("credentials") ?? false;
+            return validateOptionalSection(hasVisited, _data);
         }
 
         // Handle regular required sections
         const requiredFields = SECTION_REQUIRED_FIELDS[sectionKey];
-        return validateRequiredFields(data, requiredFields);
+        return validateRequiredFields(_data, requiredFields);
     };
 }
 
@@ -105,5 +106,5 @@ export const SECTION_VALIDATORS = Object.keys(SECTION_REQUIRED_FIELDS).reduce(
         validators[sectionKey as SectionKey] = createSectionValidator(sectionKey as SectionKey);
         return validators;
     },
-    {} as Record<SectionKey, (data: Record<string, unknown>, visitedSections?: Set<string>) => ValidationResult>
+    {} as Record<SectionKey, (_data: Record<string, unknown>, _visitedSections?: Set<string>) => ValidationResult>
 ); 
