@@ -1,6 +1,5 @@
 import {
     SectionKey,
-    CompleteProfileFormData,
     FormSectionConfig
 } from "@/types/provider-profile-form";
 import { validateRequiredFields, validateOptionalSection, ValidationResult } from "./form-validation";
@@ -48,7 +47,7 @@ export const FORM_SECTIONS: FormSectionConfig[] = [
         title: "Personal & Contact Information",
         subtitle: "Please provide your personal details and contact preferences",
         stepNumber: 1,
-        component: {} as any, // Will be set at runtime
+        component: {} as React.ComponentType<unknown>, // Will be set at runtime
         requiredFields: SECTION_REQUIRED_FIELDS["personal-contact"],
     },
     {
@@ -56,7 +55,7 @@ export const FORM_SECTIONS: FormSectionConfig[] = [
         title: "Address Information",
         subtitle: "Please provide your residential address details",
         stepNumber: 2,
-        component: {} as any,
+        component: {} as React.ComponentType<unknown>,
         requiredFields: SECTION_REQUIRED_FIELDS.address,
     },
     {
@@ -64,7 +63,7 @@ export const FORM_SECTIONS: FormSectionConfig[] = [
         title: "Emergency Contact",
         subtitle: "Please provide details for someone to contact in case of emergency",
         stepNumber: 3,
-        component: {} as any,
+        component: {} as React.ComponentType<unknown>,
         requiredFields: SECTION_REQUIRED_FIELDS["emergency-contact"],
     },
     {
@@ -72,7 +71,7 @@ export const FORM_SECTIONS: FormSectionConfig[] = [
         title: "Professional Summary",
         subtitle: "Showcase your expertise, experience, and services offered",
         stepNumber: 4,
-        component: {} as any,
+        component: {} as React.ComponentType<unknown>,
         requiredFields: SECTION_REQUIRED_FIELDS["professional-summary"],
     },
     {
@@ -80,14 +79,14 @@ export const FORM_SECTIONS: FormSectionConfig[] = [
         title: "Credentials & Work History",
         subtitle: "Optional: Add your education, certifications, and work experience to build client trust",
         stepNumber: 5,
-        component: {} as any,
+        component: {} as React.ComponentType<unknown>,
         isOptional: true,
     }
 ];
 
 // Validation function factory
 export function createSectionValidator(sectionKey: SectionKey) {
-    return (data: any, visitedSections?: Set<string>): ValidationResult => {
+    return (data: Record<string, unknown>, visitedSections?: Set<string>): ValidationResult => {
         // Handle optional credentials section
         if (sectionKey === "credentials") {
             const hasVisited = visitedSections?.has("credentials") ?? false;
@@ -106,5 +105,5 @@ export const SECTION_VALIDATORS = Object.keys(SECTION_REQUIRED_FIELDS).reduce(
         validators[sectionKey as SectionKey] = createSectionValidator(sectionKey as SectionKey);
         return validators;
     },
-    {} as Record<SectionKey, (data: any, visitedSections?: Set<string>) => ValidationResult>
+    {} as Record<SectionKey, (data: Record<string, unknown>, visitedSections?: Set<string>) => ValidationResult>
 ); 

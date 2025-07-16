@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useFieldArray } from "react-hook-form";
 import { z } from "zod";
 import { useFormSection } from "@/hooks/useFormSection";
@@ -42,11 +42,6 @@ const credentialsSchema = z.object({
     workExperience: z.array(workExperienceEntrySchema).optional(),
 });
 
-type CredentialsFormFields = z.infer<typeof credentialsSchema>;
-type EducationEntry = z.infer<typeof educationEntrySchema>;
-type CertificationEntry = z.infer<typeof certificationEntrySchema>;
-type WorkExperienceEntry = z.infer<typeof workExperienceEntrySchema>;
-
 interface CredentialsSectionProps extends BaseFormSectionProps<CredentialsData> { }
 
 // Graduation year options (last 50 years)
@@ -67,7 +62,6 @@ export function CredentialsSection({
         register,
         control,
         setValue,
-        formState: { errors },
     } = useFormSection({
         schema: credentialsSchema,
         defaultValues: {
@@ -75,7 +69,7 @@ export function CredentialsSection({
             certifications: defaultValues?.certifications || [],
             workExperience: defaultValues?.workExperience || [],
         },
-        onDataChange: onDataChange as any,
+        onDataChange: onDataChange as (data: z.infer<typeof credentialsSchema>) => void,
     });
 
     // Field arrays for dynamic entries
@@ -299,8 +293,6 @@ export function CredentialsSection({
         </div>
     );
 
-
-
     return (
         <div className="h-full bg-white rounded-lg border shadow-sm overflow-hidden">
             <div className="p-6 h-full flex flex-col">
@@ -338,7 +330,7 @@ export function CredentialsSection({
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                                 </svg>
                                 <p className="text-sm">No education entries added yet</p>
-                                <p className="text-xs mt-1">Click "Add Education" to get started</p>
+                                <p className="text-xs mt-1">Click &quot;Add Education&quot; to get started</p>
                             </div>
                         ) : (
                             <div className="space-y-6">
@@ -441,7 +433,7 @@ export function CredentialsSection({
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                                 </svg>
                                 <p className="text-sm">No certifications added yet</p>
-                                <p className="text-xs mt-1">Click "Add Certification" to get started</p>
+                                <p className="text-xs mt-1">Click &quot;Add Certification&quot; to get started</p>
                             </div>
                         ) : (
                             <div className="space-y-6">
@@ -547,7 +539,7 @@ export function CredentialsSection({
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0H8m8 0v2a2 2 0 01-2 2H10a2 2 0 01-2-2V6m8 0H8" />
                                 </svg>
                                 <p className="text-sm">No work experience added yet</p>
-                                <p className="text-xs mt-1">Click "Add Experience" to get started</p>
+                                <p className="text-xs mt-1">Click &quot;Add Experience&quot; to get started</p>
                             </div>
                         ) : (
                             <div className="space-y-6">
@@ -646,7 +638,7 @@ export function CredentialsSection({
                             <div className="text-sm">
                                 <p className="font-medium text-blue-800">Optional Section</p>
                                 <p className="text-blue-700 mt-1">
-                                    This entire section is optional. You can skip it entirely or add as much or as little information as you're comfortable sharing.
+                                    This entire section is optional. You can skip it entirely or add as much or as little information as you&apos;re comfortable sharing.
                                     Adding credentials with supporting documents helps build trust with potential clients.
                                 </p>
                             </div>

@@ -16,8 +16,6 @@ const emergencyContactSchema = z.object({
     relationship: z.string().min(1, "Relationship is required"),
 });
 
-type EmergencyContactFormFields = z.infer<typeof emergencyContactSchema>;
-
 interface EmergencyContactSectionProps extends BaseFormSectionProps<EmergencyContactData> { }
 
 // Common relationship options
@@ -48,7 +46,7 @@ export function EmergencyContactSection({
             contactPhone: defaultValues?.contactPhone || "",
             relationship: defaultValues?.relationship || "",
         },
-        onDataChange: onDataChange as any,
+        onDataChange: onDataChange as (data: z.infer<typeof emergencyContactSchema>) => void,
     });
 
     return (

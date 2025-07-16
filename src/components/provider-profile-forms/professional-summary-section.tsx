@@ -25,8 +25,6 @@ const professionalSummarySchema = z.object({
     servicesOffered: z.array(z.string()).min(1, "At least one service must be selected"),
 });
 
-type ProfessionalSummaryFormFields = z.infer<typeof professionalSummarySchema>;
-
 interface ProfessionalSummarySectionProps extends BaseFormSectionProps<ProfessionalSummaryData> { }
 
 // Healthcare services imported from utils
@@ -84,7 +82,7 @@ export function ProfessionalSummarySection({
             responseTime: defaultValues?.responseTime || "",
             servicesOffered: defaultValues?.servicesOffered || [],
         },
-        onDataChange: onDataChange as any,
+        onDataChange: onDataChange as (data: z.infer<typeof professionalSummarySchema>) => void,
     });
 
     // Filter services based on search input
@@ -181,7 +179,7 @@ export function ProfessionalSummarySection({
                                 rows={8}
                                 maxLength={500}
                                 className="w-full h-32 p-4 border-2 border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-[#4A9B9B] focus:border-[#4A9B9B] scrollbar-hide"
-                                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
                                 placeholder="Describe your background, specializations, approach to care, and what makes you unique as a healthcare provider..."
                             />
                             <div className="absolute bottom-2 right-2 text-xs text-gray-500 bg-white px-1 rounded">
@@ -305,7 +303,7 @@ export function ProfessionalSummarySection({
                         <div className="relative">
                             {/* Main Input Container */}
                             <div
-                                className={`w-full min-h-[60px] p-2 border-2 border-gray-300 rounded-lg flex items-center cursor-text ${isServiceDropdownOpen ? '!ring-2 !ring-[#4A9B9B] !border-[#4A9B9B]' : ''
+                                className={`w-full min-h-[60px] p-2 border-2 border-gray-300 rounded-lg flex items-center cursor-text ${isServiceDropdownOpen ? "!ring-2 !ring-[#4A9B9B] !border-[#4A9B9B]" : ""
                                     }`}
                                 onClick={() => setIsServiceDropdownOpen(true)}
                             >
@@ -363,7 +361,7 @@ export function ProfessionalSummarySection({
                                                         key={service}
                                                         type="button"
                                                         onClick={() => handleServiceToggle(service)}
-                                                        className={`w-full px-3 py-2 text-left text-sm hover:bg-gray-100 flex items-center justify-between ${selectedServices.includes(service) ? 'bg-blue-50 text-blue-700' : 'text-gray-900'
+                                                        className={`w-full px-3 py-2 text-left text-sm hover:bg-gray-100 flex items-center justify-between ${selectedServices.includes(service) ? "bg-blue-50 text-blue-700" : "text-gray-900"
                                                             }`}
                                                     >
                                                         <span>{service}</span>
@@ -377,7 +375,7 @@ export function ProfessionalSummarySection({
                                             </div>
                                         ) : (
                                             <div className="px-3 py-4 text-center text-gray-500 text-sm">
-                                                No services found matching "{serviceFilter}"
+                                                No services found matching &quot;{serviceFilter}&quot;
                                             </div>
                                         )}
                                     </div>

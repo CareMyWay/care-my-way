@@ -17,6 +17,7 @@ export function useFormSection<T extends FieldValues>({
     const form = useForm<T>({
         mode: "onChange",
         defaultValues: defaultValues as UseFormProps<T>["defaultValues"],
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         resolver: zodResolver(schema as any),
     });
 
@@ -26,7 +27,7 @@ export function useFormSection<T extends FieldValues>({
             onDataChange(value as T);
         });
         return () => subscription.unsubscribe();
-    }, [form.watch, onDataChange]);
+    }, [form, onDataChange]);
 
     return form;
 } 

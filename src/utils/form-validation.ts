@@ -3,10 +3,9 @@ export interface ValidationResult {
     completed: boolean;
 }
 
-export function validateRequiredFields<T extends Record<string, any>>(
+export function validateRequiredFields<T extends Record<string, unknown>>(
     data: T,
-    requiredFields: (keyof T)[],
-    optionalArrayFields: (keyof T)[] = []
+    requiredFields: (keyof T)[]
 ): ValidationResult {
     const filled = requiredFields.filter((field) => {
         const value = data[field];
@@ -17,8 +16,8 @@ export function validateRequiredFields<T extends Record<string, any>>(
         }
 
         // Handle string fields
-        if (typeof value === 'string') {
-            return value.trim() !== '';
+        if (typeof value === "string") {
+            return value.trim() !== "";
         }
 
         // Handle other truthy values
@@ -33,7 +32,7 @@ export function validateRequiredFields<T extends Record<string, any>>(
 
 export function validateOptionalSection(
     hasVisited: boolean,
-    data?: Record<string, any>
+    data?: Record<string, unknown>
 ): ValidationResult {
     if (!hasVisited) {
         return {
@@ -58,10 +57,10 @@ export function validateOptionalSection(
     Object.values(data).forEach((value) => {
         if (Array.isArray(value)) {
             value.forEach((item) => {
-                if (typeof item === 'object' && item !== null) {
+                if (typeof item === "object" && item !== null) {
                     Object.entries(item).forEach(([, fieldValue]) => {
                         totalFields++;
-                        if (fieldValue && fieldValue.toString().trim() !== '') {
+                        if (fieldValue && fieldValue.toString().trim() !== "") {
                             filledFields++;
                         }
                     });

@@ -22,9 +22,13 @@ import {
 } from "@/types/provider-profile-form";
 import { SECTION_VALIDATORS } from "@/utils/profile-form-config";
 import { useFormAutoSave } from "@/hooks/useFormAutoSave";
-import { useNavigationGuard } from "@/hooks/useNavigationGuard";
 
 const client = generateClient<Schema>();
+
+interface CurrentUser {
+    userId: string;
+    username: string;
+}
 
 export default function CompleteProviderProfile() {
     const [showMobileSidebar, setShowMobileSidebar] = useState(false);
@@ -32,7 +36,7 @@ export default function CompleteProviderProfile() {
     const [activeSection, setActiveSection] = useState("personal-contact");
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
-    const [currentUser, setCurrentUser] = useState<any>(null);
+    const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
     const [visitedSections, setVisitedSections] = useState<Set<string>>(new Set(["personal-contact"]));
 
     const [formData, setFormData] = useState<CompleteProfileFormData>({
@@ -58,6 +62,28 @@ export default function CompleteProviderProfile() {
         "credentials"
     ];
 
+    // Auto-save functionality
+    const { clearAutoSave } = useFormAutoSave(formData, true);
+
+    // Load form data from session storage
+    const loadFromStorage = (): Partial<CompleteProfileFormData> | null => {
+        try {
+            const saved = sessionStorage.getItem("provider-profile-draft");
+            if (!saved) return null;
+
+            const parsed = JSON.parse(saved);
+            console.log("Loaded auto-saved form data from", new Date(parsed.timestamp).toLocaleTimeString());
+
+            // Remove timestamp before returning
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { timestamp, ...formData } = parsed;
+            return formData;
+        } catch (error) {
+            console.warn("Failed to load auto-saved form data:", error);
+            return null;
+        }
+    };
+
     // Load user data and auto-saved form data on mount
     useEffect(() => {
         const loadData = async () => {
@@ -67,7 +93,10 @@ export default function CompleteProviderProfile() {
                 // Get current user and user attributes
                 const user = await getCurrentUser();
                 const userAttributes = await fetchUserAttributes();
-                setCurrentUser(user);
+                setCurrentUser({
+                    userId: user.userId,
+                    username: user.username
+                });
                 console.log("Current user:", user);
                 console.log("User attributes:", userAttributes);
 
@@ -102,18 +131,7 @@ export default function CompleteProviderProfile() {
         loadData();
     }, []);
 
-    // Auto-save functionality
-    const { loadFromStorage, clearAutoSave } = useFormAutoSave(formData, true);
-
-    // Navigation guard to warn about unsaved changes
-    const hasUnsavedChanges = Object.values(sectionCompletion).some(s => s.progress > 0 && !s.completed);
-    const { guardedNavigate } = useNavigationGuard({
-        isEnabled: true,
-        hasUnsavedChanges: hasUnsavedChanges && !isSaving,
-        message: "You have unsaved progress in your profile. Are you sure you want to leave? Your progress will be auto-saved."
-    });
-
-    const updateFormData = (section: SectionKey, data: any) => {
+    const updateFormData = (section: SectionKey, data: Record<string, unknown>) => {
         setFormData((prev) => ({
             ...prev,
             [section]: { ...prev[section], ...data },
@@ -203,11 +221,11 @@ export default function CompleteProviderProfile() {
                 : undefined;
 
             // Parse asking rate to number
-            const askingRate = professionalSummary?.askingRate ? parseFloat(professionalSummary.askingRate) : undefined;
+            const askingRate = professionalSummary?.askingRate ? parseFloat(professionalSummary.askingRate as string) : undefined;
 
             // Map experience to float
             const yearExperienceFloat = professionalSummary?.yearsExperience
-                ? mapExperienceToFloat(professionalSummary.yearsExperience)
+                ? mapExperienceToFloat(professionalSummary.yearsExperience as string)
                 : undefined;
 
             const input = {
@@ -216,11 +234,11 @@ export default function CompleteProviderProfile() {
                 // Personal & Contact Information
                 firstName: personalContact?.firstName,
                 lastName: personalContact?.lastName,
-                firstNameLower: personalContact?.firstName?.toLowerCase(),
-                lastNameLower: personalContact?.lastName?.toLowerCase(),
+                firstNameLower: (personalContact?.firstName as string)?.toLowerCase(),
+                lastNameLower: (personalContact?.lastName as string)?.toLowerCase(),
                 dob: personalContact?.dob,
                 gender: personalContact?.gender,
-                languages: personalContact?.languages || [],
+                languages: (personalContact?.languages as string[]) || [],
                 phone: personalContact?.phone,
                 email: personalContact?.email,
                 preferredContact: personalContact?.preferredContact,
@@ -242,11 +260,11 @@ export default function CompleteProviderProfile() {
                 askingRate,
                 rateType: professionalSummary?.rateType,
                 responseTime: professionalSummary?.responseTime,
-                servicesOffered: professionalSummary?.servicesOffered || [],
+                servicesOffered: (professionalSummary?.servicesOffered as string[]) || [],
                 // Credentials (as JSON strings)
-                education: credentials?.education?.length ? JSON.stringify(credentials.education) : null,
-                certifications: credentials?.certifications?.length ? JSON.stringify(credentials.certifications) : null,
-                workExperience: credentials?.workExperience?.length ? JSON.stringify(credentials.workExperience) : null,
+                education: (credentials?.education as unknown[])?.length ? JSON.stringify(credentials.education) : null,
+                certifications: (credentials?.certifications as unknown[])?.length ? JSON.stringify(credentials.certifications) : null,
+                workExperience: (credentials?.workExperience as unknown[])?.length ? JSON.stringify(credentials.workExperience) : null,
                 // Profile status
                 isProfileComplete: true,
                 isPubliclyVisible: true,
@@ -255,7 +273,7 @@ export default function CompleteProviderProfile() {
             console.log("Creating ProviderProfile with input:", input);
 
             // Create the ProviderProfile 
-            const result = await client.models.ProviderProfile.create(input as any);
+            const result = await client.models.ProviderProfile.create(input as unknown as Parameters<typeof client.models.ProviderProfile.create>[0]);
 
             if (result.errors) {
                 console.error("Error creating ProviderProfile:", result.errors);
@@ -444,7 +462,7 @@ export default function CompleteProviderProfile() {
                     {/* Modal Backdrop */}
                     <div
                         className="fixed inset-0 z-50 flex items-center justify-center p-4"
-                        style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+                        style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
                     >
                         {/* Modal Content */}
                         <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden animate-in fade-in duration-300">
@@ -467,7 +485,7 @@ export default function CompleteProviderProfile() {
                                     {/* Success Message */}
                                     <div className="text-center">
                                         <h3 className="text-lg font-semibold text-darkest-green mb-2">
-                                            What's Next?
+                                            What&apos;s Next?
                                         </h3>
                                         <p className="text-gray-600 text-sm leading-relaxed">
                                             Your profile is now live in our marketplace. Clients can find and connect with you based on your services and location.

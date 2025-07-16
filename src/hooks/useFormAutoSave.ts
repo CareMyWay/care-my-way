@@ -28,10 +28,9 @@ export function useFormAutoSave(formData: CompleteProfileFormData, isEnabled: bo
             if (!saved) return null;
 
             const parsed = JSON.parse(saved);
-            console.log("Loaded auto-saved form data from", new Date(parsed.timestamp).toLocaleTimeString());
-
-            // Remove timestamp before returning
             const { timestamp, ...formData } = parsed;
+            console.log("Loaded auto-saved form data from", new Date(timestamp).toLocaleTimeString());
+
             return formData;
         } catch (error) {
             console.warn("Failed to load auto-saved form data:", error);

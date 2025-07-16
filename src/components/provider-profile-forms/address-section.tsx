@@ -17,8 +17,6 @@ const addressSchema = z.object({
     ),
 });
 
-type AddressFormFields = z.infer<typeof addressSchema>;
-
 interface AddressSectionProps extends BaseFormSectionProps<AddressData> { }
 
 // Canadian provinces and territories
@@ -75,7 +73,7 @@ export function AddressSection({
             province: defaultValues?.province || "",
             postalCode: defaultValues?.postalCode || "",
         },
-        onDataChange: onDataChange as any,
+        onDataChange: onDataChange as (data: z.infer<typeof addressSchema>) => void,
     });
 
     // Search addresses using OpenStreetMap Nominatim API
@@ -91,7 +89,7 @@ export function AddressSection({
                 `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&countrycodes=ca&q=${encodeURIComponent(query)}`,
                 {
                     headers: {
-                        'User-Agent': 'CareMyWay Healthcare Provider App'
+                        "User-Agent": "CareMyWay Healthcare Provider App"
                     }
                 }
             );
@@ -102,7 +100,7 @@ export function AddressSection({
                 setShowSuggestions(true);
             }
         } catch (error) {
-            console.error('Error searching addresses:', error);
+            console.error("Error searching addresses:", error);
         } finally {
             setIsSearching(false);
         }
@@ -116,36 +114,36 @@ export function AddressSection({
         const streetParts = [];
         if (address.house_number) streetParts.push(address.house_number);
         if (address.road) streetParts.push(address.road);
-        const streetAddress = streetParts.join(' ');
+        const streetAddress = streetParts.join(" ");
 
         // Get city name
-        const city = address.city || address.town || address.village || address.municipality || '';
+        const city = address.city || address.town || address.village || address.municipality || "";
 
         // Map province/state
         const provinceMapping: { [key: string]: string } = {
-            'Alberta': 'Alberta',
-            'British Columbia': 'British Columbia',
-            'Manitoba': 'Manitoba',
-            'New Brunswick': 'New Brunswick',
-            'Newfoundland and Labrador': 'Newfoundland and Labrador',
-            'Northwest Territories': 'Northwest Territories',
-            'Nova Scotia': 'Nova Scotia',
-            'Nunavut': 'Nunavut',
-            'Ontario': 'Ontario',
-            'Prince Edward Island': 'Prince Edward Island',
-            'Quebec': 'Quebec',
-            'Saskatchewan': 'Saskatchewan',
-            'Yukon': 'Yukon'
+            "Alberta": "Alberta",
+            "British Columbia": "British Columbia",
+            "Manitoba": "Manitoba",
+            "New Brunswick": "New Brunswick",
+            "Newfoundland and Labrador": "Newfoundland and Labrador",
+            "Northwest Territories": "Northwest Territories",
+            "Nova Scotia": "Nova Scotia",
+            "Nunavut": "Nunavut",
+            "Ontario": "Ontario",
+            "Prince Edward Island": "Prince Edward Island",
+            "Quebec": "Quebec",
+            "Saskatchewan": "Saskatchewan",
+            "Yukon": "Yukon"
         };
 
-        const province = address.state ? provinceMapping[address.state] || address.state : '';
-        const postalCode = address.postcode || '';
+        const province = address.state ? provinceMapping[address.state] || address.state : "";
+        const postalCode = address.postcode || "";
 
         // Update form values
-        if (streetAddress) setValue('address', streetAddress);
-        if (city) setValue('city', city);
-        if (province) setValue('province', province);
-        if (postalCode) setValue('postalCode', postalCode.toUpperCase());
+        if (streetAddress) setValue("address", streetAddress);
+        if (city) setValue("city", city);
+        if (province) setValue("province", province);
+        if (postalCode) setValue("postalCode", postalCode.toUpperCase());
 
         // Hide suggestions
         setShowSuggestions(false);
@@ -154,7 +152,7 @@ export function AddressSection({
 
     // Handle address input change with debouncing
     const handleAddressInputChange = (value: string) => {
-        setValue('address', value);
+        setValue("address", value);
 
         // Clear existing timeout
         if (searchTimeout) {
@@ -173,8 +171,6 @@ export function AddressSection({
 
         setSearchTimeout(timeout);
     };
-
-
 
     // Cleanup timeout on unmount
     useEffect(() => {
@@ -249,7 +245,7 @@ export function AddressSection({
                                                     <div className="font-medium text-gray-900">
                                                         {suggestion.address.house_number && suggestion.address.road
                                                             ? `${suggestion.address.house_number} ${suggestion.address.road}`
-                                                            : suggestion.address.road || 'Address'
+                                                            : suggestion.address.road || "Address"
                                                         }
                                                     </div>
                                                     <div className="text-xs text-gray-600">
@@ -257,7 +253,7 @@ export function AddressSection({
                                                             suggestion.address.city || suggestion.address.town || suggestion.address.village,
                                                             suggestion.address.state,
                                                             suggestion.address.postcode
-                                                        ].filter(Boolean).join(', ')}
+                                                        ].filter(Boolean).join(", ")}
                                                     </div>
                                                 </button>
                                             ))}

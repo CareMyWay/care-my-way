@@ -112,7 +112,7 @@ export interface FormSectionConfig {
     title: string;
     subtitle: string;
     stepNumber: number;
-    component: React.ComponentType<any>;
+    component: React.ComponentType<unknown>;
     requiredFields?: string[];
     isOptional?: boolean;
 }

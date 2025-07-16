@@ -23,8 +23,6 @@ const personalContactSchema = z.object({
     profilePhoto: z.string().optional(),
 });
 
-type PersonalContactFormFields = z.infer<typeof personalContactSchema>;
-
 interface PersonalContactSectionProps extends BaseFormSectionProps<PersonalContactData> { }
 
 // Get comprehensive list of languages from ISO 639-1 standard
@@ -52,7 +50,6 @@ export function PersonalContactSection({
 
     const {
         register,
-        watch,
         setValue,
         formState: { errors },
     } = useFormSection({
@@ -68,7 +65,7 @@ export function PersonalContactSection({
             preferredContact: defaultValues?.preferredContact || "",
             profilePhoto: defaultValues?.profilePhoto || "",
         },
-        onDataChange: onDataChange as any,
+        onDataChange: onDataChange as (data: z.infer<typeof personalContactSchema>) => void,
     });
 
     // Filter languages based on search input
@@ -234,7 +231,7 @@ export function PersonalContactSection({
                         <div className="relative">
                             {/* Main Input Container */}
                             <div
-                                className={`std-form-input min-h-[42px] flex items-center cursor-text ${isLanguageDropdownOpen ? '!ring-2 !ring-[black] !border-[black]' : ''
+                                className={`std-form-input min-h-[42px] flex items-center cursor-text ${isLanguageDropdownOpen ? "!ring-2 !ring-[black] !border-[black]" : ""
                                     }`}
                                 onClick={() => setIsLanguageDropdownOpen(true)}
                             >
@@ -295,7 +292,7 @@ export function PersonalContactSection({
                                                         key={language}
                                                         type="button"
                                                         onClick={() => handleLanguageToggle(language)}
-                                                        className={`w-full px-3 py-2 text-left text-sm hover:bg-gray-100 flex items-center justify-between ${selectedLanguages.includes(language) ? 'bg-blue-50 text-blue-700' : 'text-gray-900'
+                                                        className={`w-full px-3 py-2 text-left text-sm hover:bg-gray-100 flex items-center justify-between ${selectedLanguages.includes(language) ? "bg-blue-50 text-blue-700" : "text-gray-900"
                                                             }`}
                                                     >
                                                         <span>{language}</span>
@@ -309,7 +306,7 @@ export function PersonalContactSection({
                                             </div>
                                         ) : (
                                             <div className="px-3 py-4 text-center text-gray-500 text-sm">
-                                                No languages found matching "{languageFilter}"
+                                                No languages found matching &quot;{languageFilter}&quot;
                                             </div>
                                         )}
                                     </div>
