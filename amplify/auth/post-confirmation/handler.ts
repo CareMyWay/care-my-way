@@ -75,64 +75,12 @@ export const handler: PostConfirmationTriggerHandler = async (event) => {
         throw new Error("Failed to create user in DB");
       }
       console.log("User created", user);
-      return user;
+      return event;
     })
     .catch((error) => {
       console.error(error);
       throw error;
     });
-
-  // If user is a Provider, also create a basic ProviderProfile
-  if (group === "Provider") {
-    console.log("Creating ProviderProfile for Provider user:", event.request.userAttributes.sub);
-
-    try {
-      const firstName = event.request.userAttributes.given_name || "";
-      const lastName = event.request.userAttributes.family_name || "";
-
-      const providerProfileData = {
-        userId: event.request.userAttributes.sub,
-        profileOwner: `${event.request.userAttributes.sub}::${event.userName}`,
-        firstName,
-        lastName,
-        // Add lowercase versions for case-insensitive search
-        firstNameLower: firstName.toLowerCase(),
-        lastNameLower: lastName.toLowerCase(),
-        email: event.request.userAttributes.email,
-        isProfileComplete: false,
-        isPubliclyVisible: false,
-        languages: [],
-        servicesOffered: [],
-        // Initialize numeric fields
-        yearExperienceFloat: null,
-        askingRate: null,
-        education: null,
-        certifications: null,
-        workExperience: null,
-      };
-
-      console.log("ProviderProfile data to create:", JSON.stringify(providerProfileData, null, 2));
-
-      const providerProfileResponse = await dataClient.models.ProviderProfile.create(providerProfileData);
-
-      console.log("ProviderProfile creation response:", JSON.stringify(providerProfileResponse, null, 2));
-
-      if (providerProfileResponse.errors) {
-        console.error("Failed to create ProviderProfile - GraphQL errors:", JSON.stringify(providerProfileResponse.errors, null, 2));
-        // Don't throw here - we don't want to fail the entire sign-up process
-        // if the ProviderProfile creation fails, but log it clearly
-      } else {
-        console.log("ProviderProfile created successfully:", JSON.stringify(providerProfileResponse.data, null, 2));
-      }
-    } catch (error) {
-      console.error("Error creating ProviderProfile - Exception caught:", error);
-      console.error("Error stack:", (error as Error)?.stack);
-      // Don't throw here - we don't want to fail the entire sign-up process
-      // if the ProviderProfile creation fails
-    }
-  } else {
-    console.log("User is not a Provider, skipping ProviderProfile creation. User type:", group);
-  }
 
   if (
     cognitoGroupResponse.$metadata.httpStatusCode !== 200 &&

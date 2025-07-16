@@ -9,31 +9,22 @@ import { EmergencyContactSection } from "@/components/provider-profile-forms/eme
 import { ProfessionalSummarySection } from "@/components/provider-profile-forms/professional-summary-section";
 import { CredentialsSection } from "@/components/provider-profile-forms/credentials-section";
 import toast from "react-hot-toast";
-import { getCurrentUser } from "aws-amplify/auth";
+import { getCurrentUser, fetchUserAttributes } from "aws-amplify/auth";
+import { generateClient } from "aws-amplify/data";
+import type { Schema } from "@/../amplify/data/resource";
 import {
-    getProviderProfile,
-    updateProviderProfile,
-    transformFormDataToProfile,
-    type ProviderProfileData
+    mapExperienceToFloat,
 } from "@/actions/providerProfileActions";
 import {
     CompleteProfileFormData,
     SectionCompletionState,
     SectionKey,
-    PersonalContactData,
-    AddressData,
-    EmergencyContactData,
-    ProfessionalSummaryData,
-    CredentialsData,
-    EducationEntry,
-    CertificationEntry,
-    WorkExperienceEntry
 } from "@/types/provider-profile-form";
 import { SECTION_VALIDATORS } from "@/utils/profile-form-config";
 import { useFormAutoSave } from "@/hooks/useFormAutoSave";
 import { useNavigationGuard } from "@/hooks/useNavigationGuard";
 
-
+const client = generateClient<Schema>();
 
 export default function CompleteProviderProfile() {
     const [showMobileSidebar, setShowMobileSidebar] = useState(false);
@@ -41,7 +32,6 @@ export default function CompleteProviderProfile() {
     const [activeSection, setActiveSection] = useState("personal-contact");
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
-    const [existingProfile, setExistingProfile] = useState<ProviderProfileData | null>(null);
     const [currentUser, setCurrentUser] = useState<any>(null);
     const [visitedSections, setVisitedSections] = useState<Set<string>>(new Set(["personal-contact"]));
 
@@ -68,91 +58,52 @@ export default function CompleteProviderProfile() {
         "credentials"
     ];
 
-    // Load existing profile data on mount
+    // Load user data and auto-saved form data on mount
     useEffect(() => {
-        const loadProfileData = async () => {
+        const loadData = async () => {
             try {
                 setIsLoading(true);
 
-                // Get current user
+                // Get current user and user attributes
                 const user = await getCurrentUser();
+                const userAttributes = await fetchUserAttributes();
                 setCurrentUser(user);
                 console.log("Current user:", user);
-
-                // Try to load existing provider profile first
-                let profileFromDB = null;
-                if (user?.userId) {
-                    profileFromDB = await getProviderProfile(user.userId);
-                    console.log("Existing profile:", profileFromDB);
-
-                    if (profileFromDB) {
-                        setExistingProfile(profileFromDB);
-                    }
-                }
+                console.log("User attributes:", userAttributes);
 
                 // Try to load auto-saved data
                 const autoSavedData = loadFromStorage();
 
                 if (autoSavedData) {
-                    console.log("Loading auto-saved form data - this takes priority");
+                    console.log("Loading auto-saved form data");
                     setFormData(autoSavedData as CompleteProfileFormData);
                     toast.success("Restored your previous progress!", { duration: 3000 });
-                } else if (profileFromDB) {
-                    console.log("No auto-saved data found, using profile from database");
-                    // Only populate from database if no auto-saved data exists
-                    setFormData({
+                } else {
+                    console.log("No auto-saved data found, starting fresh");
+                    // Pre-populate with user's basic info from Cognito if available
+                    setFormData(prev => ({
+                        ...prev,
                         "personal-contact": {
-                            firstName: profileFromDB.firstName || "",
-                            lastName: profileFromDB.lastName || "",
-                            dob: profileFromDB.dob || "",
-                            gender: profileFromDB.gender || "",
-                            languages: profileFromDB.languages || [],
-                            phone: profileFromDB.phone || "",
-                            email: profileFromDB.email || "",
-                            preferredContact: profileFromDB.preferredContact || "",
-                            profilePhoto: profileFromDB.profilePhoto || "",
-                        },
-                        address: {
-                            address: profileFromDB.address || "",
-                            city: profileFromDB.city || "",
-                            province: profileFromDB.province || "",
-                            postalCode: profileFromDB.postalCode || "",
-                        },
-                        "emergency-contact": {
-                            contactFirstName: profileFromDB.emergencyContactName ? profileFromDB.emergencyContactName.split(' ')[0] : '',
-                            contactLastName: profileFromDB.emergencyContactName ? profileFromDB.emergencyContactName.split(' ').slice(1).join(' ') : '',
-                            contactPhone: profileFromDB.emergencyContactPhone || "",
-                            relationship: profileFromDB.emergencyContactRelationship || "",
-                        },
-                        "professional-summary": {
-                            profileTitle: profileFromDB.profileTitle || "",
-                            bio: profileFromDB.bio || "",
-                            yearsExperience: profileFromDB.yearsExperience || "",
-                            askingRate: profileFromDB.askingRate || "",
-                            rateType: profileFromDB.rateType || "",
-                            responseTime: profileFromDB.responseTime || "",
-                            servicesOffered: profileFromDB.servicesOffered || [],
-                        },
-                        credentials: {
-                            education: profileFromDB.education || [],
-                            certifications: profileFromDB.certifications || [],
-                            workExperience: profileFromDB.workExperience || [],
-                        },
-                    });
+                            ...prev["personal-contact"],
+                            firstName: userAttributes.given_name || "",
+                            lastName: userAttributes.family_name || "",
+                            email: userAttributes.email || user?.signInDetails?.loginId || "",
+                        }
+                    }));
                 }
             } catch (error) {
-                console.error("Error loading profile data:", error);
-                toast.error("Failed to load existing profile data");
+                console.error("Error loading data:", error);
+                toast.error("Failed to load user data");
             } finally {
                 setIsLoading(false);
             }
         };
 
-        loadProfileData();
+        loadData();
     }, []);
 
     // Auto-save functionality
-    const { loadFromStorage, clearAutoSave } = useFormAutoSave(formData, !existingProfile?.isProfileComplete);
+    const { loadFromStorage, clearAutoSave } = useFormAutoSave(formData, true);
 
     // Navigation guard to warn about unsaved changes
     const hasUnsavedChanges = Object.values(sectionCompletion).some(s => s.progress > 0 && !s.completed);
@@ -236,38 +187,92 @@ export default function CompleteProviderProfile() {
         setIsSaving(true);
 
         try {
-            // Transform form data to database format
+            // Build input object directly for Amplify client
             const profileOwner = `${currentUser.userId}::${currentUser.username}`;
-            const profileData = transformFormDataToProfile(formData, currentUser.userId, profileOwner);
 
-            // Set profile as complete
-            profileData.isProfileComplete = true;
-            profileData.isPubliclyVisible = true;
+            // Get data from form sections
+            const personalContact = formData["personal-contact"];
+            const address = formData.address;
+            const emergencyContact = formData["emergency-contact"];
+            const professionalSummary = formData["professional-summary"];
+            const credentials = formData.credentials;
 
-            console.log("Updating profile data:", profileData);
+            // Combine emergency contact name
+            const emergencyContactName = emergencyContact?.contactFirstName && emergencyContact?.contactLastName
+                ? `${emergencyContact.contactFirstName} ${emergencyContact.contactLastName}`
+                : undefined;
 
-            if (!existingProfile?.id) {
-                throw new Error("No existing profile found. Please try refreshing the page.");
+            // Parse asking rate to number
+            const askingRate = professionalSummary?.askingRate ? parseFloat(professionalSummary.askingRate) : undefined;
+
+            // Map experience to float
+            const yearExperienceFloat = professionalSummary?.yearsExperience
+                ? mapExperienceToFloat(professionalSummary.yearsExperience)
+                : undefined;
+
+            const input = {
+                userId: currentUser.userId,
+                profileOwner,
+                // Personal & Contact Information
+                firstName: personalContact?.firstName,
+                lastName: personalContact?.lastName,
+                firstNameLower: personalContact?.firstName?.toLowerCase(),
+                lastNameLower: personalContact?.lastName?.toLowerCase(),
+                dob: personalContact?.dob,
+                gender: personalContact?.gender,
+                languages: personalContact?.languages || [],
+                phone: personalContact?.phone,
+                email: personalContact?.email,
+                preferredContact: personalContact?.preferredContact,
+                profilePhoto: personalContact?.profilePhoto,
+                // Address Information
+                address: address?.address,
+                city: address?.city,
+                province: address?.province,
+                postalCode: address?.postalCode,
+                // Emergency Contact
+                emergencyContactName,
+                emergencyContactPhone: emergencyContact?.contactPhone,
+                emergencyContactRelationship: emergencyContact?.relationship,
+                // Professional Summary
+                profileTitle: professionalSummary?.profileTitle,
+                bio: professionalSummary?.bio,
+                yearsExperience: professionalSummary?.yearsExperience,
+                yearExperienceFloat,
+                askingRate,
+                rateType: professionalSummary?.rateType,
+                responseTime: professionalSummary?.responseTime,
+                servicesOffered: professionalSummary?.servicesOffered || [],
+                // Credentials (as JSON strings)
+                education: credentials?.education?.length ? JSON.stringify(credentials.education) : null,
+                certifications: credentials?.certifications?.length ? JSON.stringify(credentials.certifications) : null,
+                workExperience: credentials?.workExperience?.length ? JSON.stringify(credentials.workExperience) : null,
+                // Profile status
+                isProfileComplete: true,
+                isPubliclyVisible: true,
+            };
+
+            console.log("Creating ProviderProfile with input:", input);
+
+            // Create the ProviderProfile 
+            const result = await client.models.ProviderProfile.create(input as any);
+
+            if (result.errors) {
+                console.error("Error creating ProviderProfile:", result.errors);
+                toast.error("Failed to complete profile. Please try again.");
+                return;
             }
 
-            // Always update the existing profile
-            const result = await updateProviderProfile(existingProfile.id, profileData);
+            console.log("ProviderProfile created successfully:", result.data);
+            setSubmitSuccess(true);
 
-            if (result) {
-                setExistingProfile(result);
-                setSubmitSuccess(true);
+            // Clear auto-saved data since profile is now complete
+            clearAutoSave();
 
-                // Clear auto-saved data since profile is now complete
-                clearAutoSave();
-
-                toast.success("Provider profile completed successfully!");
-                console.log("Profile completed successfully:", result);
-            } else {
-                throw new Error("Failed to update profile");
-            }
+            toast.success("Provider profile completed successfully!");
 
         } catch (error) {
-            console.error("Error updating profile:", error);
+            console.error("Error creating profile:", error);
             toast.error("Failed to save profile. Please try again.");
         } finally {
             setIsSaving(false);

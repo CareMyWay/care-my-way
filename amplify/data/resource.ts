@@ -124,7 +124,6 @@ const schema = a
 
         // Profile completion status
         isProfileComplete: a.boolean().default(false),
-        lastUpdated: a.timestamp(),
 
         // Public visibility settings
         isPubliclyVisible: a.boolean().default(true),

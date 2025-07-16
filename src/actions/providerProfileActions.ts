@@ -290,6 +290,5 @@ export function transformFormDataToProfile(formData: any, userId: string, profil
         // Profile completion status
         isProfileComplete: false, // Will be set to true when submitting
         isPubliclyVisible: false, // Will be set to true when submitting
-        lastUpdated: new Date().toISOString(),
     };
 } 
