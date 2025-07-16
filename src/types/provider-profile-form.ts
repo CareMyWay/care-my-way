@@ -42,7 +42,7 @@ export interface ProfessionalSummaryData {
     profileTitle?: string;
     bio?: string;
     yearsExperience?: string;
-    askingRate?: string;
+    askingRate?: string; // Input as string in form, converted to number in database
     rateType?: string;
     responseTime?: string;
     servicesOffered?: string[];

@@ -84,6 +84,9 @@ const schema = a
         // Personal & Contact Information
         firstName: a.string(),
         lastName: a.string(),
+        // Lowercase versions for case-insensitive search
+        firstNameLower: a.string(),
+        lastNameLower: a.string(),
         dob: a.date(),
         gender: a.string(),
         languages: a.string().array(), // Array of language names
@@ -107,7 +110,9 @@ const schema = a
         profileTitle: a.string(),
         bio: a.string(),
         yearsExperience: a.string(),
-        askingRate: a.string(),
+        // Numeric representation for filtering and sorting
+        yearExperienceFloat: a.float(),
+        askingRate: a.float(),
         rateType: a.string(),
         responseTime: a.string(),
         servicesOffered: a.string().array(), // Array of service names
@@ -127,7 +132,11 @@ const schema = a
       .secondaryIndexes((index) => [
         index("userId"),
         index("city"),
-        index("province")
+        index("province"),
+        index("yearExperienceFloat"), // Add index for experience filtering
+        index("askingRate"), // Add index for rate filtering
+        index("firstNameLower"), // Add index for name searching
+        index("lastNameLower"), // Add index for name searching
       ])
       .authorization((allow) => [
         // Provider owns their profile - full access

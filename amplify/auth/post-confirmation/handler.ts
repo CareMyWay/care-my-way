@@ -87,16 +87,25 @@ export const handler: PostConfirmationTriggerHandler = async (event) => {
     console.log("Creating ProviderProfile for Provider user:", event.request.userAttributes.sub);
 
     try {
+      const firstName = event.request.userAttributes.given_name || "";
+      const lastName = event.request.userAttributes.family_name || "";
+
       const providerProfileData = {
         userId: event.request.userAttributes.sub,
         profileOwner: `${event.request.userAttributes.sub}::${event.userName}`,
-        firstName: event.request.userAttributes.given_name || "",
-        lastName: event.request.userAttributes.family_name || "",
+        firstName,
+        lastName,
+        // Add lowercase versions for case-insensitive search
+        firstNameLower: firstName.toLowerCase(),
+        lastNameLower: lastName.toLowerCase(),
         email: event.request.userAttributes.email,
         isProfileComplete: false,
         isPubliclyVisible: false,
         languages: [],
         servicesOffered: [],
+        // Initialize numeric fields
+        yearExperienceFloat: null,
+        askingRate: null,
         education: null,
         certifications: null,
         workExperience: null,

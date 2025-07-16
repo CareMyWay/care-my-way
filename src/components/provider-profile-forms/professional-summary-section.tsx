@@ -12,7 +12,14 @@ const professionalSummarySchema = z.object({
     profileTitle: z.string().min(1, "Profile title is required"),
     bio: z.string().min(10, "Bio must be at least 10 characters").max(500, "Bio must be 500 characters or less"),
     yearsExperience: z.string().min(1, "Years of experience is required"),
-    askingRate: z.string().min(1, "Asking rate is required"),
+    askingRate: z.string()
+        .min(1, "Asking rate is required")
+        .refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0, {
+            message: "Asking rate must be a valid positive number"
+        })
+        .refine((val) => parseFloat(val) >= 1 && parseFloat(val) <= 10000, {
+            message: "Asking rate must be between $1 and $10000"
+        }),
     rateType: z.string().min(1, "Rate type is required"),
     responseTime: z.string().min(1, "Response time is required"),
     servicesOffered: z.array(z.string()).min(1, "At least one service must be selected"),

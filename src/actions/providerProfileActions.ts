@@ -3,12 +3,27 @@ import type { Schema } from "../../amplify/data/resource";
 
 const client = generateClient<Schema>();
 
+// Experience mapping for filtering
+export function mapExperienceToFloat(yearsExperience: string): number {
+    const mapping: { [key: string]: number } = {
+        "Less than 1 year": 0.5,
+        "1-2 years": 1.5,
+        "3-5 years": 3.5,
+        "5+ years": 5.5,
+    };
+
+    return mapping[yearsExperience] || 0;
+}
+
 export type ProviderProfileData = {
     id?: string;
     userId: string;
     profileOwner: string;
     firstName?: string;
     lastName?: string;
+    // Lowercase versions for case-insensitive search
+    firstNameLower?: string;
+    lastNameLower?: string;
     dob?: string;
     gender?: string;
     languages?: string[];
@@ -26,7 +41,9 @@ export type ProviderProfileData = {
     profileTitle?: string;
     bio?: string;
     yearsExperience?: string;
-    askingRate?: string;
+    // Numeric representation for filtering and sorting
+    yearExperienceFloat?: number;
+    askingRate?: number;
     rateType?: string;
     responseTime?: string;
     servicesOffered?: string[];
@@ -102,8 +119,18 @@ export async function updateProviderProfile(profileId: string, profileData: Part
         };
 
         // Only include defined fields to avoid overwriting with undefined
-        if (profileData.firstName !== undefined) updateInput.firstName = profileData.firstName;
-        if (profileData.lastName !== undefined) updateInput.lastName = profileData.lastName;
+        if (profileData.firstName !== undefined) {
+            updateInput.firstName = profileData.firstName;
+            // Auto-calculate lowercase version
+            updateInput.firstNameLower = profileData.firstName?.toLowerCase();
+        }
+        if (profileData.lastName !== undefined) {
+            updateInput.lastName = profileData.lastName;
+            // Auto-calculate lowercase version
+            updateInput.lastNameLower = profileData.lastName?.toLowerCase();
+        }
+        if (profileData.firstNameLower !== undefined) updateInput.firstNameLower = profileData.firstNameLower;
+        if (profileData.lastNameLower !== undefined) updateInput.lastNameLower = profileData.lastNameLower;
         if (profileData.dob !== undefined) updateInput.dob = profileData.dob;
         if (profileData.gender !== undefined) updateInput.gender = profileData.gender;
         if (profileData.languages !== undefined) updateInput.languages = profileData.languages;
@@ -120,7 +147,12 @@ export async function updateProviderProfile(profileId: string, profileData: Part
         if (profileData.emergencyContactRelationship !== undefined) updateInput.emergencyContactRelationship = profileData.emergencyContactRelationship;
         if (profileData.profileTitle !== undefined) updateInput.profileTitle = profileData.profileTitle;
         if (profileData.bio !== undefined) updateInput.bio = profileData.bio;
-        if (profileData.yearsExperience !== undefined) updateInput.yearsExperience = profileData.yearsExperience;
+        if (profileData.yearsExperience !== undefined) {
+            updateInput.yearsExperience = profileData.yearsExperience;
+            // Auto-calculate float version for filtering
+            updateInput.yearExperienceFloat = mapExperienceToFloat(profileData.yearsExperience);
+        }
+        if (profileData.yearExperienceFloat !== undefined) updateInput.yearExperienceFloat = profileData.yearExperienceFloat;
         if (profileData.askingRate !== undefined) updateInput.askingRate = profileData.askingRate;
         if (profileData.rateType !== undefined) updateInput.rateType = profileData.rateType;
         if (profileData.responseTime !== undefined) updateInput.responseTime = profileData.responseTime;
@@ -205,12 +237,21 @@ export function transformFormDataToProfile(formData: any, userId: string, profil
     const certifications = cleanCredentialsData(formData.credentials?.certifications);
     const workExperience = cleanCredentialsData(formData.credentials?.workExperience);
 
+    // Calculate derived fields for marketplace filtering
+    const firstName = formData['personal-contact']?.firstName;
+    const lastName = formData['personal-contact']?.lastName;
+    const yearsExperience = formData['professional-summary']?.yearsExperience;
+    const askingRateStr = formData['professional-summary']?.askingRate;
+
     return {
         userId,
         profileOwner,
         // Personal & Contact Information
-        firstName: formData['personal-contact']?.firstName,
-        lastName: formData['personal-contact']?.lastName,
+        firstName,
+        lastName,
+        // Lowercase versions for case-insensitive search
+        firstNameLower: firstName?.toLowerCase(),
+        lastNameLower: lastName?.toLowerCase(),
         dob: formData['personal-contact']?.dob,
         gender: formData['personal-contact']?.gender,
         languages: formData['personal-contact']?.languages,
@@ -233,8 +274,10 @@ export function transformFormDataToProfile(formData: any, userId: string, profil
         // Professional Summary
         profileTitle: formData['professional-summary']?.profileTitle,
         bio: formData['professional-summary']?.bio,
-        yearsExperience: formData['professional-summary']?.yearsExperience,
-        askingRate: formData['professional-summary']?.askingRate,
+        yearsExperience,
+        // Numeric representation for filtering and sorting
+        yearExperienceFloat: yearsExperience ? mapExperienceToFloat(yearsExperience) : undefined,
+        askingRate: askingRateStr ? parseFloat(askingRateStr) : undefined,
         rateType: formData['professional-summary']?.rateType,
         responseTime: formData['professional-summary']?.responseTime,
         servicesOffered: formData['professional-summary']?.servicesOffered,
