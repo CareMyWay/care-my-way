@@ -29,7 +29,7 @@ export function ProfileIncompletePrompt() {
                                 <div className="flex items-start justify-center">
                                     <AlertCircle className="h-6 w-6 text-blue-600 mt-1 mr-4 flex-shrink-0" />
                                     <div className="text-left">
-                                        <h4 className="font-semibold text-blue-900 text-lg mb-3">What you'll add:</h4>
+                                        <h4 className="font-semibold text-blue-900 text-lg mb-3">What you&apos;ll add:</h4>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-blue-800">
                                             <div className="flex items-center">
                                                 <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>

@@ -4,6 +4,33 @@ import { BookOpen, Award, Briefcase, Calendar, Building, GraduationCap } from "l
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-dashboard-ui/card";
 import { type ProviderProfileData } from "@/actions/providerProfileActions";
 
+// Types for credential entries
+interface EducationEntry {
+    institution?: string;
+    degree?: string;
+    fieldOfStudy?: string;
+    graduationYear?: string;
+    documents?: string[];
+}
+
+interface CertificationEntry {
+    certificationName?: string;
+    issuingOrganization?: string;
+    issueDate?: string;
+    expiryDate?: string;
+    licenseNumber?: string;
+    documents?: string[];
+}
+
+interface WorkExperienceEntry {
+    employer?: string;
+    jobTitle?: string;
+    startDate?: string;
+    endDate?: string;
+    description?: string;
+    documents?: string[];
+}
+
 interface ProfileCredentialsProps {
     profileData: ProviderProfileData;
 }
@@ -24,7 +51,7 @@ export function ProfileCredentials({ profileData }: ProfileCredentialsProps) {
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6 space-y-5">
-                        {profileData.education.map((edu: any, index: number) => (
+                        {profileData.education.map((edu: EducationEntry, index: number) => (
                             <div key={index} className="relative pl-6 pb-4 border-l-4 border-indigo-200 last:pb-0">
                                 <div className="absolute -left-2 top-0 w-4 h-4 bg-indigo-500 rounded-full border-2 border-white"></div>
 
@@ -68,7 +95,7 @@ export function ProfileCredentials({ profileData }: ProfileCredentialsProps) {
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6 space-y-5">
-                        {profileData.certifications.map((cert: any, index: number) => (
+                        {profileData.certifications.map((cert: CertificationEntry, index: number) => (
                             <div key={index} className="relative pl-6 pb-4 border-l-4 border-emerald-200 last:pb-0">
                                 <div className="absolute -left-2 top-0 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white"></div>
 
@@ -123,7 +150,7 @@ export function ProfileCredentials({ profileData }: ProfileCredentialsProps) {
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6 space-y-5">
-                        {profileData.workExperience.map((work: any, index: number) => (
+                        {profileData.workExperience.map((work: WorkExperienceEntry, index: number) => (
                             <div key={index} className="relative pl-6 pb-4 border-l-4 border-blue-200 last:pb-0">
                                 <div className="absolute -left-2 top-0 w-4 h-4 bg-blue-500 rounded-full border-2 border-white"></div>
 

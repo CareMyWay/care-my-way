@@ -16,7 +16,9 @@ const emergencyContactSchema = z.object({
     relationship: z.string().min(1, "Relationship is required"),
 });
 
-interface EmergencyContactSectionProps extends BaseFormSectionProps<EmergencyContactData> { }
+interface EmergencyContactSectionProps extends BaseFormSectionProps<EmergencyContactData> {
+    // Props are inherited from BaseFormSectionProps
+}
 
 // Common relationship options
 const relationshipOptions = [

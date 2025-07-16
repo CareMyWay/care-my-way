@@ -42,7 +42,9 @@ const credentialsSchema = z.object({
     workExperience: z.array(workExperienceEntrySchema).optional(),
 });
 
-interface CredentialsSectionProps extends BaseFormSectionProps<CredentialsData> { }
+interface CredentialsSectionProps extends BaseFormSectionProps<CredentialsData> {
+    // Props are inherited from BaseFormSectionProps
+}
 
 // Graduation year options (last 50 years)
 const currentYear = new Date().getFullYear();

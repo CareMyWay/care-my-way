@@ -17,7 +17,9 @@ const addressSchema = z.object({
     ),
 });
 
-interface AddressSectionProps extends BaseFormSectionProps<AddressData> { }
+interface AddressSectionProps extends BaseFormSectionProps<AddressData> {
+    // Props are inherited from BaseFormSectionProps
+}
 
 // Canadian provinces and territories
 const canadianProvinces = [

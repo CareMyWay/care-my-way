@@ -4,6 +4,7 @@
 import { useState, useEffect } from "react";
 import { z } from "zod";
 import ISO6391 from "iso-639-1";
+import Image from "next/image";
 import { useFormSection } from "@/hooks/useFormSection";
 import { FormSectionHeader } from "./form-section-header";
 import { PersonalContactData, BaseFormSectionProps } from "@/types/provider-profile-form";
@@ -23,7 +24,9 @@ const personalContactSchema = z.object({
     profilePhoto: z.string().optional(),
 });
 
-interface PersonalContactSectionProps extends BaseFormSectionProps<PersonalContactData> { }
+interface PersonalContactSectionProps extends BaseFormSectionProps<PersonalContactData> {
+    // Props are inherited from BaseFormSectionProps
+}
 
 // Get comprehensive list of languages from ISO 639-1 standard
 const availableLanguages = [...ISO6391.getAllNames().sort(), "Other"];
@@ -389,9 +392,11 @@ export function PersonalContactSection({
                             {/* Photo Preview */}
                             <div className="flex-shrink-0">
                                 {profilePhotoPreview ? (
-                                    <img
+                                    <Image
                                         src={profilePhotoPreview}
                                         alt="Profile preview"
+                                        width={80}
+                                        height={80}
                                         className="w-20 h-20 rounded-full object-cover border-2 border-gray-200"
                                     />
                                 ) : (

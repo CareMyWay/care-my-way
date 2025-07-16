@@ -75,8 +75,7 @@ export default function CompleteProviderProfile() {
             console.log("Loaded auto-saved form data from", new Date(parsed.timestamp).toLocaleTimeString());
 
             // Remove timestamp before returning
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { timestamp, ...formData } = parsed;
+            const { timestamp: _, ...formData } = parsed;
             return formData;
         } catch (error) {
             console.warn("Failed to load auto-saved form data:", error);

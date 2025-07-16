@@ -25,7 +25,9 @@ const professionalSummarySchema = z.object({
     servicesOffered: z.array(z.string()).min(1, "At least one service must be selected"),
 });
 
-interface ProfessionalSummarySectionProps extends BaseFormSectionProps<ProfessionalSummaryData> { }
+interface ProfessionalSummarySectionProps extends BaseFormSectionProps<ProfessionalSummaryData> {
+    // Props are inherited from BaseFormSectionProps
+}
 
 // Healthcare services imported from utils
 

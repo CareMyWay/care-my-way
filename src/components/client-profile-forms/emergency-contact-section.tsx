@@ -99,7 +99,7 @@ export function EmergencyContactSection({
       setValue("supportRelationship", "");
       setValue("supportPhone", "");
     }
-  }, [sameAsEmergency]);
+  }, [sameAsEmergency, setValue, watchedFields.contactFirstName, watchedFields.contactLastName, watchedFields.relationship, watchedFields.contactPhone]);
 
   return (
     <div className="h-full bg-white rounded-lg border shadow-sm overflow-hidden">
@@ -107,11 +107,10 @@ export function EmergencyContactSection({
         {/* Header */}
         <div className="mb-6 flex items-center gap-3">
           <div
-            className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-bold ${
-              isCompleted
+            className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-bold ${isCompleted
                 ? "border-green-500 bg-green-500 text-white"
                 : "border-[#4A9B9B] bg-[#4A9B9B] text-white"
-            }`}
+              }`}
           >
             {isCompleted ? (
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">

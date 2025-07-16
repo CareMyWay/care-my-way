@@ -19,7 +19,7 @@ export function ProfileMain() {
     const [profileData, setProfileData] = useState<ProviderProfileData | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [currentUser, setCurrentUser] = useState<any>(null);
+    const [, setCurrentUser] = useState<{ userId: string; username?: string } | null>(null);
 
     useEffect(() => {
         const loadProfileData = async () => {
