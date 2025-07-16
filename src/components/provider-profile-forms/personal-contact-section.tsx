@@ -24,9 +24,7 @@ const personalContactSchema = z.object({
     profilePhoto: z.string().optional(),
 });
 
-interface PersonalContactSectionProps extends BaseFormSectionProps<PersonalContactData> {
-    // Props are inherited from BaseFormSectionProps
-}
+type PersonalContactSectionProps = BaseFormSectionProps<PersonalContactData>;
 
 // Get comprehensive list of languages from ISO 639-1 standard
 const availableLanguages = [...ISO6391.getAllNames().sort(), "Other"];

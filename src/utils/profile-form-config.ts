@@ -86,16 +86,16 @@ export const FORM_SECTIONS: FormSectionConfig[] = [
 
 // Validation function factory
 export function createSectionValidator(sectionKey: SectionKey) {
-    return (sectionData: Record<string, unknown>, visitedSections?: Set<string>): ValidationResult => {
+    return (data: Record<string, unknown>, visitedSections?: Set<string>): ValidationResult => {
         // Handle optional credentials section
         if (sectionKey === "credentials") {
             const hasVisited = visitedSections?.has("credentials") ?? false;
-            return validateOptionalSection(hasVisited, sectionData);
+            return validateOptionalSection(hasVisited, data);
         }
 
         // Handle regular required sections
         const requiredFields = SECTION_REQUIRED_FIELDS[sectionKey];
-        return validateRequiredFields(sectionData, requiredFields);
+        return validateRequiredFields(data, requiredFields);
     };
 }
 
@@ -105,5 +105,5 @@ export const SECTION_VALIDATORS = Object.keys(SECTION_REQUIRED_FIELDS).reduce(
         validators[sectionKey as SectionKey] = createSectionValidator(sectionKey as SectionKey);
         return validators;
     },
-    {} as Record<SectionKey, (sectionData: Record<string, unknown>, visitedSections?: Set<string>) => ValidationResult>
+    {} as Record<SectionKey, (data: Record<string, unknown>, visitedSections?: Set<string>) => ValidationResult>
 ); 

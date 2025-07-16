@@ -6,7 +6,7 @@ import { z } from "zod";
 interface UseFormSectionProps<T extends FieldValues> {
     schema: z.ZodSchema<T>;
     defaultValues?: Partial<T>;
-    onDataChange: (formData: T) => void;
+    onDataChange: (data: T) => void;
 }
 
 export function useFormSection<T extends FieldValues>({

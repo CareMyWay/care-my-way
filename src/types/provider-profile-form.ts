@@ -1,6 +1,6 @@
 // Base interface for all form sections
 export interface BaseFormSectionProps<T> {
-    onDataChange: (formData: T) => void;
+    onDataChange: (data: T) => void;
     isCompleted: boolean;
     defaultValues?: Partial<T>;
 }
