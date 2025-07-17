@@ -196,7 +196,6 @@ export default function CompleteClientProfile() {
       try {
         const currentUser = await getCurrentUser();
         const userId = currentUser?.userId;
-        console.log("UserId used in create:", userId);
 
         if (!userId) throw new Error("User is not authenticated");
 
