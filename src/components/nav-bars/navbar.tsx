@@ -181,7 +181,7 @@ export default function NavBar() {
     { href: "/", label: "Home" },
     { href: "/marketplace", label: "Healthcare Directory" },
     { href: "/client-dashboard", label: "My Dashboard", loggedIn: true },
-    // { href: "/settings", label: "Settings", loggedIn: true },
+    { href: "/client-dashboard/profile", label: "My Profile", loggedIn: true },
   ];
 
   const routes = defaultRoutes.filter(
