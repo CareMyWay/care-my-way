@@ -29,12 +29,13 @@ import {
   // Trash2,
   // Edit,
 } from "lucide-react";
+import ProfileNotComplete from "./profile-not-complete";
 
 const client = generateClient<Schema>();
 
 export default function CompletedClientProfile() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("account-settings");
+  const [activeSection, setActiveSection] = useState("personal-info");
 
   const [profile, setProfile] = useState<
     Schema["ClientProfile"]["type"] | null
@@ -101,16 +102,13 @@ export default function CompletedClientProfile() {
     loadProfile();
   }, []);
 
-  if (loading)
-    return (
-      <div className="text-darkest-green text-3xl justify-center items-center">
-        Loading profile...
-      </div>
-    );
+  if (loading) return <Loading />;
   if (error || !profile)
     return (
-      <div className="text-red-600 p-4">{error || "Profile not found."}</div>
+      <div className="text-red-600 p-4">{error || <ProfileNotComplete />}</div>
     );
+  if (!profile)
+    return <div className="text-red-600 p-4">{<ProfileNotComplete />}</div>;
 
   const navigationItems = [
     {
@@ -135,32 +133,33 @@ export default function CompletedClientProfile() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="flex max-w-7xl mx-auto">
-        {/* Sidebar */}
-        <aside
-          className={`
-          fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-200 ease-in-out
-          ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
-        `}
-        >
-          <div className="p-4 pt-20 lg:pt-4">
-            {navigationItems.map((section) => (
-              <div key={section.category} className="mb-6">
-                <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
-                  {section.category}
-                </h3>
-                <nav className="space-y-1">
-                  {section.items.map((item) => {
-                    const Icon = item.icon;
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => {
-                          setActiveSection(item.id);
-                          setSidebarOpen(false);
-                        }}
-                        className={`
+    <div className="min-h-screen flex">
+      {/* Sidebar */}
+      <aside
+        className={`
+    fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 
+    transform transition-transform duration-200 ease-in-out
+    flex flex-col
+    ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+  `}
+      >
+        <div className="p-4 pt-20 lg:pt-4">
+          {navigationItems.map((section) => (
+            <div key={section.category} className="mb-6">
+              <h3 className="text-xs font-semibold text-darkest-green uppercase tracking-wider mb-3">
+                {section.category}
+              </h3>
+              <nav className="space-y-1">
+                {section.items.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        setActiveSection(item.id);
+                        setSidebarOpen(false);
+                      }}
+                      className={`
                           w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-colors
                           ${
                             activeSection === item.id
@@ -168,29 +167,28 @@ export default function CompletedClientProfile() {
                               : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                           }
                         `}
-                      >
-                        <Icon className="h-4 w-4" />
-                        {item.label}
-                      </button>
-                    );
-                  })}
-                </nav>
-              </div>
-            ))}
-          </div>
-        </aside>
-        {/* Overlay for mobile */}
-        {sidebarOpen && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
-        {/* Main Content */}
-        <main className="flex-1 p-4 lg:p-6">
-          {renderContent(activeSection, profile)}
-        </main>{" "}
-      </div>
+                    >
+                      <Icon className="h-4 w-4" />
+                      {item.label}
+                    </button>
+                  );
+                })}
+              </nav>
+            </div>
+          ))}
+        </div>
+      </aside>
+      {/* Overlay for mobile */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      {/* Main Content */}
+      <main className="flex-1 p-4 lg:p-6 overflow-y-auto">
+        {renderContent(activeSection, profile)}
+      </main>{" "}
     </div>
   );
 }
@@ -211,63 +209,10 @@ function renderContent(
   }
 }
 
-// function PersonalInfoContent({
-//   profile,
-// }: {
-//   profile: Schema["ClientProfile"]["type"];
-// }) {
-//   return (
-//     <div className="space-y-6">
-//       <h1 className="text-2xl font-bold text-darkest-green">
-//         Profile Information
-//       </h1>
-//       <Card>
-//         <CardHeader>
-//           <CardTitle>Personal Details</CardTitle>
-//         </CardHeader>
-//         <CardContent className="space-y-6">
-//           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-//             <div className="space-y-2">
-//               <Label htmlFor="firstName">First Name</Label>
-//               <Input id="firstName" defaultValue={profile.firstName ?? ""} />
-//             </div>
-//             <div className="space-y-2">
-//               <Label htmlFor="lastName">Last Name</Label>
-//               <Input id="lastName" defaultValue={profile.lastName ?? ""} />
-//             </div>
-//           </div>
-//           <div className="space-y-2">
-//             <Label htmlFor="email">Email</Label>
-//             <Input id="email" type="email" defaultValue={profile.email ?? ""} />
-//           </div>
-//           <div className="space-y-2">
-//             <Label htmlFor="email">Phone Number</Label>
-//             <Input id="phoneNumber" defaultValue={profile.phoneNumber ?? ""} />
-//           </div>
-//           <div>
-//             <Label htmlFor="dateOfBirth">Date of Birth</Label>
-//             <Input
-//               id="date"
-//               type="date"
-//               defaultValue={profile.dateOfBirth ?? ""}
-//             />
-//           </div>
-//           <div>
-//             <Label htmlFor="gender">Gender</Label>
-//             <Input
-//               id="gender"
-//               type="gender"
-//               defaultValue={profile.gender ?? ""}
-//             />
-//           </div>
-//         </CardContent>
-//       </Card>
-//     </div>
-//   );
-// }
-
 import OrangeButton from "@/components/buttons/orange-button";
 import { Button } from "@/components/ui/button";
+import Loading from "../ui/loading";
+
 function PersonalInfoContent({
   profile,
 }: {
@@ -408,6 +353,40 @@ function AddressInfoContent({
 }: {
   profile: Schema["ClientProfile"]["type"];
 }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    address: profile.address ?? "",
+    city: profile.city ?? "",
+    province: profile.province ?? "",
+    postalCode: profile.postalCode ?? "",
+  });
+
+  const handleChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleCancel = () => {
+    setFormData({
+      address: profile.address ?? "",
+      city: profile.city ?? "",
+      province: profile.province ?? "",
+      postalCode: profile.postalCode ?? "",
+    });
+    setIsEditing(false);
+  };
+
+  const handleSave = async () => {
+    try {
+      await client.models.ClientProfile.update({
+        id: profile.id,
+        ...formData,
+      });
+      setIsEditing(false);
+    } catch (err) {
+      console.error("Failed to update address", err);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-darkest-green">
@@ -415,28 +394,32 @@ function AddressInfoContent({
       </h1>
       <Card>
         <CardContent className="space-y-4 p-6">
-          <div>
-            <Label htmlFor="Address">Address</Label>
-            <Input defaultValue={profile.address ?? ""} placeholder="Address" />
-          </div>
-          <div>
-            <Label htmlFor="city">City</Label>
-            <Input defaultValue={profile.city ?? ""} placeholder="City" />
-          </div>
-          <div>
-            <Label htmlFor="province">Province</Label>
-            <Input
-              defaultValue={profile.province ?? ""}
-              placeholder="Province"
-            />
-          </div>
-          <div>
-            <Label htmlFor="PostalCode">Postal Code</Label>
-
-            <Input
-              defaultValue={profile.postalCode ?? ""}
-              placeholder="Postal Code"
-            />
+          {["address", "city", "province", "postalCode"].map((field) => (
+            <div key={field}>
+              <Label htmlFor={field}>{field.replace(/([A-Z])/g, " $1")}</Label>
+              <Input
+                id={field}
+                value={formData[field as keyof typeof formData]}
+                onChange={(e) => handleChange(field, e.target.value)}
+                disabled={!isEditing}
+              />
+            </div>
+          ))}
+          <div className="flex gap-2 mt-4">
+            {isEditing ? (
+              <>
+                <OrangeButton variant="action" onClick={handleSave}>
+                  Save
+                </OrangeButton>
+                <Button variant="ghost" onClick={handleCancel}>
+                  Cancel
+                </Button>
+              </>
+            ) : (
+              <OrangeButton variant="action" onClick={() => setIsEditing(true)}>
+                Edit
+              </OrangeButton>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -449,6 +432,46 @@ function EmergencySupportContent({
 }: {
   profile: Schema["ClientProfile"]["type"];
 }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    emergencyContactFirstName: profile.emergencyContactFirstName ?? "",
+    emergencyContactLastName: profile.emergencyContactLastName ?? "",
+    emergencyContactPhone: profile.emergencyContactPhone ?? "",
+    supportFirstName: profile.supportFirstName ?? "",
+    supportLastName: profile.supportLastName ?? "",
+    supportRelationship: profile.supportRelationship ?? "",
+    supportContactPhone: profile.supportContactPhone ?? "",
+  });
+
+  const handleChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleCancel = () => {
+    setFormData({
+      emergencyContactFirstName: profile.emergencyContactFirstName ?? "",
+      emergencyContactLastName: profile.emergencyContactLastName ?? "",
+      emergencyContactPhone: profile.emergencyContactPhone ?? "",
+      supportFirstName: profile.supportFirstName ?? "",
+      supportLastName: profile.supportLastName ?? "",
+      supportRelationship: profile.supportRelationship ?? "",
+      supportContactPhone: profile.supportContactPhone ?? "",
+    });
+    setIsEditing(false);
+  };
+
+  const handleSave = async () => {
+    try {
+      await client.models.ClientProfile.update({
+        id: profile.id,
+        ...formData,
+      });
+      setIsEditing(false);
+    } catch (err) {
+      console.error("Failed to update emergency/support contact", err);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-darkest-green">
@@ -462,57 +485,103 @@ function EmergencySupportContent({
           <div>
             <Label htmlFor="emergencyContactFirstName">First Name</Label>
             <Input
-              defaultValue={profile.emergencyContactFirstName ?? ""}
-              placeholder="First Name"
+              id="emergencyContactFirstName"
+              value={formData.emergencyContactFirstName}
+              onChange={(e) =>
+                handleChange("emergencyContactFirstName", e.target.value)
+              }
+              disabled={!isEditing}
             />
           </div>
           <div>
             <Label htmlFor="emergencyContactLastName">Last Name</Label>
             <Input
-              defaultValue={profile.emergencyContactLastName ?? ""}
-              placeholder="Last Name"
+              id="emergencyContactLastName"
+              value={formData.emergencyContactLastName}
+              onChange={(e) =>
+                handleChange("emergencyContactLastName", e.target.value)
+              }
+              disabled={!isEditing}
             />
           </div>
           <div>
-            <Label htmlFor="emergencyRelationship">Relationship</Label>
+            <Label htmlFor="emergencyContactPhone">Phone</Label>
             <Input
-              defaultValue={profile.emergencyContactPhone ?? ""}
-              placeholder="Phone"
+              id="emergencyContactPhone"
+              value={formData.emergencyContactPhone}
+              onChange={(e) =>
+                handleChange("emergencyContactPhone", e.target.value)
+              }
+              disabled={!isEditing}
             />
           </div>
+
           {profile.hasRepSupportPerson && (
             <>
               <h3 className="text-lg font-semibold mt-4">Support Person</h3>
               <div>
                 <Label htmlFor="supportFirstName">First Name</Label>
                 <Input
-                  defaultValue={profile.supportFirstName ?? ""}
-                  placeholder="First Name"
+                  id="supportFirstName"
+                  value={formData.supportFirstName}
+                  onChange={(e) =>
+                    handleChange("supportFirstName", e.target.value)
+                  }
+                  disabled={!isEditing}
                 />
               </div>
               <div>
                 <Label htmlFor="supportLastName">Last Name</Label>
                 <Input
-                  defaultValue={profile.supportLastName ?? ""}
-                  placeholder="Last Name"
+                  id="supportLastName"
+                  value={formData.supportLastName}
+                  onChange={(e) =>
+                    handleChange("supportLastName", e.target.value)
+                  }
+                  disabled={!isEditing}
                 />
               </div>
               <div>
                 <Label htmlFor="supportRelationship">Relationship</Label>
                 <Input
-                  defaultValue={profile.supportRelationship ?? ""}
-                  placeholder="Relationship"
+                  id="supportRelationship"
+                  value={formData.supportRelationship}
+                  onChange={(e) =>
+                    handleChange("supportRelationship", e.target.value)
+                  }
+                  disabled={!isEditing}
                 />
               </div>
               <div>
                 <Label htmlFor="supportContactPhone">Phone</Label>
                 <Input
-                  defaultValue={profile.supportContactPhone ?? ""}
-                  placeholder="Phone"
+                  id="supportContactPhone"
+                  value={formData.supportContactPhone}
+                  onChange={(e) =>
+                    handleChange("supportContactPhone", e.target.value)
+                  }
+                  disabled={!isEditing}
                 />
               </div>
             </>
           )}
+
+          <div className="flex gap-2 mt-4">
+            {isEditing ? (
+              <>
+                <OrangeButton variant="action" onClick={handleSave}>
+                  Save
+                </OrangeButton>
+                <Button variant="ghost" onClick={handleCancel}>
+                  Cancel
+                </Button>
+              </>
+            ) : (
+              <OrangeButton variant="action" onClick={() => setIsEditing(true)}>
+                Edit
+              </OrangeButton>
+            )}
+          </div>
         </CardContent>
       </Card>
     </div>
