@@ -121,6 +121,9 @@ const schema = a
         certifications: a.json(), // Array of certification objects
         workExperience: a.json(), // Array of work experience objects
 
+        // Availability
+        availability: a.string().array(), // "yyyy-mm-dd:HH24" (e.g., "2025-07-20:09" for July 20, 2025, at 9:00 AM).
+
         // Profile completion status
         isProfileComplete: a.boolean().default(false),
 
