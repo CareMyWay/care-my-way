@@ -11,7 +11,7 @@ export default function ProfileCompletedStatusPage() {
         </h1>
         <p className="text-gray-600 mb-6">
           Thank you for completing your profile. You can now view and manage
-          your information.
+          your profile information.
         </p>
         <Link
           href="/client-dashboard/profile"

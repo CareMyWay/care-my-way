@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-// import Link from "next/link";
 import { PersonalInfoSection } from "@/components/client-profile-forms/personal-info-section";
 import { AddressSection } from "@/components/client-profile-forms/address-section";
 import { EmergencyContactSection } from "@/components/client-profile-forms/emergency-contact-section";
@@ -49,7 +48,6 @@ type EmergencyContactData = {
 
 export default function CompleteClientProfile() {
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
-  // const [submitSuccess, setSubmitSuccess] = useState(false);
   const [activeSection, setActiveSection] = useState("personal-info");
   const [formData, setFormData] = useState({
     "personal-info": {},
@@ -245,7 +243,7 @@ export default function CompleteClientProfile() {
         }
 
         console.log("Form data saved:", result.data);
-        router.push("/client-dashboard/profile-completed"); //  Redirect here
+        router.push("/client-dashboard/profile-completed-status"); //  Redirect here
       } catch (error) {
         console.error("Submission error:", error);
         toast.error("Something went wrong!");
@@ -322,6 +320,7 @@ export default function CompleteClientProfile() {
                     isCompleted={
                       sectionCompletion["emergency-contact"].completed
                     }
+                    defaultValues={formData["emergency-contact"]}
                   />
                 )}
               </div>
@@ -393,17 +392,6 @@ export default function CompleteClientProfile() {
           </div>
         </div>
       </main>
-      {/* {submitSuccess && (
-        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white border border-green-300 text-green-800 px-6 py-4 rounded-lg shadow-md flex flex-col items-center gap-2 z-50">
-          <p className="font-semibold">🎉 Your profile has been completed!</p>
-          <Link
-            href="/client/dashboard"
-            className="mt-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm transition"
-          >
-            View your Profile
-          </Link>
-        </div>
-      )} */}
     </div>
   );
 }
