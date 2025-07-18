@@ -48,6 +48,7 @@ type EmergencyFormFields = z.infer<typeof emergencySchema>;
 interface EmergencyContactSectionProps {
   onDataChange: (data: EmergencyFormFields) => void;
   isCompleted: boolean;
+  defaultValues?: EmergencyFormFields;
 }
 
 // Common relationship options
@@ -65,6 +66,7 @@ const relationshipOptions = [
 export function EmergencyContactSection({
   onDataChange,
   isCompleted,
+  defaultValues,
 }: EmergencyContactSectionProps) {
   const {
     register,
@@ -73,8 +75,7 @@ export function EmergencyContactSection({
     formState: { errors },
   } = useForm<EmergencyFormFields>({
     mode: "onChange",
-    resolver: zodResolver(emergencySchema),
-    defaultValues: {
+    defaultValues: defaultValues || {
       contactFirstName: "",
       contactLastName: "",
       relationship: "",
@@ -85,6 +86,7 @@ export function EmergencyContactSection({
       supportRelationship: "",
       supportPhone: "",
     },
+    resolver: zodResolver(emergencySchema),
   });
 
   const [hasSupportPerson, setHasSupportPerson] = useState("");
@@ -92,6 +94,7 @@ export function EmergencyContactSection({
 
   const watchedFields = watch();
 
+  //Sync form changes with parent component
   useEffect(() => {
     const subscription = watch((value) => {
       onDataChange(value as EmergencyFormFields);
@@ -99,6 +102,7 @@ export function EmergencyContactSection({
     return () => subscription.unsubscribe();
   }, [watch, onDataChange]);
 
+  //Auto-full or clear support person field based on "Same as Emergency Contact" checkbox
   useEffect(() => {
     if (sameAsEmergency) {
       setValue("supportFirstName", watchedFields.contactFirstName);
@@ -112,6 +116,29 @@ export function EmergencyContactSection({
       setValue("supportPhone", "");
     }
   }, [sameAsEmergency]);
+
+  //Initialize hasSupportPerson toggle from default values
+  useEffect(() => {
+    if (
+      defaultValues?.supportPerson === "Yes"
+      // defaultValues?.supportPerson === true
+    ) {
+      setHasSupportPerson("Yes");
+    } else if (defaultValues?.supportPerson === "No") {
+      setHasSupportPerson("No");
+    }
+  }, [defaultValues]);
+
+  useEffect(() => {
+    if (
+      defaultValues?.supportFirstName === defaultValues?.contactFirstName &&
+      defaultValues?.supportLastName === defaultValues?.contactLastName &&
+      defaultValues?.supportRelationship === defaultValues?.relationship &&
+      defaultValues?.supportPhone === defaultValues?.contactPhone
+    ) {
+      setSameAsEmergency(true);
+    }
+  }, [defaultValues]);
 
   return (
     <div className="h-full bg-white rounded-lg border shadow-sm overflow-hidden">
