@@ -42,26 +42,6 @@ const schema = a
         allow.authenticated().to(["read"]),
       ]),
 
-
-// Booking schema
-      Booking: a
-      .model({
-        id: a.string().required(),
-        // providerId: a.string().required(), // Include this field after DynamoDB is set up to record provider ID
-        providerName: a.string().required(),
-        // providerTitle: a.string().required(),
-        providerRate: a.string().required(),
-        date: a.string().required(),
-        time: a.string().required(),
-        clientId: a.string(),
-        // clientName: a.string(),
-      })
-      .authorization((allow) => [
-        allow.authenticated().to(["create", "read"]),
-        allow.group("Admin"),
-        allow.guest().to(["create", "read"]), // ✅ Add this line
-      ]),
-
     // Availability schema for providers
     Availability: a
       .model({
@@ -92,7 +72,6 @@ const schema = a
         allow.guest().to(["read"]),
       ]),
 
-    
     ProviderProfile: a
       .model({
         userId: a.string().required(),
@@ -138,9 +117,6 @@ const schema = a
         certifications: a.json(), // Array of certification objects
         workExperience: a.json(), // Array of work experience objects
 
-        // Availability
-        availability: a.string().array(), // "yyyy-mm-dd:HH24" (e.g., "2025-07-20:09" for July 20, 2025, at 9:00 AM).
-
         // Profile completion status
         isProfileComplete: a.boolean().default(false),
 
@@ -158,9 +134,7 @@ const schema = a
       ])
       .authorization((allow) => [
         // Provider owns their profile - full access
-        allow
-          .ownerDefinedIn("profileOwner")
-          .to(["create", "read", "update", "delete"]),
+        allow.ownerDefinedIn("profileOwner").to(["create", "read", "update", "delete"]),
         // Admins have full access
         allow.group("Admin").to(["create", "read", "update", "delete"]),
         // Authenticated users can read profiles (for marketplace)

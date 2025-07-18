@@ -1,57 +1,54 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronLeft, ChevronRight, Clock, Calendar, Settings } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight, Clock, Settings } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-dashboard-ui/card";
 import { Button } from "@/components/provider-dashboard-ui/button";
 import { Badge } from "@/components/provider-dashboard-ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar";
 import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav";
-import { AvailabilityEditorModal } from "@/components/provider-dashboard-ui/AvailabilityEditorModal";
-import { WeeklyAvailabilityPreview } from "@/components/provider-dashboard-ui/WeeklyAvailabilityPreview";
-import { type TimeSlot } from "@/utils/schedule-utils";
-import { format, startOfWeek, endOfWeek, addDays } from "date-fns";
+import { format } from "date-fns";
+import { generateDayTimeSlots, formatDisplayTime, type TimeSlot } from "@/utils/schedule-utils";
 
 interface Appointment {
-  id: string;
-  patientName: string;
-  patientAvatar?: string;
-  service: string;
-  date: string; // format: YYYY-MM-DD
-  time: string;
-  status: "confirmed" | "pending" | "completed" | "cancelled";
-  type: "one-time" | "recurring";
-  location: string;
-  notes?: string;
+  id: string
+  patientName: string
+  patientAvatar?: string
+  service: string
+  date: string // format: YYYY-MM-DD
+  time: string
+  status: "confirmed" | "pending" | "completed" | "cancelled"
+  type: "one-time" | "recurring"
+  location: string
+  notes?: string
+}
+
+function getDaysInMonth(year: number, month: number) {
+  return new Date(year, month + 1, 0).getDate();
+}
+
+function getDayOfWeek(year: number, month: number, day: number) {
+  return new Date(year, month, day).getDay();
 }
 
 export default function SchedulePage() {
-  // Calendar state
+  // Real-time date state
+  const [realTimeDate, setRealTimeDate] = useState(new Date());
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [calendarView, setCalendarView] = useState<"month" | "week" | "day">("week");
-  const [showAvailabilityEditor, setShowAvailabilityEditor] = useState(false);
+  const [calendarView, setCalendarView] = useState<"month" | "week">("month");
   
-  // Provider ID - in real app, get from auth context
-  const providerId = "provider-123"; // Replace with actual provider ID
+  // Availability management state
+  const [dayTimeSlots, setDayTimeSlots] = useState<TimeSlot[]>(generateDayTimeSlots());
+  const [isEditingAvailability, setIsEditingAvailability] = useState(false);
+  
+  // Update real-time date every minute
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRealTimeDate(new Date());
+    }, 60000); // Update every minute
 
-  // Get current date properly to fix timezone issues
-  const today = new Date();
-  const todayStr = format(today, "yyyy-MM-dd");
-
-  // Mock function to save availability to backend
-  const handleSaveAvailability = async (date: string, timeSlots: TimeSlot[]): Promise<void> => {
-    try {
-      // Here you would call your actual API
-      console.log("Saving availability for", date, timeSlots);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Show success message or update UI
-    } catch (error) {
-      console.error("Failed to save availability:", error);
-    }
-  };
+    return () => clearInterval(interval);
+  }, []);
 
   const [appointments] = useState<Appointment[]>([
     {
@@ -234,56 +231,64 @@ export default function SchedulePage() {
         </div>
       </div>
 
-      {/* Calendar View */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main Calendar */}
-        <div className="lg:col-span-2">
-          <Card className="h-fit">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="h-5 w-5" />
-                Weekly Schedule Overview
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <WeeklyAvailabilityPreview currentDate={currentDate} />
-              
-              <div className="mt-6 text-center">
-                <Button
-                  onClick={() => setShowAvailabilityEditor(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
-                >
-                  <Settings className="h-4 w-4 mr-2" />
-                  Edit Availability
-                </Button>
+        <Card className="border-gray-400 dashboard-bg-primary rounded-2xl dashboard-card mb-6 !shadow-none">
+          <CardHeader>
+            <CardTitle className="dashboard-text-primary flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Settings className="h-5 w-5" />
+                Availability Management
               </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Today's Schedule Sidebar */}
-        <div>
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Clock className="h-5 w-5" />
-                Today&apos;s Schedule
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {todayAppointments.length === 0 && (
-                  <div className="text-gray-400 text-center py-8">
-                    No appointments today.
-                  </div>
-                )}
-                {todayAppointments.map((appointment) => (
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setIsEditingAvailability(!isEditingAvailability)}
+                className="text-xs"
+              >
+                {isEditingAvailability ? "Save Changes" : "Edit Availability"}
+              </Button>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <h4 className="font-medium dashboard-text-primary mb-3">
+                Today&apos;s Time Slots - {format(realTimeDate, "EEEE, MMMM d")}
+              </h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {dayTimeSlots.map((slot) => (
                   <div
-                    key={appointment.id}
-                    className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                    key={slot.time}
+                    className={`
+                      p-2 rounded border text-center cursor-pointer transition-colors
+                      ${slot.isBooked 
+                        ? "bg-red-100 border-red-300 text-red-800" 
+                        : slot.isAvailable 
+                          ? "bg-green-100 border-green-300 text-green-800 hover:bg-green-200" 
+                          : "bg-gray-100 border-gray-300 text-gray-500"
+                      }
+                      ${isEditingAvailability ? "hover:shadow-md" : ""}
+                    `}
+                    onClick={() => {
+                      if (isEditingAvailability && !slot.isBooked) {
+                        setDayTimeSlots(slots => 
+                          slots.map(s => 
+                            s.time === slot.time 
+                              ? { ...s, isAvailable: !s.isAvailable }
+                              : s
+                          )
+                        );
+                      }
+                    }}
                   >
-                    <div className="text-sm font-medium text-blue-600 min-w-[70px]">
-                      {appointment.time}
+                    <div className="text-sm font-medium">
+                      {formatDisplayTime(slot.time)}
+                    </div>
+                    <div className="text-xs mt-1">
+                      {slot.isBooked 
+                        ? "Booked" 
+                        : slot.isAvailable 
+                          ? "Available" 
+                          : "Blocked"
+                      }
                     </div>
                     <Avatar className="h-8 w-8">
                       <AvatarImage
@@ -312,42 +317,57 @@ export default function SchedulePage() {
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
-
-          {/* Quick Stats */}
-          <Card className="mt-4">
-            <CardHeader>
-              <CardTitle className="text-lg">Today&apos;s Summary</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Total Appointments</span>
-                  <span className="font-semibold">{todayAppointments.length}</span>
+              {isEditingAvailability && (
+                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-sm text-blue-700">
+                    💡 Click on time slots to toggle availability. Green = Available, Gray = Blocked, Red = Already Booked
+                  </p>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Confirmed</span>
-                  <span className="font-semibold text-green-600">
-                    {todayAppointments.filter(apt => apt.status === "confirmed").length}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Pending</span>
-                  <span className="font-semibold text-yellow-600">
-                    {todayAppointments.filter(apt => apt.status === "pending").length}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Current Date</span>
-                  <span className="font-semibold text-blue-600">
-                    {format(today, "MMM d, yyyy")}
-                  </span>
-                </div>
+              )}
+            </div>
+            
+            <div className="border-t pt-4">
+              <h4 className="font-medium dashboard-text-primary mb-3">Quick Actions</h4>
+              <div className="flex gap-2 flex-wrap">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    setDayTimeSlots(slots => 
+                      slots.map(s => ({ ...s, isAvailable: true }))
+                    );
+                  }}
+                  disabled={!isEditingAvailability}
+                >
+                  Mark All Available
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    setDayTimeSlots(slots => 
+                      slots.map(s => s.isBooked ? s : { ...s, isAvailable: false })
+                    );
+                  }}
+                  disabled={!isEditingAvailability}
+                >
+                  Block All Unbooked
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    // Reset to default business hours (9 AM - 5 PM available)
+                    setDayTimeSlots(generateDayTimeSlots());
+                  }}
+                  disabled={!isEditingAvailability}
+                >
+                  Reset to Default
+                </Button>
               </div>
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Availability Editor Modal */}

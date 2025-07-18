@@ -13,14 +13,20 @@
     "@aws-amplify/auth": "^6.13.0",
     "@aws-amplify/ui-react": "^6.11.1",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "@aws-sdk/client-dynamodb": "^3.848.0",
 =======
+=======
+>>>>>>> 96139a5 (commit availability schema)
     "@fullcalendar/core": "^6.1.18",
     "@fullcalendar/daygrid": "^6.1.18",
     "@fullcalendar/interaction": "^6.1.18",
     "@fullcalendar/react": "^6.1.18",
     "@fullcalendar/timegrid": "^6.1.18",
+<<<<<<< HEAD
 >>>>>>> 85decd6 (commit availability schema)
+=======
+>>>>>>> 96139a5 (commit availability schema)
     "@headlessui/react": "^2.2.1",
     "@hookform/resolvers": "^5.1.1",
     "@preline/toggle-password": "^3.1.0",

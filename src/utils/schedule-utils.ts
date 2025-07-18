@@ -1,6 +1,4 @@
 // Simple availability utilities for schedule page
-import { startOfWeek, addDays, format, differenceInDays } from "date-fns";
-
 export interface TimeSlot {
   time: string; // HH:MM format
   isAvailable: boolean;
@@ -17,51 +15,6 @@ export interface DaySchedule {
     patientName: string;
     service: string;
   }>;
-}
-
-export interface AvailabilityEvent {
-  id: string;
-  title: string;
-  start: string; // ISO string
-  end: string; // ISO string
-  backgroundColor?: string;
-  borderColor?: string;
-  classNames?: string[];
-  extendedProps: {
-    isAvailable: boolean;
-    isBooked: boolean;
-    isEditable: boolean;
-    providerId: string;
-    notes?: string;
-  };
-}
-
-/**
- * Check if a given week is editable (at least 3 days before the week starts)
- */
-export function isEditableWeek(date: Date): boolean {
-  const today = new Date();
-  const weekStart = startOfWeek(date, { weekStartsOn: 0 }); // Sunday
-  const diffInDays = differenceInDays(weekStart, today);
-  return diffInDays >= 3;
-}
-
-/**
- * Get the start of the week for a given date
- */
-export function getWeekStart(date: Date): Date {
-  return startOfWeek(date, { weekStartsOn: 0 }); // Sunday
-}
-
-/**
- * Get all dates in a week
- */
-export function getWeekDates(weekStart: Date): Date[] {
-  const dates: Date[] = [];
-  for (let i = 0; i < 7; i++) {
-    dates.push(addDays(weekStart, i));
-  }
-  return dates;
 }
 
 /**
@@ -82,64 +35,6 @@ export function generateDayTimeSlots(): TimeSlot[] {
   }
   
   return slots;
-}
-
-/**
- * Convert time slots to FullCalendar events
- */
-export function convertToCalendarEvents(
-  weekStart: Date,
-  availabilityData: { [date: string]: TimeSlot[] },
-  providerId: string
-): AvailabilityEvent[] {
-  const events: AvailabilityEvent[] = [];
-  const weekDates = getWeekDates(weekStart);
-  const isEditable = isEditableWeek(weekStart);
-
-  weekDates.forEach(date => {
-    const dateStr = format(date, "yyyy-MM-dd");
-    const daySlots = availabilityData[dateStr] || generateDayTimeSlots();
-
-    daySlots.forEach(slot => {
-      const startDateTime = `${dateStr}T${slot.time}:00`;
-      const endHour = parseInt(slot.time.split(":")[0]) + slot.duration;
-      const endTime = `${endHour.toString().padStart(2, "0")}:00`;
-      const endDateTime = `${dateStr}T${endTime}:00`;
-
-      let backgroundColor = "#e5e7eb"; // gray
-      let borderColor = "#9ca3af";
-      let title = "Unavailable";
-
-      if (slot.isBooked) {
-        backgroundColor = "#fca5a5"; // red
-        borderColor = "#dc2626";
-        title = "Booked";
-      } else if (slot.isAvailable) {
-        backgroundColor = "#86efac"; // green
-        borderColor = "#16a34a";
-        title = "Available";
-      }
-
-      events.push({
-        id: `${dateStr}-${slot.time}`,
-        title,
-        start: startDateTime,
-        end: endDateTime,
-        backgroundColor,
-        borderColor,
-        classNames: isEditable && !slot.isBooked ? ["editable-slot"] : ["readonly-slot"],
-        extendedProps: {
-          isAvailable: slot.isAvailable,
-          isBooked: slot.isBooked,
-          isEditable: isEditable && !slot.isBooked,
-          providerId,
-          notes: ""
-        }
-      });
-    });
-  });
-
-  return events;
 }
 
 /**
@@ -164,11 +59,13 @@ export function formatDisplayTime(time: string): string {
  */
 export function getCurrentWeekDates(currentDate: Date): string[] {
   const week = [];
-  const startOfWeekDate = startOfWeek(currentDate, { weekStartsOn: 0 });
+  const startOfWeek = new Date(currentDate);
+  startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
   
   for (let i = 0; i < 7; i++) {
-    const date = addDays(startOfWeekDate, i);
-    week.push(format(date, "yyyy-MM-dd"));
+    const date = new Date(startOfWeek);
+    date.setDate(startOfWeek.getDate() + i);
+    week.push(date.toISOString().split("T")[0]);
   }
   
   return week;
