@@ -12,13 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 // import { Button } from "@/components/ui/button";
 // import OrangeButton from "@/components/buttons/orange-button";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
+
 import {
   User,
   MapPin,
@@ -103,10 +97,9 @@ export default function CompletedClientProfile() {
   }, []);
 
   if (loading) return <Loading />;
-  if (error || !profile)
-    return (
-      <div className="text-red-600 p-4">{error || <ProfileNotComplete />}</div>
-    );
+  if (error)
+    return <div className="text-red-600 p-4">{<ProfileNotComplete />}</div>;
+
   if (!profile)
     return <div className="text-red-600 p-4">{<ProfileNotComplete />}</div>;
 
@@ -133,7 +126,35 @@ export default function CompletedClientProfile() {
   ];
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex flex-col lg:flex-row">
+      {/* Mobile Vertical Top Nav */}
+      <div className="lg:hidden  px-4 py-2">
+        <div className="flex flex-col gap-2">
+          {navigationItems.flatMap((section) =>
+            section.items.map((item) => {
+              const Icon = item.icon;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setActiveSection(item.id);
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm
+                ${
+                  activeSection === item.id
+                    ? "bg-teal-100 text-teal-800"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  {item.label}
+                </button>
+              );
+            })
+          )}
+        </div>
+      </div>
       {/* Sidebar */}
       <aside
         className={`
@@ -146,7 +167,7 @@ export default function CompletedClientProfile() {
         <div className="p-4 pt-20 lg:pt-4">
           {navigationItems.map((section) => (
             <div key={section.category} className="mb-6">
-              <h3 className="text-xs font-semibold text-darkest-green uppercase tracking-wider mb-3">
+              <h3 className="text-md font-semibold text-darkest-green uppercase tracking-wider mb-3">
                 {section.category}
               </h3>
               <nav className="space-y-1">
@@ -185,6 +206,7 @@ export default function CompletedClientProfile() {
           onClick={() => setSidebarOpen(false)}
         />
       )}
+      {/* Mobile Sidebar Toggle Button */}
       {/* Main Content */}
       <main className="flex-1 p-4 lg:p-6 overflow-y-auto">
         {renderContent(activeSection, profile)}
@@ -325,6 +347,17 @@ function PersonalInfoContent({
               disabled={!isEditing}
             />
           </div>
+          {/* <div className="space-y-2">
+            <Label htmlFor="gender">Gender</Label>
+            <select id="gender" className="std-form-input" onChange={}>
+              <option value="">Select gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Non-binary">Non-binary</option>
+              <option value="Prefer not to say">Prefer not to say</option>
+              <option value="Other">Other</option>
+            </select>
+          </div> */}
 
           <div className="flex gap-2 mt-4">
             {isEditing ? (
@@ -360,6 +393,12 @@ function AddressInfoContent({
     province: profile.province ?? "",
     postalCode: profile.postalCode ?? "",
   });
+  const addressLabels: Record<string, string> = {
+    address: "Street Address",
+    city: "City",
+    province: "Province",
+    postalCode: "Postal Code",
+  };
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -396,7 +435,9 @@ function AddressInfoContent({
         <CardContent className="space-y-4 p-6">
           {["address", "city", "province", "postalCode"].map((field) => (
             <div key={field}>
-              <Label htmlFor={field}>{field.replace(/([A-Z])/g, " $1")}</Label>
+              <Label htmlFor={addressLabels[field]}>
+                {addressLabels[field]}
+              </Label>
               <Input
                 id={field}
                 value={formData[field as keyof typeof formData]}
