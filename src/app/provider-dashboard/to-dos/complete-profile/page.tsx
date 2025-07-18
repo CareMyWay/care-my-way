@@ -258,7 +258,6 @@ export default function CompleteProviderProfile() {
                 yearsExperience: professionalSummary?.yearsExperience,
                 yearExperienceFloat,
                 askingRate,
-                rateType: professionalSummary?.rateType,
                 responseTime: professionalSummary?.responseTime,
                 servicesOffered: (professionalSummary?.servicesOffered as string[]) || [],
                 // Credentials (as JSON strings)

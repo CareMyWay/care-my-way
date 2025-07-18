@@ -66,17 +66,19 @@ export function ProfileProfessionalSummary({ profileData }: ProfileProfessionalS
                         </div>
 
                         {/* Asking Rate */}
-                        {profileData.askingRate && profileData.rateType && (
-                            <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
-                                <div className="flex items-center gap-3 mb-2">
-                                    <div className="p-2 bg-gray-100 rounded-lg">
-                                        <DollarSign className="h-4 w-4 text-gray-600" />
+                        {profileData.askingRate && (
+                            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl border border-green-100">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                        <span className="text-green-600 font-bold">$</span>
                                     </div>
-                                    <p className="text-sm text-gray-500 font-medium uppercase tracking-wide">Rate</p>
+                                    <div>
+                                        <p className="text-sm text-gray-600">Rate</p>
+                                        <p className="font-semibold text-gray-800">
+                                            ${profileData.askingRate} per hour
+                                        </p>
+                                    </div>
                                 </div>
-                                <p className="font-bold text-gray-900 text-xl">
-                                    ${profileData.askingRate} {profileData.rateType}
-                                </p>
                             </div>
                         )}
                     </div>

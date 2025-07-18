@@ -68,10 +68,10 @@ export function ProfileHeader({ profileData }: ProfileHeaderProps) {
                                     <Clock className="h-5 w-5" />
                                     <span className="font-medium">Responds {profileData.responseTime || "within 24 hours"}</span>
                                 </div>
-                                {profileData.askingRate && profileData.rateType && (
+                                {profileData.askingRate && (
                                     <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
                                         <span className="font-semibold text-lg">${profileData.askingRate}</span>
-                                        <span className="font-medium">{profileData.rateType}</span>
+                                        <span className="font-medium">per hour</span>
                                     </div>
                                 )}
                             </div>

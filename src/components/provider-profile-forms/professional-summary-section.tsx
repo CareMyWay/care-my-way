@@ -20,7 +20,6 @@ const professionalSummarySchema = z.object({
         .refine((val) => parseFloat(val) >= 1 && parseFloat(val) <= 10000, {
             message: "Asking rate must be between $1 and $10000"
         }),
-    rateType: z.string().min(1, "Rate type is required"),
     responseTime: z.string().min(1, "Response time is required"),
     servicesOffered: z.array(z.string()).min(1, "At least one service must be selected"),
 });
@@ -35,15 +34,6 @@ const experienceOptions = [
     "1-2 years",
     "3-5 years",
     "5+ years",
-];
-
-// Rate types
-const rateTypes = [
-    "Per hour",
-    "Per visit",
-    "Per day",
-    "Per week",
-    "Per month"
 ];
 
 // Response time options
@@ -78,7 +68,6 @@ export function ProfessionalSummarySection({
             bio: defaultValues?.bio || "",
             yearsExperience: defaultValues?.yearsExperience || "",
             askingRate: defaultValues?.askingRate || "",
-            rateType: defaultValues?.rateType || "",
             responseTime: defaultValues?.responseTime || "",
             servicesOffered: defaultValues?.servicesOffered || [],
         },
@@ -248,45 +237,30 @@ export function ProfessionalSummarySection({
                     {/* Asking Rate */}
                     <div className="space-y-2">
                         <label className="std-form-label">
-                            Asking Rate *
+                            Asking Rate per Hour *
                         </label>
-                        <div className="grid grid-cols-2 gap-2">
-                            <div>
-                                <input
-                                    type="number"
-                                    step="1"
-                                    min="0"
-                                    {...register("askingRate")}
-                                    className="std-form-input"
-                                    placeholder="e.g., 25.00"
-                                />
-                                {errors.askingRate && (
-                                    <p className="text-sm text-red-600 mt-1">
-                                        {errors.askingRate.message}
-                                    </p>
-                                )}
+                        <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             </div>
-                            <div>
-                                <select
-                                    {...register("rateType")}
-                                    className="std-form-input"
-                                >
-                                    <option value="">Rate type</option>
-                                    {rateTypes.map((type) => (
-                                        <option key={type} value={type}>
-                                            {type}
-                                        </option>
-                                    ))}
-                                </select>
-                                {errors.rateType && (
-                                    <p className="text-sm text-red-600 mt-1">
-                                        {errors.rateType.message}
-                                    </p>
-                                )}
+                            <input
+                                type="number"
+                                step="1"
+                                min="0"
+                                {...register("askingRate")}
+                                className="std-form-input pl-8"
+                                placeholder="e.g., 25"
+                            />
+                            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                <span className="text-gray-500 text-sm">/hour</span>
                             </div>
                         </div>
+                        {errors.askingRate && (
+                            <p className="text-sm text-red-600 mt-1">
+                                {errors.askingRate.message}
+                            </p>
+                        )}
                         <p className="text-xs text-gray-500">
-                            Enter your rate in CAD. This helps clients understand your pricing structure.
+                            Enter your hourly rate in CAD. This helps clients understand your pricing.
                         </p>
                     </div>
 

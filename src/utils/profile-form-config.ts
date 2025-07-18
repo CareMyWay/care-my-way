@@ -34,7 +34,6 @@ export const SECTION_REQUIRED_FIELDS: Record<SectionKey, string[]> = {
         "bio",
         "yearsExperience",
         "askingRate",
-        "rateType",
         "responseTime",
         "servicesOffered",
     ],

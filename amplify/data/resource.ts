@@ -113,7 +113,6 @@ const schema = a
         // Numeric representation for filtering and sorting
         yearExperienceFloat: a.float(),
         askingRate: a.float(),
-        rateType: a.string(),
         responseTime: a.string(),
         servicesOffered: a.string().array(), // Array of service names
 

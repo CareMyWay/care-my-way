@@ -45,7 +45,6 @@ export type ProviderProfileDataDB = {
     // Numeric representation for filtering and sorting
     yearExperienceFloat?: number;
     askingRate?: number;
-    rateType?: string;
     responseTime?: string;
     servicesOffered?: string[];
     education?: string; // JSON string in database
@@ -85,7 +84,6 @@ export type ProviderProfileData = {
     // Numeric representation for filtering and sorting
     yearExperienceFloat?: number;
     askingRate?: number;
-    rateType?: string;
     responseTime?: string;
     servicesOffered?: string[];
     education?: Array<Record<string, unknown>>; // Parsed array for UI
@@ -148,7 +146,6 @@ export function transformFormDataToProfile(formData: Record<string, unknown>, us
         askingRate: professionalSummary?.askingRate
             ? parseFloat(professionalSummary.askingRate as string)
             : undefined,
-        rateType: professionalSummary?.rateType as string,
         responseTime: professionalSummary?.responseTime as string,
         servicesOffered: professionalSummary?.servicesOffered as string[] || [],
         // Credentials (as JSON strings)
@@ -268,7 +265,6 @@ export async function updateProviderProfile(profileId: string, profileData: Part
         if (profileData.yearsExperience !== undefined) updateInput.yearsExperience = profileData.yearsExperience;
         if (profileData.yearExperienceFloat !== undefined) updateInput.yearExperienceFloat = profileData.yearExperienceFloat;
         if (profileData.askingRate !== undefined) updateInput.askingRate = profileData.askingRate;
-        if (profileData.rateType !== undefined) updateInput.rateType = profileData.rateType;
         if (profileData.responseTime !== undefined) updateInput.responseTime = profileData.responseTime;
         if (profileData.servicesOffered !== undefined) updateInput.servicesOffered = profileData.servicesOffered;
         if (profileData.education !== undefined) updateInput.education = profileData.education;

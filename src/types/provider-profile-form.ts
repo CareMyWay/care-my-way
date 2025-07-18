@@ -44,7 +44,6 @@ export interface ProfessionalSummaryData {
     bio?: string;
     yearsExperience?: string;
     askingRate?: string; // Input as string in form, converted to number in database
-    rateType?: string;
     responseTime?: string;
     servicesOffered?: string[];
     [key: string]: string | string[] | undefined;
