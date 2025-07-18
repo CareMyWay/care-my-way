@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Clock, Settings } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-dashboard-ui/card";
 import { Button } from "@/components/provider-dashboard-ui/button";
 import { Badge } from "@/components/provider-dashboard-ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar";
 import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav";
+import { format } from "date-fns";
+import { generateDayTimeSlots, formatDisplayTime, type TimeSlot } from "@/utils/schedule-utils";
 
 interface Appointment {
   id: string
@@ -21,14 +23,6 @@ interface Appointment {
   notes?: string
 }
 
-const WORKING_HOURS = {
-  Monday: "9:00 AM - 5:00 PM",
-  Tuesday: "9:00 AM - 5:00 PM",
-  Wednesday: "9:00 AM - 5:00 PM",
-  Thursday: "9:00 AM - 5:00 PM",
-  Friday: "9:00 AM - 5:00 PM",
-};
-
 function getDaysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate();
 }
@@ -38,10 +32,23 @@ function getDayOfWeek(year: number, month: number, day: number) {
 }
 
 export default function SchedulePage() {
-    const [currentDate, setCurrentDate] = useState(new Date());
-    const [calendarView, setCalendarView] = useState<"month" | "week">("month");
-
+  // Real-time date state
+  const [realTimeDate, setRealTimeDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [calendarView, setCalendarView] = useState<"month" | "week">("month");
   
+  // Availability management state
+  const [dayTimeSlots, setDayTimeSlots] = useState<TimeSlot[]>(generateDayTimeSlots());
+  const [isEditingAvailability, setIsEditingAvailability] = useState(false);
+  
+  // Update real-time date every minute
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRealTimeDate(new Date());
+    }, 60000); // Update every minute
+
+    return () => clearInterval(interval);
+  }, []);
 
   const [appointments] = useState<Appointment[]>([
     {
@@ -295,26 +302,115 @@ export default function SchedulePage() {
 
         <Card className="border-gray-400 dashboard-bg-primary rounded-2xl dashboard-card mb-6 !shadow-none">
           <CardHeader>
-            <CardTitle className="dashboard-text-primary">Availability Settings</CardTitle>
+            <CardTitle className="dashboard-text-primary flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Settings className="h-5 w-5" />
+                Availability Management
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setIsEditingAvailability(!isEditingAvailability)}
+                className="text-xs"
+              >
+                {isEditingAvailability ? "Save Changes" : "Edit Availability"}
+              </Button>
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <h4 className="font-medium dashboard-text-primary mb-3">Working Hours</h4>
-              <div className="space-y-2">
-                {Object.entries(WORKING_HOURS).map(([day, hours]) => (
-                  <div key={day} className="flex items-center justify-between p-2 border border-gray-200 rounded">
-                    <span className="text-sm font-medium">{day}</span>
-                    <div className="flex items-center gap-2 text-sm dashboard-text-secondary">
-                      <span>{hours}</span>
-                      <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                        <Settings className="h-3 w-3" />
-                      </Button>
+              <h4 className="font-medium dashboard-text-primary mb-3">
+                Today&apos;s Time Slots - {format(realTimeDate, "EEEE, MMMM d")}
+              </h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {dayTimeSlots.map((slot) => (
+                  <div
+                    key={slot.time}
+                    className={`
+                      p-2 rounded border text-center cursor-pointer transition-colors
+                      ${slot.isBooked 
+                        ? "bg-red-100 border-red-300 text-red-800" 
+                        : slot.isAvailable 
+                          ? "bg-green-100 border-green-300 text-green-800 hover:bg-green-200" 
+                          : "bg-gray-100 border-gray-300 text-gray-500"
+                      }
+                      ${isEditingAvailability ? "hover:shadow-md" : ""}
+                    `}
+                    onClick={() => {
+                      if (isEditingAvailability && !slot.isBooked) {
+                        setDayTimeSlots(slots => 
+                          slots.map(s => 
+                            s.time === slot.time 
+                              ? { ...s, isAvailable: !s.isAvailable }
+                              : s
+                          )
+                        );
+                      }
+                    }}
+                  >
+                    <div className="text-sm font-medium">
+                      {formatDisplayTime(slot.time)}
+                    </div>
+                    <div className="text-xs mt-1">
+                      {slot.isBooked 
+                        ? "Booked" 
+                        : slot.isAvailable 
+                          ? "Available" 
+                          : "Blocked"
+                      }
                     </div>
                   </div>
                 ))}
               </div>
+              {isEditingAvailability && (
+                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-sm text-blue-700">
+                    💡 Click on time slots to toggle availability. Green = Available, Gray = Blocked, Red = Already Booked
+                  </p>
+                </div>
+              )}
             </div>
-            <Button className="dashboard-button-primary text-primary-white">Update Availability</Button>
+            
+            <div className="border-t pt-4">
+              <h4 className="font-medium dashboard-text-primary mb-3">Quick Actions</h4>
+              <div className="flex gap-2 flex-wrap">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    setDayTimeSlots(slots => 
+                      slots.map(s => ({ ...s, isAvailable: true }))
+                    );
+                  }}
+                  disabled={!isEditingAvailability}
+                >
+                  Mark All Available
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    setDayTimeSlots(slots => 
+                      slots.map(s => s.isBooked ? s : { ...s, isAvailable: false })
+                    );
+                  }}
+                  disabled={!isEditingAvailability}
+                >
+                  Block All Unbooked
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    // Reset to default business hours (9 AM - 5 PM available)
+                    setDayTimeSlots(generateDayTimeSlots());
+                  }}
+                  disabled={!isEditingAvailability}
+                >
+                  Reset to Default
+                </Button>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>

@@ -76,6 +76,57 @@ const schema = a
         allow.authenticated().to(["read"]),
       ]),
 
+
+// Booking schema
+      Booking: a
+      .model({
+        id: a.string().required(),
+        // providerId: a.string().required(), // Include this field after DynamoDB is set up to record provider ID
+        providerName: a.string().required(),
+        // providerTitle: a.string().required(),
+        providerRate: a.string().required(),
+        date: a.string().required(),
+        time: a.string().required(),
+        clientId: a.string(),
+        // clientName: a.string(),
+      })
+      .authorization((allow) => [
+        allow.authenticated().to(["create", "read"]),
+        allow.group("Admin"),
+        allow.guest().to(["create", "read"]), // ✅ Add this line
+      ]),
+
+    // Availability schema for providers
+    Availability: a
+      .model({
+        id: a.string().required(),
+        providerId: a.string().required(), // Links to UserProfile.userId where userType = "Provider"
+        profileOwner: a.string().required(), // For authorization
+        date: a.string().required(), // Format: YYYY-MM-DD (same as Booking)
+        time: a.string().required(), // Format: HH:MM (same as Booking)
+        duration: a.float().default(1.0), // Duration in hours (e.g., 1.0 for 1 hour slots)
+        isAvailable: a.boolean().default(true), // true = available, false = blocked/unavailable
+        isRecurring: a.boolean().default(false), // true = repeats weekly, false = one-time
+        dayOfWeek: a.string(), // "monday", "tuesday", etc. (for recurring slots)
+        notes: a.string(), // Optional notes for the provider
+      })
+      .secondaryIndexes((index) => [
+        index("providerId"), // Query by provider
+        index("date"), // Query by date
+        index("providerId").sortKeys(["date"]), // Query provider's schedule by date range
+      ])
+      .authorization((allow) => [
+        // Provider owns their availability - full access
+        allow.ownerDefinedIn("profileOwner").to(["create", "read", "update", "delete"]),
+        // Admins have full access
+        allow.group("Admin").to(["create", "read", "update", "delete"]),
+        // Authenticated users can read availability (for booking)
+        allow.authenticated().to(["read"]),
+        // Guests can read availability (for marketplace browsing)
+        allow.guest().to(["read"]),
+      ]),
+
+    
     ProviderProfile: a
       .model({
         userId: a.string().required(),
