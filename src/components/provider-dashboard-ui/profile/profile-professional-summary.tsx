@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText, Briefcase, Award, Clock, DollarSign } from "lucide-react";
+import { FileText, Briefcase, Award, Clock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-dashboard-ui/card";
 import { Badge } from "@/components/provider-dashboard-ui/badge";
 import { type ProviderProfileData } from "@/actions/providerProfileActions";
