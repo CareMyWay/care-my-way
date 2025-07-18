@@ -26,7 +26,6 @@ const schema = a
             allow.ownerDefinedIn("profileOwner").to(["read", "create"]),
             allow.groups(["Admin"]).to(["read", "update", "create"]),
           ]),
-        // We don't want people to change ownership of their profile
         profileOwner: a
           .string()
           .authorization((allow) => [
@@ -70,12 +69,132 @@ const schema = a
         //NEED TO ADD FIELDS HERE
       })
       .secondaryIndexes((index) => [index("userId")])
-
       .authorization((allow) => [
         allow.ownerDefinedIn("profileOwner").to(["read", "update"]),
         allow.group("Admin"),
         allow.guest().to(["read"]),
         allow.authenticated().to(["read"]),
+      ]),
+
+
+// Booking schema
+      Booking: a
+      .model({
+        id: a.string().required(),
+        // providerId: a.string().required(), // Include this field after DynamoDB is set up to record provider ID
+        providerName: a.string().required(),
+        // providerTitle: a.string().required(),
+        providerRate: a.string().required(),
+        date: a.string().required(),
+        time: a.string().required(),
+        clientId: a.string(),
+        // clientName: a.string(),
+      })
+      .authorization((allow) => [
+        allow.authenticated().to(["create", "read"]),
+        allow.group("Admin"),
+        allow.guest().to(["create", "read"]), // ✅ Add this line
+      ]),
+
+    // Availability schema for providers
+    Availability: a
+      .model({
+        id: a.string().required(),
+        providerId: a.string().required(), // Links to UserProfile.userId where userType = "Provider"
+        profileOwner: a.string().required(), // For authorization
+        date: a.string().required(), // Format: YYYY-MM-DD (same as Booking)
+        time: a.string().required(), // Format: HH:MM (same as Booking)
+        duration: a.float().default(1.0), // Duration in hours (e.g., 1.0 for 1 hour slots)
+        isAvailable: a.boolean().default(true), // true = available, false = blocked/unavailable
+        isRecurring: a.boolean().default(false), // true = repeats weekly, false = one-time
+        dayOfWeek: a.string(), // "monday", "tuesday", etc. (for recurring slots)
+        notes: a.string(), // Optional notes for the provider
+      })
+      .secondaryIndexes((index) => [
+        index("providerId"), // Query by provider
+        index("date"), // Query by date
+        index("providerId").sortKeys(["date"]), // Query provider's schedule by date range
+      ])
+      .authorization((allow) => [
+        // Provider owns their availability - full access
+        allow.ownerDefinedIn("profileOwner").to(["create", "read", "update", "delete"]),
+        // Admins have full access
+        allow.group("Admin").to(["create", "read", "update", "delete"]),
+        // Authenticated users can read availability (for booking)
+        allow.authenticated().to(["read"]),
+        // Guests can read availability (for marketplace browsing)
+        allow.guest().to(["read"]),
+      ]),
+
+    ProviderProfile: a
+      .model({
+        userId: a.string().required(),
+        profileOwner: a.string().required(),
+
+        // Personal & Contact Information
+        firstName: a.string(),
+        lastName: a.string(),
+        // Lowercase versions for case-insensitive search
+        firstNameLower: a.string(),
+        lastNameLower: a.string(),
+        dob: a.date(),
+        gender: a.string(),
+        languages: a.string().array(), // Array of language names
+        phone: a.string(),
+        email: a.string(),
+        preferredContact: a.string(),
+        profilePhoto: a.string(), // Base64 or URL
+
+        // Address Information
+        address: a.string(),
+        city: a.string(),
+        province: a.string(),
+        postalCode: a.string(),
+
+        // Emergency Contact
+        emergencyContactName: a.string(),
+        emergencyContactPhone: a.string(),
+        emergencyContactRelationship: a.string(),
+
+        // Professional Summary
+        profileTitle: a.string(),
+        bio: a.string(),
+        yearsExperience: a.string(),
+        // Numeric representation for filtering and sorting
+        yearExperienceFloat: a.float(),
+        askingRate: a.float(),
+        responseTime: a.string(),
+        servicesOffered: a.string().array(), // Array of service names
+
+        // Credentials & Work History (stored as JSON strings)
+        education: a.json(), // Array of education objects
+        certifications: a.json(), // Array of certification objects
+        workExperience: a.json(), // Array of work experience objects
+
+        // Profile completion status
+        isProfileComplete: a.boolean().default(false),
+
+        // Public visibility settings
+        isPubliclyVisible: a.boolean().default(true),
+      })
+      .secondaryIndexes((index) => [
+        index("userId"),
+        index("city"),
+        index("province"),
+        index("yearExperienceFloat"), // Add index for experience filtering
+        index("askingRate"), // Add index for rate filtering
+        index("firstNameLower"), // Add index for name searching
+        index("lastNameLower"), // Add index for name searching
+      ])
+      .authorization((allow) => [
+        // Provider owns their profile - full access
+        allow.ownerDefinedIn("profileOwner").to(["create", "read", "update", "delete"]),
+        // Admins have full access
+        allow.group("Admin").to(["create", "read", "update", "delete"]),
+        // Authenticated users can read profiles (for marketplace)
+        allow.authenticated().to(["read"]),
+        // Guests can read profiles (for marketplace browsing)
+        allow.guest().to(["read"]),
       ]),
   })
   .authorization((allow) => [allow.resource(postConfirmation)]);
@@ -97,7 +216,7 @@ Go to your frontend source code. From your client-side code, generate a
 Data client to make CRUDL requests to your table. (THIS SNIPPET WILL ONLY
 WORK IN THE FRONTEND CODE FILE.)
 
-Using JavaScript or Next.js React Server Components, Middleware, Server 
+Using JavaScript or Next.js React Server Components, Middleware, Server
 Actions or Pages Router? Review how to generate Data clients for those use
 cases: https://docs.amplify.aws/gen2/build-a-backend/data/connect-to-API/
 =========================================================================*/
