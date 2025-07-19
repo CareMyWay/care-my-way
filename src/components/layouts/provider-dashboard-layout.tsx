@@ -1,10 +1,10 @@
 // components/layouts/ProviderDashboardLayout.tsx
-// import {
-//   getCurrentUserServer,
-//   checkIsInGroup,
-// } from "@/utils/amplify-server-utils";
-// import { getUserProfile } from "@/actions/getUserProfile";
-// import { redirect } from "next/navigation";
+import {
+  getCurrentUserServer,
+  checkIsInGroup,
+} from "@/utils/amplify-server-utils";
+import { getUserProfile } from "@/actions/getUserProfile";
+import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 import NavBar from "@/components/nav-bars/navbar";
 import { SidebarNav } from "../provider-dashboard-ui/careprovider-sidenav";
@@ -13,13 +13,13 @@ export default async function ProviderDashboardLayout({
 }: {
   children: ReactNode;
 }) {
-  // const isProvider = await checkIsInGroup("Provider");
-  // if (!isProvider) redirect("/not-found");
+  const isProvider = await checkIsInGroup("Provider");
+  if (!isProvider) redirect("/not-found");
 
-  // const currentUser = await getCurrentUserServer();
-  // const userProfileData = await getUserProfile(currentUser.userId);
+  const currentUser = await getCurrentUserServer();
+  const userProfileData = await getUserProfile(currentUser.userId);
 
-  // if (!userProfileData) return <p>User not found</p>;
+  if (!userProfileData) return <p>User not found</p>;
 
   return (
     <div className="min-h-screen flex bg-dashboard-bg font-manrope">
@@ -31,12 +31,12 @@ export default async function ProviderDashboardLayout({
         <header className="w-full border-b border-gray-200 bg-white z-10">
           <NavBar />
         </header>
-        {/* <p>
+        <p>
           <strong>Email:</strong> {userProfileData.email}
         </p>
         <p>
           <strong>User Type:</strong> {userProfileData.userType}
-        </p> */}
+        </p>
 
         <main className="flex-1 p-6 overflow-y-auto">{children}</main>
       </div>

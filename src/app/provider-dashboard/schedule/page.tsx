@@ -1,14 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Clock, Settings } from "lucide-react";
+import { useState } from "react";
+import { ChevronLeft, ChevronRight, Clock, Calendar, Settings } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-dashboard-ui/card";
 import { Button } from "@/components/provider-dashboard-ui/button";
 import { Badge } from "@/components/provider-dashboard-ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar";
 import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav";
-import { format } from "date-fns";
-import { generateDayTimeSlots, formatDisplayTime, type TimeSlot } from "@/utils/schedule-utils";
+import { AvailabilityEditorModal } from "@/components/provider-dashboard-ui/AvailabilityEditorModal";
+import { WeeklyAvailabilityPreview } from "@/components/provider-dashboard-ui/WeeklyAvailabilityPreview";
+import { type TimeSlot } from "@/utils/schedule-utils";
+import { format, startOfWeek, endOfWeek, addDays } from "date-fns";
 
 interface Appointment {
   id: string
@@ -23,32 +25,33 @@ interface Appointment {
   notes?: string
 }
 
-function getDaysInMonth(year: number, month: number) {
-  return new Date(year, month + 1, 0).getDate();
-}
-
-function getDayOfWeek(year: number, month: number, day: number) {
-  return new Date(year, month, day).getDay();
-}
-
 export default function SchedulePage() {
-  // Real-time date state
-  const [realTimeDate, setRealTimeDate] = useState(new Date());
+  // Calendar state
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [calendarView, setCalendarView] = useState<"month" | "week">("month");
+  const [calendarView, setCalendarView] = useState<"month" | "week" | "day">("week");
+  const [showAvailabilityEditor, setShowAvailabilityEditor] = useState(false);
   
-  // Availability management state
-  const [dayTimeSlots, setDayTimeSlots] = useState<TimeSlot[]>(generateDayTimeSlots());
-  const [isEditingAvailability, setIsEditingAvailability] = useState(false);
-  
-  // Update real-time date every minute
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setRealTimeDate(new Date());
-    }, 60000); // Update every minute
+  // Provider ID - in real app, get from auth context
+  const providerId = "provider-123"; // Replace with actual provider ID
 
-    return () => clearInterval(interval);
-  }, []);
+  // Get current date properly to fix timezone issues
+  const today = new Date();
+  const todayStr = format(today, "yyyy-MM-dd");
+
+  // Mock function to save availability to backend
+  const handleSaveAvailability = async (date: string, timeSlots: TimeSlot[]): Promise<void> => {
+    try {
+      // Here you would call your actual API
+      console.log("Saving availability for", date, timeSlots);
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Show success message or update UI
+    } catch (error) {
+      console.error("Failed to save availability:", error);
+    }
+  };
 
   const [appointments] = useState<Appointment[]>([
     {
@@ -56,7 +59,7 @@ export default function SchedulePage() {
       patientName: "Emma Wilson",
       patientAvatar: "/placeholder.svg?height=40&width=40",
       service: "Physical Therapy",
-      date: "2025-06-25",
+      date: todayStr, // Use today's date
       time: "9:00 AM",
       status: "confirmed",
       type: "recurring",
@@ -67,53 +70,83 @@ export default function SchedulePage() {
       id: "2",
       patientName: "Robert Davis",
       service: "Nursing Care",
-      date: "2025-06-30",
+      date: format(addDays(today, 1), "yyyy-MM-dd"), // Tomorrow
       time: "2:00 PM",
       status: "confirmed",
       type: "one-time",
       location: "Care My Way Clinic",
       notes: "Post-surgery care assessment",
     },
+    {
+      id: "3",
+      patientName: "Sarah Johnson",
+      service: "Medication Management",
+      date: todayStr, // Today
+      time: "11:30 AM",
+      status: "pending",
+      type: "one-time",
+      location: "Patient Home",
+      notes: "Weekly medication review",
+    },
   ]);
 
-  // Helper for calendar
-  const year = currentDate.getFullYear();
-  const month = currentDate.getMonth();
-  const todayStr = new Date().toISOString().split("T")[0];
+  // Helper functions for week view
+  const navigatePrevious = () => {
+    const newDate = new Date(currentDate);
+    switch (calendarView) {
+      case "month":
+        newDate.setMonth(newDate.getMonth() - 1);
+        break;
+      case "week":
+        newDate.setDate(newDate.getDate() - 7);
+        break;
+      case "day":
+        newDate.setDate(newDate.getDate() - 1);
+        break;
+    }
+    setCurrentDate(newDate);
+  };
 
-  // Build calendar grid for month view
-  const daysInMonth = getDaysInMonth(year, month);
-  const firstDayOfWeek = getDayOfWeek(year, month, 1);
-  const calendarDays: { date: string; isToday: boolean; appointments: Appointment[] }[] = [];
+  const navigateNext = () => {
+    const newDate = new Date(currentDate);
+    switch (calendarView) {
+      case "month":
+        newDate.setMonth(newDate.getMonth() + 1);
+        break;
+      case "week":
+        newDate.setDate(newDate.getDate() + 7);
+        break;
+      case "day":
+        newDate.setDate(newDate.getDate() + 1);
+        break;
+    }
+    setCurrentDate(newDate);
+  };
 
-  if (calendarView === "month") {
-    for (let i = 0; i < firstDayOfWeek; i++) {
-      calendarDays.push({ date: "", isToday: false, appointments: [] });
+  const goToToday = () => {
+    setCurrentDate(new Date());
+  };
+
+  // Get title based on view
+  const getViewTitle = () => {
+    switch (calendarView) {
+      case "month":
+        return format(currentDate, "MMMM yyyy");
+      case "week":
+        const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });
+        const weekEnd = endOfWeek(currentDate, { weekStartsOn: 0 });
+        return `${format(weekStart, "MMM d")} - ${format(weekEnd, "MMM d, yyyy")}`;
+      case "day":
+        return format(currentDate, "EEEE, MMMM d, yyyy");
+      default:
+        return "";
     }
-    for (let day = 1; day <= daysInMonth; day++) {
-      const dateObj = new Date(year, month, day);
-      const dateStr = dateObj.toISOString().split("T")[0];
-      calendarDays.push({
-        date: dateStr,
-        isToday: dateStr === todayStr,
-        appointments: appointments.filter((apt) => apt.date === dateStr),
-      });
-    }
-  } else {
-    // week view: show current week (Sunday to Saturday)
-    const weekStart = new Date(currentDate);
-    weekStart.setDate(currentDate.getDate() - currentDate.getDay());
-    for (let i = 0; i < 7; i++) {
-      const dateObj = new Date(weekStart);
-      dateObj.setDate(weekStart.getDate() + i);
-      const dateStr = dateObj.toISOString().split("T")[0];
-      calendarDays.push({
-        date: dateStr,
-        isToday: dateStr === todayStr,
-        appointments: appointments.filter((apt) => apt.date === dateStr),
-      });
-    }
-  }
+  };
+
+  // Today's appointments
+  const todayAppointments = appointments.filter(
+    (apt) => apt.date === todayStr
+  );
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -130,290 +163,200 @@ export default function SchedulePage() {
     }
   };
 
-  // Today's appointments
-  const todayAppointments = appointments.filter(
-    (apt) => apt.date === todayStr
-  );
-
   return (
     <>
       <TopNav title="Schedule" notificationCount={2}>
         <div className="flex gap-2">
+          <Button
+            onClick={goToToday}
+            variant="outline"
+            size="sm"
+            className="text-blue-600 border-blue-200 hover:bg-blue-50"
+          >
+            Today
+          </Button>
+          <Button
+            onClick={() => setShowAvailabilityEditor(!showAvailabilityEditor)}
+            variant="outline"
+            size="sm"
+            className="text-green-600 border-green-200 hover:bg-green-50"
+          >
+            <Settings className="h-4 w-4 mr-2" />
+            Availability
+          </Button>
         </div>
       </TopNav>
 
-      {/* Calendar */}
-      <Card className="border-none dashboard-bg-primary rounded-2xl dashboard-card mb-6 !shadow-none">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4">
+      {/* Modern Header with Navigation */}
+      <div className="bg-white border-b border-gray-200 px-6 py-4 mb-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => {
-                  const newDate = new Date(currentDate);
-                  if (calendarView === "month") {
-                    newDate.setMonth(newDate.getMonth() - 1);
-                  } else {
-                    newDate.setDate(newDate.getDate() - 7);
-                  }
-                  setCurrentDate(newDate);
-                }}
-                aria-label="Previous"
+                onClick={navigatePrevious}
+                className="p-2 hover:bg-gray-100"
               >
                 <ChevronLeft className="h-5 w-5" />
               </Button>
-              <h3 className="text-2xl font-bold dashboard-text-primary tracking-tight">
-                {calendarView === "month"
-                  ? currentDate.toLocaleDateString("en-US", { month: "long", year: "numeric" })
-                  : (() => {
-                      const weekStart = new Date(currentDate);
-                      weekStart.setDate(currentDate.getDate() - currentDate.getDay());
-                      const weekEnd = new Date(weekStart);
-                      weekEnd.setDate(weekStart.getDate() + 6);
-                      return (
-                        `${weekStart.toLocaleDateString("en-US", { month: "short", day: "numeric" }) 
-                        } - ${ 
-                        weekEnd.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
-                      );
-                    })()}
-              </h3>
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => {
-                  const newDate = new Date(currentDate);
-                  if (calendarView === "month") {
-                    newDate.setMonth(newDate.getMonth() + 1);
-                  } else {
-                    newDate.setDate(newDate.getDate() + 7);
-                  }
-                  setCurrentDate(newDate);
-                }}
-                aria-label="Next"
+                onClick={navigateNext}
+                className="p-2 hover:bg-gray-100"
               >
                 <ChevronRight className="h-5 w-5" />
               </Button>
             </div>
-            <div>
-              <select
-                value={calendarView}
-                onChange={e => setCalendarView(e.target.value as "month" | "week")}
-                className="border border-gray-300 rounded px-2 py-1 text-xs bg-white focus:outline-none"
-                aria-label="Calendar View"
-              >
-                <option value="month">Month</option>
-                <option value="week">Week</option>
-              </select>
-            </div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              {getViewTitle()}
+            </h1>
           </div>
-          {/* Calendar grid */}
-          <div className="border-gray-200 grid grid-cols-7 gap-2 text-center p-4 shadow-sm ">
-            {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
-              <div key={d} className="font-semibold text-xs text-gray-500 pb-2 uppercase tracking-wide">{d}</div>
-            ))}
-            {calendarDays.map((day, idx) =>
-              day.date ? (
-                <div
-                  key={idx}
-                  className={`
-                    group relative rounded-lg p-2 min-h-[70px] flex flex-col items-center border transition
-                    ${day.isToday ? "border-green-600 bg-green-50 shadow-md" : "border-gray-200 bg-white hover:bg-teal-50"}
-                    cursor-pointer
-                  `}
+          
+          <div className="flex items-center gap-3">
+            <div className="flex bg-gray-100 rounded-lg p-1">
+              {(["month", "week", "day"] as const).map((view) => (
+                <button
+                  key={view}
+                  onClick={() => setCalendarView(view)}
+                  className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                    calendarView === view
+                      ? "bg-white text-blue-600 shadow-sm"
+                      : "text-gray-600 hover:text-gray-900"
+                  }`}
                 >
-                  <div className={`text-base font-semibold mb-1 ${day.isToday ? "text-green-700" : "text-gray-800"}`}>
-                    {new Date(day.date).getDate()}
-                  </div>
-                  {day.appointments.length > 0 && (
-                    <div className="mt-1 flex flex-col gap-1 w-full">
-                      {day.appointments.map((apt) => (
-                        <Badge
-                          key={apt.id}
-                          className={`w-full text-[11px] px-1 py-0.5 mt-1 ${getStatusColor(apt.status)} border`}
-                          variant="outline"
-                        >
-                          <span className="font-semibold">{apt.time}</span> <span className="truncate">{apt.patientName}</span>
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
-                  {/* Tooltip for appointments */}
-                  {day.appointments.length > 0 && (
-                    <div className="absolute left-1/2 z-10 hidden group-hover:flex flex-col bg-white border border-gray-300 rounded shadow-lg p-2 min-w-[160px] -translate-x-1/2 top-14">
-                      {day.appointments.map((apt) => (
-                        <div key={apt.id} className="text-xs text-left mb-1 last:mb-0">
-                          <span className="font-semibold">{apt.time}</span> - {apt.patientName}
-                          <div className="text-gray-500">{apt.service}</div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div key={idx}></div>
-              )
-            )}  
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Today's Schedule */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="border-gray-400 dashboard-bg-primary rounded-2xl dashboard-card mb-6 !shadow-none">
-          <CardHeader>
-            <CardTitle className="dashboard-text-primary flex items-center gap-2">
-              <Clock className="h-5 w-5" />
-              Today&#39;s Schedule
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {todayAppointments.length === 0 && (
-                <div className="text-gray-400 text-center py-8">No appointments today.</div>
-              )}
-              {todayAppointments.map((appointment) => (
-                <div key={appointment.id} className="flex items-center gap-4 p-3 border border-gray-200 rounded-lg">
-                  <div className="text-sm font-medium dashboard-text-primary min-w-[80px]">{appointment.time}</div>
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage
-                      src={appointment.patientAvatar || "/placeholder.svg"}
-                      alt={appointment.patientName}
-                    />
-                    <AvatarFallback className="bg-teal-100 text-teal-800 text-xs">
-                      {appointment.patientName
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <h4 className="font-medium dashboard-text-primary">{appointment.patientName}</h4>
-                    <p className="text-sm dashboard-text-secondary">{appointment.service}</p>
-                  </div>
-                  <Badge className={getStatusColor(appointment.status)} variant="outline">
-                    {appointment.status}
-                  </Badge>
-                </div>
+                  {view.charAt(0).toUpperCase() + view.slice(1)}
+                </button>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
+      </div>
 
-        <Card className="border-gray-400 dashboard-bg-primary rounded-2xl dashboard-card mb-6 !shadow-none">
-          <CardHeader>
-            <CardTitle className="dashboard-text-primary flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Settings className="h-5 w-5" />
-                Availability Management
+      {/* Calendar View */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main Calendar */}
+        <div className="lg:col-span-2">
+          <Card className="h-fit">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Calendar className="h-5 w-5" />
+                Weekly Schedule Overview
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <WeeklyAvailabilityPreview currentDate={currentDate} />
+              
+              <div className="mt-6 text-center">
+                <Button
+                  onClick={() => setShowAvailabilityEditor(true)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  <Settings className="h-4 w-4 mr-2" />
+                  Edit Availability
+                </Button>
               </div>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => setIsEditingAvailability(!isEditingAvailability)}
-                className="text-xs"
-              >
-                {isEditingAvailability ? "Save Changes" : "Edit Availability"}
-              </Button>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <h4 className="font-medium dashboard-text-primary mb-3">
-                Today&apos;s Time Slots - {format(realTimeDate, "EEEE, MMMM d")}
-              </h4>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                {dayTimeSlots.map((slot) => (
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Today's Schedule Sidebar */}
+        <div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Clock className="h-5 w-5" />
+                Today&apos;s Schedule
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {todayAppointments.length === 0 && (
+                  <div className="text-gray-400 text-center py-8">
+                    No appointments today.
+                  </div>
+                )}
+                {todayAppointments.map((appointment) => (
                   <div
-                    key={slot.time}
-                    className={`
-                      p-2 rounded border text-center cursor-pointer transition-colors
-                      ${slot.isBooked 
-                        ? "bg-red-100 border-red-300 text-red-800" 
-                        : slot.isAvailable 
-                          ? "bg-green-100 border-green-300 text-green-800 hover:bg-green-200" 
-                          : "bg-gray-100 border-gray-300 text-gray-500"
-                      }
-                      ${isEditingAvailability ? "hover:shadow-md" : ""}
-                    `}
-                    onClick={() => {
-                      if (isEditingAvailability && !slot.isBooked) {
-                        setDayTimeSlots(slots => 
-                          slots.map(s => 
-                            s.time === slot.time 
-                              ? { ...s, isAvailable: !s.isAvailable }
-                              : s
-                          )
-                        );
-                      }
-                    }}
+                    key={appointment.id}
+                    className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                   >
-                    <div className="text-sm font-medium">
-                      {formatDisplayTime(slot.time)}
+                    <div className="text-sm font-medium text-blue-600 min-w-[70px]">
+                      {appointment.time}
                     </div>
-                    <div className="text-xs mt-1">
-                      {slot.isBooked 
-                        ? "Booked" 
-                        : slot.isAvailable 
-                          ? "Available" 
-                          : "Blocked"
-                      }
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage
+                        src={appointment.patientAvatar || "/placeholder.svg"}
+                        alt={appointment.patientName}
+                      />
+                      <AvatarFallback className="bg-blue-100 text-blue-800 text-xs">
+                        {appointment.patientName
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-medium text-gray-900 truncate">
+                        {appointment.patientName}
+                      </h4>
+                      <p className="text-xs text-gray-600 truncate">{appointment.service}</p>
                     </div>
+                    <Badge
+                      className={getStatusColor(appointment.status)}
+                      variant="outline"
+                    >
+                      {appointment.status}
+                    </Badge>
                   </div>
                 ))}
               </div>
-              {isEditingAvailability && (
-                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                  <p className="text-sm text-blue-700">
-                    💡 Click on time slots to toggle availability. Green = Available, Gray = Blocked, Red = Already Booked
-                  </p>
+            </CardContent>
+          </Card>
+
+          {/* Quick Stats */}
+          <Card className="mt-4">
+            <CardHeader>
+              <CardTitle className="text-lg">Today&apos;s Summary</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Total Appointments</span>
+                  <span className="font-semibold">{todayAppointments.length}</span>
                 </div>
-              )}
-            </div>
-            
-            <div className="border-t pt-4">
-              <h4 className="font-medium dashboard-text-primary mb-3">Quick Actions</h4>
-              <div className="flex gap-2 flex-wrap">
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => {
-                    setDayTimeSlots(slots => 
-                      slots.map(s => ({ ...s, isAvailable: true }))
-                    );
-                  }}
-                  disabled={!isEditingAvailability}
-                >
-                  Mark All Available
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => {
-                    setDayTimeSlots(slots => 
-                      slots.map(s => s.isBooked ? s : { ...s, isAvailable: false })
-                    );
-                  }}
-                  disabled={!isEditingAvailability}
-                >
-                  Block All Unbooked
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => {
-                    // Reset to default business hours (9 AM - 5 PM available)
-                    setDayTimeSlots(generateDayTimeSlots());
-                  }}
-                  disabled={!isEditingAvailability}
-                >
-                  Reset to Default
-                </Button>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Confirmed</span>
+                  <span className="font-semibold text-green-600">
+                    {todayAppointments.filter(apt => apt.status === "confirmed").length}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Pending</span>
+                  <span className="font-semibold text-yellow-600">
+                    {todayAppointments.filter(apt => apt.status === "pending").length}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Current Date</span>
+                  <span className="font-semibold text-blue-600">
+                    {format(today, "MMM d, yyyy")}
+                  </span>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
       </div>
+
+      {/* Availability Editor Modal */}
+      <AvailabilityEditorModal
+        isOpen={showAvailabilityEditor}
+        onClose={() => setShowAvailabilityEditor(false)}
+        onSave={handleSaveAvailability}
+        providerId={providerId}
+      />
     </>
   );
 }
