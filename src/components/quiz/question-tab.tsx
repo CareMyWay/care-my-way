@@ -1,7 +1,8 @@
 import React, {Dispatch, SetStateAction} from "react";
-import type {Question} from "@/components/quiz/staticQuizData";
+import {QsWithVer, Question} from "@/components/quiz/staticQuizData";
 import OrangeButton from "@/components/buttons/orange-button";
-import {commitQuiz, fetchQuiz} from "@/actions/fetchCommitQuiz";
+import {pushQuizAnswer} from "@/actions/fetchCommitQuiz";
+// import { getCurrentUserServer } from "@/utils/amplify-server-utils";
 
 interface ProgressStepsProps {
   currQuestionIdx: number;
@@ -9,9 +10,11 @@ interface ProgressStepsProps {
   questionPool: Question[];
   answerPool: number[];
   setAnswerPoolAction: Dispatch<SetStateAction<number[]>>;
+  currUserId: string;
 }
 
-export function QuestionTab({ currQuestionIdx, setCurrQuestionIdxAction, questionPool, answerPool, setAnswerPoolAction }: ProgressStepsProps) {
+export function QuestionTab({ currQuestionIdx, setCurrQuestionIdxAction, questionPool, answerPool, setAnswerPoolAction, currUserId }: ProgressStepsProps) {
+
   // console.info(`currQuestionIdx: ${currQuestionIdx}`);
   const q_obj = questionPool[currQuestionIdx - 1];
   const q_idx = currQuestionIdx;
@@ -45,15 +48,15 @@ export function QuestionTab({ currQuestionIdx, setCurrQuestionIdxAction, questio
       console.info(`Q${_que_idx}-OPT${_opt_idx}: Call Admin Now!`);
     }
     setAnswerPoolAction(lcl_a_pool);
-    console.info(`AnswerPool: ${lcl_a_pool}`);
+    console.info(`OnClick Show AnswerPool: ${lcl_a_pool}`);
 
-    commitQuiz(lcl_a_pool.toString())
-      .catch(e => {console.error("Quiz->Back: Error committing quiz data:", e);})
-      .then(() => {console.info("Quiz->Back: Synced with backend");});
-
-    fetchQuiz()
-      .catch(e => {console.error("Back->Quiz: Error fetching quiz data:", e);})
-      .then( r => { console.info("Back->Quiz: Fetched from backend", r);});
+    const objQsWithVer = new QsWithVer();
+    pushQuizAnswer(currUserId, objQsWithVer.getVerCurrInUse(), lcl_a_pool.toString())
+      .catch(e => {console.error("Push Quiz --> Back: Error committing quiz data:", e);})
+      .then((_r) => {
+        if (!_r) return;
+        console.info("Push Quiz  -->  Back: Synced with backend");
+      });
   };
 
   return (
@@ -100,7 +103,6 @@ export function QuestionTab({ currQuestionIdx, setCurrQuestionIdxAction, questio
             }
           })}
         </div>
-
         <div className="flex flex-row justify-between mt-8 items-end">
           {currQuestionIdx > 1 ?                   ( <OrangeButton onClick={handleBack} variant={"action"} >BACK</OrangeButton>) : (<span></span>)}
           {currQuestionIdx < questionPool.length ? ( <OrangeButton onClick={handleNext} variant={"action"} >NEXT</OrangeButton>) :
