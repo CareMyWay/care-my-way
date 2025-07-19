@@ -1,48 +1,90 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "@/components/nav-bars/navbar";
 import ProviderCard from "@/components/marketplace/healthcare-provider-card";
 import MarketplaceSearchBar from "@/components/marketplace/search-bar";
 import MarketplaceFilter from "@/components/marketplace/filter";
-
-const MOCK_PROVIDERS = [
-  {
-    name: "Nina Nguyen",
-    title: "Health Care Aide",
-    location: "Calgary, AB",
-    experience: "5+ years",
-    testimonials: 10,
-    languages: ["English", "French", "Urdu"],
-    services: ["Dementia Care", "Personal Care", "Health Monitoring"],
-    hourlyRate: 20,
-    imageSrc: "/images/home/meet-providers/person-placeholder-1.png",
-  },
-  {
-    name: "Kenji Yamamoto",
-    title: "Live-in Caregiver",
-    location: "Calgary, AB",
-    experience: "2+ years",
-    testimonials: 18,
-    languages: ["English", "French", "Urdu"],
-    services: ["Housekeeping", "Companionship", "Mobility Assistance"],
-    hourlyRate: 31,
-    imageSrc: "/images/home/meet-providers/person-placeholder-2.jpg",
-  },
-  {
-    name: "Jamal Osborne",
-    title: "Registered Nurse",
-    location: "Calgary, AB",
-    experience: "10+ years",
-    testimonials: 5,
-    languages: ["English", "French", "Urdu"],
-    services: ["Wound Care", "Medication Management", "Health Education"],
-    hourlyRate: 56,
-    imageSrc: "/images/home/meet-providers/person-placeholder-6.jpg",
-  },
-];
+import { getPublicProviderProfiles, transformProviderForMarketplace, type ProviderProfileData } from "@/actions/providerProfileActions";
+import toast from "react-hot-toast";
 
 export default function MarketplacePage() {
+  const [providers, setProviders] = useState<ReturnType<typeof transformProviderForMarketplace>[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadProviders = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const profiles = await getPublicProviderProfiles();
+        const transformedProviders = profiles.map(transformProviderForMarketplace);
+        setProviders(transformedProviders);
+
+        if (transformedProviders.length === 0) {
+          console.log("No public provider profiles found");
+        }
+      } catch (error) {
+        console.error("Error loading provider profiles:", error);
+        setError("Failed to load provider profiles. Please try again.");
+        toast.error("Failed to load providers");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadProviders();
+  }, []);
+
+  const renderContent = () => {
+    if (isLoading) {
+      return (
+        <div className="flex items-center justify-center py-20">
+          <div className="text-center space-y-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-medium-green border-t-transparent mx-auto"></div>
+            <p className="text-darkest-green text-lg">Loading caregivers...</p>
+          </div>
+        </div>
+      );
+    }
+
+    if (error) {
+      return (
+        <div className="text-center py-20">
+          <div className="text-red-500 text-lg mb-4">{error}</div>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-6 py-2 bg-medium-green text-white rounded-lg hover:bg-darkest-green transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      );
+    }
+
+    if (providers.length === 0) {
+      return (
+        <div className="text-center text-darkest-green text-lg py-20">
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold">No Caregivers Available</h3>
+            <p className="text-gray-600">
+              There are currently no caregivers with completed profiles available in the marketplace.
+            </p>
+            <p className="text-sm text-gray-500">
+              Check back later as new caregivers join our platform!
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    return providers.map((provider, idx) => (
+      <ProviderCard key={provider.id || idx} {...provider} />
+    ));
+  };
+
   return (
     <div>
       <Navbar />
@@ -58,15 +100,7 @@ export default function MarketplacePage() {
               <MarketplaceFilter />
             </div>
             <div className="space-y-6 w-full md:overflow-y-auto">
-              {MOCK_PROVIDERS.length === 0 ? (
-                <div className="text-center text-darkest-green text-lg py-10">
-                  There are no matching providers for your search.
-                </div>
-              ) : (
-                MOCK_PROVIDERS.map((provider, idx) => (
-                  <ProviderCard key={idx} {...provider} />
-                ))
-              )}
+              {renderContent()}
             </div>
           </div>
         </div>

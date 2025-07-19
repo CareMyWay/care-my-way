@@ -3,6 +3,7 @@ import Image from "next/image";
 import OrangeButton from "@/components/buttons/orange-button";
 
 interface HealthcareProviderCardProps {
+  id?: string;
   name: string;
   title: string;
   location: string;
@@ -15,6 +16,7 @@ interface HealthcareProviderCardProps {
 }
 
 const HealthcareProviderCard: React.FC<HealthcareProviderCardProps> = ({
+  id,
   name,
   title,
   location,
@@ -25,6 +27,9 @@ const HealthcareProviderCard: React.FC<HealthcareProviderCardProps> = ({
   hourlyRate,
   imageSrc,
 }) => {
+  // For now, link to a generic provider page
+  const profileLink = id ? `/provider/${id}` : "/provider";
+
   return (
     <div className="flex flex-col md:flex-row justify-between items-stretch gap-6 p-6 bg-primary-white rounded-xl border border-gray-200 shadow-md hover:shadow-lg transition-shadow">
       {/* Left Section: Image and Info */}
@@ -86,7 +91,7 @@ const HealthcareProviderCard: React.FC<HealthcareProviderCardProps> = ({
         </div>
         <OrangeButton
           variant="route"
-          href="/provider" // Replace with actual profile link
+          href={profileLink}
           className="!px-4 !py-1.5 !text-md mt-4"
         >
           View Profile
