@@ -142,7 +142,11 @@ export default function BookingModal({
       try {
         const user = await getCurrentUser();
         const clientId = user.userId;
+<<<<<<< HEAD
         const totalCost = providerRateFloat * Number.parseFloat(selectedDuration);
+=======
+        const totalCost = 20 * Number.parseFloat(selectedDuration!);
+>>>>>>> 0099742 (Completed booking status update)
 
         const bookingId = uuidv4();
         const result = await client.models.Booking.create({
@@ -158,8 +162,11 @@ export default function BookingModal({
         });
 
         {/* Stripe Checkout Data */}
+<<<<<<< HEAD
         console.log("Booking data:", {
           providerRate, providerLocation});
+=======
+>>>>>>> 0099742 (Completed booking status update)
         const res = await fetch("/api/create-checkout-session", {
         method: "POST",
         headers: {
@@ -170,6 +177,7 @@ export default function BookingModal({
           amount: totalCost,
           quantity: 1,
           bookingId,
+<<<<<<< HEAD
           providerId,
           providerPhoto,
           providerName,
@@ -179,6 +187,8 @@ export default function BookingModal({
           date: selectedDate,
           time: `${selectedTime} - ${getEndTime(selectedTime, Number.parseFloat(selectedDuration))}`,
           duration: selectedDuration,
+=======
+>>>>>>> 0099742 (Completed booking status update)
         }),
         });
 

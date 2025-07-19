@@ -1,7 +1,10 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 // app/api/create-checkout-session/route.ts
 >>>>>>> f29aef9 (Fixed booking model file structure and implemented stripe hosted checkout page)
+=======
+>>>>>>> 0099742 (Completed booking status update)
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import Stripe from "stripe";
@@ -16,11 +19,15 @@ export async function POST(req: Request) {
     const body = await req.json();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     const { name, amount, quantity, bookingId, providerId, providerPhoto, providerName, providerTitle, providerLocation, providerRate, date, time, duration } = body;
 
     if (!name || !amount || !quantity || !bookingId || !providerId) {
 =======
     const { name, amount, quantity } = body;
+=======
+    const { name, amount, quantity, bookingId} = body;
+>>>>>>> 0099742 (Completed booking status update)
 
     if (!name || !amount || !quantity) {
 >>>>>>> f29aef9 (Fixed booking model file structure and implemented stripe hosted checkout page)
@@ -35,6 +42,7 @@ export async function POST(req: Request) {
             product_data: {
               name: name,
 <<<<<<< HEAD
+<<<<<<< HEAD
               images: providerPhoto ? [providerPhoto] : [],
             },
             unit_amount: Math.round(amount * 100),
@@ -42,12 +50,18 @@ export async function POST(req: Request) {
             },
             unit_amount: Math.round(amount * 100), // amount in cents
 >>>>>>> f29aef9 (Fixed booking model file structure and implemented stripe hosted checkout page)
+=======
+              images: [body.imageUrl],
+            },
+            unit_amount: Math.round(amount * 100),
+>>>>>>> 0099742 (Completed booking status update)
           },
           quantity,
         },
       ],
       mode: "payment",
       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
+<<<<<<< HEAD
 <<<<<<< HEAD
       cancel_url: `${origin}/provider/${providerId}?cancelled=true&bookingId=${bookingId}`,
       metadata: {
@@ -63,6 +77,12 @@ export async function POST(req: Request) {
 =======
       cancel_url: `${origin}/checkout?canceled=true`,
 >>>>>>> f29aef9 (Fixed booking model file structure and implemented stripe hosted checkout page)
+=======
+      cancel_url: `${origin}/provider?cancelled=true&bookingId=${bookingId}`,
+      metadata: {
+        bookingId,
+      },
+>>>>>>> 0099742 (Completed booking status update)
     });
 
     return NextResponse.json({ url: session.url });

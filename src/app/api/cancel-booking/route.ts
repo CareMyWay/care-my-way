@@ -38,4 +38,8 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 0099742 (Completed booking status update)

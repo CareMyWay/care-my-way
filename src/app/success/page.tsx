@@ -2,21 +2,71 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useAuthenticator } from "@aws-amplify/ui-react";
+<<<<<<< HEAD
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Calendar, Clock, User, CheckCircle, Home } from "lucide-react";
+=======
+import Link from "next/link";
+>>>>>>> 0099742 (Completed booking status update)
 
 export default function SuccessPage() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const [status, setStatus] = useState("loading");
   const { authStatus } = useAuthenticator((context) => [context.authStatus]);
+<<<<<<< HEAD
   const [bookingDetails, setBookingDetails] = useState(null);
+=======
+>>>>>>> 0099742 (Completed booking status update)
 
   useEffect(() => {
     const updateBookingStatus = async () => {
       if (!sessionId || authStatus !== "authenticated") return;
+<<<<<<< HEAD
+=======
+
+      try {
+        const res = await fetch("/api/confirm-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setStatus("success");
+      } else {
+        console.error("Failed to update booking status", data.error);
+        setStatus("error");
+      }
+    } catch (error) {
+      console.error("Error confirming payment:", error);
+      setStatus("error");
+    } 
+  };
+
+    updateBookingStatus();
+  }, [sessionId, authStatus]);
+
+  if (!sessionId) {
+    return <p className="p-10">No session ID found in URL.</p>;
+  }
+
+  if (status === "loading") {
+    return <p className="p-10">Updating your booking status...</p>;
+  }
+
+  if (status === "error") {
+    return (
+      <div className="p-10">
+        <h1 className="text-2xl font-bold text-red-600">Oops! Something went wrong.</h1>
+        <p>We were unable to update your booking status. Please contact support.</p>
+      </div>
+    );
+  }
+>>>>>>> 0099742 (Completed booking status update)
 
       try {
         const res = await fetch("/api/confirm-payment", {
@@ -60,6 +110,7 @@ export default function SuccessPage() {
   }
   
   return (
+<<<<<<< HEAD
     <div className="min-h-screen bg-gray-50">
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -177,6 +228,14 @@ export default function SuccessPage() {
           </div>
         </div>
       </main>
+=======
+    <div className="p-10">
+      <h1 className="text-2xl font-bold">Payment Successful</h1>
+      <p>Your booking is now confirmed.</p>
+      <Link href="/" className="text-medium-green-500 mt-5 hover:underline">
+        Go back to the homepage
+      </Link>
+>>>>>>> 0099742 (Completed booking status update)
     </div>
   );
 }
