@@ -1,4 +1,3 @@
-// app/api/create-checkout-session/route.ts
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import Stripe from "stripe";
@@ -12,7 +11,7 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    const { name, amount, quantity } = body;
+    const { name, amount, quantity, bookingId} = body;
 
     if (!name || !amount || !quantity) {
       return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
@@ -25,15 +24,19 @@ export async function POST(req: Request) {
             currency: "cad",
             product_data: {
               name: name,
+              images: [body.imageUrl],
             },
-            unit_amount: Math.round(amount * 100), // amount in cents
+            unit_amount: Math.round(amount * 100),
           },
           quantity,
         },
       ],
       mode: "payment",
       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/checkout?canceled=true`,
+      cancel_url: `${origin}/provider?cancelled=true&bookingId=${bookingId}`,
+      metadata: {
+        bookingId,
+      },
     });
 
     return NextResponse.json({ url: session.url });

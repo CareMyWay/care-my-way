@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import Image from "next/image";
 import OrangeButton from "../buttons/orange-button";
 import BookingModal from "../booking-modal";
+import { useRouter } from "next/navigation";
+import { getCurrentUser } from "@aws-amplify/auth";
 
 // Need to fetch data from dynamoDB when ready
 // const fetchProvider = async () => {
@@ -34,6 +36,24 @@ const infoRows = [
 
 const ProfileSummary = () => {
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+    const router = useRouter();
+
+    const handleBookingClick = async () => {
+        try {
+            await getCurrentUser();
+            setIsBookingModalOpen(true);
+        }
+        catch (error) {
+            if (
+                error?.name === "UserNotAuthenticatedException" ||
+                error?.message?.includes("User needs to be authenticated")
+            ) {
+                router.push("/login?redirect=/provider");
+            } else {
+                console.error("Unexpected error:", error);
+            }
+        }
+    };
 
     return (
         <>
@@ -70,7 +90,7 @@ const ProfileSummary = () => {
                     </div>   
                 </div>
                 <div className="mt-5">
-                    <OrangeButton variant="action" onClick={() => setIsBookingModalOpen(true)} className="w-full">
+                    <OrangeButton variant="action" onClick={handleBookingClick} className="w-full">
                         REQUEST TO BOOK
                     </OrangeButton>
                 </div>
