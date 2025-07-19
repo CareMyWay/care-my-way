@@ -160,14 +160,20 @@ const schema = a
         providerRate: a.string().required(),
         date: a.string().required(),
         time: a.string().required(),
-        clientId: a.string(),
-        // clientName: a.string(),
+        clientId: a.string().required(),
+        clientName: a.string(),
+        bookingStatus: a.string().default("For Confirmation"),
+        duration: a.float().required(),
+        totalCost: a.float(),
       })
       .authorization((allow) => [
-        allow.authenticated().to(["create", "read"]),
+        allow.authenticated().to(["create", "read", "update"]),
         allow.group("Admin"),
+<<<<<<< HEAD
         allow.guest().to(["create", "read"]), // ✅ Add this line
 >>>>>>> 500e226 (Booking modal working with dynamoDB)
+=======
+>>>>>>> 0099742 (Completed booking status update)
       ]),
   })
   .authorization((allow) => [allow.resource(postConfirmation)]);

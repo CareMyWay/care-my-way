@@ -11,7 +11,8 @@
   "dependencies": {
     "@aws-amplify/adapter-nextjs": "^1.6.2",
     "@aws-amplify/auth": "^6.13.0",
-    "@aws-amplify/ui-react": "^6.11.1",
+    "@aws-amplify/ui-react": "^6.11.2",
+    "@aws-sdk/client-dynamodb": "^3.848.0",
     "@headlessui/react": "^2.2.1",
     "@hookform/resolvers": "^5.1.1",
     "@preline/toggle-password": "^3.1.0",
@@ -36,6 +37,7 @@
     "iso-639-1": "^3.1.5",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.508.0",
+    "micro": "^10.0.1",
     "next": "15.2.4",
     "openid-client": "^6.5.0",
     "react": "^19.0.0",
