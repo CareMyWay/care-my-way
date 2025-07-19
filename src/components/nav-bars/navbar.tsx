@@ -87,7 +87,12 @@ export default function NavBar({ userGroups = [] }: NavBarProps) {
 
   const renderRoutes = (routes: typeof combinedRoutes) =>
     routes.map(({ href, label }) => (
-      <Link key={href} href={href} className="text-darkest-green">
+      <Link
+        key={href}
+        href={href}
+        className="text-darkest-green hover:text-medium-green transition-colors duration-200 block"
+        onClick={() => setMenuOpen(false)} // optional: close mobile menu when clicking
+      >
         {label}
       </Link>
     ));
@@ -103,15 +108,6 @@ export default function NavBar({ userGroups = [] }: NavBarProps) {
 
           {/* Desktop Nav Links */}
           <div className="hidden lg:flex items-center gap-8">
-            {/* {routes.map((route) => (
-              <Link
-                key={route.href}
-                href={route.href}
-                className="text-darkest-green"
-              >
-                {route.label}
-              </Link>
-            ))} */}
             {renderRoutes(combinedRoutes)}
           </div>
         </div>
@@ -155,16 +151,6 @@ export default function NavBar({ userGroups = [] }: NavBarProps) {
       {/* Mobile Dropdown Menu */}
       {menuOpen && (
         <div className="lg:hidden px-4 py-4 space-y-4 bg-white border-b border-gray-200">
-          {/* {routes.map((route) => (
-            <Link
-              key={route.href}
-              href={route.href}
-              className="block text-darkest-green"
-              onClick={() => setMenuOpen(false)}
-            >
-              {route.label}
-            </Link>
-          ))} */}
           {renderRoutes(combinedRoutes)}
 
           <div className="my-4 border-t-2 border-darkest-green w-full" />
