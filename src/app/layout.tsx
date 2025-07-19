@@ -4,6 +4,8 @@ import "@/app/globals.css";
 import ConfigureAmplifyClientSide from "@/app/amplify-config";
 import AuthProvider from "@/components/auth/auth";
 import { Toaster } from "react-hot-toast";
+import NavBar from "@/components/nav-bars/navbar";
+import { getUserGroups } from "@/utils/amplify-server-utils";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -31,6 +33,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const userGroups = await getUserGroups(); // pass to NavBar
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -41,6 +45,7 @@ export default async function RootLayout({
 
         <AuthProvider>
           <ConfigureAmplifyClientSide />
+          <NavBar userGroups={userGroups} />
           {children}
         </AuthProvider>
       </body>
