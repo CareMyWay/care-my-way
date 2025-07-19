@@ -234,6 +234,35 @@ export async function getProviderProfile(userId: string): Promise<ProviderProfil
     }
 }
 
+// Get provider profile by profile ID (for individual profile pages)
+export async function getProviderProfileById(profileId: string): Promise<ProviderProfileData | null> {
+    try {
+        const result = await client.models.ProviderProfile.get({ id: profileId });
+
+        if (result.errors) {
+            console.error("Error fetching provider profile by ID:", result.errors);
+            return null;
+        }
+
+        const rawProfile = result.data;
+        if (!rawProfile) return null;
+
+        // Transform the raw profile data and parse JSON strings into arrays
+        const transformedProfile: ProviderProfileData = {
+            ...rawProfile,
+            // Parse JSON strings back into arrays for UI consumption
+            education: safeParseJSON(rawProfile.education),
+            certifications: safeParseJSON(rawProfile.certifications),
+            workExperience: safeParseJSON(rawProfile.workExperience),
+        } as ProviderProfileData;
+
+        return transformedProfile;
+    } catch (error) {
+        console.error("Failed to get provider profile by ID:", error);
+        return null;
+    }
+}
+
 export async function updateProviderProfile(profileId: string, profileData: Partial<ProviderProfileDataDB>): Promise<ProviderProfileData | null> {
     try {
         // Build update input object, only including defined fields
@@ -336,20 +365,16 @@ export function transformProviderForMarketplace(profile: ProviderProfileData) {
     const fullName = [profile.firstName, profile.lastName].filter(Boolean).join(" ") || "Unknown Provider";
     const location = [profile.city, profile.province].filter(Boolean).join(", ") || "Location not specified";
 
-    // Calculate testimonials count (placeholder for now - you can implement this later)
-    const testimonials = Math.floor(Math.random() * 20) + 1; // Random number for now
-
     return {
         id: profile.id,
         name: fullName,
         title: profile.profileTitle || "Healthcare Provider",
         location: location,
         experience: profile.yearsExperience || "Not specified",
-        testimonials: testimonials,
         languages: profile.languages || [],
         services: profile.servicesOffered || [],
         hourlyRate: profile.askingRate || 0,
-        imageSrc: profile.profilePhoto || "/images/home/meet-providers/person-placeholder-1.png",
+        imageSrc: profile.profilePhoto || null, // Use null when no photo uploaded
         profileData: profile // Include full profile data for potential future use
     };
 } 
