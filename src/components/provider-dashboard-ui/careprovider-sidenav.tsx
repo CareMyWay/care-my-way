@@ -70,18 +70,6 @@ export function SidebarNav() {
     }
   };
 
-  // const handleSignOut = async () => {
-  //   // Example: Clear authentication tokens from localStorage/sessionStorage
-  //   localStorage.removeItem("authToken");
-  //   sessionStorage.removeItem("authToken");
-
-  //   // Optionally, call your sign out API endpoint if needed
-  //   // await fetch("/api/auth/signout", { method: "POST" });
-
-  //   // Redirect to home page
-  //   router.push("/");
-  // };
-
   return (
     <nav className="w-64 dashboard-sidebar min-h-screen flex flex-col">
       {/* Profile Section */}

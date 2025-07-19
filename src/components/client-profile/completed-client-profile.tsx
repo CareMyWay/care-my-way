@@ -126,6 +126,7 @@ export default function CompletedClientProfile() {
   ];
 
   return (
+    // <div className="min-h-screen flex flex-col lg:flex-row">
     <div className="min-h-screen flex flex-col lg:flex-row">
       {/* Mobile Vertical Top Nav */}
       <div className="lg:hidden  px-4 py-2">
@@ -157,7 +158,7 @@ export default function CompletedClientProfile() {
       </div>
       {/* Sidebar */}
       <aside
-        className={`
+        className={`min-h-screen 
     fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 
     transform transition-transform duration-200 ease-in-out
     flex flex-col
