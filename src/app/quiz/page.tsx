@@ -3,6 +3,7 @@ import QuestionFrame from "@/components/quiz/question-frame";
 import Navbar from "@/components/nav-bars/navbar";
 
 const ShowQuiz = () => {
+  // ToDo: make the page adept to narrow screen
   return (
     <div>
       <Navbar />
