@@ -1,6 +1,7 @@
 import React, {Dispatch, SetStateAction} from "react";
 import type {Question} from "@/components/quiz/staticQuizData";
 import OrangeButton from "@/components/buttons/orange-button";
+import {commitQuiz, fetchQuiz} from "@/actions/fetchCommitQuiz";
 
 interface ProgressStepsProps {
   currQuestionIdx: number;
@@ -45,6 +46,14 @@ export function QuestionTab({ currQuestionIdx, setCurrQuestionIdxAction, questio
     }
     setAnswerPoolAction(lcl_a_pool);
     console.info(`AnswerPool: ${lcl_a_pool}`);
+
+    commitQuiz(lcl_a_pool.toString())
+      .catch(e => {console.error("Quiz->Back: Error committing quiz data:", e);})
+      .then(() => {console.info("Quiz->Back: Synced with backend");});
+
+    fetchQuiz()
+      .catch(e => {console.error("Back->Quiz: Error fetching quiz data:", e);})
+      .then( r => { console.info("Back->Quiz: Fetched from backend", r);});
   };
 
   return (
