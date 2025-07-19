@@ -12,7 +12,7 @@ const ProfileServices: React.FC<ProfileServicesProps> = ({ profileData }) => {
     const getServiceIcon = (service: string) => {
         const serviceLower = service.toLowerCase();
 
-        if (serviceLower.includes('medication') || serviceLower.includes('medicine')) {
+        if (serviceLower.includes("medication") || serviceLower.includes("medicine")) {
             return (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
@@ -20,7 +20,7 @@ const ProfileServices: React.FC<ProfileServicesProps> = ({ profileData }) => {
             );
         }
 
-        if (serviceLower.includes('personal') || serviceLower.includes('hygiene') || serviceLower.includes('bathing')) {
+        if (serviceLower.includes("personal") || serviceLower.includes("hygiene") || serviceLower.includes("bathing")) {
             return (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -28,7 +28,7 @@ const ProfileServices: React.FC<ProfileServicesProps> = ({ profileData }) => {
             );
         }
 
-        if (serviceLower.includes('mobility') || serviceLower.includes('exercise') || serviceLower.includes('physical')) {
+        if (serviceLower.includes("mobility") || serviceLower.includes("exercise") || serviceLower.includes("physical")) {
             return (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -36,7 +36,7 @@ const ProfileServices: React.FC<ProfileServicesProps> = ({ profileData }) => {
             );
         }
 
-        if (serviceLower.includes('companionship') || serviceLower.includes('social') || serviceLower.includes('emotional')) {
+        if (serviceLower.includes("companionship") || serviceLower.includes("social") || serviceLower.includes("emotional")) {
             return (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -44,7 +44,7 @@ const ProfileServices: React.FC<ProfileServicesProps> = ({ profileData }) => {
             );
         }
 
-        if (serviceLower.includes('meal') || serviceLower.includes('nutrition') || serviceLower.includes('cooking')) {
+        if (serviceLower.includes("meal") || serviceLower.includes("nutrition") || serviceLower.includes("cooking")) {
             return (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17M17 13v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
@@ -52,7 +52,7 @@ const ProfileServices: React.FC<ProfileServicesProps> = ({ profileData }) => {
             );
         }
 
-        if (serviceLower.includes('housekeeping') || serviceLower.includes('cleaning') || serviceLower.includes('laundry')) {
+        if (serviceLower.includes("housekeeping") || serviceLower.includes("cleaning") || serviceLower.includes("laundry")) {
             return (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
@@ -61,7 +61,7 @@ const ProfileServices: React.FC<ProfileServicesProps> = ({ profileData }) => {
             );
         }
 
-        if (serviceLower.includes('health') || serviceLower.includes('monitoring') || serviceLower.includes('vital')) {
+        if (serviceLower.includes("health") || serviceLower.includes("monitoring") || serviceLower.includes("vital")) {
             return (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />

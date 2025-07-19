@@ -5,7 +5,7 @@ import Navbar from "@/components/nav-bars/navbar";
 import ProviderCard from "@/components/marketplace/healthcare-provider-card";
 import MarketplaceSearchBar from "@/components/marketplace/search-bar";
 import MarketplaceFilter from "@/components/marketplace/filter";
-import { getPublicProviderProfiles, transformProviderForMarketplace, type ProviderProfileData } from "@/actions/providerProfileActions";
+import { getPublicProviderProfiles, transformProviderForMarketplace } from "@/actions/providerProfileActions";
 import toast from "react-hot-toast";
 
 export default function MarketplacePage() {

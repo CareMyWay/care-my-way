@@ -48,7 +48,7 @@ const ProfileEducation: React.FC<ProfileEducationProps> = ({ profileData }) => {
     const formatDate = (dateString: string) => {
         if (!dateString) return "";
         const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+        return date.toLocaleDateString("en-US", { year: "numeric", month: "short" });
     };
 
     return (
@@ -82,7 +82,7 @@ const ProfileEducation: React.FC<ProfileEducationProps> = ({ profileData }) => {
                                         <div className="text-sm text-gray-600 mt-1 sm:mt-0">
                                             {work.startDate && (
                                                 <span>
-                                                    {formatDate(work.startDate)} - {work.endDate ? formatDate(work.endDate) : 'Present'}
+                                                    {formatDate(work.startDate)} - {work.endDate ? formatDate(work.endDate) : "Present"}
                                                 </span>
                                             )}
                                         </div>
