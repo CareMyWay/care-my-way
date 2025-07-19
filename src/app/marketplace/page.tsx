@@ -60,6 +60,7 @@ const landingProviders: Provider[] = [];
 // MOCK_PROVIDERS.push(... demo_data);
 
 export default function MarketplacePage() {
+  // ToDo: make the page adept to narrow screen
   const thisSliderMinValue = 0;
   const thisSliderMaxValue = 200;
 
