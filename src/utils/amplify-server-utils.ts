@@ -94,7 +94,7 @@ export const checkIsInGroup = async (groupName: string): Promise<boolean> => {
           return rawGroups.includes(groupName);
         }
 
-        // 🔄 Some Cognito configurations may return a comma-separated string
+        // Some Cognito configurations may return a comma-separated string
         if (typeof rawGroups === "string") {
           return rawGroups.split(",").includes(groupName);
         }
@@ -121,21 +121,43 @@ export const getRedirectLinkForGroup = async (): Promise<string> => {
       const rawGroups = session.tokens?.accessToken?.payload["cognito:groups"];
 
       if (Array.isArray(rawGroups)) {
-        if (rawGroups.includes("Admin")) return "/admin/dashboard";
+        if (rawGroups.includes("Admin")) return "/admin-dashboard";
         if (rawGroups.includes("Provider")) return "/provider-dashboard";
         if (rawGroups.includes("Client")) return "/client-dashboard";
-        if (rawGroups.includes("Support")) return "/support/dashboard";
+        if (rawGroups.includes("Support")) return "/support-dashboard";
       }
 
       if (typeof rawGroups === "string") {
         const groups = rawGroups.split(",");
-        if (groups.includes("Admin")) return "/admin/dashboard";
+        if (groups.includes("Admin")) return "/admin-dashboard";
         if (groups.includes("Provider")) return "/provider-dashboard";
         if (groups.includes("Client")) return "/client-dashboard";
-        if (groups.includes("Support")) return "/support/dashboard";
+        if (groups.includes("Support")) return "/support-dashboard";
       }
 
-      return "/unauthorized";
+      return "/not-found";
+    },
+  });
+};
+
+// amplify-server-utils.ts
+
+export const getUserGroups = async (): Promise<string[]> => {
+  return await runWithAmplifyServerContext({
+    nextServerContext: { cookies },
+    async operation(contextSpec) {
+      const session = await fetchAuthSession(contextSpec);
+      const rawGroups = session.tokens?.accessToken?.payload["cognito:groups"];
+
+      if (typeof rawGroups === "string") {
+        return rawGroups.split(",");
+      }
+
+      if (Array.isArray(rawGroups)) {
+        return rawGroups.filter((group) => typeof group === "string");
+      }
+
+      return [];
     },
   });
 };

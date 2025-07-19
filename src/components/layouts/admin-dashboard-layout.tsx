@@ -5,15 +5,14 @@ import {
 import { getUserProfile } from "@/actions/getUserProfile";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
-import { SidebarNav } from "@/components/provider-dashboard-ui/careprovider-sidenav";
-
-export default async function ProviderDashboardLayout({
+// import { SidebarNav } from "../Admin-dashboard-ui/careAdmin-sidenav";
+export default async function AdminDashboardLayout({
   children,
 }: {
   children: ReactNode;
 }) {
-  const isProvider = await checkIsInGroup("Provider");
-  if (!isProvider) redirect("/not-found");
+  const isAdmin = await checkIsInGroup("Admin");
+  if (!isAdmin) redirect("/not-found");
 
   const currentUser = await getCurrentUserServer();
   const userProfileData = await getUserProfile(currentUser.userId);
@@ -22,10 +21,13 @@ export default async function ProviderDashboardLayout({
 
   return (
     <div className="min-h-screen flex bg-dashboard-bg font-manrope">
-      <aside className="w-64 dashboard-sidebar min-h-screen flex flex-col">
-        <SidebarNav />
-      </aside>
-      <div className="flex flex-col min-h-screen w-full">
+      <div className="ml-64 flex flex-col min-h-screen w-full">
+        <p>
+          <strong>Email:</strong> {userProfileData.email}
+        </p>
+        <p>
+          <strong>User Type:</strong> {userProfileData.userType}
+        </p>
         <main className="flex-1 p-6 overflow-y-auto">{children}</main>
       </div>
     </div>

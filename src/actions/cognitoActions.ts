@@ -88,27 +88,6 @@ export async function handleConfirmSignUp(
   }
 }
 
-// export async function handleConfirmSignUp(
-//   prevState: string | undefined,
-//   formData: FormData
-// ): Promise<string | undefined> {
-//   try {
-//     const email = String(formData.get("email"));
-//     const code = String(formData.get("code"));
-
-//     await confirmSignUp({
-//       username: email,
-//       confirmationCode: code,
-//     });
-
-//     await autoSignIn();
-
-//     return "/auth/redirect-after-login";
-//   } catch (error) {
-//     return error instanceof Error ? error.message : "Unknown error";
-//   }
-// }
-
 export async function handleSignIn(
   prevState: string | undefined,
   formData: FormData
