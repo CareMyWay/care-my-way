@@ -3,7 +3,7 @@ import { postConfirmation } from "../auth/post-confirmation/resource";
 /*== STEP 1 ===============================================================
 The section below creates a UserProfile database table with a "content" field. Try
 adding a new "isDone" field as a boolean. The authorization rule below
-specifies that any unauthenticated user can "create", "read", "update", 
+specifies that any unauthenticated user can "create", "read", "update",
 and "delete" any "UserProfile" records.
 =========================================================================*/
 const schema = a
@@ -149,6 +149,30 @@ const schema = a
         // Guests can read profiles (for marketplace browsing)
         allow.guest().to(["read"]),
       ]),
+
+
+    QuizAnswers: a
+      .model({
+        userId: a.string().required(),
+        version: a.integer().required(),
+        answers: a.string().required(),
+      })
+      .secondaryIndexes((index) => [
+        index("userId"),
+        index("version"),
+      ])
+      .authorization((allow) => [
+        // Provider owns their profile - full access
+        allow.ownerDefinedIn("userId").to(["create", "read", "update", "delete"]),
+        // Admins have full access
+        allow.group("Admin").to(["create", "read", "update", "delete"]),
+        // Authenticated users can read
+        allow.authenticated().to(["read"]),
+        // Guests can read
+        allow.guest().to(["create", "read", "update", "delete"]),
+      ]),
+
+
   })
   .authorization((allow) => [allow.resource(postConfirmation)]);
 
