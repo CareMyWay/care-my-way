@@ -28,18 +28,18 @@ const emergencySchema = z
     (data) => {
       if (data.supportPerson === "Yes") {
         return (
-          data.supportFirstName?.trim().length >= 2 &&
-          data.supportLastName?.trim().length >= 2 &&
-          data.supportRelationship?.trim().length >= 2 &&
+          !!data.supportFirstName?.trim() &&
+          !!data.supportLastName?.trim() &&
+          !!data.supportRelationship?.trim() &&
           /^\d{10}$/.test(data.supportPhone ?? "")
         );
       }
-      return true;
+      return true; // if No or empty
     },
     {
       message:
         "All support person fields are required and must be valid if 'Yes' is selected.",
-      path: ["supportPhoneNumber"], // Target the first support field for better error display
+      path: ["supportPhoneNumber"],
     }
   );
 
@@ -99,7 +99,7 @@ export function EmergencyContactSection({
       setValue("supportRelationship", "");
       setValue("supportPhone", "");
     }
-  }, [sameAsEmergency]);
+  }, [sameAsEmergency, setValue, watchedFields.contactFirstName, watchedFields.contactLastName, watchedFields.relationship, watchedFields.contactPhone]);
 
   return (
     <div className="h-full bg-white rounded-lg border shadow-sm overflow-hidden">
@@ -107,11 +107,10 @@ export function EmergencyContactSection({
         {/* Header */}
         <div className="mb-6 flex items-center gap-3">
           <div
-            className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-bold ${
-              isCompleted
+            className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-bold ${isCompleted
                 ? "border-green-500 bg-green-500 text-white"
                 : "border-[#4A9B9B] bg-[#4A9B9B] text-white"
-            }`}
+              }`}
           >
             {isCompleted ? (
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -174,7 +173,6 @@ export function EmergencyContactSection({
                   )}
                 </div>
               </div>
-
               <div className="space-y-2">
                 <label htmlFor="relationship" className="std-form-label">
                   Relationship *
@@ -191,7 +189,6 @@ export function EmergencyContactSection({
                   </p>
                 )}
               </div>
-
               <div className="space-y-2">
                 <label htmlFor="contactPhone" className="std-form-label">
                   Phone Number *
@@ -209,7 +206,6 @@ export function EmergencyContactSection({
                   </p>
                 )}
               </div>
-
               <div className="space-y-2">
                 <label htmlFor="supportPerson" className="std-form-label">
                   Do you have a Support Person that will represent you? *
@@ -217,7 +213,22 @@ export function EmergencyContactSection({
                 <select
                   {...register("supportPerson")}
                   className="std-form-input"
-                  onChange={(e) => setHasSupportPerson(e.target.value)}
+                  onChange={(e) => {
+                    const supportValue = e.target.value;
+                    setHasSupportPerson(supportValue);
+                    setValue(
+                      "supportPerson",
+                      supportValue as "" | "Yes" | "No"
+                    );
+
+                    if (supportValue === "No") {
+                      setSameAsEmergency(false); // Reset checkbox too
+                      setValue("supportFirstName", "");
+                      setValue("supportLastName", "");
+                      setValue("supportRelationship", "");
+                      setValue("supportPhone", "");
+                    }
+                  }}
                 >
                   <option value="">Select an option</option>
                   <option value="Yes">Yes</option>
@@ -229,7 +240,6 @@ export function EmergencyContactSection({
                   </p>
                 )}
               </div>
-
               {hasSupportPerson === "Yes" && (
                 <div className="flex flex-col items-start space-x-2">
                   <label className="std-form-label">Support Person</label>

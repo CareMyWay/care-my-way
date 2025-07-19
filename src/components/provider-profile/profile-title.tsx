@@ -1,17 +1,19 @@
 import React from "react";
+import { type ProviderProfileData } from "@/actions/providerProfileActions";
 
-const ProfileTitle = () => {
+interface ProfileTitleProps {
+    profileData: ProviderProfileData;
+}
 
-    const title = (
-        <span className="text-h5-size md:text-h4-size text-dark-green font-semibold">
-            Experienced and compassionate caregiver offering personalized support for all ages.
-        </span>
-    );
+const ProfileTitle: React.FC<ProfileTitleProps> = ({ profileData }) => {
+    const title = profileData.profileTitle || "Healthcare Provider";
 
     return (
         <div>
             <div className="">
-                {title}
+                <span className="text-h5-size md:text-h4-size text-dark-green font-semibold">
+                    {title}
+                </span>
             </div>
         </div>
     );

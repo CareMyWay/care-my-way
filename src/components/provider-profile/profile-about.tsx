@@ -1,11 +1,12 @@
 import React from "react";
+import { type ProviderProfileData } from "@/actions/providerProfileActions";
 
-const ProfileAbout = () => {
-    const aboutText = (
-        <span>
-            Compassionate and dedicated Health Care Aide with 3+ years of experience providing high-quality care to elderly and disabled individuals. Skilled in assisting with daily living activities, administering medications, and ensuring the physical and emotional well-being of clients. Strong knowledge of infection control protocols and a commitment to fostering a safe and comfortable environment for patients.
-        </span>
-    );
+interface ProfileAboutProps {
+    profileData: ProviderProfileData;
+}
+
+const ProfileAbout: React.FC<ProfileAboutProps> = ({ profileData }) => {
+    const aboutText = profileData.bio || "No bio available.";
 
     return (
         <div className="flex flex-col gap-3 my-10">
