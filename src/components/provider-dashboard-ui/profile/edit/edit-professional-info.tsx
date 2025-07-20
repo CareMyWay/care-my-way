@@ -21,9 +21,10 @@ const EXPERIENCE_OPTIONS = [
 
 const RESPONSE_TIME_OPTIONS = [
     "Within 1 hour",
-    "Within 4 hours",
-    "Within 24 hours",
-    "Within 2-3 days"
+    "A few hours",
+    "Same day",
+    "2-3 days",
+    "1 week"
 ];
 
 export function EditProfessionalInfo({ profileData, onUpdate }: EditProfessionalInfoProps) {

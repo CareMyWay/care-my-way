@@ -5,17 +5,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-
 import { Button } from "@/components/provider-dashboard-ui/button";
 import { type ProviderProfileData } from "@/actions/providerProfileActions";
 import { useState } from "react";
+import ISO6391 from "iso-639-1";
 
 interface EditPersonalInfoProps {
     profileData: Partial<ProviderProfileData>;
     onUpdate: (updates: Partial<ProviderProfileData>) => void;
 }
 
-const LANGUAGES = [
-    "English", "French", "Spanish", "Mandarin", "Cantonese", "Tagalog", "Hindi", "Punjabi",
-    "German", "Russian", "Arabic", "Portuguese", "Vietnamese", "Korean", "Italian", "Japanese",
-    "Dutch", "Polish", "Romanian", "Greek", "Turkish", "Hebrew", "Thai", "Swedish", "Norwegian"
-];
+// Get comprehensive list of languages from ISO 639-1 standard
+const LANGUAGES = [...ISO6391.getAllNames().sort(), "Other"];
 
 const GENDER_OPTIONS = ["Male", "Female", "Non-binary", "Prefer not to say"];
 const CONTACT_METHODS = ["Phone Call", "Text Message", "Email", "Video Call", "Any method"];

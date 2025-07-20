@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { getCurrentUser } from "aws-amplify/auth";
-import { AlertCircle, Edit } from "lucide-react";
+import { AlertCircle, Edit, User, Briefcase, BookOpen, Eye } from "lucide-react";
 import { Card, CardContent } from "@/components/provider-dashboard-ui/card";
 import { Button } from "@/components/provider-dashboard-ui/button";
 import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav";
@@ -20,6 +20,7 @@ export function ProfileMain() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [, setCurrentUser] = useState<{ userId: string; username?: string } | null>(null);
+    const [activeTab, setActiveTab] = useState<'overview' | 'contact' | 'professional' | 'credentials'>('overview');
 
     useEffect(() => {
         const loadProfileData = async () => {
@@ -114,27 +115,83 @@ export function ProfileMain() {
             <div className="min-h-screen bg-gray-50/50">
                 <div className="max-w-full mx-auto px-6 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-8 space-y-8">
 
-                    {/* Profile Header */}
-                    <ProfileHeader profileData={profileData} />
-
-                    {/* Main Content Grid */}
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-
-                        {/* Left Column - Contact Info (4 columns) */}
-                        <div className="lg:col-span-4">
-                            <ProfileContactInfo profileData={profileData} />
+                    {/* Tab Navigation */}
+                    <Card className="border border-gray-200 rounded-2xl overflow-hidden shadow-lg">
+                        <div className="border-b bg-gray-50">
+                            <div className="flex space-x-1 p-2">
+                                <button
+                                    onClick={() => setActiveTab('overview')}
+                                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-colors duration-200 ${activeTab === 'overview'
+                                            ? 'bg-white text-[#4A9B9B] shadow-sm border border-[#4A9B9B]/20'
+                                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                                        }`}
+                                >
+                                    <Eye className="h-5 w-5" />
+                                    Profile Overview
+                                </button>
+                                <button
+                                    onClick={() => setActiveTab('contact')}
+                                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-colors duration-200 ${activeTab === 'contact'
+                                            ? 'bg-white text-blue-600 shadow-sm border border-blue-200'
+                                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                                        }`}
+                                >
+                                    <User className="h-5 w-5" />
+                                    Contact & Personal
+                                </button>
+                                <button
+                                    onClick={() => setActiveTab('professional')}
+                                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-colors duration-200 ${activeTab === 'professional'
+                                            ? 'bg-white text-purple-600 shadow-sm border border-purple-200'
+                                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                                        }`}
+                                >
+                                    <Briefcase className="h-5 w-5" />
+                                    Professional Details
+                                </button>
+                                <button
+                                    onClick={() => setActiveTab('credentials')}
+                                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-colors duration-200 ${activeTab === 'credentials'
+                                            ? 'bg-white text-indigo-600 shadow-sm border border-indigo-200'
+                                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                                        }`}
+                                >
+                                    <BookOpen className="h-5 w-5" />
+                                    Credentials
+                                </button>
+                            </div>
                         </div>
 
-                        {/* Middle Column - Professional Summary (4 columns) */}
-                        <div className="lg:col-span-4">
-                            <ProfileProfessionalSummary profileData={profileData} />
-                        </div>
+                        <div className="p-8">
+                            {/* Profile Overview Tab */}
+                            {activeTab === 'overview' && (
+                                <div className="space-y-8">
+                                    <ProfileHeader profileData={profileData} />
+                                </div>
+                            )}
 
-                        {/* Right Column - Credentials (4 columns) */}
-                        <div className="lg:col-span-4">
-                            <ProfileCredentials profileData={profileData} />
+                            {/* Contact & Personal Tab */}
+                            {activeTab === 'contact' && (
+                                <div className="space-y-8">
+                                    <ProfileContactInfo profileData={profileData} />
+                                </div>
+                            )}
+
+                            {/* Professional Details Tab */}
+                            {activeTab === 'professional' && (
+                                <div className="space-y-8">
+                                    <ProfileProfessionalSummary profileData={profileData} />
+                                </div>
+                            )}
+
+                            {/* Credentials Tab */}
+                            {activeTab === 'credentials' && (
+                                <div className="space-y-8">
+                                    <ProfileCredentials profileData={profileData} />
+                                </div>
+                            )}
                         </div>
-                    </div>
+                    </Card>
 
                     {/* Action Buttons Section */}
                     <div className="max-w-4xl mx-auto">
