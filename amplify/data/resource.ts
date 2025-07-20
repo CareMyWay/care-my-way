@@ -72,10 +72,27 @@ const schema = a
         supportLastName: a.string(),
         supportRelationship: a.string(),
         supportContactPhone: a.string(),
+        medicalConditions: a.string(),
+        surgeriesOrHospitalizations: a.string(),
+        chronicIllnesses: a.string(),
+        allergies: a.string(),
+        medications: a.string(),
+        mobilityStatus: a.string(),
+        cognitiveDifficulties: a.string(),
+        cognitiveDifficultiesOther: a.string(),
+        sensoryImpairments: a.string(),
+        sensoryImpairmentsOther: a.string(),
+        typicalDay: a.string(),
+        physicalActivity: a.string(),
+        dietaryPreferences: a.string(),
+        sleepHours: a.string(),
+        hobbies: a.string(),
+        socialTime: a.string(),
       })
       .authorization((allow) => [
         allow.ownerDefinedIn("profileOwner").to(["read", "update", "create"]),
         allow.groups(["Admin"]).to(["read", "update", "create", "delete"]),
+        allow.groups(["Provider"]).to(["read"]),
         allow.authenticated().to(["read", "create"]), // Add "create" for regular users
       ]),
   })

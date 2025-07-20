@@ -12,6 +12,9 @@ import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/../amplify/data/resource";
 
 import toast from "react-hot-toast";
+import { MedicalSection } from "@/components/client-profile-forms/medical-section";
+import { LifestyleSection } from "@/components/client-profile-forms/lifestyle-section";
+import { AbilitySection } from "@/components/client-profile-forms/ability-section";
 
 const client = generateClient<Schema>();
 // Form validation functions
@@ -46,6 +49,33 @@ type EmergencyContactData = {
   [key: string]: string | boolean | undefined;
 };
 
+type MedicalData = {
+  medicalConditions?: string;
+  surgeriesOrHospitalizations?: string;
+  chronicIllnesses?: string;
+  allergies?: string;
+  medications?: string;
+  [key: string]: string | undefined;
+};
+type AbilityData = {
+  mobilityStatus?: string;
+  cognitiveDifficulties?: string[];
+  cognitiveDifficultiesOther?: string;
+  sensoryImpairments?: string[];
+  sensoryImpairmentsOther?: string;
+  [key: string]: string | string[] | undefined;
+};
+
+type LifestyleData = {
+  typicalDay?: string;
+  physicalActivity?: string;
+  dietaryPreferences?: string;
+  sleepHours?: string;
+  hobbies?: string;
+  socialTime?: string;
+  [key: string]: string | undefined;
+};
+
 export default function CompleteClientProfile() {
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const [activeSection, setActiveSection] = useState("personal-info");
@@ -53,14 +83,27 @@ export default function CompleteClientProfile() {
     "personal-info": {},
     address: {},
     "emergency-contact": {},
+    medical: {},
+    ability: {},
+    lifestyle: {},
   });
   const [sectionCompletion, setSectionCompletion] = useState({
     "personal-info": { completed: false, progress: 0 },
     address: { completed: false, progress: 0 },
     "emergency-contact": { completed: false, progress: 0 },
+    medical: { completed: false, progress: 0 },
+    ability: { completed: false, progress: 0 },
+    lifestyle: { completed: false, progress: 0 },
   });
 
-  const sections = ["personal-info", "address", "emergency-contact"];
+  const sections = [
+    "personal-info",
+    "address",
+    "emergency-contact",
+    "medical",
+    "ability",
+    "lifestyle",
+  ];
 
   const validatePersonalInfo = (data: PersonalInfoData) => {
     const required = [
@@ -131,8 +174,113 @@ export default function CompleteClientProfile() {
     };
   };
 
-  type SectionKey = "personal-info" | "address" | "emergency-contact";
-  type SectionData = PersonalInfoData | AddressData | EmergencyContactData;
+  const validateMedical = (data: MedicalData) => {
+    const required = [
+      "medicalConditions",
+      "surgeriesOrHospitalizations",
+      "chronicIllnesses",
+      "allergies",
+      "medications",
+    ];
+    const filled = required.filter(
+      (field) => typeof data[field] === "string" && data[field].trim() !== ""
+    );
+    return {
+      progress: (filled.length / required.length) * 100,
+      completed: filled.length === required.length,
+    };
+  };
+  const validateAbility = (data: AbilityData) => {
+    let filledCount = 0;
+    let requiredFields = 3; // mobilityStatus, cognitiveDifficulties, sensoryImpairments
+
+    // 1. Check mobilityStatus
+    if (
+      typeof data.mobilityStatus === "string" &&
+      data.mobilityStatus.trim() !== ""
+    ) {
+      filledCount++;
+    }
+
+    // 2. Check cognitiveDifficulties
+    if (
+      Array.isArray(data.cognitiveDifficulties) &&
+      data.cognitiveDifficulties.length > 0
+    ) {
+      filledCount++;
+
+      // Check cognitiveDifficultiesOther only if 'Other' is selected
+      if (data.cognitiveDifficulties.includes("Other")) {
+        requiredFields++;
+        if (
+          typeof data.cognitiveDifficultiesOther === "string" &&
+          data.cognitiveDifficultiesOther.trim() !== ""
+        ) {
+          filledCount++;
+        }
+      }
+    }
+
+    // 3. Check sensoryImpairments
+    if (
+      Array.isArray(data.sensoryImpairments) &&
+      data.sensoryImpairments.length > 0
+    ) {
+      filledCount++;
+
+      // Check sensoryImpairmentsOther only if 'Other' is selected
+      if (data.sensoryImpairments.includes("Other")) {
+        requiredFields++;
+        if (
+          typeof data.sensoryImpairmentsOther === "string" &&
+          data.sensoryImpairmentsOther.trim() !== ""
+        ) {
+          filledCount++;
+        }
+      }
+    }
+
+    const progress = (filledCount / requiredFields) * 100;
+
+    return {
+      progress,
+      completed: filledCount === requiredFields,
+    };
+  };
+
+  const validateLifestyle = (data: LifestyleData) => {
+    const required = [
+      "typicalDay",
+      "physicalActivity",
+      "dietaryPreferences",
+      "sleepHours",
+      "hobbies",
+      "socialTime",
+    ];
+    const filled = required.filter(
+      (field) => typeof data[field] === "string" && data[field].trim() !== ""
+    );
+    return {
+      progress: (filled.length / required.length) * 100,
+      completed: filled.length === required.length,
+    };
+  };
+
+  type SectionKey =
+    | "personal-info"
+    | "address"
+    | "emergency-contact"
+    | "medical"
+    | "ability"
+    | "lifestyle";
+
+  type SectionData =
+    | PersonalInfoData
+    | AddressData
+    | EmergencyContactData
+    | MedicalData
+    | AbilityData
+    | LifestyleData;
 
   const updateFormData = (section: SectionKey, data: SectionData) => {
     setFormData((prev) => ({
@@ -148,11 +296,17 @@ export default function CompleteClientProfile() {
     const emergencyValidation = validateEmergencyContact(
       formData["emergency-contact"]
     );
+    const medicalValidation = validateMedical(formData["medical"]);
+    const abilityValidation = validateAbility(formData["ability"]);
+    const lifestyleValidation = validateLifestyle(formData["lifestyle"]);
 
     setSectionCompletion({
       "personal-info": personalValidation,
       address: addressValidation,
       "emergency-contact": emergencyValidation,
+      medical: medicalValidation,
+      ability: abilityValidation,
+      lifestyle: lifestyleValidation,
     });
   }, [formData]);
 
@@ -202,6 +356,9 @@ export default function CompleteClientProfile() {
         const emergencyInfo = formData[
           "emergency-contact"
         ] as EmergencyContactData;
+        const medicalInfo = formData["medical"] as MedicalData;
+        const abilityInfo = formData["ability"] as AbilityData;
+        const lifestyleInfo = formData["lifestyle"] as LifestyleData;
 
         const input = {
           userId,
@@ -228,6 +385,26 @@ export default function CompleteClientProfile() {
           supportLastName: emergencyInfo.supportLastName,
           supportRelationship: emergencyInfo.supportRelationship,
           supportContactPhone: emergencyInfo.supportPhone,
+          medicalConditions: medicalInfo.medicalConditions,
+          surgeriesOrHospitalizations: medicalInfo.surgeriesOrHospitalizations,
+          chronicIllnesses: medicalInfo.chronicIllnesses,
+          allergies: medicalInfo.allergies,
+          medications: medicalInfo.medications,
+          mobilityStatus: abilityInfo.mobilityStatus,
+          cognitiveDifficulties: Array.isArray(
+            abilityInfo.cognitiveDifficulties
+          )
+            ? abilityInfo.cognitiveDifficulties.join(",")
+            : abilityInfo.cognitiveDifficulties,
+          sensoryImpairments: Array.isArray(abilityInfo.sensoryImpairments)
+            ? abilityInfo.sensoryImpairments.join(",")
+            : abilityInfo.sensoryImpairments,
+          typicalDay: lifestyleInfo.typicalDay,
+          physicalActivity: lifestyleInfo.physicalActivity,
+          dietaryPreferences: lifestyleInfo.dietaryPreferences,
+          sleepHours: lifestyleInfo.sleepHours,
+          hobbies: lifestyleInfo.hobbies,
+          socialTime: lifestyleInfo.socialTime,
         };
 
         const result = await client.models.ClientProfile.create(input);
@@ -323,6 +500,27 @@ export default function CompleteClientProfile() {
                     defaultValues={formData["emergency-contact"]}
                   />
                 )}
+                {activeSection === "medical" && (
+                  <MedicalSection
+                    onDataChange={(data) => updateFormData("medical", data)}
+                    isCompleted={sectionCompletion["medical"].completed}
+                    defaultValues={formData["medical"]}
+                  />
+                )}
+                {activeSection === "ability" && (
+                  <AbilitySection
+                    onDataChange={(data) => updateFormData("ability", data)}
+                    isCompleted={sectionCompletion["ability"].completed}
+                    defaultValues={formData["ability"]}
+                  />
+                )}
+                {activeSection === "lifestyle" && (
+                  <LifestyleSection
+                    onDataChange={(data) => updateFormData("lifestyle", data)}
+                    isCompleted={sectionCompletion["lifestyle"].completed}
+                    defaultValues={formData["lifestyle"]}
+                  />
+                )}
               </div>
 
               {/* Compact Action Buttons */}
@@ -350,7 +548,7 @@ export default function CompleteClientProfile() {
                   </div>
                 </div>
 
-                {activeSection === "emergency-contact" ? (
+                {activeSection === "lifestyle" ? (
                   <button
                     onClick={handleSubmit}
                     disabled={

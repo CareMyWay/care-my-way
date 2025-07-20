@@ -6,7 +6,6 @@ import { fetchUserAttributes } from "aws-amplify/auth";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/../amplify/data/resource";
 
-// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,6 +16,9 @@ import {
   User,
   MapPin,
   Shield,
+  FolderHeart,
+  BrainCircuit,
+  PersonStanding,
   // Bell,
   // Settings,
   // Upload,
@@ -65,6 +67,22 @@ export default function CompletedClientProfile() {
             "supportLastName",
             "supportRelationship",
             "supportContactPhone",
+            "medicalConditions",
+            "surgeriesOrHospitalizations",
+            "chronicIllnesses",
+            "allergies",
+            "medications",
+            "mobilityStatus",
+            "cognitiveDifficulties",
+            "cognitiveDifficultiesOther",
+            "sensoryImpairments",
+            "sensoryImpairmentsOther",
+            "typicalDay",
+            "physicalActivity",
+            "dietaryPreferences",
+            "sleepHours",
+            "hobbies",
+            "socialTime",
             "userId",
             "userType",
             "phoneNumber",
@@ -113,6 +131,21 @@ export default function CompletedClientProfile() {
           id: "emergency-support",
           label: "Emergency & Support",
           icon: Shield,
+        },
+        {
+          id: "medical-info",
+          label: "Medical History",
+          icon: FolderHeart,
+        },
+        {
+          id: "abilities",
+          label: "Function & Cognition",
+          icon: BrainCircuit,
+        },
+        {
+          id: "lifestyle",
+          label: "Lifestyle",
+          icon: PersonStanding,
         },
       ],
     },
@@ -227,6 +260,12 @@ function renderContent(
       return <AddressInfoContent profile={profile} />;
     case "emergency-support":
       return <EmergencySupportContent profile={profile} />;
+    case "medical-info":
+      return <MedicalInfoContent profile={profile} />;
+    case "abilities":
+      return <AbilitiesInfoContent profile={profile} />;
+    case "lifestyle":
+      return <LifestyleInfoContent profile={profile} />;
     default:
       return <PersonalInfoContent profile={profile} />;
   }
@@ -608,6 +647,298 @@ function EmergencySupportContent({
             </>
           )}
 
+          <div className="flex gap-2 mt-4">
+            {isEditing ? (
+              <>
+                <OrangeButton variant="action" onClick={handleSave}>
+                  Save
+                </OrangeButton>
+                <Button variant="ghost" onClick={handleCancel}>
+                  Cancel
+                </Button>
+              </>
+            ) : (
+              <OrangeButton variant="action" onClick={() => setIsEditing(true)}>
+                Edit
+              </OrangeButton>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function MedicalInfoContent({
+  profile,
+}: {
+  profile: Schema["ClientProfile"]["type"];
+}) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    medicalConditions: profile.medicalConditions ?? "",
+    surgeriesOrHospitalizations: profile.surgeriesOrHospitalizations ?? "",
+    chronicIllnesses: profile.chronicIllnesses ?? "",
+    allergies: profile.allergies ?? "",
+    medications: profile.medications ?? "",
+  });
+  const medicalLabels: Record<string, string> = {
+    medicalConditions: "Medical Conditions",
+    surgeriesOrHospitalizations: "Surgeries/Hospitalizations",
+    chronicIllnesses: "Chronic Illnesses",
+    allergies: "Allergies",
+    medications: "Medications",
+  };
+
+  const handleChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleCancel = () => {
+    setFormData({
+      medicalConditions: profile.medicalConditions ?? "",
+      surgeriesOrHospitalizations: profile.surgeriesOrHospitalizations ?? "",
+      chronicIllnesses: profile.chronicIllnesses ?? "",
+      allergies: profile.allergies ?? "",
+      medications: profile.medications ?? "",
+    });
+    setIsEditing(false);
+  };
+
+  const handleSave = async () => {
+    try {
+      await client.models.ClientProfile.update({
+        id: profile.id,
+        ...formData,
+      });
+      setIsEditing(false);
+    } catch (err) {
+      console.error("Failed to update address", err);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold text-darkest-green">
+        Medical History Information
+      </h1>
+      <Card>
+        <CardContent className="space-y-4 p-6">
+          {[
+            "medicalConditions",
+            "surgeriesOrHospitalizations",
+            "chronicIllnesses",
+            "allergies",
+            "medications",
+          ].map((field) => (
+            <div key={field}>
+              <Label htmlFor={medicalLabels[field]}>
+                {medicalLabels[field]}
+              </Label>
+              <Input
+                id={field}
+                value={formData[field as keyof typeof formData]}
+                onChange={(e) => handleChange(field, e.target.value)}
+                disabled={!isEditing}
+              />
+            </div>
+          ))}
+          <div className="flex gap-2 mt-4">
+            {isEditing ? (
+              <>
+                <OrangeButton variant="action" onClick={handleSave}>
+                  Save
+                </OrangeButton>
+                <Button variant="ghost" onClick={handleCancel}>
+                  Cancel
+                </Button>
+              </>
+            ) : (
+              <OrangeButton variant="action" onClick={() => setIsEditing(true)}>
+                Edit
+              </OrangeButton>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+function AbilitiesInfoContent({
+  profile,
+}: {
+  profile: Schema["ClientProfile"]["type"];
+}) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    mobilityStatus: profile.mobilityStatus ?? "",
+    cognitiveDifficulties: profile.cognitiveDifficulties ?? "",
+    cognitiveDifficultiesOther: profile.cognitiveDifficultiesOther ?? "",
+    sensoryImpairments: profile.sensoryImpairments ?? "",
+    sensoryImpairmentsOther: profile.sensoryImpairmentsOther ?? "",
+  });
+  const abilitiesLabels: Record<string, string> = {
+    mobilityStatus: "Mobility Status",
+    cognitiveDifficulties: "Cognitive Difficulties",
+    cognitiveDifficultiesOther: "Cognitive Difficulties (Other)",
+    sensoryImpairments: "Sensory Impairments",
+    sensoryImpairmentsOther: "Sensory Impairments (Other)",
+  };
+
+  const handleChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleCancel = () => {
+    setFormData({
+      mobilityStatus: profile.mobilityStatus ?? "",
+      cognitiveDifficulties: profile.cognitiveDifficulties ?? "",
+      cognitiveDifficultiesOther:
+        profile.cognitiveDifficultiesOther ?? "Not specified",
+      sensoryImpairments: profile.sensoryImpairments ?? "",
+      sensoryImpairmentsOther:
+        profile.sensoryImpairmentsOther ?? "Not specified",
+    });
+    setIsEditing(false);
+  };
+
+  const handleSave = async () => {
+    try {
+      await client.models.ClientProfile.update({
+        id: profile.id,
+        ...formData,
+      });
+      setIsEditing(false);
+    } catch (err) {
+      console.error("Failed to update address", err);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold text-darkest-green">
+        Functional & Cognitive Abilities Information
+      </h1>
+      <Card>
+        <CardContent className="space-y-4 p-6">
+          {[
+            "mobilityStatus",
+            "cognitiveDifficulties",
+            "cognitiveDifficultiesOther",
+            "sensoryImpairments",
+            "sensoryImpairmentsOther",
+          ].map((field) => (
+            <div key={field}>
+              <Label htmlFor={abilitiesLabels[field]}>
+                {abilitiesLabels[field]}
+              </Label>
+              <Input
+                id={field}
+                value={formData[field as keyof typeof formData]}
+                onChange={(e) => handleChange(field, e.target.value)}
+                disabled={!isEditing}
+              />
+            </div>
+          ))}
+          <div className="flex gap-2 mt-4">
+            {isEditing ? (
+              <>
+                <OrangeButton variant="action" onClick={handleSave}>
+                  Save
+                </OrangeButton>
+                <Button variant="ghost" onClick={handleCancel}>
+                  Cancel
+                </Button>
+              </>
+            ) : (
+              <OrangeButton variant="action" onClick={() => setIsEditing(true)}>
+                Edit
+              </OrangeButton>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+function LifestyleInfoContent({
+  profile,
+}: {
+  profile: Schema["ClientProfile"]["type"];
+}) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    typicalDay: profile.typicalDay ?? "",
+    physicalActivity: profile.physicalActivity ?? "",
+    dietaryPreferences: profile.dietaryPreferences ?? "",
+    sleepHours: profile.sleepHours ?? "",
+    hobbies: profile.hobbies ?? "",
+    socialTime: profile.socialTime ?? "",
+  });
+  const lifestyleLabels: Record<string, string> = {
+    typicalDay: "Typical Day",
+    physicalActivity: "Physical Activity",
+    dietaryPreferences: "Dietary Preferences",
+    sleepHours: "Sleep Hours",
+    hobbies: "Hobbies",
+    socialTime: "Social Time",
+  };
+
+  const handleChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleCancel = () => {
+    setFormData({
+      typicalDay: profile.typicalDay ?? "",
+      physicalActivity: profile.physicalActivity ?? "",
+      dietaryPreferences: profile.dietaryPreferences ?? "",
+      sleepHours: profile.sleepHours ?? "",
+      hobbies: profile.hobbies ?? "",
+      socialTime: profile.socialTime ?? "",
+    });
+    setIsEditing(false);
+  };
+
+  const handleSave = async () => {
+    try {
+      await client.models.ClientProfile.update({
+        id: profile.id,
+        ...formData,
+      });
+      setIsEditing(false);
+    } catch (err) {
+      console.error("Failed to update address", err);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold text-darkest-green">
+        Lifestyle Information
+      </h1>
+      <Card>
+        <CardContent className="space-y-4 p-6">
+          {[
+            "typicalDay",
+            "physicalActivity",
+            "dietaryPreferences",
+            "sleepHours",
+            "hobbies",
+            "socialTime",
+          ].map((field) => (
+            <div key={field}>
+              <Label htmlFor={lifestyleLabels[field]}>
+                {lifestyleLabels[field]}
+              </Label>
+              <Input
+                id={field}
+                value={formData[field as keyof typeof formData]}
+                onChange={(e) => handleChange(field, e.target.value)}
+                disabled={!isEditing}
+              />
+            </div>
+          ))}
           <div className="flex gap-2 mt-4">
             {isEditing ? (
               <>
