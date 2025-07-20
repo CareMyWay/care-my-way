@@ -150,7 +150,6 @@ const schema = a
         allow.guest().to(["read"]),
       ]),
 
-
     QuizAnswers: a
       .model({
         userId: a.string().required(),
