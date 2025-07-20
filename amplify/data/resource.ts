@@ -76,8 +76,6 @@ const schema = a
         allow.authenticated().to(["read"]),
       ]),
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     ProviderProfile: a
       .model({
         userId: a.string().required(),
@@ -150,9 +148,8 @@ const schema = a
         allow.authenticated().to(["read"]),
         // Guests can read profiles (for marketplace browsing)
         allow.guest().to(["read"]),
-=======
-=======
->>>>>>> 70c4d7c (Booking modal working with dynamoDB)
+      ]),
+      
       // Booking schema
       Booking: a
       .model({
@@ -163,7 +160,6 @@ const schema = a
         providerRate: a.string().required(),
         date: a.string().required(),
         time: a.string().required(),
-<<<<<<< HEAD
         clientId: a.string().required(),
         clientName: a.string(),
         bookingStatus: a.string().default("For Confirmation"),
@@ -173,20 +169,6 @@ const schema = a
       .authorization((allow) => [
         allow.authenticated().to(["create", "read", "update"]),
         allow.group("Admin"),
-<<<<<<< HEAD
-        allow.guest().to(["create", "read"]), // ✅ Add this line
->>>>>>> 500e226 (Booking modal working with dynamoDB)
-=======
->>>>>>> 0099742 (Completed booking status update)
-=======
-        clientId: a.string(),
-        // clientName: a.string(),
-      })
-      .authorization((allow) => [
-        allow.authenticated().to(["create", "read"]),
-        allow.group("Admin"),
-        allow.guest().to(["create", "read"]), // ✅ Add this line
->>>>>>> 70c4d7c (Booking modal working with dynamoDB)
       ]),
   })
   .authorization((allow) => [allow.resource(postConfirmation)]);

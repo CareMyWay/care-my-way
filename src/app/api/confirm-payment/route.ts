@@ -40,7 +40,18 @@ export async function POST(req: Request) {
 
     await ddbClient.send(updateCommand);
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ 
+      success: true,
+      bookingDetails: {
+        providerName: session.metadata?.providerName,
+        providerTitle: session.metadata?.providerTitle,
+        location: session.metadata?.providerLocation,
+        date: session.metadata?.date,
+        time: session.metadata?.time,
+        duration: session.metadata?.duration,
+        totalCost: session.amount_total / 100,
+        providerRate: session.metadata?.providerRate,
+      } });
   } catch (error) {
     console.error("Error updating booking:", error);
     return NextResponse.json(

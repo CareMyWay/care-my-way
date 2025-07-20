@@ -4,7 +4,6 @@ import "@/app/globals.css";
 import ConfigureAmplifyClientSide from "@/app/amplify-config";
 import AuthProvider from "@/components/auth/auth";
 import { Toaster } from "react-hot-toast";
-import StripeProvider from "@/components/stripe/stripe-provider";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -42,9 +41,7 @@ export default async function RootLayout({
 
         <AuthProvider>
           <ConfigureAmplifyClientSide />
-          <StripeProvider>
           {children}
-          </StripeProvider>
         </AuthProvider>
       </body>
     </html>

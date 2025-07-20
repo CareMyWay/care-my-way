@@ -19,7 +19,22 @@ const ProfileSummary: React.FC<ProfileSummaryProps> = ({ profileData }) => {
         return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
     };
 
-const ProfileSummary = () => {
+    // Helper function to format location
+    const getLocation = () => {
+        const parts = [profileData.city, profileData.province].filter(Boolean);
+        return parts.length > 0 ? parts.join(", ") : "Location not specified";
+    };
+
+    const providerName = [profileData.firstName, profileData.lastName].filter(Boolean).join(" ") || "Unknown Provider";
+    const providerTitle = profileData.profileTitle || "Healthcare Provider";
+    const location = getLocation();
+
+    const infoRows = [
+        { label: "Working Experience", value: profileData.yearsExperience || "Not specified" },
+        { label: "Starting Rate", value: profileData.askingRate ? `$${profileData.askingRate}/hour` : "Rate on request" },
+        { label: "Response Time", value: profileData.responseTime || "Not specified" },
+    ];
+
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const router = useRouter();
 
@@ -41,7 +56,7 @@ const ProfileSummary = () => {
     };
 
     return (
-        <div className="flex flex-col items-center border-solid border-1 rounded-md border-input-border-gray pb-7 w-full md:w-[320px] xl:w-[400px]">
+        <div className="flex flex-col items-center border-solid border-1 rounded-none border-input-border-gray pb-7 w-full md:w-[320px] xl:w-[400px]">
             <div className="flex flex-col items-left w-[360px] p-7">
                 <div className="md:w-[220] xl:w-[320px] md:h-[220px] xl:h-[320px] mx-auto bg-gray-100 rounded-lg flex items-center justify-center">
                     {profileData.profilePhoto ? (
@@ -87,13 +102,20 @@ const ProfileSummary = () => {
                         REQUEST TO BOOK
                     </OrangeButton>
                 </div>
+                {isBookingModalOpen && (
+                <BookingModal
+                    isOpen={isBookingModalOpen}
+                    onOpenChange={setIsBookingModalOpen}
+                    providerId={profileData.id}
+                    providerName={providerName}
+                    providerPhoto={profileData.profilePhoto}
+                    providerTitle={providerTitle}
+                    providerRate={String(profileData.askingRate ? `$${profileData.askingRate}/hour` : "Rate on request")}
+                    providerRateFloat={profileData.askingRate}
+                    providerLocation={String(location)}
+                />
+            )}
             </div>
-            <div className="mt-5">
-                <OrangeButton variant="route" href="/provider" className="w-full"> {/*href is a placeholder link, replace with booking link */}
-                    REQUEST TO BOOK
-                </OrangeButton>
-            </div>
-        </div>
     );
 };
 
