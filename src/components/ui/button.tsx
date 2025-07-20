@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -74,9 +73,12 @@ function Button({
 }
 
 export { Button, buttonVariants };
+<<<<<<< HEAD
 =======
   )
 }
 
 export { Button, buttonVariants }
 >>>>>>> 70c4d7c (Booking modal working with dynamoDB)
+=======
+>>>>>>> c9e772d (Prep for pull request)
