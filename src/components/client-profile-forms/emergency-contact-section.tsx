@@ -397,6 +397,8 @@ export function EmergencyContactSection({
           </div>
 
           {/* Completion Status */}
+
+          {/* Completion indicator */}
           {isCompleted && (
             <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
               <div className="flex items-center gap-2 text-green-700">
@@ -412,7 +414,7 @@ export function EmergencyContactSection({
                   />
                 </svg>
                 <span className="text-sm font-medium">
-                  All sections completed! Ready to submit.
+                  Section completed! Click Next to continue.
                 </span>
               </div>
             </div>
