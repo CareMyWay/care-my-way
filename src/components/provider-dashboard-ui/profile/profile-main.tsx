@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { getCurrentUser } from "aws-amplify/auth";
-import { AlertCircle, Edit, FileText } from "lucide-react";
+import { AlertCircle, Edit } from "lucide-react";
 import { Card, CardContent } from "@/components/provider-dashboard-ui/card";
 import { Button } from "@/components/provider-dashboard-ui/button";
 import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav";
@@ -153,15 +153,7 @@ export function ProfileMain() {
                                         </Button>
                                     </Link>
 
-                                    <Link href="/provider-dashboard/to-dos/complete-profile" className="w-full sm:w-auto">
-                                        <Button
-                                            variant="outline"
-                                            className="dashboard-button-secondary px-8 py-4 text-lg font-semibold rounded-xl border-2 hover:bg-gray-50 transition-all duration-200 w-full sm:w-auto"
-                                        >
-                                            <FileText className="h-5 w-5 mr-2" />
-                                            Update Credentials
-                                        </Button>
-                                    </Link>
+
 
                                     <Link href="/provider-dashboard" className="w-full sm:w-auto">
                                         <Button
