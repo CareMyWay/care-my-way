@@ -76,6 +76,12 @@
   --color-hover-orange: #B93F23;
 
   --color-input-border-gray: #B5BAC0;
+  
+  /* Schedule availability colors */
+  --color-available-green: #dcfce7;
+  --color-success-green: #16a34a;
+  --color-light-gray: #f3f4f6;
+  --color-medium-gray: #d1d5db;
 
   /* BUTTON STYLES */
   --text-btn-font-size: 16px;
@@ -407,4 +413,60 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* ===== WEEKLY SCHEDULE GRID STYLES ===== */
+
+.week-view-grid {
+  display: grid;
+  grid-template-columns: 80px repeat(7, 1fr);
+  gap: 1px;
+  background-color: #e5e7eb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.week-time-slot {
+  background-color: white;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+  border: 1px solid #f3f4f6;
+}
+
+.week-time-slot:hover {
+  background-color: #f9fafb;
+}
+
+/* Calendar Grid for Month View */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background-color: #e5e7eb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.calendar-cell {
+  background-color: white;
+  min-height: 120px;
+  padding: 8px;
+  transition: background-color 0.2s ease;
+  border: 1px solid #f3f4f6;
+}
+
+.calendar-cell:hover {
+  background-color: #f9fafb;
+}
+
+.time-slot {
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  line-height: 1rem;
 }
