@@ -31,8 +31,42 @@ const schema = a
           .authorization((allow) => [
             allow.ownerDefinedIn("profileOwner").to(["read"]),
             allow.group("Admin"),
+            allow.guest().to(["read"]),
             allow.authenticated().to(["read"]),
           ]),
+
+        // Shared fields
+        // firstName: a.string(),
+        // lastName: a.string(),
+        // gender: a.string(),
+        // dateOfBirth: a.date(),
+        // address: a.string(),
+        // city: a.string(),
+        // province: a.string(),
+        // postalCode: a.string(),
+        // emergencyContactFirstName: a.string(),
+        // emergencyContactLastName: a.string(),
+        // emergencyRelationship: a.string(),
+        // emergencyContactPhone: a.string(),
+        // // We don't want people to change ownership of their profile
+        // profileOwner: a
+        //   .string()
+        //   .authorization((allow) => [
+        //     allow.ownerDefinedIn("profileOwner").to(["read"]),
+        //     allow.group("Admins"),
+        //     allow.guest().to(["read"]),
+        //     allow.authenticated().to(["read"]),
+        //   ]),
+
+        //Client support fields
+        // hasRepSupportPerson: a.boolean(),
+        // supportFirstName: a.string(),
+        // supportLastName: a.string(),
+        // supportRelationship: a.string(),
+        // supportContactPhone: a.string(),
+
+        //healthcare provider fields
+        //NEED TO ADD FIELDS HERE
       })
       .secondaryIndexes((index) => [index("userId")])
       .authorization((allow) => [
@@ -42,7 +76,7 @@ const schema = a
         allow.authenticated().to(["read"]),
       ]),
 
-    ProviderProfile: a
+    ClientProfile: a
       .model({
         userId: a.string().required(),
         userType: a.string().default("Client"),
@@ -52,6 +86,38 @@ const schema = a
             allow.ownerDefinedIn("profileOwner").to(["read", "create"]),
             allow.group("Admin").to(["read", "update"]),
           ]),
+        firstName: a.string(),
+        lastName: a.string(),
+        gender: a.string(),
+        dateOfBirth: a.date(),
+        email: a.string(),
+        phoneNumber: a.string(),
+        address: a.string(),
+        city: a.string(),
+        province: a.string(),
+        postalCode: a.string(),
+        emergencyContactFirstName: a.string(),
+        emergencyContactLastName: a.string(),
+        emergencyRelationship: a.string(),
+        emergencyContactPhone: a.string(),
+        hasRepSupportPerson: a.boolean(),
+        supportFirstName: a.string(),
+        supportLastName: a.string(),
+        supportRelationship: a.string(),
+        supportContactPhone: a.string(),
+      })
+      .authorization((allow) => [
+        allow.ownerDefinedIn("profileOwner").to(["read", "update", "create"]),
+        allow.groups(["Admin"]).to(["read", "update", "create", "delete"]),
+        allow.authenticated().to(["read", "create"]), // Add "create" for regular users
+      ]),
+
+    ProviderProfile: a
+      .model({
+        userId: a.string().required(),
+        profileOwner: a.string().required(),
+
+        // Personal & Contact Information
         firstName: a.string(),
         lastName: a.string(),
         // Lowercase versions for case-insensitive search

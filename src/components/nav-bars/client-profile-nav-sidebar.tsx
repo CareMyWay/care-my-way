@@ -31,6 +31,24 @@ export function ClientProfileNavSideBar({
       subtitle: "Contact details",
       step: 3,
     },
+    {
+      id: "medical",
+      title: "Medical Information",
+      subtitle: "Medical history",
+      step: 4,
+    },
+    {
+      id: "abilities",
+      title: "Functional and Cognitive Abilities",
+      subtitle: "Ability details",
+      step: 5,
+    },
+    {
+      id: "lifestyle",
+      title: "Lifestyle Information",
+      subtitle: "Lifestyle habits",
+      step: 5,
+    },
   ];
 
   const getStepStatus = (sectionId: string) => {
@@ -184,11 +202,11 @@ export function ClientProfileNavSideBar({
       {/* Compact Help Section */}
       <div className="p-3 border-t bg-blue-50">
         <div className="text-center">
-          <div className="text-xs font-medium text-blue-800 mb-1">
+          {/* <div className="text-xs font-medium text-blue-800 mb-1">
             Need Help?
-          </div>
-          <div className="text-xs text-blue-600">
-            Complete each section to continue
+          </div> */}
+          <div className="text-md text-blue-600">
+            Complete each section before continuing on to the next section.
           </div>
         </div>
       </div>
