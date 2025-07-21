@@ -1,12 +1,13 @@
-"use client"
+"use client";
 
-import type React from "react"
+/* eslint-disable no-unused-vars */
+import type React from "react";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
-import { X } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { X } from "lucide-react";
 
 interface TimeSlot {
   time: string
@@ -46,40 +47,40 @@ export function ScheduleGrid({
   getAvailableHoursForDay,
 }: ScheduleGridProps) {
   const getSlotClassName = (slot: TimeSlot, dayIndex: number) => {
-    const baseClasses = "p-2 text-xs rounded transition-all duration-200 border cursor-pointer select-none"
+    const baseClasses = "p-2 text-xs rounded-lg transition-all duration-300 border cursor-pointer select-none font-medium";
 
     if (slot.isBlocked) {
-      return `${baseClasses} bg-red-100 border-red-300 text-red-600 cursor-not-allowed`
+      return `${baseClasses} bg-red-100 border-red-300 text-red-700 cursor-not-allowed opacity-75`;
     }
 
     if (!weeklySchedule[dayIndex].enabled || !canEdit) {
-      return `${baseClasses} bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed`
+      return `${baseClasses} bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed`;
     }
 
     if (slot.available) {
-      return `${baseClasses} bg-[var(--color-available-green)] border-[var(--color-success-green)] text-[var(--color-success-green)] hover:bg-[var(--color-success-green)] hover:text-white`
+      return `${baseClasses} bg-[var(--color-available-green)] border-[var(--color-success-green)] text-[var(--color-success-green)] hover:bg-[var(--color-success-green)] hover:text-white hover:scale-105 hover:shadow-md transform active:scale-95`;
     }
 
-    return `${baseClasses} bg-gray-50 border-gray-200 text-gray-400 hover:bg-gray-100 hover:border-gray-300`
-  }
+    return `${baseClasses} bg-gray-50 border-gray-300 text-gray-500 hover:bg-gray-100 hover:border-gray-400 hover:text-gray-700 hover:scale-105 transform active:scale-95`;
+  };
 
   const getSlotTitle = (slot: TimeSlot, dayIndex: number) => {
     if (!canEdit) {
-      return `${formatTimeSlot(slot.time)} - Cannot edit current week`
+      return `${formatTimeSlot(slot.time)} - Cannot edit current week`;
     }
 
     if (slot.isBlocked) {
-      return `${formatTimeSlot(slot.time)} - Blocked (unavailable)`
+      return `${formatTimeSlot(slot.time)} - Blocked (unavailable)`;
     }
 
     if (!weeklySchedule[dayIndex].enabled) {
-      return `${formatTimeSlot(slot.time)} - Day disabled`
+      return `${formatTimeSlot(slot.time)} - Day disabled`;
     }
 
-    const action = slot.available ? "disable" : "enable"
-    const shortcuts = "Shift+Click for range, Ctrl+Click for multi-select"
-    return `${formatTimeSlot(slot.time)} - Click to ${action}\n${shortcuts}`
-  }
+    const action = slot.available ? "disable" : "enable";
+    const shortcuts = "Shift+Click for range, Ctrl+Click for multi-select";
+    return `${formatTimeSlot(slot.time)} - Click to ${action}\n${shortcuts}`;
+  };
 
   return (
     <Card className="dashboard-card">
@@ -191,5 +192,5 @@ export function ScheduleGrid({
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

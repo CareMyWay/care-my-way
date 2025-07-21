@@ -104,7 +104,7 @@ const schema = a
         profileOwner: a.string().required(), // For authorization
         date: a.string().required(), // Format: YYYY-MM-DD (same as Booking)
         time: a.string().required(), // Format: HH:MM (same as Booking)
-        duration: a.float().default(1.0), // Duration in hours (e.g., 1.0 for 1 hour slots)
+        duration: a.float().default(1.0), // Duration in hours (1.0 for 1 hour slots - changed from 30-minute slots)
         isAvailable: a.boolean().default(true), // true = available, false = blocked/unavailable
         isRecurring: a.boolean().default(false), // true = repeats weekly, false = one-time
         dayOfWeek: a.string(), // "monday", "tuesday", etc. (for recurring slots)
@@ -172,8 +172,8 @@ const schema = a
         certifications: a.json(), // Array of certification objects
         workExperience: a.json(), // Array of work experience objects
 
-        // Availability
-        availability: a.string().array(), // "yyyy-mm-dd:HH24" (e.g., "2025-07-20:09" for July 20, 2025, at 9:00 AM).
+        // Availability - stores hourly time slots
+        availability: a.string().array(), // "yyyy-mm-dd:HH" format (e.g., "2025-07-20:09" for July 20, 2025, at 9:00 AM - 1 hour slot)
 
         // Profile completion status
         isProfileComplete: a.boolean().default(false),
