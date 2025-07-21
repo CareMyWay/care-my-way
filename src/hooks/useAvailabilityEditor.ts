@@ -400,14 +400,14 @@ export const useAvailabilityEditor = () => {
 
         if (slot.availabilityId) {
           savePromises.push(
-            client.models.Availability.update({
+            client.models.ProviderAvailability.update({
               id: slot.availabilityId,
               ...availabilityData,
-            } as unknown as Parameters<typeof client.models.Availability.update>[0])
+            } as unknown as Parameters<typeof client.models.ProviderAvailability.update>[0])
           );
         } else if (day.enabled && slot.available) {
           savePromises.push(
-            client.models.Availability.create(availabilityData as unknown as Parameters<typeof client.models.Availability.create>[0])
+            client.models.ProviderAvailability.create(availabilityData as unknown as Parameters<typeof client.models.ProviderAvailability.create>[0])
           );
         }
       }
@@ -415,7 +415,7 @@ export const useAvailabilityEditor = () => {
       for (const slot of day.slots) {
         if (slot.availabilityId && (!day.enabled || !slot.available) && !slot.isBlocked) {
           deletePromises.push(
-            client.models.Availability.delete({ id: slot.availabilityId } as unknown as Parameters<typeof client.models.Availability.delete>[0])
+            client.models.ProviderAvailability.delete({ id: slot.availabilityId } as unknown as Parameters<typeof client.models.ProviderAvailability.delete>[0])
           );
         }
       }

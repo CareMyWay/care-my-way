@@ -93,27 +93,29 @@ const schema = a
       .authorization((allow) => [
         allow.authenticated().to(["create", "read"]),
         allow.group("Admin"),
-        allow.guest().to(["create", "read"]), // ✅ Add this line
+        allow.guest().to(["create", "read"]), // Add this line
       ]),
 
-    // Availability schema for providers
-    Availability: a
+    // Availability schema for providers - single record per provider
+    ProviderAvailability: a
       .model({
         id: a.string().required(),
         providerId: a.string().required(), // Links to UserProfile.userId where userType = "Provider"
         profileOwner: a.string().required(), // For authorization
-        date: a.string().required(), // Format: YYYY-MM-DD (same as Booking)
-        time: a.string().required(), // Format: HH:MM (same as Booking)
-        duration: a.float().default(1.0), // Duration in hours (1.0 for 1 hour slots - changed from 30-minute slots)
-        isAvailable: a.boolean().default(true), // true = available, false = blocked/unavailable
-        isRecurring: a.boolean().default(false), // true = repeats weekly, false = one-time
-        dayOfWeek: a.string(), // "monday", "tuesday", etc. (for recurring slots)
+        
+        // Store all availability as JSON array
+        availabilityData: a.json(), // Array of availability objects: [{date: "2025-07-21", time: "09:00", duration: 1.0, isAvailable: true}, ...]
+        
+        // Weekly template for recurring availability
+        weeklyTemplate: a.json(), // Template for weekly recurring schedule: {monday: ["09:00", "10:00"], tuesday: [...], ...}
+        
+        // Metadata
+        lastUpdated: a.datetime(),
+        timezone: a.string().default("Alberta/Edmonton"), // Default timezone for Alberta
         notes: a.string(), // Optional notes for the provider
       })
       .secondaryIndexes((index) => [
         index("providerId"), // Query by provider
-        index("date"), // Query by date
-        index("providerId").sortKeys(["date"]), // Query provider's schedule by date range
       ])
       .authorization((allow) => [
         // Provider owns their availability - full access
@@ -177,6 +179,7 @@ const schema = a
 
         // Profile completion status
         isProfileComplete: a.boolean().default(false),
+        setupComplete: a.boolean().default(false),
 
         // Public visibility settings
         isPubliclyVisible: a.boolean().default(true),
