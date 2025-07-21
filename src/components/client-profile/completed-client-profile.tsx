@@ -19,11 +19,6 @@ import {
   FolderHeart,
   BrainCircuit,
   PersonStanding,
-  // Bell,
-  // Settings,
-  // Upload,
-  // Trash2,
-  // Edit,
 } from "lucide-react";
 import ProfileNotComplete from "./profile-not-complete";
 
@@ -321,14 +316,9 @@ function PersonalInfoContent({
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-darkest-green">
-        Profile Information
-      </h1>
+      <h1 className="text-2xl font-bold text-darkest-green">Personal</h1>
       <Card>
-        <CardHeader>
-          <CardTitle>Personal Details</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-4 p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="firstName">First Name</Label>
@@ -387,17 +377,6 @@ function PersonalInfoContent({
               disabled={!isEditing}
             />
           </div>
-          {/* <div className="space-y-2">
-            <Label htmlFor="gender">Gender</Label>
-            <select id="gender" className="std-form-input" onChange={}>
-              <option value="">Select gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Non-binary">Non-binary</option>
-              <option value="Prefer not to say">Prefer not to say</option>
-              <option value="Other">Other</option>
-            </select>
-          </div> */}
 
           <div className="flex gap-2 mt-4">
             {isEditing ? (
@@ -468,9 +447,7 @@ function AddressInfoContent({
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-darkest-green">
-        Address Information
-      </h1>
+      <h1 className="text-2xl font-bold text-darkest-green">Address</h1>
       <Card>
         <CardContent className="space-y-4 p-6">
           {["address", "city", "province", "postalCode"].map((field) => (
@@ -556,7 +533,7 @@ function EmergencySupportContent({
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-darkest-green">
-        Emergency & Support Person Details
+        Emergency & Support
       </h1>
       <Card>
         <CardHeader>
@@ -599,7 +576,9 @@ function EmergencySupportContent({
 
           {profile.hasRepSupportPerson && (
             <>
-              <h3 className="text-lg font-semibold mt-4">Support Person</h3>
+              <h1 className="text-lg font-semibold mt-4  text-darkest-green">
+                Support Person
+              </h1>
               <div>
                 <Label htmlFor="supportFirstName">First Name</Label>
                 <Input
@@ -719,9 +698,7 @@ function MedicalInfoContent({
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-darkest-green">
-        Medical History Information
-      </h1>
+      <h1 className="text-2xl font-bold text-darkest-green">Medical History</h1>
       <Card>
         <CardContent className="space-y-4 p-6">
           {[
@@ -780,9 +757,9 @@ function AbilitiesInfoContent({
   const abilitiesLabels: Record<string, string> = {
     mobilityStatus: "Mobility Status",
     cognitiveDifficulties: "Cognitive Difficulties",
-    cognitiveDifficultiesOther: "Cognitive Difficulties (Other)",
+    cognitiveDifficultiesOther: "Other Cognitive Difficulties ",
     sensoryImpairments: "Sensory Impairments",
-    sensoryImpairmentsOther: "Sensory Impairments (Other)",
+    sensoryImpairmentsOther: "Other Sensory Impairments",
   };
 
   const handleChange = (field: string, value: string) => {
@@ -793,11 +770,9 @@ function AbilitiesInfoContent({
     setFormData({
       mobilityStatus: profile.mobilityStatus ?? "",
       cognitiveDifficulties: profile.cognitiveDifficulties ?? "",
-      cognitiveDifficultiesOther:
-        profile.cognitiveDifficultiesOther ?? "Not specified",
+      cognitiveDifficultiesOther: profile.cognitiveDifficultiesOther ?? "",
       sensoryImpairments: profile.sensoryImpairments ?? "",
-      sensoryImpairmentsOther:
-        profile.sensoryImpairmentsOther ?? "Not specified",
+      sensoryImpairmentsOther: profile.sensoryImpairmentsOther ?? "",
     });
     setIsEditing(false);
   };
@@ -817,7 +792,7 @@ function AbilitiesInfoContent({
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-darkest-green">
-        Functional & Cognitive Abilities Information
+        Functional & Cognitive Abilities
       </h1>
       <Card>
         <CardContent className="space-y-4 p-6">
@@ -914,9 +889,7 @@ function LifestyleInfoContent({
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-darkest-green">
-        Lifestyle Information
-      </h1>
+      <h1 className="text-2xl font-bold text-darkest-green">Lifestyle</h1>
       <Card>
         <CardContent className="space-y-4 p-6">
           {[

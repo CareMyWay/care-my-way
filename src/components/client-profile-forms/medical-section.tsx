@@ -10,27 +10,27 @@ import { zodResolver } from "@hookform/resolvers/zod";
 const medicalSchema = z.object({
   medicalConditions: z
     .string()
-    .min(4, "Please provide information or type 'none' if not applicable.")
+    .min(1, "Please specify or type 'none' if not applicable.")
     .max(500, "Too long (max 500 characters)."),
 
   surgeriesOrHospitalizations: z
     .string()
-    .min(4, "Please provide information or type 'none' if not applicable.")
+    .min(1, "Please specify or type 'none' if not applicable.")
     .max(500, "Too long (max 500 characters)."),
 
   chronicIllnesses: z
     .string()
-    .min(4, "Please provide information or type 'none' if not applicable.")
+    .min(1, "Please specify or type 'none' if not applicable.")
     .max(500, "Too long (max 500 characters)."),
 
   allergies: z
     .string()
-    .min(4, "Please provide information or type 'none' if not applicable.")
+    .min(1, "Please specify or type 'none' if not applicable.")
     .max(500, "Too long (max 500 characters)."),
 
   medications: z
     .string()
-    .min(4, "Please provide information or type 'none' if not applicable.")
+    .min(1, "Please specify or type 'none' if not applicable.")
     .max(500, "Too long (max 500 characters)."),
 });
 

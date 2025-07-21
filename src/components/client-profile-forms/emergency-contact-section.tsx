@@ -72,6 +72,7 @@ export function EmergencyContactSection({
     register,
     watch,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm<EmergencyFormFields>({
     mode: "onChange",
@@ -136,9 +137,9 @@ export function EmergencyContactSection({
       defaultValues?.supportRelationship === defaultValues?.relationship &&
       defaultValues?.supportPhone === defaultValues?.contactPhone
     ) {
-      setSameAsEmergency(true);
+      setSameAsEmergency(true); // THIS IS ISSUE
     }
-  }, [defaultValues]);
+  }, []);
 
   return (
     <div className="h-full bg-white rounded-lg border shadow-sm overflow-hidden">
@@ -289,13 +290,45 @@ export function EmergencyContactSection({
                 <div className="flex flex-col items-start space-x-2">
                   <label className="std-form-label">Support Person</label>
                   <span className="my-2">
-                    <input
+                    {/* <input
                       type="checkbox"
                       id="consentCheckbox"
                       className="h-4 w-4 text-medium-green border-gray-300 rounded focus:ring-dark-green"
                       checked={sameAsEmergency}
                       onChange={(e) => setSameAsEmergency(e.target.checked)}
+                    /> */}
+                    <input
+                      type="checkbox"
+                      id="consentCheckbox"
+                      className="h-4 w-4 text-medium-green border-gray-300 rounded focus:ring-dark-green"
+                      checked={sameAsEmergency}
+                      onChange={(e) => {
+                        const checked = e.target.checked;
+                        setSameAsEmergency(checked);
+
+                        if (checked) {
+                          // Use current values from form
+                          const contactFirstName =
+                            getValues("contactFirstName");
+                          const contactLastName = getValues("contactLastName");
+                          const relationship = getValues("relationship");
+                          const phone = getValues("contactPhone");
+
+                          setValue("supportFirstName", contactFirstName);
+                          setValue("supportLastName", contactLastName);
+                          setValue("supportRelationship", relationship);
+                          setValue("supportPhone", phone);
+                        }
+                        // Optional: clear support fields on uncheck
+                        else {
+                          setValue("supportFirstName", "");
+                          setValue("supportLastName", "");
+                          setValue("supportRelationship", "");
+                          setValue("supportPhone", "");
+                        }
+                      }}
                     />
+
                     <label
                       htmlFor="consentCheckbox"
                       className="text-md text-darkest-green ms-1"
