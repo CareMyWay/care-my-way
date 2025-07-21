@@ -1,13 +1,15 @@
 "use client";
 
 import type React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Calendar, Clock, Save, ArrowLeft, AlertTriangle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { AvailabilityManager, saveAvailabilityData } from "@/components/provider-dashboard-ui/availability-manager";
+import { AvailabilityManager, AvailabilityManagerRef } from "@/components/provider-dashboard-ui/availability-manager";
 import { WeekNavigation } from "@/components/provider-dashboard-ui/week-navigation";
 import { ScheduleGrid } from "@/components/provider-dashboard-ui/schedule-grid";
 import { generateClient } from "aws-amplify/data";
@@ -65,6 +67,10 @@ export default function EditAvailabilityPage() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [weeklySchedule, setWeeklySchedule] = useState<DaySchedule[]>([]);
   const [isLoadingSchedule, setIsLoadingSchedule] = useState(false);
+  const [applyToFuture, setApplyToFuture] = useState(false);
+
+  // Ref for AvailabilityManager
+  const availabilityManagerRef = useRef<AvailabilityManagerRef>(null);
 
   const [selection, setSelection] = useState<SelectionState>({
     isSelecting: false,
@@ -171,9 +177,13 @@ export default function EditAvailabilityPage() {
   };
 
   const handleScheduleLoaded = (schedule: DaySchedule[]) => {
-    setWeeklySchedule(schedule);
+    // Only update the schedule if we don't have unsaved changes
+    // This prevents overwriting user changes when the component reloads data
+    if (!hasChanges) {
+      setWeeklySchedule(schedule);
+    }
     setIsLoadingSchedule(false);
-    setHasChanges(false);
+    // Don't reset hasChanges here as it might overwrite user modifications
   };
 
   const handleSaveComplete = (success: boolean, message?: string) => {
@@ -182,6 +192,12 @@ export default function EditAvailabilityPage() {
       setHasChanges(false);
       setLastSaved(new Date());
       setErrors([]);
+      // Reload data after successful save to sync with database
+      setTimeout(() => {
+        if (availabilityManagerRef.current) {
+          availabilityManagerRef.current.loadAvailability();
+        }
+      }, 100);
     } else if (message) {
       setErrors([message]);
     }
@@ -194,7 +210,15 @@ export default function EditAvailabilityPage() {
       setIsSaving(true);
       setErrors([]);
 
-      await saveAvailabilityData(weeklySchedule, userProfile.userId, userProfile.profileOwner);
+      if (applyToFuture) {
+        // Save for current week and all future weeks
+        await saveRecurringAvailability();
+      } else {
+        // Save only for current week
+        if (availabilityManagerRef.current) {
+          await availabilityManagerRef.current.saveAvailability(weeklySchedule);
+        }
+      }
 
       setHasChanges(false);
       setLastSaved(new Date());
@@ -206,9 +230,98 @@ export default function EditAvailabilityPage() {
     }
   };
 
+  const saveRecurringAvailability = async () => {
+    if (!userProfile) return;
+
+    // Save for the next 52 weeks (1 year)
+    const weeksToSave = 52;
+    const startWeek = new Date(currentWeekStart);
+    
+    for (let weekOffset = 0; weekOffset < weeksToSave; weekOffset++) {
+      const weekStart = new Date(startWeek);
+      weekStart.setDate(startWeek.getDate() + (weekOffset * 7));
+      
+      // Create weekly schedule for this week
+      const weekSchedule = createWeekScheduleFromTemplate(weekStart);
+      
+      // Save this week's availability
+      await saveWeeklyAvailability(weekSchedule);
+    }
+  };
+
+  const createWeekScheduleFromTemplate = (weekStart: Date): DaySchedule[] => {
+    const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    
+    return dayNames.map((dayName, index) => {
+      const date = new Date(weekStart);
+      date.setDate(weekStart.getDate() + index);
+      const dateStr = date.toISOString().split("T")[0];
+      
+      // Find the corresponding day from current template
+      const templateDay = weeklySchedule.find(day => day.day === dayName);
+      
+      return {
+        day: dayName,
+        date: dateStr,
+        enabled: templateDay?.enabled || false,
+        slots: templateDay?.slots.map(slot => ({ ...slot })) || []
+      };
+    });
+  };
+
+  const saveWeeklyAvailability = async (weekSchedule: DaySchedule[]) => {
+    if (!userProfile) return;
+
+    const savePromises: Promise<unknown>[] = [];
+    const deletePromises: Promise<unknown>[] = [];
+
+    for (const day of weekSchedule) {
+      for (const slot of day.slots) {
+        if (slot.isBlocked) continue;
+
+        const availabilityData = {
+          providerId: userProfile.userId,
+          profileOwner: userProfile.profileOwner,
+          date: day.date,
+          time: slot.time,
+          duration: 1.0,
+          isAvailable: day.enabled && slot.available,
+          isRecurring: applyToFuture,
+        };
+
+        if (slot.availabilityId) {
+          // Update existing availability
+          savePromises.push(
+            client.models.Availability.update({
+              id: slot.availabilityId,
+              ...availabilityData,
+            } as unknown as Parameters<typeof client.models.Availability.update>[0])
+          );
+        } else if (day.enabled && slot.available) {
+          // Create new availability
+          savePromises.push(
+            client.models.Availability.create(availabilityData as unknown as Parameters<typeof client.models.Availability.create>[0])
+          );
+        }
+      }
+
+      // Delete slots that are no longer available
+      for (const slot of day.slots) {
+        if (slot.availabilityId && (!day.enabled || !slot.available) && !slot.isBlocked) {
+          deletePromises.push(
+            client.models.Availability.delete({ id: slot.availabilityId } as unknown as Parameters<typeof client.models.Availability.delete>[0])
+          );
+        }
+      }
+    }
+
+    // Execute all save and delete operations
+    await Promise.all([...savePromises, ...deletePromises]);
+  };
+
   const getAvailableHoursForDay = (daySchedule: DaySchedule) => {
     if (!daySchedule.enabled) return 0;
-    return daySchedule.slots.filter((slot) => slot.available).length * 0.5;
+    return daySchedule.slots.filter((slot) => slot.available).length * 1.0; // Changed from 0.5 to 1.0 for hourly slots
   };
 
   const getTotalAvailableHours = () => {
@@ -429,6 +542,22 @@ export default function EditAvailabilityPage() {
             {lastSaved && (
               <div className="text-sm dashboard-text-secondary">Last saved: {lastSaved.toLocaleTimeString()}</div>
             )}
+            
+            {/* Recurring Availability Checkbox */}
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="apply-to-future"
+                checked={applyToFuture}
+                onCheckedChange={(checked) => setApplyToFuture(checked as boolean)}
+              />
+              <Label
+                htmlFor="apply-to-future"
+                className="text-sm dashboard-text-primary cursor-pointer"
+              >
+                Apply to all future weeks
+              </Label>
+            </div>
+            
             <Button
               onClick={saveChanges}
               disabled={!hasChanges || isSaving || !canEditCurrentWeek()}
@@ -437,12 +566,12 @@ export default function EditAvailabilityPage() {
               {isSaving ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  Saving...
+                  {applyToFuture ? "Saving to all weeks..." : "Saving..."}
                 </>
               ) : (
                 <>
                   <Save className="w-4 h-4 mr-2" />
-                  Save Changes
+                  {applyToFuture ? "Save for All Future Weeks" : "Save Changes"}
                 </>
               )}
             </Button>
@@ -451,11 +580,13 @@ export default function EditAvailabilityPage() {
 
         {/* Availability Manager */}
         <AvailabilityManager
+          ref={availabilityManagerRef}
           providerId={userProfile.userId}
           profileOwner={userProfile.profileOwner}
           currentWeekStart={currentWeekStart}
           onScheduleLoaded={handleScheduleLoaded}
           onSaveComplete={handleSaveComplete}
+          skipAutoLoad={hasChanges} // Skip auto-loading when user has unsaved changes
         />
 
         {/* Week Navigation */}
@@ -480,6 +611,26 @@ export default function EditAvailabilityPage() {
           </Alert>
         )}
 
+        {/* How to Use Instructions */}
+        {canEditCurrentWeek() && weeklySchedule.length > 0 && (
+          <Alert className="mb-6 border-blue-200 bg-blue-50">
+            <div className="flex items-start gap-3">
+              <div className="text-blue-600 mt-0.5">💡</div>
+              <div className="text-blue-800">
+                <div className="font-semibold mb-2">How to set your availability:</div>
+                <div className="space-y-1 text-sm">
+                  <div>• <strong>Click</strong> individual time slots to toggle availability</div>
+                  <div>• <strong>Shift + Click</strong> to select a range of time slots</div>
+                  <div>• <strong>Ctrl/Cmd + Click</strong> to select multiple individual slots</div>
+                  <div>• Use preset buttons (9-5, 8-6) for quick setup</div>
+                  <div>• Toggle the <strong>&ldquo;Apply to all future weeks&rdquo;</strong> checkbox to make this your permanent schedule</div>
+                  <div>• Green slots = Available, Gray slots = Unavailable</div>
+                </div>
+              </div>
+            </div>
+          </Alert>
+        )}
+
         {/* Current Week Restriction Alert */}
         {!canEditCurrentWeek() && (
           <Alert className="mb-6 border-red-200 bg-red-50">
@@ -501,6 +652,69 @@ export default function EditAvailabilityPage() {
               <p className="dashboard-text-secondary">Loading schedule...</p>
             </div>
           </div>
+        )}
+
+        {/* New Provider Welcome */}
+        {!isLoadingSchedule && weeklySchedule.length > 0 && getTotalAvailableHours() === 0 && (
+          <Card className="dashboard-card mb-6">
+            <CardContent className="p-6">
+              <div className="text-center space-y-4">
+                <div className="text-6xl">👋</div>
+                <div>
+                  <h3 className="text-xl font-bold dashboard-text-primary mb-2">Welcome! Let&apos;s set up your availability</h3>
+                  <p className="dashboard-text-secondary mb-4">
+                    You haven&apos;t set any availability yet. Start by enabling the days you want to work and selecting your available time slots.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2 justify-center">
+                  <Button
+                    onClick={() => {
+                      // Enable Monday-Friday and set 9-5 schedule
+                      setWeeklySchedule(prev => 
+                        prev.map((day, index) => {
+                          if (index < 5) { // Monday-Friday
+                            return {
+                              ...day,
+                              enabled: true,
+                              slots: day.slots.map(slot => ({
+                                ...slot,
+                                available: slot.time >= "09:00" && slot.time <= "17:00"
+                              }))
+                            };
+                          }
+                          return day;
+                        })
+                      );
+                      setHasChanges(true);
+                    }}
+                    className="dashboard-button-primary text-white"
+                  >
+                    Quick Setup: Mon-Fri 9AM-5PM
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      // Enable all days and set 8-6 schedule
+                      setWeeklySchedule(prev => 
+                        prev.map(day => ({
+                          ...day,
+                          enabled: true,
+                          slots: day.slots.map(slot => ({
+                            ...slot,
+                            available: slot.time >= "08:00" && slot.time <= "18:00"
+                          }))
+                        }))
+                      );
+                      setHasChanges(true);
+                    }}
+                    variant="outline"
+                    className="dashboard-button-secondary"
+                  >
+                    Quick Setup: All Days 8AM-6PM
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         )}
 
         {/* Summary Stats */}

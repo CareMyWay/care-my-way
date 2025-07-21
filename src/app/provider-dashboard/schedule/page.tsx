@@ -74,7 +74,7 @@ const getMonthDays = (date: Date) => {
   return days;
 };
 
-// Helper function to add minutes to time string
+// Helper function to add minutes to time string (used for both 30-min and 60-min calculations)
 const addMinutes = (timeStr: string, minutes: number): string => {
   const [hours, mins] = timeStr.split(":").map(Number);
   const totalMinutes = hours * 60 + mins + minutes;
@@ -142,37 +142,18 @@ export default function SchedulingPage() {
         const dateStr = day.toISOString().split("T")[0];
         const dayData = availabilityByDate[dateStr] || [];
 
-        // Convert to time slots (group consecutive 30-min slots)
+        // Convert to time slots (each slot is 1 hour)
         const timeSlots: TimeSlot[] = [];
         const sortedSlots = dayData.filter((slot) => slot.isAvailable).sort((a, b) => a.time.localeCompare(b.time));
 
-        // Group consecutive slots
-        let currentSlot: TimeSlot | null = null;
+        // Create individual hour slots (no need to group since each is already 1 hour)
         for (const slot of sortedSlots) {
-          if (!currentSlot) {
-            currentSlot = {
-              id: slot.id,
-              start: slot.time,
-              end: addMinutes(slot.time, 30),
-              isAvailable: true,
-            };
-          } else {
-            // Check if this slot is consecutive
-            if (slot.time === currentSlot.end) {
-              currentSlot.end = addMinutes(slot.time, 30);
-            } else {
-              timeSlots.push(currentSlot);
-              currentSlot = {
-                id: slot.id,
-                start: slot.time,
-                end: addMinutes(slot.time, 30),
-                isAvailable: true,
-              };
-            }
-          }
-        }
-        if (currentSlot) {
-          timeSlots.push(currentSlot);
+          timeSlots.push({
+            id: slot.id,
+            start: slot.time,
+            end: addMinutes(slot.time, 60), // 1-hour slots
+            isAvailable: true,
+          });
         }
 
         return {
@@ -561,6 +542,31 @@ export default function SchedulingPage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* No Availability Message for New Providers */}
+        {!isLoadingAvailability && !isLoadingBookings && 
+         weeklyAvailability.every(day => day.timeSlots.length === 0) && 
+         bookings.length === 0 && (
+          <Card className="dashboard-card mb-6">
+            <CardContent className="p-8 text-center">
+              <div className="space-y-4">
+                <div className="text-6xl">📅</div>
+                <div>
+                  <h3 className="text-xl font-bold dashboard-text-primary mb-2">No availability set yet</h3>
+                  <p className="dashboard-text-secondary mb-4">
+                    You haven&apos;t configured your availability schedule. Set up your working hours to start receiving bookings.
+                  </p>
+                </div>
+                <Link href="/provider-dashboard/schedule/edit" className="no-underline">
+                  <Button className="dashboard-button-primary text-white">
+                    <Edit3 className="w-4 h-4 mr-2" />
+                    Set Up Your Availability
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Calendar */}
         <Card className="dashboard-card">
