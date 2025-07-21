@@ -10,7 +10,7 @@ import {MultipleSelect} from "@/components/select/multipleSelect";
 import {Availability} from "@/components/calendar/availability";
 import {Select} from "@/components/select/standardSelect";
 import ISO6391 from "iso-639-1";
-import {healthcareServices} from "@/utils/healthcare-services";
+import {getServiceNames} from "@/utils/healthcare-services";
 
 const MarketplaceFilter = ({
                              minPrice,
@@ -45,7 +45,7 @@ const MarketplaceFilter = ({
   };
 
   const languagePool = [...ISO6391.getAllNames().sort(), "Other"];
-  const servicePool = [... healthcareServices.map(service => service.name)];
+  const servicePool = getServiceNames();
 
   const handleSliderChange = (value: number[]) => {
     setPriceRange(value);

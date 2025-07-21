@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import ProviderCard from "@/components/marketplace/healthcare-provider-card";
 import MarketplaceSearchBar from "@/components/marketplace/search-bar";
 import MarketplaceFilter from "@/components/marketplace/filter";
@@ -76,44 +76,79 @@ export default function MarketplaceFrame() {
     });
   };
 
-  return (
-    <div className={"w-full h-[100%] flex flex-col"}>
-      <div className={"flex-initial"}>
-        <MarketplaceSearchBar searchKey={searchKey} setSearchKey={setSearchKey} triggerFetch={triggerFetch} />
-      </div>
+  const [showBackToTopButton, setShowBackToTopButton] = useState(false);
 
-      <div className="flex flex-col flex-auto lg:flex-row gap-3 lg:flex-1 lg:min-h-0">
-        <div>
-          <MarketplaceFilter
-            minPrice={minPrice}
-            maxPrice={maxPrice}
-            availability={availability}
-            experience={experience}
-            specialty={specialty}
-            languagePreference={languagePreference}
-            setMinPrice={setMinPrice}
-            setMaxPrice={setMaxPrice}
-            setAvailability={setAvailability}
-            setExperience={setExperience}
-            setSpecialty={setSpecialty}
-            setLanguagePreference={setLanguagePreference}
-            triggerFetch={triggerFetch} />
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth" // For smooth scrolling animation
+    });
+  };
+
+  useEffect(() => {
+    const toggleVisibility = () => {
+      if (window.pageYOffset > 300) {
+        setShowBackToTopButton(true);
+      } else {
+        setShowBackToTopButton(false);
+      }
+    };
+
+    window.addEventListener("scroll", toggleVisibility);
+
+    return () => {
+      window.removeEventListener("scroll", toggleVisibility);
+    };
+  }, []);
+
+  return (
+    <div className="relative">
+
+      {/* Back to Top Button */}
+      {(showBackToTopButton || true) && (
+        <button onClick={scrollToTop} className="fixed bottom-5 right-5 bg-light-green text-white font-extrabold rounded-full w-[50px] h-[50px] text-2xl flex justify-center items-center cursor-pointer shadow-md z-[1000]">
+          &#8593;
+        </button>
+      )}
+
+      <div className={"w-full h-[100%] flex flex-col"}>
+        <div className={"flex-initial"}>
+          <MarketplaceSearchBar searchKey={searchKey} setSearchKey={setSearchKey} triggerFetch={triggerFetch} />
         </div>
-        <div className={"flex-auto overflow-y-auto"}>
-          <div className="space-y-6 w-full  lg:overflow-auto">
-            {
-              pageDoneLoading ? (
-                fetchedProviders.length === 0 ? (
-                  <div className="text-center text-darkest-green text-lg py-10">
-                    There are no matching providers for your search.
-                  </div>
-                ) : (
-                  fetchedProviders.map((provider, idx) => (
-                    <ProviderCard key={idx} {...provider} />
-                  ))
-                )
-              ) : <Loading />
-            }
+
+        <div className="flex flex-col flex-auto lg:flex-row gap-3 lg:flex-1 lg:min-h-0">
+          <div>
+            <MarketplaceFilter
+              minPrice={minPrice}
+              maxPrice={maxPrice}
+              availability={availability}
+              experience={experience}
+              specialty={specialty}
+              languagePreference={languagePreference}
+              setMinPrice={setMinPrice}
+              setMaxPrice={setMaxPrice}
+              setAvailability={setAvailability}
+              setExperience={setExperience}
+              setSpecialty={setSpecialty}
+              setLanguagePreference={setLanguagePreference}
+              triggerFetch={triggerFetch} />
+          </div>
+          <div className={"flex-auto overflow-y-auto"}>
+            <div className="space-y-6 w-full  lg:overflow-auto">
+              {
+                pageDoneLoading ? (
+                  fetchedProviders.length === 0 ? (
+                    <div className="text-center text-darkest-green text-lg py-10">
+                      There are no matching providers for your search.
+                    </div>
+                  ) : (
+                    fetchedProviders.map((provider, idx) => (
+                      <ProviderCard key={idx} {...provider} />
+                    ))
+                  )
+                ) : <Loading />
+              }
+            </div>
           </div>
         </div>
       </div>

@@ -37,31 +37,6 @@ const QuestionFrame = ( {currUserId} : {currUserId: string} ) => {
     fetchQuizData().then(() => { });
   }, [currQuestionIdx, currUserId]);
 
-  const [showBackToTopButton, setShowBackToTopButton] = useState(false);
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth" // For smooth scrolling animation
-    });
-  };
-
-  useEffect(() => {
-    const toggleVisibility = () => {
-      if (window.pageYOffset > 300) {
-        setShowBackToTopButton(true);
-      } else {
-        setShowBackToTopButton(false);
-      }
-    };
-
-    window.addEventListener("scroll", toggleVisibility);
-
-    return () => {
-      window.removeEventListener("scroll", toggleVisibility);
-    };
-  }, []);
-
   if (loading) {
     return <Loading />;
   }
@@ -72,15 +47,6 @@ const QuestionFrame = ( {currUserId} : {currUserId: string} ) => {
 
   return (
     <>
-      {/* Back to Top Button */}
-      <div className="fixed bottom-5 right-5 bg-blue-600 text-white rounded-full w-[50px] h-[50px] text-2xl flex justify-center items-center cursor-pointer shadow-md z-[1000]">
-        {showBackToTopButton && (
-          <button onClick={scrollToTop} className="">
-            &#8593;
-          </button>
-        )}
-      </div>
-
       {/*<MarketplaceSearchBar />*/}
       <div className="h-4/5 py-8 flex flex-col lg:flex-row">
         <div className="flex-1">
