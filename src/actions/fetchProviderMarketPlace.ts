@@ -1,4 +1,5 @@
 import { DynamoClient } from "./dynamoConfig";
+// import { DemoData } from "./DemoData";
 
 export interface Provider {
   lastName: string;
@@ -50,7 +51,7 @@ export const fetchProviders = async (
       }
     */
 
-    attrFilter.filter.and.push( { yearsExperienceFloat: { gt: experience } } );
+    attrFilter.filter.and.push( { yearExperienceFloat: { gt: experience } } );
     attrFilter.filter.and.push( { askingRate: { between: [minPrice, maxPrice] } } );
 
     const nameCondAnd = {and:[]};

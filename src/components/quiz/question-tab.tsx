@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction} from "react";
-import {QsWithVer, Question} from "@/components/quiz/staticQuizData";
+import {QsWithVer, QuestionCheckbox, QuestionRadio} from "@/components/quiz/staticQuizData";
 import OrangeButton from "@/components/buttons/orange-button";
 import {pushQuizAnswer} from "@/actions/fetchCommitQuiz";
 // import { getCurrentUserServer } from "@/utils/amplify-server-utils";
@@ -7,7 +7,7 @@ import {pushQuizAnswer} from "@/actions/fetchCommitQuiz";
 interface ProgressStepsProps {
   currQuestionIdx: number;
   setCurrQuestionIdxAction: Dispatch<SetStateAction<number>>;
-  questionPool: Question[];
+  questionPool: (QuestionCheckbox | QuestionRadio)[];
   answerPool: number[];
   setAnswerPoolAction: Dispatch<SetStateAction<number[]>>;
   currUserId: string;

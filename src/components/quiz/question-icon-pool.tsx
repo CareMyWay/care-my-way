@@ -1,10 +1,10 @@
 import React, {Dispatch, SetStateAction} from "react";
-import type {Question} from "@/components/quiz/staticQuizData";
+import type {QuestionCheckbox, QuestionRadio} from "@/components/quiz/staticQuizData";
 
 interface ProgressStepsProps {
   currQuestionIdx: number;
   setCurrQuestionIdxAction: Dispatch<SetStateAction<number>>;
-  questionPool: Question[];
+  questionPool: (QuestionCheckbox | QuestionRadio)[];
   answerPool: number[];
 }
 
@@ -31,5 +31,3 @@ export function QuestionIconPool({ currQuestionIdx, setCurrQuestionIdxAction, qu
     </div>
   );
 }
-
-export default QuestionIconPool;

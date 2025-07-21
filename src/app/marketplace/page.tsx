@@ -1,132 +1,50 @@
-"use client";
-
-import React, {useState} from "react";
+import React from "react";
 import Navbar from "@/components/nav-bars/navbar";
-import ProviderCard from "@/components/marketplace/healthcare-provider-card";
-import MarketplaceSearchBar from "@/components/marketplace/search-bar";
-import MarketplaceFilter from "@/components/marketplace/filter";
-import {fetchProviders} from "@/actions/fetchProviderMarketPlace";
-import Loading from "../loading";
+import { getCurrentUserServer } from "@/utils/amplify-server-utils";
+import MarketplaceFrame from "@/components/marketplace/frame";
 
-export interface Provider {
-  name: string;
-  title: string;
-  location: string;
-  experience: string;
-  languages: string[];
-  services: string[];
-  hourlyRate: number;
-  imageSrc: string;
-}
+const MarketplacePage = async () => {
+  const currentUser = await getCurrentUserServer();
 
-const landingProviders: Provider[] = [];
-// MOCK_PROVIDERS.push(... demo_data);
+  if (!currentUser) {
+    return (
+      <div>
+        <Navbar />
+        <section className="h-auto px-4 py-12 md:px-16 bg-primary-white">
+          <div className="container mx-auto flex flex-col md:h-auto">
+            <div className="h-2/3 flex items-center justify-center">Error loading qMarketplace -1</div>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
-export default function MarketplacePage() {
-  // ToDo: make the page adept to narrow screen
-  const thisSliderMinValue = 0;
-  const thisSliderMaxValue = 200;
+  const currUserId = currentUser.userId;
 
-  const [searchKey, setSearchKey] = useState<string>("");
-
-  const [minPrice, setMinPrice] = useState(thisSliderMinValue);
-  const [maxPrice, setMaxPrice] = useState(thisSliderMaxValue);
-
-  const [availability, setAvailability] = useState<string[]>([]);
-  const [experience, setExperience] = useState<number>(0);
-  const [specialty, setSpecialty] = useState<string[]>([]);
-
-  const [languagePreference, setLanguagePreference] = useState<string[]>([]);
-
-  const [fetchedProviders, setFetchedProviders] = useState<Provider[]>([]);
-  const [pageDoneLoading, setPageDoneLoading] = useState<boolean>(true);
-
-  const triggerFetch = () => {
-    setPageDoneLoading(false);
-    landingProviders.length = 0;
-
-    const tmpSearchKeySet: string[] = [];
-    searchKey.split(" ").map((word: string) => {
-      if (word.length > 0) {
-        tmpSearchKeySet.push(word);
-      }
-    });
-
-    fetchProviders(languagePreference,availability,experience,specialty,minPrice,maxPrice, tmpSearchKeySet).then(r => {
-      r.map(ele => {
-
-        landingProviders.push(
-          {
-            name: ele.firstName.concat(" ".concat(ele.lastName)),
-            title: ele.title,
-            location: ele.location,
-            experience: ele.experience,
-            languages: Array.from(ele.languages.values()),
-            services: Array.from(ele.services.values()),
-            hourlyRate: ele.hourlyRate,
-            imageSrc: ele.imageSrc,
-          });
-      });
-    }).then(
-      () => {
-        console.info("front rst cnt: ", Object.values(landingProviders).length, landingProviders);
-        setFetchedProviders(landingProviders);
-        setPageDoneLoading(true);
-      }
-    ).catch(e => {
-      console.log(e);
-    });
-  };
+  if (!currUserId) {
+    return (
+      <div>
+        <Navbar />
+        <section className="h-auto px-4 py-12 md:px-16 bg-primary-white">
+          <div className="container mx-auto flex flex-col md:h-auto">
+            <div className="h-2/3 flex items-center justify-center">Error loading qMarketplace -2</div>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   return (
-    <div className={"w-[100%] h-[100%] flex flex-col"}>
-      <div className={"w-[100%] h-[70px]"}>
-        <div className={"w-[100%]"}>
-          <Navbar />
+    <div>
+      <Navbar />
+      <section className="h-auto px-4 py-12 md:px-16 bg-primary-white">
+        <div className="container mx-auto flex flex-col md:h-auto">
+          <MarketplaceFrame />
         </div>
-      </div>
-
-      <div className="w-full flex flex-col h-[calc(100%_-_75px)]">
-        <div className={"flex-initial"}>
-          <MarketplaceSearchBar searchKey={searchKey} setSearchKey={setSearchKey} triggerFetch={triggerFetch} />
-        </div>
-
-        <div className="flex flex-col flex-auto lg:flex-row gap-6 md:flex-1 md:min-h-0">
-          <div>
-            <MarketplaceFilter
-              minPrice={minPrice}
-              maxPrice={maxPrice}
-              availability={availability}
-              experience={experience}
-              specialty={specialty}
-              languagePreference={languagePreference}
-              setMinPrice={setMinPrice}
-              setMaxPrice={setMaxPrice}
-              setAvailability={setAvailability}
-              setExperience={setExperience}
-              setSpecialty={setSpecialty}
-              setLanguagePreference={setLanguagePreference}
-              triggerFetch={triggerFetch} />
-          </div>
-          <div className={"flex-auto overflow-y-auto"}>
-            <div className="space-y-6 w-full  md:overflow-auto">
-              {
-                pageDoneLoading ? (
-                  fetchedProviders.length === 0 ? (
-                    <div className="text-center text-darkest-green text-lg py-10">
-                      There are no matching providers for your search.
-                    </div>
-                  ) : (
-                    fetchedProviders.map((provider, idx) => (
-                      <ProviderCard key={idx} {...provider} />
-                    ))
-                  )
-                ) : <Loading />
-              }
-            </div>
-          </div>
-        </div>
-      </div>
+      </section>
     </div>
+
   );
-}
+};
+
+export default MarketplacePage;
