@@ -106,7 +106,8 @@ export default function SuccessPage() {
               </div>
 
               <div className="space-y-4">
-                <div className="bg-gray-50 p-4 rounded-lg">
+                {/* Commented Out until provider services are finalized */}
+                {/* <div className="bg-gray-50 p-4 rounded-lg">
                   <h3 className="font-medium text-gray-900 mb-3">Services</h3>
                   <div className="space-y-2">
                     <div className="flex items-center space-x-2">
@@ -118,7 +119,7 @@ export default function SuccessPage() {
                       <span className="text-gray-600">Light Housekeeping</span>
                     </div>
                   </div>
-                </div>
+                </div> */}
 
                 <div className="flex items-center space-x-3">
                   <div>

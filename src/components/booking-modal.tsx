@@ -147,6 +147,7 @@ export default function BookingModal({
         const bookingId = uuidv4();
         const result = await client.models.Booking.create({
           id: bookingId,
+          providerId,
           providerName,
           providerRate,
           date: selectedDate,

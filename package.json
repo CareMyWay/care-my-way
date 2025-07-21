@@ -47,6 +47,8 @@
   "devDependencies": {
     "@aws-amplify/backend": "^1.16.0",
     "@aws-amplify/backend-cli": "^1.7.0",
+    "@aws-amplify/data-construct": "^1.16.3",
+    "@aws-amplify/graphql-api-construct": "^1.20.3",
     "@aws-sdk/client-cognito-identity-provider": "^3.828.0",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
