@@ -72,6 +72,7 @@
   },
   "overrides": {
     "picomatch": "^4.0.2",
-    "@aws-sdk/types": "3.734.0"
+    "@aws-sdk/types": "3.734.0",
+    "@aws-amplify/plugin-types": "1.10.1"
   }
 }
