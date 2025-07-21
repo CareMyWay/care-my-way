@@ -2,10 +2,10 @@
 
 /* eslint-disable no-unused-vars */
 import type React from "react";
+import { memo } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { X } from "lucide-react";
 
@@ -35,7 +35,7 @@ interface ScheduleGridProps {
   getAvailableHoursForDay: (daySchedule: DaySchedule) => number
 }
 
-export function ScheduleGrid({
+function ScheduleGridComponent({
   weeklySchedule,
   canEdit,
   onToggleDay,
@@ -100,14 +100,20 @@ export function ScheduleGrid({
               <div className="flex items-center justify-between p-4 bg-[var(--color-light-gray)] rounded-lg">
                 <div className="flex items-center gap-4">
                   <div className="flex items-center space-x-2">
-                    <Switch
-                      id={`day-${dayIndex}`}
-                      checked={daySchedule.enabled}
-                      onCheckedChange={() => onToggleDay(dayIndex)}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onToggleDay(dayIndex)}
                       disabled={!canEdit}
-                    />
+                      className={`p-1 h-8 w-16 rounded-full transition-colors ${
+                        daySchedule.enabled 
+                          ? "bg-green-500 text-white hover:bg-green-600" 
+                          : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+                      }`}
+                    >
+                      {daySchedule.enabled ? "ON" : "OFF"}
+                    </Button>
                     <Label
-                      htmlFor={`day-${dayIndex}`}
                       className={`text-lg font-semibold cursor-pointer ${
                         daySchedule.enabled && canEdit ? "dashboard-text-primary" : "text-gray-400"
                       }`}
@@ -194,3 +200,5 @@ export function ScheduleGrid({
     </Card>
   );
 }
+
+export const ScheduleGrid = memo(ScheduleGridComponent);

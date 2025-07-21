@@ -5,6 +5,7 @@ import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/../amplify/data/resource";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertTriangle, CheckCircle, Loader2 } from "lucide-react";
+import { syncAvailabilityToProfile } from "@/utils/availability-sync";
 
 const client = generateClient<Schema>();
 
@@ -77,25 +78,33 @@ export const AvailabilityManager = forwardRef<AvailabilityManagerRef, Availabili
         weekDates.push(date.toISOString().split("T")[0]);
       }
 
-      // Query availability for the week  
+      // Optimized query - only fetch data for this specific week and provider
       const { data: availabilityData, errors } = await client.models.Availability.list({
         filter: {
           providerId: { eq: providerId },
           date: { between: [weekDates[0], weekDates[6]] }
         },
+        limit: 200 // Reasonable limit for a week's worth of data
       });
 
       if (errors && errors.length > 0) {
         throw new Error(`Database error: ${errors[0].message}`);
       }
 
-      // Create schedule structure
+      // Create lookup map for faster access
+      const availabilityMap = new Map<string, typeof availabilityData[0]>();
+      availabilityData?.forEach(slot => {
+        const key = `${slot.date}-${slot.time}`;
+        availabilityMap.set(key, slot);
+      });
+
+      // Create schedule structure with optimized lookup
       const schedule: DaySchedule[] = daysOfWeek.map((day, index) => {
         const dayDate = weekDates[index];
-        const dayAvailability = availabilityData?.filter((av) => av.date === dayDate) || [];
-
+        
         const slots: TimeSlot[] = timeSlots.map((time) => {
-          const dbSlot = dayAvailability.find((av) => av.time === time);
+          const key = `${dayDate}-${time}`;
+          const dbSlot = availabilityMap.get(key);
           return {
             time,
             available: dbSlot ? (dbSlot.isAvailable ?? false) : false,
@@ -104,11 +113,13 @@ export const AvailabilityManager = forwardRef<AvailabilityManagerRef, Availabili
           };
         });
 
+        // Check if any slot has availability data for this day
+        const hasAvailabilityData = slots.some(slot => slot.availabilityId);
+
         return {
           day,
           date: dayDate,
-          // Only enable days if there's actual availability data for that day
-          enabled: dayAvailability.length > 0,
+          enabled: hasAvailabilityData,
           slots,
         };
       });
@@ -154,7 +165,6 @@ export const AvailabilityManager = forwardRef<AvailabilityManagerRef, Availabili
 
       const savePromises: Promise<unknown>[] = [];
       const deletePromises: Promise<unknown>[] = [];
-      const availabilityStrings: string[] = [];
 
       // Process each day
       for (const day of weeklySchedule) {
@@ -171,12 +181,6 @@ export const AvailabilityManager = forwardRef<AvailabilityManagerRef, Availabili
             isRecurring: false,
             notes: "",
           };
-
-          // Build availability string for ProviderProfile field (yyyy-mm-dd:HH format)
-          if (day.enabled && slot.available) {
-            const timeHour = slot.time.split(":")[0];
-            availabilityStrings.push(`${day.date}:${timeHour}`);
-          }
 
           if (slot.availabilityId) {
             if (day.enabled) {
@@ -212,40 +216,19 @@ export const AvailabilityManager = forwardRef<AvailabilityManagerRef, Availabili
         throw new Error(`${failures.length} operations failed`);
       }
 
-      // Update ProviderProfile availability field with new availability strings
+      // Sync availability to ProviderProfile.availability field using centralized sync function
       try {
-        // Query ProviderProfile by userId since it's not the primary key
-        const { data: profiles } = await client.models.ProviderProfile.list({
-          filter: { userId: { eq: providerId } },
-        });
-        
-        if (profiles && profiles.length > 0) {
-          const existingProfile = profiles[0];
-          // Get existing availability and merge with new data
-          const existingAvailability = existingProfile.availability || [];
-          // Remove old entries for this week and add new ones
-          const weekDates = [];
-          for (let i = 0; i < 7; i++) {
-            const date = new Date(currentWeekStart);
-            date.setDate(currentWeekStart.getDate() + i);
-            weekDates.push(date.toISOString().split("T")[0]);
-          }
-          
-          const filteredExisting = existingAvailability.filter(av => {
-            const avDate = av.split(":")[0];
-            return !weekDates.includes(avDate);
-          });
-          
-          const updatedAvailability = [...filteredExisting, ...availabilityStrings];
-          
-          await client.models.ProviderProfile.update({
-            id: existingProfile.id, // Use the id field as primary key
-            availability: updatedAvailability,
-          } as unknown as Parameters<typeof client.models.ProviderProfile.update>[0]);
+        const weekDates = [];
+        for (let i = 0; i < 7; i++) {
+          const date = new Date(currentWeekStart);
+          date.setDate(currentWeekStart.getDate() + i);
+          weekDates.push(date.toISOString().split("T")[0]);
         }
+        await syncAvailabilityToProfile(providerId, weekDates);
+        console.log("Successfully synced availability to provider profile");
       } catch (profileError) {
-        console.warn("Failed to update ProviderProfile availability field:", profileError);
-        // Don't fail the entire operation if profile update fails
+        console.warn("Failed to sync availability to provider profile:", profileError);
+        // Don't fail the entire operation if profile sync fails
       }
 
       setSuccess("Availability saved successfully!");
@@ -266,8 +249,11 @@ export const AvailabilityManager = forwardRef<AvailabilityManagerRef, Availabili
 
   // Load data when week changes
   useEffect(() => {
-    if (providerId && currentWeekStart && !skipAutoLoad) {
-      loadAvailability();
+    if (providerId && currentWeekStart) {
+      // Always load when week changes, unless specifically told to skip
+      if (!skipAutoLoad) {
+        loadAvailability();
+      }
     }
   }, [providerId, currentWeekStart, loadAvailability, skipAutoLoad]);
 
