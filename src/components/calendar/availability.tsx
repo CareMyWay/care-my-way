@@ -75,38 +75,38 @@ export function Availability({subtitle, selectedAvailability, setSelectedAvailab
 
   return (
     <div className={"relative mb-6"}>
-      <h3 className="text-[16px] text-darkest-green mb-3">{subtitle}</h3>
+      <h3 className="text-[32px] text-darkest-green mb-3">{subtitle}</h3>
       <div className="flex flex-wrap gap-2 mb-3">
         {
           selectedAvailability.map((item, index) => (
             <div key={index} className="px-4 py-1 rounded-full border border-input-border-gray text-darkest-green text-sm hover:bg-gray-200">
               {item.substring(5)}
               <button
-                className="font-extrabold text-[23px] ml-2 align-middle"
+                className="font-extrabold text-[32px] ml-2 align-middle"
                 onClick={() => handleDelete(item)}>&times;</button>
             </div>
           ))
         }
       </div>
-      <GreenButton className={"mt-6"} variant={"action"} onClick={() => {setIsOpen(!isOpen);}} >Edit</GreenButton>
+      <GreenButton className={"mt-6"} variant={"action"} onClick={() => {setIsOpen(!isOpen);}} >Add</GreenButton>
       {isOpen && <div className={"absolute z-10 bg-primary-white border mt-1 overflow-y-auto shadow-md"}>
-        <div className={" w-[400px]  shadow-amber-500 shadow-[2px]"}>
-          <div className={" text-[18px] font-bold  pt-2.5 px-2.5 pb-1.25 flex justify-between bg-blue-300"}>
-            <div className={`cursor-pointer ${(year == today.getFullYear() && month == today.getMonth()) ? " text-zinc-500 " : "text-zinc-900"}`} onClick={() => {
+        <div className={" min-w-[650px]  shadow-amber-500 shadow-[2px]"}>
+          <div className={" text-[40px] font-bold  pt-2.5 px-2.5 pb-1.25 flex justify-between bg-light-green"}>
+            <div className={`cursor-pointer text-[32px] ${(year == today.getFullYear() && month == today.getMonth()) ? " text-zinc-500 " : "text-zinc-900 "}`} onClick={() => {
               if (!(year * 100 + month - 1 >= today.getFullYear() * 100 + today.getMonth())) {
                 return;
               }
               setDate(new Date(year, month - 1, day));
-            }}>Prev
+            }}>&lt;&lt;
             </div>
             <div className={"text-zinc-900"}>
               {MONTHS[month]} {year}
             </div>
-            <div className={"cursor-pointer text-zinc-900"} onClick={() => setDate(new Date(year, month + 1, day))}>Next</div>
+            <div className={"cursor-pointer text-zinc-900 text-[32px]"} onClick={() => setDate(new Date(year, month + 1, day))}>&gt;&gt; </div>
           </div>
           <div className={" w-[100%] flex flex-wrap"}>
             {DAYS_OF_THE_WEEK.map((d) => (
-              <div key={d} className={"w-[14.2%] text-center text-zinc-600 h-[40px] flex items-center justify-center cursor-pointer"}>
+              <div key={d} className={"w-[14.2%] text-center text-zinc-900 h-[40px] flex items-center justify-center cursor-pointer"}>
                 <strong>{d}</strong>
               </div>
             ))}
@@ -115,10 +115,10 @@ export function Availability({subtitle, selectedAvailability, setSelectedAvailab
               .map((_, index) => {
                 const d = index - (startDay - 2);
                 return (
-                  <div className={"w-[14.2%] text-center text-zinc-500 h-[40px] flex items-center justify-center cursor-pointer" +
-                    ` ${d == today.getDate() ? "border-1 border-zinc-500" : ""} ` + // for the current day
-                    ` ${d == day ? "bg-indigo-200" : ""} ` + // for the selected day
-                    ` ${findDayInSelectedAvailability(d) ? "underline decoration-dark-green underline-offset-3 decoration-4" : ""} ` +  // for the day having selected hours
+                  <div className={"w-[14.2%] text-center text-zinc-900 h-[40px] flex items-center justify-center cursor-pointer" +
+                    ` ${d == today.getDate() ? " border-1 border-primary-white " : " border-1 border-primary-white "} ` + // for the current day
+                    ` ${d == day ? "bg-light-green" : ""} ` + // for the selected day
+                    ` ${findDayInSelectedAvailability(d) ? "underline decoration-primary-orange underline-offset-3 decoration-4" : ""} ` +  // for the day having selected hours
                     ` ${year * 10000 + month * 100 + d < today.getFullYear() * 10000 + today.getMonth() * 100 + today.getDate() ? "bg-zinc-300" : ""} `
                   }
                        key={index}
@@ -136,24 +136,24 @@ export function Availability({subtitle, selectedAvailability, setSelectedAvailab
                 );
               })}
           </div>
-          <div className={"w-[100%] text-center text-zinc-500 border-t-1 border-zinc-400 flex flex-row"}>
+          <div className={"w-[100%] text-center text-zinc-900 border-t-1 border-zinc-400 flex flex-row mt-3"}>
             <div className={"w-[9%]"}>AM:</div>
             {
               HOURS_AM.map((h) => (
                 <div className={"w-[8%] cursor-pointer" +
-                  ` ${findDayHourInSelectedAvailability(`00${h}`) ? "underline decoration-dark-green underline-offset-3 decoration-4" : ""} ` // for the selected hours
+                  ` ${findDayHourInSelectedAvailability(`00${h}`) ? "underline decoration-primary-orange underline-offset-3 decoration-4" : ""} ` // for the selected hours
                 } onClick={handleClick}
                      key={`${h}`}
                      id={`${h}`}>{h}</div>
               ))
             }
           </div>
-          <div className={"w-[100%] text-center text-zinc-500 border-t-1 border-b-1 border-zinc-400 flex flex-row"}>
+          <div className={"w-[100%] text-center text-zinc-900 border-t-1 border-b-1 border-zinc-400 flex flex-row"}>
             <div className={"w-[9%]"}>PM:</div>
             {
               HOURS_PM.map((h) => (
                 <div className={"w-[8%] cursor-pointer" +
-                  ` ${findDayHourInSelectedAvailability(`00${(parseInt(h) < 12 ? 12 + parseInt(h) : parseInt(h))}`) ? "underline decoration-dark-green underline-offset-3 decoration-4" : ""} `
+                  ` ${findDayHourInSelectedAvailability(`00${(parseInt(h) < 12 ? 12 + parseInt(h) : parseInt(h))}`) ? "underline decoration-primary-orange underline-offset-3 decoration-4" : ""} `
                 } onClick={handleClick}
                      key={`${(parseInt(h) < 12 ? 12 + parseInt(h) : parseInt(h))}`}
                      id={`${(parseInt(h) < 12 ? 12 + parseInt(h) : parseInt(h))}`}>{h}</div>
