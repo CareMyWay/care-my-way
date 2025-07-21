@@ -46,23 +46,35 @@ export function parseAvailabilityFromProfile(availabilityStrings: string[]): Arr
 /**
  * Sync availability from Availability table to ProviderProfile.availability field
  * @param providerId - Provider's user ID
+ * @param specificWeekDates - Optional array of dates to sync only specific week (for performance)
  */
-export async function syncAvailabilityToProfile(providerId: string): Promise<void> {
+export async function syncAvailabilityToProfile(providerId: string, specificWeekDates?: string[]): Promise<void> {
   try {
-    // Get all availability records for the provider
-    const { data: availabilityRecords } = await client.models.Availability.list({
-      filter: {
-        providerId: { eq: providerId }
-      }
-    });
+    let availabilityRecords;
+    
+    if (specificWeekDates && specificWeekDates.length > 0) {
+      // For performance, only query the specific week being saved
+      const { data } = await client.models.Availability.list({
+        filter: {
+          providerId: { eq: providerId },
+          date: { between: [specificWeekDates[0], specificWeekDates[specificWeekDates.length - 1]] }
+        }
+      });
+      availabilityRecords = data;
+    } else {
+      // Get all availability records for the provider (fallback for full sync)
+      const { data } = await client.models.Availability.list({
+        filter: {
+          providerId: { eq: providerId }
+        }
+      });
+      availabilityRecords = data;
+    }
 
     if (!availabilityRecords) {
       console.warn("No availability records found for provider:", providerId);
       return;
     }
-
-    // Format for ProviderProfile field
-    const availabilityStrings = formatAvailabilityForProfile(availabilityRecords);
 
     // Query ProviderProfile by userId to get the id
     const { data: profiles } = await client.models.ProviderProfile.list({
@@ -71,10 +83,33 @@ export async function syncAvailabilityToProfile(providerId: string): Promise<voi
 
     if (profiles && profiles.length > 0) {
       const existingProfile = profiles[0];
-      await client.models.ProviderProfile.update({
-        id: existingProfile.id,
-        availability: availabilityStrings,
-      } as unknown as Parameters<typeof client.models.ProviderProfile.update>[0]);
+      
+      if (specificWeekDates) {
+        // Merge with existing availability (update only this week)
+        const existingAvailability = existingProfile.availability || [];
+        const weeklyAvailabilityStrings = formatAvailabilityForProfile(availabilityRecords);
+        
+        // Remove old entries for this week
+        const filteredExisting = existingAvailability.filter(av => {
+          const avDate = av.split(":")[0];
+          return !specificWeekDates.includes(avDate);
+        });
+        
+        const updatedAvailability = [...filteredExisting, ...weeklyAvailabilityStrings];
+        
+        await client.models.ProviderProfile.update({
+          id: existingProfile.id,
+          availability: updatedAvailability,
+        } as unknown as Parameters<typeof client.models.ProviderProfile.update>[0]);
+      } else {
+        // Full sync - replace all availability
+        const availabilityStrings = formatAvailabilityForProfile(availabilityRecords);
+        await client.models.ProviderProfile.update({
+          id: existingProfile.id,
+          availability: availabilityStrings,
+        } as unknown as Parameters<typeof client.models.ProviderProfile.update>[0]);
+      }
+      
       console.log("Successfully synced availability to provider profile");
     } else {
       console.warn("No ProviderProfile found for provider:", providerId);
