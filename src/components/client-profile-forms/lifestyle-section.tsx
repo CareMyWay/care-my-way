@@ -9,20 +9,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 const lifestyleSchema = z.object({
   typicalDay: z
     .string()
-    .min(4, "Please provide required information.")
+    .min(1, "Please provide required information.")
     .max(500),
   physicalActivity: z
     .string()
-    .min(4, "Please provide information or type 'none' if not applicable.")
+    .min(1, "Please provide information or type 'none' if not applicable.")
     .max(500),
   dietaryPreferences: z
     .string()
-    .min(4, "Please provide information or type 'none' if not applicable.")
+    .min(1, "Please provide information or type 'none' if not applicable.")
     .max(500),
   sleepHours: z.string(),
   hobbies: z
     .string()
-    .min(4, "Please provide information or type 'none' if not applicable.")
+    .min(1, "Please provide information or type 'none' if not applicable.")
     .max(500),
   socialTime: z.enum(
     [
@@ -118,11 +118,11 @@ export function LifestyleSection({
             ["typicalDay", "What does a typical day look like for you?"],
             [
               "physicalActivity",
-              "Do you engage in regular physical activity or exercise? Type 'N/A' if not applicable.",
+              "Do you engage in regular physical activity or exercise? Please specify. Type 'N/A' if not applicable.",
             ],
             [
               "dietaryPreferences",
-              "Do you follow any dietary restrictions or preferences? Type 'N/A' if not applicable.",
+              "Do you follow any dietary restrictions or preferences? Please specify. Type 'N/A' if not applicable.",
             ],
             ["hobbies", "What are your favorite hobbies or interests?"],
           ].map(([field, label]) => (
@@ -187,7 +187,8 @@ export function LifestyleSection({
           {/* Social Time Select */}
           <div className="space-y-2">
             <label htmlFor="socialTime" className="std-form-label">
-              How many days per week do you spend time with family or friends?
+              On average, how many days per week do you spend time with family
+              or friends?
             </label>
             <select
               id="socialTime"
