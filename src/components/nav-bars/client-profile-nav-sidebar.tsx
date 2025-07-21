@@ -38,7 +38,7 @@ export function ClientProfileNavSideBar({
       step: 4,
     },
     {
-      id: "abilities",
+      id: "ability",
       title: "Functional and Cognitive Abilities",
       subtitle: "Ability details",
       step: 5,

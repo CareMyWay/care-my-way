@@ -394,11 +394,15 @@ export default function CompleteClientProfile() {
           cognitiveDifficulties: Array.isArray(
             abilityInfo.cognitiveDifficulties
           )
-            ? abilityInfo.cognitiveDifficulties.join(",")
+            ? abilityInfo.cognitiveDifficulties.join(" , ")
             : abilityInfo.cognitiveDifficulties,
+          cognitiveDifficultiesOther:
+            abilityInfo.cognitiveDifficultiesOther || "None",
           sensoryImpairments: Array.isArray(abilityInfo.sensoryImpairments)
-            ? abilityInfo.sensoryImpairments.join(",")
+            ? abilityInfo.sensoryImpairments.join(" , ")
             : abilityInfo.sensoryImpairments,
+          sensoryImpairmentsOther:
+            abilityInfo.sensoryImpairmentsOther || "None",
           typicalDay: lifestyleInfo.typicalDay,
           physicalActivity: lifestyleInfo.physicalActivity,
           dietaryPreferences: lifestyleInfo.dietaryPreferences,

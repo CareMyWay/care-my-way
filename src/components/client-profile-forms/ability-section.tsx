@@ -11,11 +11,11 @@ const abilitySchema = z.object({
   cognitiveDifficulties: z
     .array(z.string())
     .min(1, "Please select at least one option."),
-  cognitiveDifficultiesOther: z.string().max(500).optional(),
+  cognitiveDifficultiesOther: z.string().max(500),
   sensoryImpairments: z
     .array(z.string())
     .min(1, "Please select at least one option."),
-  sensoryImpairmentsOther: z.string().max(500).optional(),
+  sensoryImpairmentsOther: z.string().max(500),
 });
 
 type AbilityFormFields = z.infer<typeof abilitySchema>;
@@ -108,7 +108,6 @@ export function AbilitySection({
               </option>
               <option value="Uses wheelchair">Uses wheelchair</option>
               <option value="Mostly immobile">Mostly immobile</option>
-              <option value="Other">Other</option>
             </select>
             {errors.mobilityStatus && (
               <p className="text-sm text-red-600">
@@ -129,6 +128,7 @@ export function AbilitySection({
                 "Word-finding issues",
                 "Problem-solving challenges",
                 "None of the above",
+                "Other (please specify)",
               ].map((option) => (
                 <label key={option} className="flex items-center gap-2">
                   <input
@@ -141,7 +141,7 @@ export function AbilitySection({
                 </label>
               ))}
             </div>
-            {cognitiveValues?.includes("None of the above") && (
+            {cognitiveValues?.includes("Other (please specify)") && (
               <div className="relative">
                 <textarea
                   {...register("cognitiveDifficultiesOther")}
@@ -168,6 +168,7 @@ export function AbilitySection({
                 "Touch sensitivity or numbness",
                 "Taste or smell loss",
                 "None of the above",
+                "Other (please specify)",
               ].map((option) => (
                 <label key={option} className="flex items-center gap-2">
                   <input
@@ -180,7 +181,7 @@ export function AbilitySection({
                 </label>
               ))}
             </div>
-            {sensoryValues?.includes("None of the above") && (
+            {sensoryValues?.includes("Other (please specify)") && (
               <div className="relative">
                 <textarea
                   {...register("sensoryImpairmentsOther")}
