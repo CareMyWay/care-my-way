@@ -9,7 +9,7 @@ import { useState } from "react";
 
 interface EditProfessionalInfoProps {
     profileData: Partial<ProviderProfileData>;
-    onUpdate: (value: Partial<ProviderProfileData>) => void;
+    onUpdate: (_updates: Partial<ProviderProfileData>) => void;
 }
 
 const EXPERIENCE_OPTIONS = [

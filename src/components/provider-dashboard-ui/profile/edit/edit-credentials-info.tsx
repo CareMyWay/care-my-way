@@ -6,7 +6,7 @@ import { useState } from "react";
 
 interface EditCredentialsInfoProps {
     profileData: Partial<ProviderProfileData>;
-    onUpdate: (value: Partial<ProviderProfileData>) => void;
+    onUpdate: (_updates: Partial<ProviderProfileData>) => void;
 }
 
 // Types for credential entries (matching what's expected in the profile data)
@@ -247,8 +247,8 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
     }: {
         entryIndex: number;
         files: File[];
-        onFileUpload: (index: number, event: React.ChangeEvent<HTMLInputElement>) => void;
-        onFileRemove: (entryIndex: number, fileIndex: number) => void;
+        onFileUpload: (_index: number, _event: React.ChangeEvent<HTMLInputElement>) => void;
+        onFileRemove: (_entryIndex: number, _fileIndex: number) => void;
         uploadId: string;
         title: string;
     }) => (

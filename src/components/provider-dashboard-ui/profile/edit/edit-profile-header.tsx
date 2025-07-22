@@ -8,7 +8,7 @@ import { type ProviderProfileData } from "@/actions/providerProfileActions";
 
 interface EditProfileHeaderProps {
     profileData: Partial<ProviderProfileData>;
-    onUpdate: (value: Partial<ProviderProfileData>) => void;
+    onUpdate: (_updates: Partial<ProviderProfileData>) => void;
 }
 
 export function EditProfileHeader({ profileData, onUpdate }: EditProfileHeaderProps) {

@@ -6,7 +6,7 @@ import { type ProviderProfileData } from "@/actions/providerProfileActions";
 
 interface EditEmergencyContactProps {
     profileData: Partial<ProviderProfileData>;
-    onUpdate: (value: Partial<ProviderProfileData>) => void;
+    onUpdate: (_updates: Partial<ProviderProfileData>) => void;
 }
 
 const RELATIONSHIP_OPTIONS = [

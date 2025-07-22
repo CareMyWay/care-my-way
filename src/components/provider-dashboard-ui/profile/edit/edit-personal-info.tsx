@@ -9,7 +9,7 @@ import ISO6391 from "iso-639-1";
 
 interface EditPersonalInfoProps {
     profileData: Partial<ProviderProfileData>;
-    onUpdate: (value: Partial<ProviderProfileData>) => void;
+    onUpdate: (_updates: Partial<ProviderProfileData>) => void;
 }
 
 // Get comprehensive list of languages from ISO 639-1 standard

@@ -7,7 +7,7 @@ import { getCanadianProvinces } from "@/utils/canadian-provinces";
 
 interface EditAddressInfoProps {
     profileData: Partial<ProviderProfileData>;
-    onUpdate: (value: Partial<ProviderProfileData>) => void;
+    onUpdate: (_updates: Partial<ProviderProfileData>) => void;
 }
 
 export function EditAddressInfo({ profileData, onUpdate }: EditAddressInfoProps) {
