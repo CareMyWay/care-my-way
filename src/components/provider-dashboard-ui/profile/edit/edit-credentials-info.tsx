@@ -6,7 +6,7 @@ import { useState } from "react";
 
 interface EditCredentialsInfoProps {
     profileData: Partial<ProviderProfileData>;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line no-unused-vars
     onUpdate: (updates: Partial<ProviderProfileData>) => void;
 }
 
@@ -248,9 +248,9 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
     }: {
         entryIndex: number;
         files: File[];
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // eslint-disable-next-line no-unused-vars
         onFileUpload: (index: number, event: React.ChangeEvent<HTMLInputElement>) => void;
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // eslint-disable-next-line no-unused-vars
         onFileRemove: (entryIndex: number, fileIndex: number) => void;
         uploadId: string;
         title: string;

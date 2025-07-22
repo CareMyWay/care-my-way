@@ -9,7 +9,7 @@ import ISO6391 from "iso-639-1";
 
 interface EditPersonalInfoProps {
     profileData: Partial<ProviderProfileData>;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line no-unused-vars
     onUpdate: (updates: Partial<ProviderProfileData>) => void;
 }
 

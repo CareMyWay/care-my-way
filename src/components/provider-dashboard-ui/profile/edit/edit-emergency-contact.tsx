@@ -6,7 +6,7 @@ import { type ProviderProfileData } from "@/actions/providerProfileActions";
 
 interface EditEmergencyContactProps {
     profileData: Partial<ProviderProfileData>;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line no-unused-vars
     onUpdate: (updates: Partial<ProviderProfileData>) => void;
 }
 
