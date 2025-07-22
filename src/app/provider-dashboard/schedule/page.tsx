@@ -189,7 +189,7 @@ export default function SchedulePage() {
                 You haven&#39;t set up your availability yet. Click the button below to get started.
               </p>
               <Link href="/provider-dashboard/schedule/edit">
-                <Button className="flex items-center space-x-2 bg-orange-500 text-white hover:bg-orange-600">Set Up Availability</Button>
+                <Button className="flex items-center space-x-2 bg-orange-500 text-white hover:bg-orange-600 mx-auto">Set Up Availability</Button>
               </Link>
             </div>
           </CardContent>
