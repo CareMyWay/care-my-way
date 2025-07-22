@@ -23,6 +23,6 @@
       "@/*": ["src/*", "./public/*"]
     }
   },
-  "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx", "amplify/functions/updateBookingStatus/tsconfig.json"],
   "exclude": ["node_modules", "amplify/**/*"]
 }

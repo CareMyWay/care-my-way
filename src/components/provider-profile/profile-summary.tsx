@@ -1,7 +1,12 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Image from "next/image";
 import OrangeButton from "../buttons/orange-button";
 import { type ProviderProfileData } from "@/actions/providerProfileActions";
+import BookingModal from "../booking-modal";
+import { useRouter } from "next/navigation";
+import { getCurrentUser } from "@aws-amplify/auth";
 
 interface ProfileSummaryProps {
     profileData: ProviderProfileData;
@@ -30,8 +35,28 @@ const ProfileSummary: React.FC<ProfileSummaryProps> = ({ profileData }) => {
         { label: "Response Time", value: profileData.responseTime || "Not specified" },
     ];
 
+    const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+    const router = useRouter();
+
+    const handleBookingClick = async () => {
+        try {
+            await getCurrentUser();
+            setIsBookingModalOpen(true);
+        }
+        catch (error) {
+            if (
+                error?.name === "UserNotAuthenticatedException" ||
+                error?.message?.includes("User needs to be authenticated")
+            ) {
+                router.push("/login?redirect=/provider");
+            } else {
+                console.error("Unexpected error:", error);
+            }
+        }
+    };
+
     return (
-        <div className="flex flex-col items-center border-solid border-1 rounded-md border-input-border-gray pb-7 w-full md:w-[320px] xl:w-[400px]">
+        <div className="flex flex-col items-center border-solid border-1 rounded-none border-input-border-gray pb-7 w-full md:w-[320px] xl:w-[400px]">
             <div className="flex flex-col items-left w-[360px] p-7">
                 <div className="md:w-[220] xl:w-[320px] md:h-[220px] xl:h-[320px] mx-auto bg-gray-100 rounded-lg flex items-center justify-center">
                     {profileData.profilePhoto ? (
@@ -70,14 +95,27 @@ const ProfileSummary: React.FC<ProfileSummaryProps> = ({ profileData }) => {
                             </span>
                         </div>
                     ))}
+                    </div>   
                 </div>
+                <div className="mt-5">
+                    <OrangeButton variant="action" onClick={handleBookingClick} className="w-full">
+                        REQUEST TO BOOK
+                    </OrangeButton>
+                </div>
+                {isBookingModalOpen && (
+                <BookingModal
+                    isOpen={isBookingModalOpen}
+                    onOpenChange={setIsBookingModalOpen}
+                    providerId={profileData.id}
+                    providerName={providerName}
+                    providerPhoto={profileData.profilePhoto}
+                    providerTitle={providerTitle}
+                    providerRate={String(profileData.askingRate ? `$${profileData.askingRate}/hour` : "Rate on request")}
+                    providerRateFloat={profileData.askingRate}
+                    providerLocation={String(location)}
+                />
+            )}
             </div>
-            <div className="mt-5">
-                <OrangeButton variant="route" href="/provider" className="w-full"> {/*href is a placeholder link, replace with booking link */}
-                    REQUEST TO BOOK
-                </OrangeButton>
-            </div>
-        </div>
     );
 };
 
