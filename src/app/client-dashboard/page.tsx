@@ -5,6 +5,15 @@ import HomeDashPage from "@/components/client-dashboard/home-dash-page";
 export default async function ClientDashboardPage() {
   return (
     <>
+      {/* <p>
+        <strong>Email:</strong> {userProfile.email}
+      </p>
+      <p>
+        <strong>Email:</strong> {userProfile.email}
+      </p>
+      <p>
+        <strong>User Type:</strong> {userProfile.userType}
+      </p> */}
       <HomeDashPage />
     </>
   );
