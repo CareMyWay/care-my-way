@@ -25,9 +25,9 @@ const roleRoutesMap: Record<
   { href: string; label: string; loggedIn: boolean }[]
 > = {
   Admin: [{ href: "/admin-dashboard", label: "My Dashboard", loggedIn: true }],
-  // Provider: [
-  //   { href: "/provider-dashboard", label: "My Dashboard", loggedIn: true },
-  // ],
+  Provider: [
+    { href: "/provider-dashboard", label: "My Dashboard", loggedIn: true },
+  ],
   Client: [
     { href: "/client-dashboard", label: "My Dashboard", loggedIn: true },
     { href: "/client-dashboard/profile", label: "My Profile", loggedIn: true },
