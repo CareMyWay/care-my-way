@@ -9,12 +9,6 @@ export default async function ProviderDashboardPage() {
   if (!userProfile) return <p>User not found</p>;
   return (
     <div>
-      <p>
-        <strong>Email:</strong> {userProfile.email}
-      </p>
-      <p>
-        <strong>User Type:</strong> {userProfile.userType}
-      </p>
       <HomeDashPage />
     </div>
   );
