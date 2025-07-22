@@ -9,8 +9,6 @@ import type { Schema } from "@/../amplify/data/resource";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-// import { Button } from "@/components/ui/button";
-// import OrangeButton from "@/components/buttons/orange-button";
 
 import {
   User,
@@ -118,7 +116,7 @@ export default function CompletedClientProfile() {
 
   const navigationItems = [
     {
-      category: "GENERAL",
+      category: "MY PROFILE",
       items: [
         { id: "personal-info", label: "Personal", icon: User },
         { id: "address-info", label: "Address", icon: MapPin },
@@ -157,7 +155,7 @@ export default function CompletedClientProfile() {
     // <div className="min-h-screen flex flex-col lg:flex-row">
     <div className="min-h-screen flex flex-col lg:flex-row">
       {/* Mobile Vertical Top Nav */}
-      <div className="lg:hidden  px-4 py-2">
+      <div className="lg:hidden px-4 py-2">
         <div className="flex flex-col gap-2">
           {navigationItems.flatMap((section) =>
             section.items.map((item) => {
@@ -317,7 +315,7 @@ function PersonalInfoContent({
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-darkest-green">Personal</h1>
-      <Card>
+      <Card className="border-1 drop-shadow-sm border-medium-green  rounded-lg">
         <CardContent className="space-y-4 p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -448,7 +446,7 @@ function AddressInfoContent({
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-darkest-green">Address</h1>
-      <Card>
+      <Card className="border-1 drop-shadow-sm border-medium-green  rounded-lg">
         <CardContent className="space-y-4 p-6">
           {["address", "city", "province", "postalCode"].map((field) => (
             <div key={field}>
@@ -535,7 +533,7 @@ function EmergencySupportContent({
       <h1 className="text-2xl font-bold text-darkest-green">
         Emergency & Support
       </h1>
-      <Card>
+      <Card className="border-1 drop-shadow-sm border-medium-green  rounded-lg">
         <CardHeader>
           <CardTitle>Emergency Contact</CardTitle>
         </CardHeader>
@@ -699,7 +697,7 @@ function MedicalInfoContent({
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-darkest-green">Medical History</h1>
-      <Card>
+      <Card className="border-1 drop-shadow-sm border-medium-green  rounded-lg">
         <CardContent className="space-y-4 p-6">
           {[
             "medicalConditions",
@@ -794,7 +792,7 @@ function AbilitiesInfoContent({
       <h1 className="text-2xl font-bold text-darkest-green">
         Functional & Cognitive Abilities
       </h1>
-      <Card>
+      <Card className="border-1 drop-shadow-sm border-medium-green  rounded-lg">
         <CardContent className="space-y-4 p-6">
           {[
             "mobilityStatus",
@@ -890,7 +888,7 @@ function LifestyleInfoContent({
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-darkest-green">Lifestyle</h1>
-      <Card>
+      <Card className="border-1 drop-shadow-sm border-medium-green  rounded-lg">
         <CardContent className="space-y-4 p-6">
           {[
             "typicalDay",
