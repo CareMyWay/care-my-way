@@ -148,9 +148,9 @@ const schema = a
         // Guests can read profiles (for marketplace browsing)
         allow.guest().to(["read"]),
       ]),
-
-    // Booking schema
-    Booking: a
+      
+      // Booking schema
+      Booking: a
       .model({
         id: a.string().required(),
         providerId: a.string().required(), // Include this field after DynamoDB is set up to record provider ID

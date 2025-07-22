@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     }
 
     const updateCommand = new UpdateItemCommand({
-      TableName: "Booking-iupg6yuovreq3mz2yzmuqz2epe-NONE",
+      TableName: "Booking-pnrbd5j3jraz3p7qhb4mco6cwe-NONE",
       Key: {
         id: { S: bookingId },
       },
