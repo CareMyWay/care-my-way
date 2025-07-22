@@ -9,7 +9,7 @@ import { useState } from "react";
 
 interface EditProfessionalInfoProps {
     profileData: Partial<ProviderProfileData>;
-    onUpdate: (updates: Partial<ProviderProfileData>) => void;
+    onUpdate: (value: Partial<ProviderProfileData>) => void;
 }
 
 const EXPERIENCE_OPTIONS = [
@@ -200,7 +200,7 @@ export function EditProfessionalInfo({ profileData, onUpdate }: EditProfessional
                             onChange={(e) => setCustomService(e.target.value)}
                             placeholder="Add a custom service..."
                             className="flex-1 p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors duration-200"
-                            onKeyPress={(e) => e.key === 'Enter' && addCustomService()}
+                            onKeyPress={(e) => e.key === "Enter" && addCustomService()}
                         />
                         <Button
                             onClick={addCustomService}

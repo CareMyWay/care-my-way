@@ -7,7 +7,7 @@ import { getCanadianProvinces } from "@/utils/canadian-provinces";
 
 interface EditAddressInfoProps {
     profileData: Partial<ProviderProfileData>;
-    onUpdate: (updates: Partial<ProviderProfileData>) => void;
+    onUpdate: (value: Partial<ProviderProfileData>) => void;
 }
 
 export function EditAddressInfo({ profileData, onUpdate }: EditAddressInfoProps) {
@@ -87,7 +87,7 @@ export function EditAddressInfo({ profileData, onUpdate }: EditAddressInfoProps)
                             type="text"
                             value={profileData.postalCode || ""}
                             onChange={(e) => onUpdate({
-                                postalCode: e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '')
+                                postalCode: e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "")
                             })}
                             placeholder="K1A 0A6"
                             maxLength={7}

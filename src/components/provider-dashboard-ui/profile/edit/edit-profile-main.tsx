@@ -29,7 +29,7 @@ export function EditProfileMain() {
     const [error, setError] = useState<string | null>(null);
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
     const [currentUser, setCurrentUser] = useState<{ userId: string; username?: string } | null>(null);
-    const [activeTab, setActiveTab] = useState<'personal' | 'professional' | 'credentials' | 'profile'>('personal');
+    const [activeTab, setActiveTab] = useState<"personal" | "professional" | "credentials" | "profile">("personal");
 
     useEffect(() => {
         const loadProfileData = async () => {
@@ -226,40 +226,40 @@ export function EditProfileMain() {
                         <div className="border-b bg-gray-50">
                             <div className="flex space-x-1 p-2">
                                 <button
-                                    onClick={() => setActiveTab('personal')}
-                                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-colors duration-200 ${activeTab === 'personal'
-                                            ? 'bg-white text-blue-600 shadow-sm border border-blue-200'
-                                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                                    onClick={() => setActiveTab("personal")}
+                                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-colors duration-200 ${activeTab === "personal"
+                                        ? "bg-white text-blue-600 shadow-sm border border-blue-200"
+                                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                                         }`}
                                 >
                                     <User className="h-5 w-5" />
                                     Personal Information
                                 </button>
                                 <button
-                                    onClick={() => setActiveTab('professional')}
-                                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-colors duration-200 ${activeTab === 'professional'
-                                            ? 'bg-white text-purple-600 shadow-sm border border-purple-200'
-                                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                                    onClick={() => setActiveTab("professional")}
+                                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-colors duration-200 ${activeTab === "professional"
+                                        ? "bg-white text-purple-600 shadow-sm border border-purple-200"
+                                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                                         }`}
                                 >
                                     <Briefcase className="h-5 w-5" />
                                     Professional Details
                                 </button>
                                 <button
-                                    onClick={() => setActiveTab('credentials')}
-                                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-colors duration-200 ${activeTab === 'credentials'
-                                            ? 'bg-white text-indigo-600 shadow-sm border border-indigo-200'
-                                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                                    onClick={() => setActiveTab("credentials")}
+                                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-colors duration-200 ${activeTab === "credentials"
+                                        ? "bg-white text-indigo-600 shadow-sm border border-indigo-200"
+                                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                                         }`}
                                 >
                                     <BookOpen className="h-5 w-5" />
                                     Credentials
                                 </button>
                                 <button
-                                    onClick={() => setActiveTab('profile')}
-                                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-colors duration-200 ${activeTab === 'profile'
-                                            ? 'bg-white text-green-600 shadow-sm border border-green-200'
-                                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                                    onClick={() => setActiveTab("profile")}
+                                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-colors duration-200 ${activeTab === "profile"
+                                        ? "bg-white text-green-600 shadow-sm border border-green-200"
+                                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                                         }`}
                                 >
                                     <Camera className="h-5 w-5" />
@@ -270,7 +270,7 @@ export function EditProfileMain() {
 
                         <div className="p-8">
                             {/* Personal Information Tab */}
-                            {activeTab === 'personal' && (
+                            {activeTab === "personal" && (
                                 <div className="space-y-8">
                                     <EditPersonalInfo
                                         profileData={formData}
@@ -290,7 +290,7 @@ export function EditProfileMain() {
                             )}
 
                             {/* Professional Details Tab */}
-                            {activeTab === 'professional' && (
+                            {activeTab === "professional" && (
                                 <div className="space-y-8">
                                     <EditProfessionalInfo
                                         profileData={formData}
@@ -300,7 +300,7 @@ export function EditProfileMain() {
                             )}
 
                             {/* Credentials Tab */}
-                            {activeTab === 'credentials' && (
+                            {activeTab === "credentials" && (
                                 <div className="space-y-8">
                                     <EditCredentialsInfo
                                         profileData={formData}
@@ -310,7 +310,7 @@ export function EditProfileMain() {
                             )}
 
                             {/* Profile & Photo Tab */}
-                            {activeTab === 'profile' && (
+                            {activeTab === "profile" && (
                                 <div className="space-y-8">
                                     <EditProfileHeader
                                         profileData={formData}
@@ -353,7 +353,7 @@ export function EditProfileMain() {
                                 {hasUnsavedChanges && (
                                     <div className="mt-4 text-center">
                                         <p className="text-sm text-gray-500">
-                                            Don't forget to save your changes before leaving this page
+                                            Don&apos;t forget to save your changes before leaving this page
                                         </p>
                                     </div>
                                 )}
