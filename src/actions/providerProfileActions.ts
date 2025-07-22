@@ -316,7 +316,7 @@ export async function updateProviderProfile(profileId: string, profileData: Part
 
         const transformedProfile: ProviderProfileData = {
             ...rawUpdatedProfile,
-            // Parse JSON strings back into arrays for UI consumption
+            // Parse JSON strings back into arrays for UI 
             education: safeParseJSON(rawUpdatedProfile.education),
             certifications: safeParseJSON(rawUpdatedProfile.certifications),
             workExperience: safeParseJSON(rawUpdatedProfile.workExperience),
@@ -332,6 +332,7 @@ export async function updateProviderProfile(profileId: string, profileData: Part
 // Get all publicly visible provider profiles for marketplace
 export async function getPublicProviderProfiles(): Promise<ProviderProfileData[]> {
     try {
+        // Query ALL provider profiles from DynamoDB
         const result = await client.models.ProviderProfile.list();
 
         if (result.errors) {
@@ -339,15 +340,15 @@ export async function getPublicProviderProfiles(): Promise<ProviderProfileData[]
             return [];
         }
 
-        // Filter in JavaScript for now (can be optimized later)
+        // Filter for publicly visible provider profiles
         const filteredProfiles = result.data.filter((profile) =>
             profile.isProfileComplete === true && profile.isPubliclyVisible === true
         );
 
-        // Transform each profile and parse JSON strings into arrays
+        // Transform each profile and parse JSON strings into arrays for UI 
         const transformedProfiles: ProviderProfileData[] = filteredProfiles.map((rawProfile) => ({
             ...rawProfile,
-            // Parse JSON strings back into arrays for UI consumption
+            // Parse JSON strings back into arrays for UI 
             education: safeParseJSON(rawProfile.education),
             certifications: safeParseJSON(rawProfile.certifications),
             workExperience: safeParseJSON(rawProfile.workExperience),
