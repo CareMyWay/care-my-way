@@ -182,7 +182,7 @@ export default function EditSchedulePage() {
               </div>
             </div>
           </div>
-          <Button onClick={saveSchedule} disabled={isSaving} className="bg-blue-600 hover:bg-blue-700">
+          <Button onClick={saveSchedule} disabled={isSaving} className="bg-orange-600 hover:bg-orange-700">
             {isSaving ? (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
@@ -232,7 +232,7 @@ export default function EditSchedulePage() {
                               key={key}
                               onClick={() => toggleSlot(day, hour)}
                               className={`border cursor-pointer px-2 py-1 h-10 transition-colors
-                                ${selected ? "bg-blue-500 text-white hover:bg-blue-600" : "bg-white hover:bg-blue-100"}
+                                ${selected ? "bg-orange-500 text-white hover:bg-orange-600" : "bg-white hover:bg-orange-100"}
                               `}
                             >
                               {selected ? "✓" : ""}
