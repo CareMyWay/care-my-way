@@ -6,7 +6,8 @@ import { useState } from "react";
 
 interface EditCredentialsInfoProps {
     profileData: Partial<ProviderProfileData>;
-    onUpdate: (_updates: Partial<ProviderProfileData>) => void;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onUpdate: (updates: Partial<ProviderProfileData>) => void;
 }
 
 // Types for credential entries (matching what's expected in the profile data)
@@ -247,8 +248,10 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
     }: {
         entryIndex: number;
         files: File[];
-        onFileUpload: (_index: number, _event: React.ChangeEvent<HTMLInputElement>) => void;
-        onFileRemove: (_entryIndex: number, _fileIndex: number) => void;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        onFileUpload: (index: number, event: React.ChangeEvent<HTMLInputElement>) => void;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        onFileRemove: (entryIndex: number, fileIndex: number) => void;
         uploadId: string;
         title: string;
     }) => (

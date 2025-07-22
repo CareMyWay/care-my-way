@@ -8,7 +8,8 @@ import { type ProviderProfileData } from "@/actions/providerProfileActions";
 
 interface EditProfileHeaderProps {
     profileData: Partial<ProviderProfileData>;
-    onUpdate: (_updates: Partial<ProviderProfileData>) => void;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onUpdate: (updates: Partial<ProviderProfileData>) => void;
 }
 
 export function EditProfileHeader({ profileData, onUpdate }: EditProfileHeaderProps) {
