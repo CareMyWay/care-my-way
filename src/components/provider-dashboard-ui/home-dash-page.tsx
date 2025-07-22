@@ -15,7 +15,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@/components/provider-dashboard-ui/avatar";
+} from "@/components/ui/avatar";
 //import AppointmentsPage from "./appointments/page";
 import { format, startOfWeek, addDays, isSameDay, isSameMonth } from "date-fns";
 import { Button } from "@/components/provider-dashboard-ui/button";

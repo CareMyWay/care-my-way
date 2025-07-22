@@ -76,6 +76,59 @@ const schema = a
         allow.authenticated().to(["read"]),
       ]),
 
+
+// Booking schema
+      Booking: a
+      .model({
+        id: a.string().required(),
+        // providerId: a.string().required(), // Include this field after DynamoDB is set up to record provider ID
+        providerName: a.string().required(),
+        // providerTitle: a.string().required(),
+        providerRate: a.string().required(),
+        date: a.string().required(),
+        time: a.string().required(),
+        clientId: a.string(),
+        // clientName: a.string(),
+      })
+      .authorization((allow) => [
+        allow.authenticated().to(["create", "read"]),
+        allow.group("Admin"),
+        allow.guest().to(["create", "read"]), // Add this line
+      ]),
+
+    // Availability schema for providers - single record per provider
+    ProviderAvailability: a
+      .model({
+        id: a.string().required(),
+        providerId: a.string().required(), // Links to UserProfile.userId where userType = "Provider"
+        profileOwner: a.string().required(), // For authorization
+        
+        // Store all availability as JSON array
+        availabilityData: a.json(), // Array of availability objects: [{date: "2025-07-21", time: "09:00", duration: 1.0, isAvailable: true}, ...]
+        
+        // Weekly template for recurring availability
+        weeklyTemplate: a.json(), // Template for weekly recurring schedule: {monday: ["09:00", "10:00"], tuesday: [...], ...}
+        
+        // Metadata
+        lastUpdated: a.datetime(),
+        timezone: a.string().default("Alberta/Edmonton"), // Default timezone for Alberta
+        notes: a.string(), // Optional notes for the provider
+      })
+      .secondaryIndexes((index) => [
+        index("providerId"), // Query by provider
+      ])
+      .authorization((allow) => [
+        // Provider owns their availability - full access
+        allow.ownerDefinedIn("profileOwner").to(["create", "read", "update", "delete"]),
+        // Admins have full access
+        allow.group("Admin").to(["create", "read", "update", "delete"]),
+        // Authenticated users can read availability (for booking)
+        allow.authenticated().to(["read"]),
+        // Guests can read availability (for marketplace browsing)
+        allow.guest().to(["read"]),
+      ]),
+
+    
     ProviderProfile: a
       .model({
         userId: a.string().required(),
@@ -121,11 +174,12 @@ const schema = a
         certifications: a.json(), // Array of certification objects
         workExperience: a.json(), // Array of work experience objects
 
-        // Availability
-        availability: a.string().array(), // "yyyy-mm-dd:HH24" (e.g., "2025-07-20:09" for July 20, 2025, at 9:00 AM).
+        // Availability - stores hourly time slots
+        availability: a.string().array(), // "yyyy-mm-dd:HH" format (e.g., "2025-07-20:09" for July 20, 2025, at 9:00 AM - 1 hour slot)
 
         // Profile completion status
         isProfileComplete: a.boolean().default(false),
+        setupComplete: a.boolean().default(false),
 
         // Public visibility settings
         isPubliclyVisible: a.boolean().default(true),
