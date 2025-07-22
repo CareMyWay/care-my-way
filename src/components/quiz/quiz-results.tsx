@@ -183,7 +183,7 @@ export function QuizResults({ results, onStartOver }: QuizResultsProps) {
                 2
               </span>
               <span>
-                Adjust or clear filters in the marketplace’s filter section to refine your search results.
+                Adjust or clear filters in the healthcare directory's filter section to refine your search results.
               </span>
             </p>
             <p className="flex items-start">
