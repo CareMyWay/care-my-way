@@ -149,6 +149,26 @@ const schema = a
         // Guests can read profiles (for marketplace browsing)
         allow.guest().to(["read"]),
       ]),
+      
+      // Booking schema
+      Booking: a
+      .model({
+        id: a.string().required(),
+        providerId: a.string().required(), // Include this field after DynamoDB is set up to record provider ID
+        providerName: a.string().required(),
+        providerRate: a.string().required(),
+        date: a.string().required(),
+        time: a.string().required(),
+        clientId: a.string().required(),
+        clientName: a.string(),
+        bookingStatus: a.string().default("For Confirmation"),
+        duration: a.float().required(),
+        totalCost: a.float(),
+      })
+      .authorization((allow) => [
+        allow.authenticated().to(["create", "read", "update"]),
+        allow.group("Admin"),
+      ]),
   })
   .authorization((allow) => [allow.resource(postConfirmation)]);
 
