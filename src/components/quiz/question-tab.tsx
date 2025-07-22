@@ -8,9 +8,10 @@ interface ProgressStepsProps {
   questionPool: Question[];
   answerPool: number[];
   setAnswerPoolAction: Dispatch<SetStateAction<number[]>>;
+  onQuizSubmit: () => void;
 }
 
-export function QuestionTab({ currQuestionIdx, setCurrQuestionIdxAction, questionPool, answerPool, setAnswerPoolAction }: ProgressStepsProps) {
+export function QuestionTab({ currQuestionIdx, setCurrQuestionIdxAction, questionPool, answerPool, setAnswerPoolAction, onQuizSubmit }: ProgressStepsProps) {
   // console.info(`currQuestionIdx: ${currQuestionIdx}`);
   const q_obj = questionPool[currQuestionIdx - 1];
   const q_idx = currQuestionIdx;
@@ -27,7 +28,7 @@ export function QuestionTab({ currQuestionIdx, setCurrQuestionIdxAction, questio
 
   const handleSubmit = () =>{
     if (currQuestionIdx >= answerPool.length) return;
-    alert(answerPool);
+    onQuizSubmit();
   };
 
 
@@ -37,35 +38,45 @@ export function QuestionTab({ currQuestionIdx, setCurrQuestionIdxAction, questio
     const [_que_idx, _opt_idx] = e.target.id.split("-");
 
     if (questionPool[parseInt(_que_idx) - 1]["a-tp"] === "checkbox") {
-      lcl_a_pool[_que_idx] = Math.pow(2, parseInt(_opt_idx)) * (e.target.checked === true ? 1 : -1) + (lcl_a_pool[_que_idx] || 0);
+      const currentValue = lcl_a_pool[_que_idx] || 0;
+      const optionBit = Math.pow(2, parseInt(_opt_idx));
+      
+      if (e.target.checked) {
+        // Add this option by setting the bit
+        lcl_a_pool[_que_idx] = currentValue | optionBit;
+      } else {
+        // Remove this option by clearing the bit
+        lcl_a_pool[_que_idx] = currentValue & ~optionBit;
+      }
     } else if (questionPool[parseInt(_que_idx) - 1]["a-tp"] === "radio") {
-      lcl_a_pool[_que_idx] = _opt_idx;
+      lcl_a_pool[_que_idx] = parseInt(_opt_idx);
     } else {
       console.info(`Q${_que_idx}-OPT${_opt_idx}: Call Admin Now!`);
     }
-    setAnswerPoolAction(lcl_a_pool);
-    console.info(`AnswerPool: ${lcl_a_pool}`);
+    setAnswerPoolAction([...lcl_a_pool]);
+    console.info(`Question ${_que_idx} answered:`, lcl_a_pool[_que_idx]);
+    console.info(`Full AnswerPool:`, lcl_a_pool);
   };
 
   return (
     <>
-      <div className="bg-darkest-green rounded-lg p-8 text-primary-white w-auto h-auto">
-        <div className="flex items-center mb-6">
-          <div className="w-[53px] h-[53px] rounded-full bg-primary-white text-darkest-green text-2xl flex items-center justify-center font-bold mr-4">
-            {currQuestionIdx}
-          </div>
+      <div className="bg-primary-white border border-gray-300 rounded-lg p-8 text-darkest-green w-auto h-auto">
+        <div className="flex items-center mb-5">
+          <h2 className="text-2xl font-bold text-darkest-green mr-4">
+            Question {currQuestionIdx}
+          </h2>
         </div>
-        <div key={q_idx} className="mb-6 pl-6 min-h-1/2">
-          <p className="text-lg mt-1">{q_obj["q-idx"] > 0 ? `${q_obj["q-idx"]}. ` : ""} {q_obj["q-str"]}</p>
+        <div key={q_idx} className="mb-6 min-h-1/2">
+          <p className="text-lg mt-1 mb-3">{q_obj["q-str"]}</p>
 
           {["DUMMY-Length=1-Array"].map(() => {
             if (q_obj["a-tp"] === "checkbox") {
               return (
                 <div key={`${q_idx}`}>
                   {q_obj.checkboxes.map((str, i) => (
-                    <div className="flex mb-[4px] ml-[12px]" key={`${q_idx}-${i}`}>
-                      <input type="checkbox" key={i} value={i} id={`${q_idx}-${i}`} checked={(lcl_a_pool[q_idx] & (1 << i)) != 0} onChange={handleChange}/>
-                      <label className="ml-[6px]" htmlFor={`${q_idx}-${i}`}> {str}</label>
+                    <div className="flex mb-3 ml-[12px]" key={`${q_idx}-${i}`}>
+                      <input type="checkbox" key={i} value={i} id={`${q_idx}-${i}`} className="w-5 h-5 mt-1 accent-medium-green" checked={(lcl_a_pool[q_idx] & (1 << i)) != 0} onChange={handleChange}/>
+                      <label className="ml-3 text-lg" htmlFor={`${q_idx}-${i}`}> {str}</label>
                     </div>
                   ))}
                 </div>
@@ -75,9 +86,9 @@ export function QuestionTab({ currQuestionIdx, setCurrQuestionIdxAction, questio
               return (
                 <div key={`${q_idx}`}>
                   {q_obj.radios.map((str, i) => (
-                    <div className="flex mb-[4px] ml-[12px]" key={`${q_idx}-${i}`}>
-                      <input type="radio" key={i} value={i} id={`${q_idx}-${i}`} name={`${q_idx}`} checked={lcl_a_pool[q_idx] == i} onChange={handleChange}/>
-                      <label className="ml-[6px]" htmlFor={`${q_idx}-${i}`}> {str}</label>
+                    <div className="flex mb-3 ml-[12px]" key={`${q_idx}-${i}`}>
+                      <input type="radio" key={i} value={i} id={`${q_idx}-${i}`} name={`${q_idx}`} className="w-5 h-5 mt-1 accent-medium-green" checked={lcl_a_pool[q_idx] == i} onChange={handleChange}/>
+                      <label className="ml-3 text-lg" htmlFor={`${q_idx}-${i}`}> {str}</label>
                     </div>
                   ))}
                 </div>
@@ -92,7 +103,7 @@ export function QuestionTab({ currQuestionIdx, setCurrQuestionIdxAction, questio
           })}
         </div>
 
-        <div className="flex flex-row justify-between mt-8 items-end">
+        <div className="flex flex-row justify-between mt-15 items-end">
           {currQuestionIdx > 1 ?                   ( <OrangeButton onClick={handleBack} variant={"action"} >BACK</OrangeButton>) : (<span></span>)}
           {currQuestionIdx < questionPool.length ? ( <OrangeButton onClick={handleNext} variant={"action"} >NEXT</OrangeButton>) :
                                                    ( <OrangeButton onClick={handleSubmit} variant={"action"} >SUBMIT</OrangeButton>)}
