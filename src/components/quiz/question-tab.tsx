@@ -55,7 +55,7 @@ export function QuestionTab({ currQuestionIdx, setCurrQuestionIdxAction, questio
     }
     setAnswerPoolAction([...lcl_a_pool]);
     console.info(`Question ${_que_idx} answered:`, lcl_a_pool[_que_idx]);
-    console.info(`Full AnswerPool:`, lcl_a_pool);
+    console.info("Full AnswerPool:", lcl_a_pool);
   };
 
   return (

@@ -7,28 +7,28 @@ import QuizResults from "@/components/quiz/quiz-results";
 import { ProcessedResults } from "@/components/quiz/quiz-logic";
 
 export function QuizLanding() {
-    const [currentView, setCurrentView] = useState<'landing' | 'questions' | 'results'>('landing');
+    const [currentView, setCurrentView] = useState<"landing" | "questions" | "results">("landing");
     const [quizResults, setQuizResults] = useState<ProcessedResults | null>(null);
 
     const handleStartQuiz = () => {
-        setCurrentView('questions');
+        setCurrentView("questions");
     };
 
     const handleQuizComplete = (results: ProcessedResults) => {
         setQuizResults(results);
-        setCurrentView('results');
+        setCurrentView("results");
     };
 
     const handleStartOver = () => {
-        setCurrentView('landing');
+        setCurrentView("landing");
         setQuizResults(null);
     };
 
-    if (currentView === 'results' && quizResults) {
+    if (currentView === "results" && quizResults) {
         return <QuizResults results={quizResults} onStartOver={handleStartOver} />;
     }
 
-    if (currentView === 'questions') {
+    if (currentView === "questions") {
         return <QuestionFrame onQuizComplete={handleQuizComplete} />;
     }
 

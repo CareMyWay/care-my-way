@@ -210,7 +210,7 @@ export function QuizResults({ results, onStartOver }: QuizResultsProps) {
             Retake Assessment
           </OrangeButton>
           <OrangeButton
-            onClick={() => to('/marketplace')}
+            onClick={() => to("/marketplace")}
             variant="action"
             className="px-8 py-3">
             Find a Provider

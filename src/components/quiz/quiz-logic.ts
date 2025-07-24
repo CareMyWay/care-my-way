@@ -91,7 +91,7 @@ export function processQuizAnswers(answers: (number | string)[]): QuizResults {
   
   for (let i = 1; i <= 20; i++) {
     let answer = answers[i];
-    if (typeof answer === 'string') {
+    if (typeof answer === "string") {
       answer = parseInt(answer) || 0;
     }
     processedAnswers[i] = answer || 0;
@@ -381,7 +381,7 @@ export function processResultsForDisplay(results: QuizResults): ProcessedResults
       } else if (hasCognitive) {
         combinedReason = "Cognitive changes and safety concerns require professional assessment and monitoring.";
       } else {
-        combinedReason = reasonsArray.join(", ") + ".";
+        combinedReason = `${reasonsArray.join(", ")  }.`;
       }
     } else if (providerName === PROVIDERS.LPN) {
       combinedReason = "Routine medication organization and regular vital sign monitoring.";
@@ -394,7 +394,7 @@ export function processResultsForDisplay(results: QuizResults): ProcessedResults
     } else if (providerName === PROVIDERS.DIETITIAN) {
       combinedReason = "Diabetes or nutrition concerns need individualized meal planning.";
     } else {
-      combinedReason = reasonsArray.join(", ") + ".";
+      combinedReason = `${reasonsArray.join(", ")  }.`;
     }
     
     providers.push({

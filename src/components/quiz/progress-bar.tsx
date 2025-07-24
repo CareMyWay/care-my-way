@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 
 interface ProgressBarProps {
     value: number; // Progress percentage (0-100)
