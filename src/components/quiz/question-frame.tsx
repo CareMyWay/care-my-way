@@ -10,7 +10,7 @@ import type {Question} from "@/components/quiz/staticQuizData";
 import { processQuizAnswers, processResultsForDisplay, ProcessedResults } from "@/components/quiz/quiz-logic";
 
 interface QuestionFrameProps {
-  onQuizComplete: (ProcessedResults) => void;
+  onQuizComplete: (_:ProcessedResults) => void;
 }
 
 const QuestionFrame = ({ onQuizComplete }: QuestionFrameProps) => {
