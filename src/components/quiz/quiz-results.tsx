@@ -72,7 +72,7 @@ export function QuizResults({ results, onStartOver }: QuizResultsProps) {
             Your Care Assessment Results
           </h1>
           <p className="text-lg text-darkest-green mb-8 max-w-3xl mx-auto">
-            Based on your responses, we've identified the healthcare professionals and
+            Based on your responses, we&apos;ve identified the healthcare professionals and
             services that would be most beneficial for your care needs.
           </p>
         </div>
@@ -104,7 +104,7 @@ export function QuizResults({ results, onStartOver }: QuizResultsProps) {
             ) : (
               <p className="text-darkest-green">
                 Based on your responses, you may not need additional professional
-                healthcare support at this time. However, it's always good to maintain
+                healthcare support at this time. However, it&apos;s always good to maintain
                 regular contact with your primary healthcare provider.
               </p>
             )}
@@ -131,7 +131,7 @@ export function QuizResults({ results, onStartOver }: QuizResultsProps) {
             ) : (
               <p className="text-darkest-green">
                 Based on your responses, you appear to be managing well independently.
-                Continue monitoring your health and don't hesitate to seek support if
+                Continue monitoring your health and don&apos;t hesitate to seek support if
                 your needs change.
               </p>
             )}
@@ -183,7 +183,7 @@ export function QuizResults({ results, onStartOver }: QuizResultsProps) {
                 2
               </span>
               <span>
-                Adjust or clear filters in the healthcare directory's filter section to refine your search results.
+                Adjust or clear filters in the healthcare directory&apos;s filter section to refine your search results.
               </span>
             </p>
             <p className="flex items-start">
@@ -210,8 +210,8 @@ export function QuizResults({ results, onStartOver }: QuizResultsProps) {
             Retake Assessment
           </OrangeButton>
           <OrangeButton
-            onClick={() => to("/marketplace")}
-            variant="action"
+            variant="route"
+            href={"/marketplace"}
             className="px-8 py-3">
             Find a Provider
           </OrangeButton>
