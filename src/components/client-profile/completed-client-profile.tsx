@@ -1,4 +1,3 @@
-// app/user/profile/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -60,7 +59,7 @@ export default function CompletedClientProfile() {
             "supportLastName",
             "supportRelationship",
             "supportContactPhone",
-            "medicalConditions",
+            // "medicalConditions", // Commented out due to previous error
             "surgeriesOrHospitalizations",
             "chronicIllnesses",
             "allergies",
@@ -142,17 +141,9 @@ export default function CompletedClientProfile() {
         },
       ],
     },
-    // {
-    //   category: "SYSTEM",
-    //   items: [
-    //     { id: "notifications", label: "Notifications", icon: Bell },
-    //     { id: "preferences", label: "Preferences", icon: Settings },
-    //   ],
-    // },
   ];
 
   return (
-    // <div className="min-h-screen flex flex-col lg:flex-row">
     <div className="min-h-screen flex flex-col lg:flex-row">
       {/* Mobile Vertical Top Nav */}
       <div className="lg:hidden px-4 py-2">
@@ -233,11 +224,10 @@ export default function CompletedClientProfile() {
           onClick={() => setSidebarOpen(false)}
         />
       )}
-      {/* Mobile Sidebar Toggle Button */}
       {/* Main Content */}
       <main className="flex-1 p-4 lg:p-6 overflow-y-auto">
         {renderContent(activeSection, profile)}
-      </main>{" "}
+      </main>
     </div>
   );
 }
@@ -306,7 +296,6 @@ function PersonalInfoContent({
         ...formData,
       });
       setIsEditing(false);
-      // Optionally: show a toast
     } catch (err) {
       console.error("Failed to update profile", err);
     }
@@ -315,12 +304,15 @@ function PersonalInfoContent({
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-darkest-green">Personal</h1>
-      <Card className="border-1 drop-shadow-sm border-medium-green  rounded-lg">
-        <CardContent className="space-y-4 p-6">
+      <Card className="border-1 drop-shadow-sm border-medium-green rounded-lg">
+        <CardContent className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
+              <Label className="text-lg font-medium" htmlFor="firstName">
+                First Name
+              </Label>
               <Input
+                className="mt-2 text-base"
                 id="firstName"
                 value={formData.firstName}
                 onChange={(e) => handleChange("firstName", e.target.value)}
@@ -328,8 +320,11 @@ function PersonalInfoContent({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
+              <Label className="text-lg font-medium" htmlFor="lastName">
+                Last Name
+              </Label>
               <Input
+                className="mt-2 text-base"
                 id="lastName"
                 value={formData.lastName}
                 onChange={(e) => handleChange("lastName", e.target.value)}
@@ -338,8 +333,11 @@ function PersonalInfoContent({
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label className="text-lg font-medium" htmlFor="email">
+              Email
+            </Label>
             <Input
+              className="mt-2 text-base"
               id="email"
               type="email"
               value={formData.email}
@@ -348,8 +346,11 @@ function PersonalInfoContent({
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="phoneNumber">Phone Number</Label>
+            <Label className="text-lg font-medium" htmlFor="phoneNumber">
+              Phone Number
+            </Label>
             <Input
+              className="mt-2 text-base"
               id="phoneNumber"
               value={formData.phoneNumber}
               onChange={(e) => handleChange("phoneNumber", e.target.value)}
@@ -357,8 +358,11 @@ function PersonalInfoContent({
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="dateOfBirth">Date of Birth</Label>
+            <Label className="text-lg font-medium" htmlFor="dateOfBirth">
+              Date of Birth
+            </Label>
             <Input
+              className="mt-2 text-base"
               id="dateOfBirth"
               type="date"
               value={formData.dateOfBirth}
@@ -367,8 +371,11 @@ function PersonalInfoContent({
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="gender">Gender</Label>
+            <Label className="text-lg font-medium" htmlFor="gender">
+              Gender
+            </Label>
             <Input
+              className="mt-2 text-base"
               id="gender"
               value={formData.gender}
               onChange={(e) => handleChange("gender", e.target.value)}
@@ -446,14 +453,15 @@ function AddressInfoContent({
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-darkest-green">Address</h1>
-      <Card className="border-1 drop-shadow-sm border-medium-green  rounded-lg">
-        <CardContent className="space-y-4 p-6">
+      <Card className="border-1 drop-shadow-sm border-medium-green rounded-lg">
+        <CardContent className="space-y-6">
           {["address", "city", "province", "postalCode"].map((field) => (
-            <div key={field}>
-              <Label htmlFor={addressLabels[field]}>
+            <div key={field} className="space-y-2">
+              <Label className="text-lg font-medium" htmlFor={field}>
                 {addressLabels[field]}
               </Label>
               <Input
+                className="mt-2 text-base"
                 id={field}
                 value={formData[field as keyof typeof formData]}
                 onChange={(e) => handleChange(field, e.target.value)}
@@ -533,14 +541,22 @@ function EmergencySupportContent({
       <h1 className="text-2xl font-bold text-darkest-green">
         Emergency & Support
       </h1>
-      <Card className="border-1 drop-shadow-sm border-medium-green  rounded-lg">
+      <Card className="border-1 drop-shadow-sm border-medium-green rounded-lg">
         <CardHeader>
-          <CardTitle>Emergency Contact</CardTitle>
+          <CardTitle className="text-xl font-semibold text-darkest-green">
+            Emergency Contact
+          </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label htmlFor="emergencyContactFirstName">First Name</Label>
+        <CardContent className="space-y-6">
+          <div className="space-y-2">
+            <Label
+              className="text-lg font-medium"
+              htmlFor="emergencyContactFirstName"
+            >
+              First Name
+            </Label>
             <Input
+              className="mt-2 text-base"
               id="emergencyContactFirstName"
               value={formData.emergencyContactFirstName}
               onChange={(e) =>
@@ -549,9 +565,15 @@ function EmergencySupportContent({
               disabled={!isEditing}
             />
           </div>
-          <div>
-            <Label htmlFor="emergencyContactLastName">Last Name</Label>
+          <div className="space-y-2">
+            <Label
+              className="text-lg font-medium"
+              htmlFor="emergencyContactLastName"
+            >
+              Last Name
+            </Label>
             <Input
+              className="mt-2 text-base"
               id="emergencyContactLastName"
               value={formData.emergencyContactLastName}
               onChange={(e) =>
@@ -560,9 +582,15 @@ function EmergencySupportContent({
               disabled={!isEditing}
             />
           </div>
-          <div>
-            <Label htmlFor="emergencyContactPhone">Phone</Label>
+          <div className="space-y-2">
+            <Label
+              className="text-lg font-medium"
+              htmlFor="emergencyContactPhone"
+            >
+              Phone
+            </Label>
             <Input
+              className="mt-2 text-base"
               id="emergencyContactPhone"
               value={formData.emergencyContactPhone}
               onChange={(e) =>
@@ -574,12 +602,18 @@ function EmergencySupportContent({
 
           {profile.hasRepSupportPerson && (
             <>
-              <h1 className="text-lg font-semibold mt-4  text-darkest-green">
+              <h1 className="text-xl font-semibold mt-4 text-darkest-green">
                 Support Person
               </h1>
-              <div>
-                <Label htmlFor="supportFirstName">First Name</Label>
+              <div className="space-y-2">
+                <Label
+                  className="text-lg font-medium"
+                  htmlFor="supportFirstName"
+                >
+                  First Name
+                </Label>
                 <Input
+                  className="mt-2 text-base"
                   id="supportFirstName"
                   value={formData.supportFirstName}
                   onChange={(e) =>
@@ -588,9 +622,15 @@ function EmergencySupportContent({
                   disabled={!isEditing}
                 />
               </div>
-              <div>
-                <Label htmlFor="supportLastName">Last Name</Label>
+              <div className="space-y-2">
+                <Label
+                  className="text-lg font-medium"
+                  htmlFor="supportLastName"
+                >
+                  Last Name
+                </Label>
                 <Input
+                  className="mt-2 text-base"
                   id="supportLastName"
                   value={formData.supportLastName}
                   onChange={(e) =>
@@ -599,9 +639,15 @@ function EmergencySupportContent({
                   disabled={!isEditing}
                 />
               </div>
-              <div>
-                <Label htmlFor="supportRelationship">Relationship</Label>
+              <div className="space-y-2">
+                <Label
+                  className="text-lg font-medium"
+                  htmlFor="supportRelationship"
+                >
+                  Relationship
+                </Label>
                 <Input
+                  className="mt-2 text-base"
                   id="supportRelationship"
                   value={formData.supportRelationship}
                   onChange={(e) =>
@@ -610,9 +656,15 @@ function EmergencySupportContent({
                   disabled={!isEditing}
                 />
               </div>
-              <div>
-                <Label htmlFor="supportContactPhone">Phone</Label>
+              <div className="space-y-2">
+                <Label
+                  className="text-lg font-medium"
+                  htmlFor="supportContactPhone"
+                >
+                  Phone
+                </Label>
                 <Input
+                  className="mt-2 text-base"
                   id="supportContactPhone"
                   value={formData.supportContactPhone}
                   onChange={(e) =>
@@ -653,14 +705,14 @@ function MedicalInfoContent({
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    medicalConditions: profile.medicalConditions ?? "",
+    // medicalConditions: profile.medicalConditions ?? "", // Commented out due to schema issue
     surgeriesOrHospitalizations: profile.surgeriesOrHospitalizations ?? "",
     chronicIllnesses: profile.chronicIllnesses ?? "",
     allergies: profile.allergies ?? "",
     medications: profile.medications ?? "",
   });
   const medicalLabels: Record<string, string> = {
-    medicalConditions: "Medical Conditions",
+    // medicalConditions: "Medical Conditions",
     surgeriesOrHospitalizations: "Surgeries/Hospitalizations",
     chronicIllnesses: "Chronic Illnesses",
     allergies: "Allergies",
@@ -673,7 +725,7 @@ function MedicalInfoContent({
 
   const handleCancel = () => {
     setFormData({
-      medicalConditions: profile.medicalConditions ?? "",
+      // medicalConditions: profile.medicalConditions ?? "",
       surgeriesOrHospitalizations: profile.surgeriesOrHospitalizations ?? "",
       chronicIllnesses: profile.chronicIllnesses ?? "",
       allergies: profile.allergies ?? "",
@@ -690,27 +742,28 @@ function MedicalInfoContent({
       });
       setIsEditing(false);
     } catch (err) {
-      console.error("Failed to update address", err);
+      console.error("Failed to update medical info", err);
     }
   };
 
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-darkest-green">Medical History</h1>
-      <Card className="border-1 drop-shadow-sm border-medium-green  rounded-lg">
-        <CardContent className="space-y-4 p-6">
+      <Card className="border-1 drop-shadow-sm border-medium-green rounded-lg">
+        <CardContent className="space-y-6">
           {[
-            "medicalConditions",
+            // "medicalConditions",
             "surgeriesOrHospitalizations",
             "chronicIllnesses",
             "allergies",
             "medications",
           ].map((field) => (
-            <div key={field}>
-              <Label htmlFor={medicalLabels[field]}>
+            <div key={field} className="space-y-2">
+              <Label className="text-lg font-medium" htmlFor={field}>
                 {medicalLabels[field]}
               </Label>
               <Input
+                className="mt-2 text-base"
                 id={field}
                 value={formData[field as keyof typeof formData]}
                 onChange={(e) => handleChange(field, e.target.value)}
@@ -739,6 +792,7 @@ function MedicalInfoContent({
     </div>
   );
 }
+
 function AbilitiesInfoContent({
   profile,
 }: {
@@ -755,7 +809,7 @@ function AbilitiesInfoContent({
   const abilitiesLabels: Record<string, string> = {
     mobilityStatus: "Mobility Status",
     cognitiveDifficulties: "Cognitive Difficulties",
-    cognitiveDifficultiesOther: "Other Cognitive Difficulties ",
+    cognitiveDifficultiesOther: "Other Cognitive Difficulties",
     sensoryImpairments: "Sensory Impairments",
     sensoryImpairmentsOther: "Other Sensory Impairments",
   };
@@ -783,7 +837,7 @@ function AbilitiesInfoContent({
       });
       setIsEditing(false);
     } catch (err) {
-      console.error("Failed to update address", err);
+      console.error("Failed to update abilities", err);
     }
   };
 
@@ -792,8 +846,8 @@ function AbilitiesInfoContent({
       <h1 className="text-2xl font-bold text-darkest-green">
         Functional & Cognitive Abilities
       </h1>
-      <Card className="border-1 drop-shadow-sm border-medium-green  rounded-lg">
-        <CardContent className="space-y-4 p-6">
+      <Card className="border-1 drop-shadow-sm border-medium-green rounded-lg">
+        <CardContent className="space-y-6">
           {[
             "mobilityStatus",
             "cognitiveDifficulties",
@@ -801,11 +855,12 @@ function AbilitiesInfoContent({
             "sensoryImpairments",
             "sensoryImpairmentsOther",
           ].map((field) => (
-            <div key={field}>
-              <Label htmlFor={abilitiesLabels[field]}>
+            <div key={field} className="space-y-2">
+              <Label className="text-lg font-medium" htmlFor={field}>
                 {abilitiesLabels[field]}
               </Label>
               <Input
+                className="mt-2 text-base"
                 id={field}
                 value={formData[field as keyof typeof formData]}
                 onChange={(e) => handleChange(field, e.target.value)}
@@ -834,6 +889,7 @@ function AbilitiesInfoContent({
     </div>
   );
 }
+
 function LifestyleInfoContent({
   profile,
 }: {
@@ -881,15 +937,15 @@ function LifestyleInfoContent({
       });
       setIsEditing(false);
     } catch (err) {
-      console.error("Failed to update address", err);
+      console.error("Failed to update lifestyle", err);
     }
   };
 
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-darkest-green">Lifestyle</h1>
-      <Card className="border-1 drop-shadow-sm border-medium-green  rounded-lg">
-        <CardContent className="space-y-4 p-6">
+      <Card className="border-1 drop-shadow-sm border-medium-green rounded-lg">
+        <CardContent className="space-y-6">
           {[
             "typicalDay",
             "physicalActivity",
@@ -898,11 +954,12 @@ function LifestyleInfoContent({
             "hobbies",
             "socialTime",
           ].map((field) => (
-            <div key={field}>
-              <Label htmlFor={lifestyleLabels[field]}>
+            <div key={field} className="space-y-2">
+              <Label className="text-lg font-medium" htmlFor={field}>
                 {lifestyleLabels[field]}
               </Label>
               <Input
+                className="mt-2 text-base"
                 id={field}
                 value={formData[field as keyof typeof formData]}
                 onChange={(e) => handleChange(field, e.target.value)}

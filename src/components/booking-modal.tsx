@@ -2,7 +2,12 @@
 
 import React, { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { generateClient } from "aws-amplify/data";
 import { Clock } from "lucide-react";
 import type { Schema } from "amplify/data/resource";
@@ -17,7 +22,15 @@ const client = generateClient<Schema>();
 const mockAvailability = {
   "2025-07-10": ["9:00 AM", "2:00 PM", "4:00 PM"],
   "2025-07-11": ["10:00 AM", "1:00 PM"],
-  "2025-07-12": ["9:00 AM", "11:00 AM", "3:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM"],
+  "2025-07-12": [
+    "9:00 AM",
+    "11:00 AM",
+    "3:00 PM",
+    "5:00 PM",
+    "6:00 PM",
+    "7:00 PM",
+    "8:00 PM",
+  ],
   "2025-07-15": ["8:00 AM", "2:00 PM"],
   "2025-07-18": ["10:00 AM", "4:00 PM"],
   "2025-07-20": ["9:00 AM", "1:00 PM", "5:00 PM"],
@@ -57,8 +70,6 @@ function getEndTime(start: string, duration: number): string {
 
   return `${endHours}:${formattedMinutes} ${endMeridian}`;
 }
-
-
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -114,7 +125,8 @@ export default function BookingModal({
     return mockAvailability[key]?.length > 0;
   };
 
-  const getAvailableSlots = (dateKey: string) => mockAvailability[dateKey] || [];
+  const getAvailableSlots = (dateKey: string) =>
+    mockAvailability[dateKey] || [];
 
   const handleDateSelect = (day: number) => {
     const year = currentMonth.getFullYear();
@@ -141,8 +153,10 @@ export default function BookingModal({
     if (selectedDate && selectedTime) {
       try {
         const user = await getCurrentUser();
+        console.log("Current user:", user);
         const clientId = user.userId;
-        const totalCost = providerRateFloat * Number.parseFloat(selectedDuration);
+        const totalCost =
+          providerRateFloat * Number.parseFloat(selectedDuration);
 
         const bookingId = uuidv4();
         const result = await client.models.Booking.create({
@@ -158,29 +172,33 @@ export default function BookingModal({
           totalCost: totalCost,
         });
 
-        {/* Stripe Checkout Data */}
+        {
+          /* Stripe Checkout Data */
+        }
         console.log("Booking data:", {
-          providerRate, providerLocation});
-        const res = await fetch("/api/create-checkout-session", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: `Care Aide with ${providerName} on ${selectedDate}, ${selectedTime} - ${getEndTime(selectedTime, Number.parseFloat(selectedDuration))}`,
-          amount: totalCost,
-          quantity: 1,
-          bookingId,
-          providerId,
-          providerPhoto,
-          providerName,
           providerRate,
-          providerTitle,
           providerLocation,
-          date: selectedDate,
-          time: `${selectedTime} - ${getEndTime(selectedTime, Number.parseFloat(selectedDuration))}`,
-          duration: selectedDuration,
-        }),
+        });
+        const res = await fetch("/api/create-checkout-session", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: `Care Aide with ${providerName} on ${selectedDate}, ${selectedTime} - ${getEndTime(selectedTime, Number.parseFloat(selectedDuration))}`,
+            amount: totalCost,
+            quantity: 1,
+            bookingId,
+            providerId,
+            providerPhoto,
+            providerName,
+            providerRate,
+            providerTitle,
+            providerLocation,
+            date: selectedDate,
+            time: `${selectedTime} - ${getEndTime(selectedTime, Number.parseFloat(selectedDuration))}`,
+            duration: selectedDuration,
+          }),
         });
 
         const data = await res.json();
@@ -207,12 +225,14 @@ export default function BookingModal({
       <DialogContent className="w-full md:max-w-[600px] lg:max-w-[600px] xl:max-w-[800px] max-h-[90vh] overflow-hidden mx-auto rounded-none">
         <DialogHeader>
           <DialogTitle>Book with {providerName}</DialogTitle>
-          <DialogDescription>Please select a date, time, and duration for your appointment.</DialogDescription>
+          <DialogDescription>
+            Please select a date, time, and duration for your appointment.
+          </DialogDescription>
         </DialogHeader>
 
-        <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] md:gap-6">
-          {/* Calendar Section */}
-          <div className="border-r pr-4">
+        {/* <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] md:gap-6"> */}
+        {/* Calendar Section */}
+        {/* <div className="border-r pr-4">
             <Calendar
               currentMonth={currentMonth}
               selectedDate={selectedDate}
@@ -220,10 +240,10 @@ export default function BookingModal({
               onDateSelect={handleDateSelect}
               availableDates={availableDates}
             />
-          </div>
+          </div> */}
 
-          {/* Time Slots Section */}
-          <div className="overflow-y-auto max-h-[70vh] pr-1">
+        {/* Time Slots Section */}
+        {/* <div className="overflow-y-auto max-h-[70vh] pr-1">
             <h3 className="font-semibold mb-4">
               {selectedDate ? "Available Times" : "Select a date to see available times"}
             </h3>
@@ -300,7 +320,7 @@ export default function BookingModal({
               Confirm Booking
             </Button>
           </div>
-        </div>
+        </div> */}
       </DialogContent>
     </Dialog>
   );
