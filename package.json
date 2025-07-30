@@ -76,6 +76,16 @@
     "typescript": "^5.8.3"
   },
   "overrides": {
-    "picomatch": "^4.0.2"
+    "picomatch": "^4.0.2",
+    "@aws-sdk/types": "3.821.0",
+    "@aws-amplify/ai-constructs": {
+      "@aws-sdk/types": "3.821.0"
+    },
+    "@aws-amplify/graphql-api-construct": {
+      "@aws-sdk/types": "3.821.0"
+    },
+    "@aws-amplify/data-construct": {
+      "@aws-sdk/types": "3.821.0"
+    }
   }
 }
