@@ -51,43 +51,22 @@ const ProfileSummary: React.FC<ProfileSummaryProps> = ({ profileData }) => {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const router = useRouter();
 
-  // const handleBookingClick = async () => {
-  //   try {
-  //     await getCurrentUser();
-  //     setIsBookingModalOpen(true);
-  //   } catch (error) {
-  //     if (
-  //       error?.name === "UserNotAuthenticatedException" ||
-  //       error?.message?.includes("User needs to be authenticated")
-  //     ) {
-  //       router.push("/login?redirect=/provider");
-  //     } else {
-  //       console.error("Unexpected error:", error);
-  //     }
-  //   }
-  // };
-
   const handleBookingClick = async () => {
-    console.log("handleBookingClick triggered"); // Add this
     try {
-      console.log("Attempting to get current user...");
-      const user = await getCurrentUser();
-      console.log("User retrieved:", user);
+      await getCurrentUser();
       setIsBookingModalOpen(true);
     } catch (error) {
-      console.error("Error in handleBookingClick:", error);
       if (
         error?.name === "UserNotAuthenticatedException" ||
         error?.message?.includes("User needs to be authenticated")
       ) {
-        console.log("User not authenticated, redirecting to login...");
         router.push("/login?redirect=/provider");
       } else {
         console.error("Unexpected error:", error);
-        alert("An unexpected error occurred. Please try again later.");
       }
     }
   };
+
   return (
     <div className="flex flex-col items-center border-solid border-1 rounded-none border-input-border-gray pb-7 w-full md:w-[320px] xl:w-[400px]">
       <div className="flex flex-col items-left w-[360px] p-7">

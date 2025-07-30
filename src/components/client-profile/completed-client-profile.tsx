@@ -59,7 +59,7 @@ export default function CompletedClientProfile() {
             "supportLastName",
             "supportRelationship",
             "supportContactPhone",
-            // "medicalConditions", // Commented out due to previous error
+            "medicalConditions",
             "surgeriesOrHospitalizations",
             "chronicIllnesses",
             "allergies",
@@ -705,14 +705,14 @@ function MedicalInfoContent({
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    // medicalConditions: profile.medicalConditions ?? "", // Commented out due to schema issue
+    medicalConditions: profile.medicalConditions ?? "",
     surgeriesOrHospitalizations: profile.surgeriesOrHospitalizations ?? "",
     chronicIllnesses: profile.chronicIllnesses ?? "",
     allergies: profile.allergies ?? "",
     medications: profile.medications ?? "",
   });
   const medicalLabels: Record<string, string> = {
-    // medicalConditions: "Medical Conditions",
+    medicalConditions: "Medical Conditions",
     surgeriesOrHospitalizations: "Surgeries/Hospitalizations",
     chronicIllnesses: "Chronic Illnesses",
     allergies: "Allergies",
@@ -725,7 +725,7 @@ function MedicalInfoContent({
 
   const handleCancel = () => {
     setFormData({
-      // medicalConditions: profile.medicalConditions ?? "",
+      medicalConditions: profile.medicalConditions ?? "",
       surgeriesOrHospitalizations: profile.surgeriesOrHospitalizations ?? "",
       chronicIllnesses: profile.chronicIllnesses ?? "",
       allergies: profile.allergies ?? "",
@@ -752,7 +752,7 @@ function MedicalInfoContent({
       <Card className="border-1 drop-shadow-sm border-medium-green rounded-lg">
         <CardContent className="space-y-6">
           {[
-            // "medicalConditions",
+            "medicalConditions",
             "surgeriesOrHospitalizations",
             "chronicIllnesses",
             "allergies",

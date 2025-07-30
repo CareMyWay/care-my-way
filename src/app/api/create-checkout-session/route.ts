@@ -11,10 +11,27 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    const { name, amount, quantity, bookingId, providerId, providerPhoto, providerName, providerTitle, providerLocation, providerRate, date, time, duration } = body;
+    const {
+      name,
+      amount,
+      quantity,
+      bookingId,
+      providerId,
+      providerPhoto,
+      providerName,
+      providerTitle,
+      providerLocation,
+      providerRate,
+      date,
+      time,
+      duration,
+    } = body;
 
     if (!name || !amount || !quantity || !bookingId || !providerId) {
-      return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing parameters" },
+        { status: 400 }
+      );
     }
 
     const session = await stripe.checkout.sessions.create({
@@ -48,8 +65,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ url: session.url });
   } catch (err: unknown) {
-    if (err instanceof Stripe.errors.StripeError) 
-      return  NextResponse.json({ error: err.message }, { status: 500 });
+    if (err instanceof Stripe.errors.StripeError)
+      return NextResponse.json({ error: err.message }, { status: 500 });
   }
-    return NextResponse.json({ error: "Unknown error"}, { status: 500 });
+  return NextResponse.json({ error: "Unknown error" }, { status: 500 });
 }

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-// import Navbar from "@/components/nav-bars/navbar";
 import ProviderCard from "@/components/marketplace/healthcare-provider-card";
 import MarketplaceSearchBar from "@/components/marketplace/search-bar";
 import MarketplaceFilter from "@/components/marketplace/filter";
@@ -95,7 +94,6 @@ export default function MarketplacePage() {
 
   return (
     <div>
-      {/* <Navbar /> */}
       <section className="min-h-screen px-4 py-12 md:px-16 bg-primary-white">
         <div className="container mx-auto flex flex-col md:h-screen">
           <div>

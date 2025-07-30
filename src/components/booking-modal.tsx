@@ -230,9 +230,9 @@ export default function BookingModal({
           </DialogDescription>
         </DialogHeader>
 
-        {/* <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] md:gap-6"> */}
-        {/* Calendar Section */}
-        {/* <div className="border-r pr-4">
+        <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] md:gap-6">
+          {/* Calendar Section */}
+          <div className="border-r pr-4">
             <Calendar
               currentMonth={currentMonth}
               selectedDate={selectedDate}
@@ -240,12 +240,14 @@ export default function BookingModal({
               onDateSelect={handleDateSelect}
               availableDates={availableDates}
             />
-          </div> */}
+          </div>
 
-        {/* Time Slots Section */}
-        {/* <div className="overflow-y-auto max-h-[70vh] pr-1">
+          {/* Time Slots Section */}
+          <div className="overflow-y-auto max-h-[70vh] pr-1">
             <h3 className="font-semibold mb-4">
-              {selectedDate ? "Available Times" : "Select a date to see available times"}
+              {selectedDate
+                ? "Available Times"
+                : "Select a date to see available times"}
             </h3>
 
             {selectedDate && (
@@ -299,15 +301,31 @@ export default function BookingModal({
               <div className="mt-6 p-4 bg-gray-50 rounded-md">
                 <h4 className="font-medium mb-2">Booking Summary</h4>
                 <div className="text-sm space-y-1">
-                  <p><strong>Date:</strong> {selectedDate}</p>
-                  <p><strong>Start Time:</strong> {selectedTime}</p>
+                  <p>
+                    <strong>Date:</strong> {selectedDate}
+                  </p>
+                  <p>
+                    <strong>Start Time:</strong> {selectedTime}
+                  </p>
                   <p>
                     <strong>End Time:</strong>{" "}
-                    {getEndTime(selectedTime, Number.parseFloat(selectedDuration))}
+                    {getEndTime(
+                      selectedTime,
+                      Number.parseFloat(selectedDuration)
+                    )}
                   </p>
-                  <p><strong>Rate:</strong> {providerRate}</p>
-                  <p><strong>Total Cost:</strong> ${((providerRateFloat) * Number.parseFloat(selectedDuration)).toFixed(2)}</p>
-                  <p><strong>Provider:</strong> {providerName}</p>
+                  <p>
+                    <strong>Rate:</strong> {providerRate}
+                  </p>
+                  <p>
+                    <strong>Total Cost:</strong> $
+                    {(
+                      providerRateFloat * Number.parseFloat(selectedDuration)
+                    ).toFixed(2)}
+                  </p>
+                  <p>
+                    <strong>Provider:</strong> {providerName}
+                  </p>
                 </div>
               </div>
             )}
@@ -320,7 +338,7 @@ export default function BookingModal({
               Confirm Booking
             </Button>
           </div>
-        </div> */}
+        </div>
       </DialogContent>
     </Dialog>
   );
