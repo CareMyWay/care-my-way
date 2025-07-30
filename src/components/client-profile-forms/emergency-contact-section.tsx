@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-// Define the Zod schema
 const emergencySchema = z
   .object({
     contactFirstName: z.string().min(2, "Contact first name is required"),
