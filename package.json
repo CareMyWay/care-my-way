@@ -26,6 +26,7 @@
     "@stripe/react-stripe-js": "^3.7.0",
     "@stripe/stripe-js": "^7.4.0",
     "@types/aws-sdk": "^0.0.42",
+    "amqplib": "^0.10.8",
     "aws-amplify": "^6.15.0",
     "aws-sdk": "^2.1692.0",
     "bad-words": "^4.0.0",
@@ -79,20 +80,20 @@
   "overrides": {
     "picomatch": "^4.0.2",
     "@aws-amplify/backend-output-schemas": {
-      "zod": "^3.25.76"
+      "zod": "3.25.76"
     },
-    "@aws-sdk/types": "^3.734.0",
+    "@aws-sdk/types": "3.734.0",
     "@aws-amplify/plugin-types": {
-      "@aws-sdk/types": "^3.734.0"
+      "@aws-sdk/types": "3.734.0"
     },
     "@aws-amplify/ai-constructs": {
-      "@aws-sdk/types": "^3.734.0"
+      "@aws-sdk/types": "3.734.0"
     },
     "@aws-amplify/graphql-api-construct": {
-      "@aws-sdk/types": "^3.734.0"
+      "@aws-sdk/types": "3.734.0"
     },
     "@aws-amplify/data-construct": {
-      "@aws-sdk/types": "^3.734.0"
+      "@aws-sdk/types": "3.734.0"
     }
   }
 }
