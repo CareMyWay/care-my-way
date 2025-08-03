@@ -39,6 +39,7 @@
     "micro": "^10.0.1",
     "next": "15.2.4",
     "openid-client": "^6.5.0",
+    "package-lock-only": "^0.0.4",
     "react": "^18.3.1",
     "react-country-region-selector": "^4.0.2",
     "react-dom": "^18.3.1",
@@ -53,9 +54,9 @@
   "devDependencies": {
     "@aws-amplify/backend": "^1.16.0",
     "@aws-amplify/backend-cli": "^1.7.0",
-    "@aws-cdk/cli-plugin-contract": "^2.181.1",
     "@aws-amplify/data-construct": "^1.16.3",
     "@aws-amplify/graphql-api-construct": "^1.20.3",
+    "@aws-cdk/cli-plugin-contract": "^2.181.1",
     "@aws-sdk/client-cognito-identity-provider": "^3.848.0",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
