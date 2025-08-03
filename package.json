@@ -78,12 +78,8 @@
   },
   "overrides": {
     "picomatch": "^4.0.2",
-    "@aws-sdk/types": "3.734.0",
     "@aws-amplify/backend-output-schemas": {
       "zod": "3.25.76"
-    },
-    "@aws-amplify/plugin-types": {
-      "@aws-sdk/types": "3.734.0"
     },
     "@aws-amplify/ai-constructs": {
       "@aws-sdk/types": "3.734.0"
