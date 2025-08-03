@@ -81,6 +81,8 @@
     "@aws-amplify/backend-output-schemas": {
       "zod": "3.25.76"
     },
+    "@aws-sdk/types": "3.734.0",
+  
     "@aws-amplify/ai-constructs": {
       "@aws-sdk/types": "3.734.0"
     },
