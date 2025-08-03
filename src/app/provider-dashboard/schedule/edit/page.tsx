@@ -11,21 +11,28 @@ import type { Schema } from "@/../amplify/data/resource";
 const provider = generateClient<Schema>();
 
 const DAYS_OF_WEEK = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+// Generate time options from 6:00 to 23:00 in 1-hour increments
+// This will create an array like ["06:00", "07:00", ..., "23:00"]
 const TIME_OPTIONS = Array.from({ length: 18 }, (_, i) => {
   const hour = i + 6;
   return `${hour.toString().padStart(2, "0")}:00`;
 });
 
+// EditSchedulePage component
+// This page allows providers to edit their weekly availability schedule
 export default function EditSchedulePage() {
   const [currentDate] = useState(new Date());
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [availabilityMap, setAvailabilityMap] = useState<Record<string, boolean>>({});
 
+  // State to hold the weekly availability data
   useEffect(() => {
     loadSchedule();
   }, []);
 
+  // Load the provider's schedule
+  // This function fetches the provider's availability and sets it in the state
   const loadSchedule = async () => {
     try {
       setIsLoading(true);
@@ -70,6 +77,8 @@ export default function EditSchedulePage() {
     }
   };
 
+  // Toggle the availability slot for a specific day and hour
+  // This function updates the availability map when a time slot is clicked
   const toggleSlot = (day: string, hour: string) => {
     const key = `${day}-${hour}`;
     setAvailabilityMap((prev) => ({
@@ -78,6 +87,8 @@ export default function EditSchedulePage() {
     }));
   };
 
+  // Get the next Monday from the current date
+  // This function calculates the next Monday from the current date
   const getNextMonday = (date: Date): Date => {
     const result = new Date(date);
     const dayOfWeek = result.getDay();
@@ -86,6 +97,8 @@ export default function EditSchedulePage() {
     return result;
   };
 
+  // Save the schedule
+  // This function collects the selected availability and saves it to the provider profile
   const saveSchedule = async () => {
     setIsSaving(true);
     try {
@@ -93,6 +106,8 @@ export default function EditSchedulePage() {
       const startDate = getNextMonday(new Date());
       const weeksToSave = 52; // Save for next 52 weeks
 
+      // Collect selected availability for the next 52 weeks
+      // This will create a set of dates and hours that are selected
       for (let week = 0; week < weeksToSave; week++) {
         const monday = new Date(startDate);
         monday.setDate(startDate.getDate() + week * 7);
@@ -112,8 +127,10 @@ export default function EditSchedulePage() {
         });
       }
 
+      // Convert Set to sorted array for consistency
       const availability = Array.from(availabilitySet).sort();
 
+      // Update the provider profile with the new availability
       const { data: profiles } = await provider.models.ProviderProfile.list();
       if (profiles && profiles.length > 0) {
         await provider.models.ProviderProfile.update({
@@ -132,6 +149,7 @@ export default function EditSchedulePage() {
     }
   };
 
+  // If loading, show a loading spinner
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -172,7 +190,7 @@ export default function EditSchedulePage() {
                 <div className="flex items-center gap-1">
                   <Clock className="h-4 w-4" />
                   <span>
-                    {currentDate.toLocaleTimeString("en-US", {
+                    {currentDate.toLocaleTimeString("en-CA", {
                       hour: "2-digit",
                       minute: "2-digit",
                       second: "2-digit",

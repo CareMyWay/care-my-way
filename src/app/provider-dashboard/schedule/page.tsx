@@ -39,18 +39,23 @@ export default function SchedulePage() {
     const diff = startOfWeek.getDate() - day + (day === 0 ? -6 : 1);
     startOfWeek.setDate(diff);
 
+    // Generate the week days
+    // Loop through the next 7 days to create the week array
     for (let i = 0; i < 7; i++) {
       const day = new Date(startOfWeek);
-      day.setDate(startOfWeek.getDate() + i);
+      day.setDate(startOfWeek.getDate() + i); // Increment the date by i days from monday to sunday
       week.push(day);
     }
     return week;
   };
 
+  // Format time slot to a readable format
+  // e.g., "09:00" to "9:00 AM"
   const formatTimeSlot = (time: string): string => {
     const [hour, minute] = time.split(":").map(Number);
     const ampm = hour >= 12 ? "PM" : "AM";
-    const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+    const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour; // Convert 0 to 12 for midnight
+    // Ensure minute is always two digits
     return `${displayHour}:${minute.toString().padStart(2, "0")} ${ampm}`;
   };
 
@@ -58,20 +63,24 @@ export default function SchedulePage() {
     try {
       setIsLoading(true);
       const weekDays = getWeekDays(currentWeek);
+      // Get the start and end dates of the week
       const startDate = weekDays[0].toISOString().split("T")[0];
       const endDate = weekDays[6].toISOString().split("T")[0];
 
+      // Fetch provider profile availability
       const { data: profiles } = await provider.models.ProviderProfile.list();
 
+      // Check if profiles exist and have availability
       if (profiles && profiles.length > 0) {
         const profile = profiles[0];
         const availability = profile.availability || [];
 
+        // If no availability is set
         if (availability.length === 0) {
           setHasAvailability(false);
           setWeekData([]);
           setIsLoading(false);
-          return;
+          return; // Exit early if no availability
         }
 
         setHasAvailability(true);
@@ -83,13 +92,13 @@ export default function SchedulePage() {
         });
 
         // Group availability by date
-        const availabilityByDate: { [key: string]: string[] } = {};
+        const availabilityByDate: { [key: string]: string[] } = {}; // Initialize an object to hold dates and their corresponding hours
         weekAvailability.forEach((slot) => {
-          const [date, hour] = slot.split(":");
-          if (!availabilityByDate[date]) {
+          const [date, hour] = slot.split(":"); 
+          if (!availabilityByDate[date]) { 
             availabilityByDate[date] = [];
           }
-          availabilityByDate[date].push(hour);
+          availabilityByDate[date].push(hour); 
         });
 
         // Create day availability data
