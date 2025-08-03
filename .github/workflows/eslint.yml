@@ -44,6 +44,10 @@ jobs:
           node-version: "20"
           cache: ${{ steps.detect-package-manager.outputs.manager }}
 
+      - name: Clear npm cache
+        run: npm cache clean --force
+        if: steps.detect-package-manager.outputs.manager == 'npm' # Only run for npm
+
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.install-command }}
 
