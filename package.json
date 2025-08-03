@@ -78,6 +78,22 @@
     "typescript": "^5.8.3"
   },
   "overrides": {
-    "picomatch": "^4.0.2"
+    "picomatch": "^4.0.2",
+    "@aws-amplify/backend-output-schemas": {
+      "zod": "3.25.76"
+    },
+    "@aws-sdk/types": "3.734.0",
+    "@aws-amplify/plugin-types": {
+      "@aws-sdk/types": "3.821.0"
+    },
+    "@aws-amplify/ai-constructs": {
+      "@aws-sdk/types": "3.734.0"
+    },
+    "@aws-amplify/graphql-api-construct": {
+      "@aws-sdk/types": "3.734.0"
+    },
+    "@aws-amplify/data-construct": {
+      "@aws-sdk/types": "3.734.0"
+    }
   }
 }
