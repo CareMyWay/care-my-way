@@ -69,7 +69,7 @@ const schema = a
         // Admins have full access
         allow.group("Admin").to(["create", "read", "update", "delete"]),
         // Authenticated users can read availability (for booking)
-        allow.authenticated().to(["read"]),
+        allow.authenticated().to(["read", "create", "update", "delete"]),
         // Guests can read availability (for marketplace browsing)
         allow.guest().to(["read"]),
       ]),
@@ -153,7 +153,7 @@ const schema = a
       Booking: a
       .model({
         id: a.string().required(),
-        providerId: a.string().required(), // Include this field after DynamoDB is set up to record provider ID
+        providerId: a.string().required(),
         providerName: a.string().required(),
         providerRate: a.string().required(),
         date: a.string().required(),

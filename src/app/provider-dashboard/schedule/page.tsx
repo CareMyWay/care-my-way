@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/../amplify/data/resource";
+import { getCurrentUser } from "@aws-amplify/auth";
 
 const provider = generateClient<Schema>();
 
@@ -56,84 +57,85 @@ export default function SchedulePage() {
 
   const loadAvailability = React.useCallback(async () => {
     try {
+      const user = await getCurrentUser();
       setIsLoading(true);
       const weekDays = getWeekDays(currentWeek);
-      const startDate = weekDays[0].toISOString().split("T")[0];
-      const endDate = weekDays[6].toISOString().split("T")[0];
+      const dayNameMap = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-      const { data: profiles } = await provider.models.ProviderProfile.list();
+      const { data: profiles } = await provider.models.ProviderProfile.list({
+        filter: { userId: { eq: user?.userId } },
+      });
 
       if (profiles && profiles.length > 0) {
         const profile = profiles[0];
-        const availability = profile.availability || [];
+        const availability = await provider.models.ProviderAvailability.list({
+          filter: { providerId: { eq: profile.userId } },
+        });
 
-        if (availability.length === 0) {
+        if (!availability.data.length){
           setHasAvailability(false);
           setWeekData([]);
           setIsLoading(false);
           return;
         }
 
+        const availabilityRecord = availability.data[0];
+
+        if (!availabilityRecord.weeklyTemplate) {
+          setHasAvailability(false);
+          setWeekData([]);
+          setIsLoading(false);
+          return;
+        }
+
+        // Parsing weekly template
+        const weeklyTemplate: Record<string, string[]> =
+          typeof availabilityRecord.weeklyTemplate === "string"
+            ? JSON.parse(availabilityRecord.weeklyTemplate)
+            : availabilityRecord.weeklyTemplate;
+
         setHasAvailability(true);
 
-        // Filter availability for the current week
-        const weekAvailability = availability.filter((slot) => {
-          const slotDate = slot.split(":")[0];
-          return slotDate >= startDate && slotDate <= endDate;
-        });
-
-        // Group availability by date
-        const availabilityByDate: { [key: string]: string[] } = {};
-        weekAvailability.forEach((slot) => {
-          const [date, hour] = slot.split(":");
-          if (!availabilityByDate[date]) {
-            availabilityByDate[date] = [];
-          }
-          availabilityByDate[date].push(hour);
-        });
-
-        // Create day availability data
+        // Map weekDays to DayAvailability by matching day short name keys in weeklyTemplate
         const dayAvailability: DayAvailability[] = weekDays.map((day) => {
-          const dateStr = day.toISOString().split("T")[0];
-          const dayHours = availabilityByDate[dateStr] || [];
+          const dayName = dayNameMap[day.getDay()]; // e.g. "Wed"
+          const times = weeklyTemplate[dayName] || [];
 
-          // Sort hours and remove duplicates
-          const uniqueHours = [...new Set(dayHours)].sort((a, b) => Number.parseInt(a) - Number.parseInt(b));
-
-          const timeSlots: TimeSlot[] = uniqueHours.map((hour, index) => {
-            const paddedHour = hour.padStart(2, "0");
-            const startTime = `${paddedHour}:00`;
-            const nextHour = (Number.parseInt(hour) + 1).toString().padStart(2, "0");
+          // Create TimeSlots for each time string
+          const timeSlots: TimeSlot[] = times.map((time, index) => {
+            const [hour, minute = "00"] = time.split(":");
+            const startTime = `${hour.padStart(2, "0")}:${minute.padStart(2, "0")}`;
+            const nextHour = (parseInt(hour) + 1).toString().padStart(2, "0");
             const endTime = `${nextHour}:00`;
 
             return {
-              id: `slot-${dateStr}-${paddedHour}-${index}`,
+              id: `slot-${day.toISOString().split("T")[0]}-${startTime}-${index}`,
               start: startTime,
               end: endTime,
               isAvailable: true,
             };
           });
-
+        
           return {
-            date: dateStr,
+            date: day.toISOString().split("T")[0],
             isEnabled: timeSlots.length > 0,
             timeSlots,
           };
         });
 
         setWeekData(dayAvailability);
-      } else {
-        setHasAvailability(false);
-        setWeekData([]);
-      }
-    } catch (error) {
-      console.error("Error loading availability:", error);
-      setHasAvailability(false);
-      setWeekData([]);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [currentWeek]);
+          } else {
+            setHasAvailability(false);
+            setWeekData([]);
+          }
+        } catch (error) {
+          console.error("Error loading availability:", error);
+          setHasAvailability(false);
+          setWeekData([]);
+        } finally {
+          setIsLoading(false);
+        }
+      }, [currentWeek]);
 
   useEffect(() => {
     loadAvailability();

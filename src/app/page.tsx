@@ -5,7 +5,7 @@ import AboutSection from "@/components/home/about-section"; // Adjust the path a
 import FeaturesSection from "@/components/home/feature-section";
 import { MeetOurProviders } from "@/components/home/meet-provider-section";
 import { HowItWorks } from "@/components/home/how-it-works";
-import "@/app/lib/configureAmplify";
+import "@/app/amplify-config";
 
 // import NavBar from "@/components/nav-bars/navbar";
 

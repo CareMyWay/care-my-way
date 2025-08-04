@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,31 +17,11 @@ import { DialogDescription } from "@radix-ui/react-dialog";
 import Calendar from "./calendar";
 import { formatDateKey } from "@/utils/calendar-date-format";
 import { NotificationService } from "@/services/notificationService";
+import { addDays, format } from "date-fns";
+import { formatTimeToAMPM } from "@/utils/booking-time-format";
+import timeStringToDate, { isOverlap, filterNonOverlappingDurations } from "@/utils/booking-overlap-helper";
 
 const client = generateClient<Schema>();
-
-const mockAvailability = {
-  "2025-08-10": ["9:00 AM", "2:00 PM", "4:00 PM"],
-  "2025-08-11": ["10:00 AM", "1:00 PM"],
-  "2025-08-12": [
-    "9:00 AM",
-    "11:00 AM",
-    "3:00 PM",
-    "5:00 PM",
-    "6:00 PM",
-    "7:00 PM",
-    "8:00 PM",
-  ],
-  "2025-08-15": ["8:00 AM", "2:00 PM"],
-  "2025-08-18": ["10:00 AM", "4:00 PM"],
-  "2025-08-20": ["9:00 AM", "1:00 PM", "5:00 PM"],
-  "2025-08-22": ["9:00 AM", "2:00 PM"],
-  "2025-08-24": ["10:00 AM", "3:00 PM"],
-  "2025-08-26": ["8:00 AM", "1:00 PM", "4:00 PM"],
-  "2025-08-28": ["9:00 AM", "2:00 PM"],
-  "2025-08-30": ["10:00 AM", "1:00 PM"],
-  "2025-08-31": ["9:00 AM", "3:00 PM", "5:00 PM"],
-};
 
 function getEndTime(start: string, duration: number): string {
   const [time, meridian] = start.trim().split(" ");
@@ -102,6 +82,8 @@ export default function BookingModal({
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [selectedDuration, setSelectedDuration] = useState<string | null>(null);
+  const [availabilityMap, setAvailabilityMap] = useState<Record<string, string[]>>({});
+  const [existingBookings, setExistingBookings] = useState<{ date: string; time: string; duration: number }[]>([]);
 
   const getServiceName = (): string => {
     if (providerServices && providerServices.length > 0) {
@@ -122,21 +104,125 @@ export default function BookingModal({
     { value: "8", label: "8 hours" },
   ];
 
+  useEffect(() => {
+    const loadAvailability = async () => {
+      try {
+        const user = await getCurrentUser();
+        if (!user) {
+          console.error("No user found");
+          return;
+        }
+
+        // Fetch the provider profile
+        const { data: profiles } = await client.models.ProviderProfile.list({
+          filter: { id: { eq: providerId} },
+        });
+
+        const profile = profiles?.[0];
+        if (!profile) throw new Error("No provider profile found");
+
+        // Fetch provider availability
+        const { data: weeklyAvailability } = await client.models.ProviderAvailability.list({
+          filter: { providerId: { eq: profile.userId } },
+        });
+        const availability = weeklyAvailability?.[0];
+        if (!availability) {
+          setAvailabilityMap({});
+          return;
+        }
+
+        let weeklyTemplate: Record<string, string[]> = {};
+
+        // Parse weeklyTemplate from DynamoDB
+        if (typeof availability.weeklyTemplate === "string") {
+          weeklyTemplate = JSON.parse(availability.weeklyTemplate);
+        } else if (typeof availability.weeklyTemplate === "object" && availability.weeklyTemplate !== null) {
+          // If it already parsed or is an object, just assign it directly
+          weeklyTemplate = availability.weeklyTemplate as Record<string, string[]>;
+        } else {
+          weeklyTemplate = {};
+        }
+
+        const today = new Date();
+        const result: Record<string, string[]> = {};
+        for (let i = 0; i < 30; i++) {
+        const date = addDays(today, i);
+        const dayName = date.toLocaleString("en-US", { weekday: "short" });
+        const dateKey = format(date, "yyyy-MM-dd");
+
+        const dayEntry = weeklyTemplate[dayName];
+        if (dayEntry && Array.isArray(dayEntry)) {
+          result[dateKey] = dayEntry;
+          }
+        }
+
+        const todayStr = format(today, "yyyy-MM-dd");
+        const endDateStr = format(addDays(today, 30), "yyyy-MM-dd");
+
+        const { data: existingBookingsData } = await client.models.Booking.list({
+          filter: {
+            providerId: { eq: providerId },
+            date: { between: [todayStr, endDateStr] },
+          },
+        });
+
+        const filteredAvailability = { ...result };
+
+        existingBookingsData.forEach((booking) => {
+          const bookingDate = booking.date;
+          const bookingStartTime = booking.time;
+          const bookingDuration = booking.duration;
+
+          if (!filteredAvailability[bookingDate]) return;
+
+          const bookingStart = timeStringToDate(bookingDate, bookingStartTime);
+          const bookingEnd = new Date(bookingStart.getTime() + bookingDuration * 60 * 60 * 1000);
+
+          filteredAvailability[bookingDate] = filteredAvailability[bookingDate].filter((slotTime) => {
+            const slotDuration = 0.5; 
+            // Keep only slots that do NOT overlap booking
+            return !isOverlap(slotTime, slotDuration, bookingStart, bookingEnd, bookingDate);
+          });
+
+          if (filteredAvailability[bookingDate].length === 0) {
+            delete filteredAvailability[bookingDate];
+  }
+        });
+
+        setAvailabilityMap(filteredAvailability);
+        setExistingBookings(existingBookingsData);
+      } catch (error) {
+        console.error("Error loading availability:", error);
+      }
+    };
+
+    loadAvailability();
+  }, [providerId]);
+
   const availableDates = useMemo(() => {
     return new Set(
-      Object.entries(mockAvailability)
+      Object.entries(availabilityMap)
         .filter(([, slots]) => slots.length > 0)
         .map(([date]) => date)
     );
-  }, []);
+  }, [availabilityMap]);
 
   const isDateAvailable = (year: number, month: number, day: number) => {
     const key = formatDateKey(year, month, day);
-    return mockAvailability[key]?.length > 0;
+    return availabilityMap[key]?.length > 0;
   };
 
-  const getAvailableSlots = (dateKey: string) =>
-    mockAvailability[dateKey] || [];
+  const getAvailableSlots = (dateKey: string) => availabilityMap[dateKey] || [];
+
+  const filteredDurationOptions =
+  selectedDate && selectedTime
+    ? filterNonOverlappingDurations(
+        selectedDate,
+        selectedTime,
+        durationOptions,
+        existingBookings
+      )
+    : durationOptions;
 
   const handleDateSelect = (day: number) => {
     const year = currentMonth.getFullYear();
@@ -353,7 +439,7 @@ export default function BookingModal({
                   >
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4" />
-                      {time}
+                      {formatTimeToAMPM(time)}
                     </div>
                   </button>
                 ))}
@@ -364,7 +450,7 @@ export default function BookingModal({
               <div className="mb-6">
                 <h4 className="mt-6 font-semibold mb-3">Select Duration</h4>
                 <div className="grid grid-cols-2 gap-2">
-                  {durationOptions.map((duration) => (
+                  {filteredDurationOptions.map((duration) => (
                     <button
                       key={duration.value}
                       onClick={() => setSelectedDuration(duration.value)}
@@ -388,12 +474,8 @@ export default function BookingModal({
               <div className="mt-6 p-4 bg-gray-50 rounded-md">
                 <h4 className="font-medium mb-2">Booking Summary</h4>
                 <div className="text-sm space-y-1">
-                  <p>
-                    <strong>Date:</strong> {selectedDate}
-                  </p>
-                  <p>
-                    <strong>Start Time:</strong> {selectedTime}
-                  </p>
+                  <p><strong>Date:</strong> {selectedDate}</p>
+                  <p><strong>Start Time:</strong> {formatTimeToAMPM(selectedTime)}</p>
                   <p>
                     <strong>End Time:</strong>{" "}
                     {getEndTime(

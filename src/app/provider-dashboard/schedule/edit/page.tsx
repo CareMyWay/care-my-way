@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/../amplify/data/resource";
+import "@/app/amplify-config";
+import { getCurrentUser } from "aws-amplify/auth";
 
 const provider = generateClient<Schema>();
 
@@ -78,59 +80,74 @@ export default function EditSchedulePage() {
     }));
   };
 
-  const getNextMonday = (date: Date): Date => {
-    const result = new Date(date);
-    const dayOfWeek = result.getDay();
-    const daysUntilMonday = dayOfWeek === 0 ? 1 : 8 - dayOfWeek; // If Sunday, add 1 day; otherwise, add days to get to next Monday
-    result.setDate(result.getDate() + daysUntilMonday);
-    return result;
-  };
-
   const saveSchedule = async () => {
-    setIsSaving(true);
-    try {
-      const availabilitySet = new Set<string>();
-      const startDate = getNextMonday(new Date());
-      const weeksToSave = 52; // Save for next 52 weeks
+  const user = await getCurrentUser();
+  console.log("Saving schedule with availabilityMap:", availabilityMap);
+  setIsSaving(true);
+  try {
+    // Build the weeklyTemplate from availabilityMap
+    const weeklyTemplate: Record<string, string[]> = {};
 
-      for (let week = 0; week < weeksToSave; week++) {
-        const monday = new Date(startDate);
-        monday.setDate(startDate.getDate() + week * 7);
+    DAYS_OF_WEEK.forEach((day) => {
+      TIME_OPTIONS.forEach((time) => {
+        const hour = time.split(":")[0];
+        const key = `${day}-${hour}`;
+        if (availabilityMap[key]) {
+          if (!weeklyTemplate[day]) {
+            weeklyTemplate[day] = [];
+          }
+          weeklyTemplate[day].push(time);
+        }
+      });
+    });
 
-        DAYS_OF_WEEK.forEach((day, dayIndex) => {
-          TIME_OPTIONS.forEach((time) => {
-            const hour = time.split(":")[0];
-            const key = `${day}-${hour}`;
-
-            if (availabilityMap[key]) {
-              const date = new Date(monday);
-              date.setDate(monday.getDate() + dayIndex);
-              const dateStr = date.toISOString().split("T")[0];
-              availabilitySet.add(`${dateStr}:${hour}`);
-            }
-          });
-        });
-      }
-
-      const availability = Array.from(availabilitySet).sort();
-
-      const { data: profiles } = await provider.models.ProviderProfile.list();
-      if (profiles && profiles.length > 0) {
-        await provider.models.ProviderProfile.update({
-          id: profiles[0].id,
-          availability,
-        } as unknown as Parameters<typeof provider.models.ProviderProfile.update>[0]);
-
-        // Redirect back to schedule page
-        window.location.href = "/provider-dashboard/schedule";
-      }
-    } catch (error) {
-      console.error("Error saving schedule:", error);
-      alert("Error saving schedule. Please try again.");
-    } finally {
-      setIsSaving(false);
+    // Sort each day's time slots
+    for (const day in weeklyTemplate) {
+      weeklyTemplate[day].sort();
     }
-  };
+
+    // Fetch the current provider profile
+    const { data: profiles } = await provider.models.ProviderProfile.list({
+      filter: { userId: { eq: user?.userId } },
+    });
+    const profile = profiles?.[0];
+
+    if (!profile) {
+      throw new Error("No provider profile found.");
+    }
+
+    // Check if availability record already exists
+    const existing = await provider.models.ProviderAvailability.list({
+      filter: { providerId: { eq: profile.userId } }
+    });
+
+    if (existing.data.length > 0) {
+      // Update existing availability
+      await provider.models.ProviderAvailability.update({
+        id: existing.data[0].id,
+        weeklyTemplate: JSON.stringify(weeklyTemplate),
+        lastUpdated: new Date().toISOString()
+      });
+    } else {
+      // Create new availability
+      await provider.models.ProviderAvailability.create({
+        providerId: profile.userId,
+        profileOwner: profile.userId,
+        weeklyTemplate: JSON.stringify(weeklyTemplate),
+        lastUpdated: new Date().toISOString()
+      });
+    }
+
+    // Redirect after successful save
+    window.location.href = "/provider-dashboard/schedule";
+  } catch (error) {
+    console.error("Error saving schedule:", error);
+    alert("Error saving schedule. Please try again.");
+  } finally {
+    setIsSaving(false);
+  }
+};
+
 
   if (isLoading) {
     return (
