@@ -1,4 +1,4 @@
-import { Carousel } from "@/components/carousel";
+import { Carousel } from "@/components/ui/carousel";
 import Image from "next/image";
 import GreenButton from "../buttons/green-button";
 
@@ -58,7 +58,11 @@ export function MeetOurProviders() {
 
                   {/* Button outside image */}
                   <div className="p-4 mb-2 flex justify-center">
-                    <GreenButton className="my-2 w-50" href="/provider" variant="route">
+                    <GreenButton
+                      className="my-2 w-50"
+                      href="/provider"
+                      variant="route"
+                    >
                       View
                     </GreenButton>
                   </div>

@@ -159,15 +159,19 @@ export function PersonalInfoSection({
                 <label htmlFor="dob" className="std-form-label">
                   Date of Birth *
                 </label>
-                <input
-                  id="dob"
-                  type="date"
-                  max={
-                    new Date(Date.now() - 86400000).toISOString().split("T")[0]
-                  } // yesterday's date
-                  {...register("dob")}
-                  className="std-form-input"
-                />
+                <label htmlFor="dob" className="block w-full cursor-pointer">
+                  <input
+                    id="dob"
+                    type="date"
+                    max={
+                      new Date(Date.now() - 86400000)
+                        .toISOString()
+                        .split("T")[0]
+                    } // yesterday's date
+                    {...register("dob")}
+                    className="std-form-input"
+                  />
+                </label>
                 {errors.dob && (
                   <p className="text-sm text-red-600">{errors.dob.message}</p>
                 )}

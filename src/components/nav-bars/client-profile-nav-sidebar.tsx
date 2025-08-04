@@ -1,17 +1,17 @@
 "use client";
 
-interface RegistrationNavSideBarProps {
+interface ClientProfileNavSideBarProps {
   activeSection: string;
   // eslint-disable-next-line no-unused-vars
   onSectionClick: (sectionId: string) => void;
   sectionCompletion: Record<string, { completed: boolean; progress: number }>;
 }
 
-export function RegistrationNavSideBar({
+export function ClientProfileNavSideBar({
   activeSection,
   onSectionClick,
   sectionCompletion,
-}: RegistrationNavSideBarProps) {
+}: ClientProfileNavSideBarProps) {
   const sections = [
     {
       id: "personal-info",
@@ -30,6 +30,24 @@ export function RegistrationNavSideBar({
       title: "Emergency Contact",
       subtitle: "Contact details",
       step: 3,
+    },
+    {
+      id: "medical",
+      title: "Medical Information",
+      subtitle: "Medical history",
+      step: 4,
+    },
+    {
+      id: "ability",
+      title: "Functional and Cognitive Abilities",
+      subtitle: "Ability details",
+      step: 5,
+    },
+    {
+      id: "lifestyle",
+      title: "Lifestyle Information",
+      subtitle: "Lifestyle habits",
+      step: 5,
     },
   ];
 
@@ -184,11 +202,11 @@ export function RegistrationNavSideBar({
       {/* Compact Help Section */}
       <div className="p-3 border-t bg-blue-50">
         <div className="text-center">
-          <div className="text-xs font-medium text-blue-800 mb-1">
+          {/* <div className="text-xs font-medium text-blue-800 mb-1">
             Need Help?
-          </div>
-          <div className="text-xs text-blue-600">
-            Complete each section to continue
+          </div> */}
+          <div className="text-md text-blue-600">
+            Complete each section before continuing on to the next section.
           </div>
         </div>
       </div>

@@ -48,21 +48,35 @@ type EmergencyFormFields = z.infer<typeof emergencySchema>;
 interface EmergencyContactSectionProps {
   onDataChange: (data: EmergencyFormFields) => void;
   isCompleted: boolean;
+  defaultValues?: EmergencyFormFields;
 }
+
+// Common relationship options
+const relationshipOptions = [
+  "Spouse/Partner",
+  "Parent",
+  "Child",
+  "Sibling",
+  "Other Family Member",
+  "Friend",
+  "Colleague",
+  "Other",
+];
 
 export function EmergencyContactSection({
   onDataChange,
   isCompleted,
+  defaultValues,
 }: EmergencyContactSectionProps) {
   const {
     register,
     watch,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm<EmergencyFormFields>({
     mode: "onChange",
-    resolver: zodResolver(emergencySchema),
-    defaultValues: {
+    defaultValues: defaultValues || {
       contactFirstName: "",
       contactLastName: "",
       relationship: "",
@@ -73,6 +87,7 @@ export function EmergencyContactSection({
       supportRelationship: "",
       supportPhone: "",
     },
+    resolver: zodResolver(emergencySchema),
   });
 
   const [hasSupportPerson, setHasSupportPerson] = useState("");
@@ -80,6 +95,7 @@ export function EmergencyContactSection({
 
   const watchedFields = watch();
 
+  //Sync form changes with parent component
   useEffect(() => {
     const subscription = watch((value) => {
       onDataChange(value as EmergencyFormFields);
@@ -87,6 +103,7 @@ export function EmergencyContactSection({
     return () => subscription.unsubscribe();
   }, [watch, onDataChange]);
 
+  //Auto-full or clear support person field based on "Same as Emergency Contact" checkbox
   useEffect(() => {
     if (sameAsEmergency) {
       setValue("supportFirstName", watchedFields.contactFirstName);
@@ -100,6 +117,29 @@ export function EmergencyContactSection({
       setValue("supportPhone", "");
     }
   }, [sameAsEmergency, setValue, watchedFields.contactFirstName, watchedFields.contactLastName, watchedFields.relationship, watchedFields.contactPhone]);
+
+  //Initialize hasSupportPerson toggle from default values
+  useEffect(() => {
+    if (
+      defaultValues?.supportPerson === "Yes"
+      // defaultValues?.supportPerson === true
+    ) {
+      setHasSupportPerson("Yes");
+    } else if (defaultValues?.supportPerson === "No") {
+      setHasSupportPerson("No");
+    }
+  }, [defaultValues]);
+
+  useEffect(() => {
+    if (
+      defaultValues?.supportFirstName === defaultValues?.contactFirstName &&
+      defaultValues?.supportLastName === defaultValues?.contactLastName &&
+      defaultValues?.supportRelationship === defaultValues?.relationship &&
+      defaultValues?.supportPhone === defaultValues?.contactPhone
+    ) {
+      setSameAsEmergency(true); // THIS IS ISSUE
+    }
+  }, []);
 
   return (
     <div className="h-full bg-white rounded-lg border shadow-sm overflow-hidden">
@@ -177,12 +217,18 @@ export function EmergencyContactSection({
                 <label htmlFor="relationship" className="std-form-label">
                   Relationship *
                 </label>
-                <input
+                <select
                   id="relationship"
                   {...register("relationship")}
                   className="std-form-input"
-                  placeholder="e.g., Spouse, Parent, Sibling"
-                />
+                >
+                  <option value="">Select relationship</option>
+                  {relationshipOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
                 {errors.relationship && (
                   <p className="text-sm text-red-600">
                     {errors.relationship.message}
@@ -244,13 +290,45 @@ export function EmergencyContactSection({
                 <div className="flex flex-col items-start space-x-2">
                   <label className="std-form-label">Support Person</label>
                   <span className="my-2">
-                    <input
+                    {/* <input
                       type="checkbox"
                       id="consentCheckbox"
                       className="h-4 w-4 text-medium-green border-gray-300 rounded focus:ring-dark-green"
                       checked={sameAsEmergency}
                       onChange={(e) => setSameAsEmergency(e.target.checked)}
+                    /> */}
+                    <input
+                      type="checkbox"
+                      id="consentCheckbox"
+                      className="h-4 w-4 text-medium-green border-gray-300 rounded focus:ring-dark-green"
+                      checked={sameAsEmergency}
+                      onChange={(e) => {
+                        const checked = e.target.checked;
+                        setSameAsEmergency(checked);
+
+                        if (checked) {
+                          // Use current values from form
+                          const contactFirstName =
+                            getValues("contactFirstName");
+                          const contactLastName = getValues("contactLastName");
+                          const relationship = getValues("relationship");
+                          const phone = getValues("contactPhone");
+
+                          setValue("supportFirstName", contactFirstName);
+                          setValue("supportLastName", contactLastName);
+                          setValue("supportRelationship", relationship);
+                          setValue("supportPhone", phone);
+                        }
+                        // Optional: clear support fields on uncheck
+                        else {
+                          setValue("supportFirstName", "");
+                          setValue("supportLastName", "");
+                          setValue("supportRelationship", "");
+                          setValue("supportPhone", "");
+                        }
+                      }}
                     />
+
                     <label
                       htmlFor="consentCheckbox"
                       className="text-md text-darkest-green ms-1"
@@ -309,12 +387,18 @@ export function EmergencyContactSection({
                       >
                         Relationship with Support Person*
                       </label>
-                      <input
+                      <select
                         id="supportRelationship"
                         {...register("supportRelationship")}
                         className="std-form-input"
-                        placeholder="e.g., Spouse, Parent, Sibling"
-                      />
+                      >
+                        <option value="">Select relationship</option>
+                        {relationshipOptions.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
                       {errors.supportRelationship && (
                         <p className="text-sm text-red-600">
                           {errors.supportRelationship.message}
@@ -346,6 +430,8 @@ export function EmergencyContactSection({
           </div>
 
           {/* Completion Status */}
+
+          {/* Completion indicator */}
           {isCompleted && (
             <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
               <div className="flex items-center gap-2 text-green-700">
@@ -361,7 +447,7 @@ export function EmergencyContactSection({
                   />
                 </svg>
                 <span className="text-sm font-medium">
-                  All sections completed! Ready to submit.
+                  Section completed! Click Next to continue.
                 </span>
               </div>
             </div>

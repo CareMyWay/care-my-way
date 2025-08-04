@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter, redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Button, Divider } from "@aws-amplify/ui-react";
 import { getCurrentUser, signOut } from "@aws-amplify/auth";
 import { Hub } from "aws-amplify/utils";
@@ -11,9 +11,34 @@ import { getErrorMessage } from "@/utils/get-error-message";
 import GreenButton from "../buttons/green-button";
 import { Menu, X } from "lucide-react"; // for hamburger icon
 
-export default function NavBar() {
-  const [authCheck, setAuthCheck] = useState<boolean | null>(null);
+type NavBarProps = {
+  userGroups: string[];
+};
 
+const defaultSharedRoutes = [
+  { href: "/", label: "Home" },
+  { href: "/marketplace", label: "Healthcare Directory" },
+];
+
+const roleRoutesMap: Record<
+  string,
+  { href: string; label: string; loggedIn: boolean }[]
+> = {
+  Admin: [{ href: "/admin-dashboard", label: "My Dashboard", loggedIn: true }],
+  // Provider: [
+  //   { href: "/provider-dashboard", label: "My Dashboard", loggedIn: true },
+  // ],
+  Client: [
+    { href: "/client-dashboard", label: "My Dashboard", loggedIn: true },
+    { href: "/client-dashboard/profile", label: "My Profile", loggedIn: true },
+  ],
+  Support: [
+    { href: "/support-dashboard", label: "Support Dashboard", loggedIn: true },
+  ],
+};
+
+export default function NavBar({ userGroups = [] }: NavBarProps) {
+  const [authCheck, setAuthCheck] = useState<boolean | null>(null);
   const [menuOpen, setMenuOpen] = useState(false); // mobile menu toggle
   const [, startTransition] = useTransition();
   const router = useRouter();
@@ -45,19 +70,32 @@ export default function NavBar() {
     } catch (error) {
       console.log(getErrorMessage(error));
     }
-    redirect("/login");
+    router.push("/login");
   };
 
-  const defaultRoutes = [
-    { href: "/", label: "Home" },
-    { href: "/marketplace", label: "Healthcare Directory" },
-    { href: "/client-dashboard", label: "My Dashboard", loggedIn: true },
-    // { href: "/settings", label: "Settings", loggedIn: true },
-  ];
-
-  const routes = defaultRoutes.filter(
-    (route) => route.loggedIn === authCheck || route.loggedIn === undefined
+  // Gather unique routes from roles
+  const roleBasedRoutes = Array.from(
+    new Map(
+      (userGroups ?? [])
+        .flatMap((group) => roleRoutesMap[group] || [])
+        .map((route) => [route.href, route]) // use href as key
+    ).values()
   );
+  console.log("Role-based routes:", roleBasedRoutes);
+
+  const combinedRoutes = [...defaultSharedRoutes, ...roleBasedRoutes];
+
+  const renderRoutes = (routes: typeof combinedRoutes) =>
+    routes.map(({ href, label }) => (
+      <Link
+        key={href}
+        href={href}
+        className="text-darkest-green hover:text-medium-green transition-colors duration-200 block"
+        onClick={() => setMenuOpen(false)} // optional: close mobile menu when clicking
+      >
+        {label}
+      </Link>
+    ));
 
   return (
     <>
@@ -70,15 +108,7 @@ export default function NavBar() {
 
           {/* Desktop Nav Links */}
           <div className="hidden lg:flex items-center gap-8">
-            {routes.map((route) => (
-              <Link
-                key={route.href}
-                href={route.href}
-                className="text-darkest-green"
-              >
-                {route.label}
-              </Link>
-            ))}
+            {renderRoutes(combinedRoutes)}
           </div>
         </div>
 
@@ -121,16 +151,8 @@ export default function NavBar() {
       {/* Mobile Dropdown Menu */}
       {menuOpen && (
         <div className="lg:hidden px-4 py-4 space-y-4 bg-white border-b border-gray-200">
-          {routes.map((route) => (
-            <Link
-              key={route.href}
-              href={route.href}
-              className="block text-darkest-green"
-              onClick={() => setMenuOpen(false)}
-            >
-              {route.label}
-            </Link>
-          ))}
+          {renderRoutes(combinedRoutes)}
+
           <div className="my-4 border-t-2 border-darkest-green w-full" />
 
           {authCheck ? (

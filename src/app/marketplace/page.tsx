@@ -1,15 +1,19 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Navbar from "@/components/nav-bars/navbar";
 import ProviderCard from "@/components/marketplace/healthcare-provider-card";
 import MarketplaceSearchBar from "@/components/marketplace/search-bar";
 import MarketplaceFilter from "@/components/marketplace/filter";
-import { getPublicProviderProfiles, transformProviderForMarketplace } from "@/actions/providerProfileActions";
+import {
+  getPublicProviderProfiles,
+  transformProviderForMarketplace,
+} from "@/actions/providerProfileActions";
 import toast from "react-hot-toast";
 
 export default function MarketplacePage() {
-  const [providers, setProviders] = useState<ReturnType<typeof transformProviderForMarketplace>[]>([]);
+  const [providers, setProviders] = useState<
+    ReturnType<typeof transformProviderForMarketplace>[]
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,7 +24,9 @@ export default function MarketplacePage() {
         setError(null);
 
         const profiles = await getPublicProviderProfiles();
-        const transformedProviders = profiles.map(transformProviderForMarketplace);
+        const transformedProviders = profiles.map(
+          transformProviderForMarketplace
+        );
         setProviders(transformedProviders);
 
         if (transformedProviders.length === 0) {
@@ -70,7 +76,8 @@ export default function MarketplacePage() {
           <div className="space-y-4">
             <h3 className="text-xl font-semibold">No Caregivers Available</h3>
             <p className="text-gray-600">
-              There are currently no caregivers with completed profiles available in the marketplace.
+              There are currently no caregivers with completed profiles
+              available in the marketplace.
             </p>
             <p className="text-sm text-gray-500">
               Check back later as new caregivers join our platform!
@@ -87,7 +94,6 @@ export default function MarketplacePage() {
 
   return (
     <div>
-      <Navbar />
       <section className="min-h-screen px-4 py-12 md:px-16 bg-primary-white">
         <div className="container mx-auto flex flex-col md:h-screen">
           <div>

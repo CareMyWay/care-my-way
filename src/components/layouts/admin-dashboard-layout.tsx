@@ -1,4 +1,3 @@
-// components/layouts/AdminDashboardLayout.tsx
 import {
   getCurrentUserServer,
   checkIsInGroup,
@@ -6,7 +5,6 @@ import {
 import { getUserProfile } from "@/actions/getUserProfile";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
-import NavBar from "@/components/nav-bars/navbar";
 // import { SidebarNav } from "../Admin-dashboard-ui/careAdmin-sidenav";
 export default async function AdminDashboardLayout({
   children,
@@ -23,14 +21,7 @@ export default async function AdminDashboardLayout({
 
   return (
     <div className="min-h-screen flex bg-dashboard-bg font-manrope">
-      {/* <aside className="w-64 h-screen fixed top-0 left-0 z-20 bg-white border-r border-gray-200">
-        <SidebarNav />
-      </aside> */}
-
       <div className="ml-64 flex flex-col min-h-screen w-full">
-        <header className="w-full border-b border-gray-200 bg-white z-10">
-          <NavBar />
-        </header>
         <p>
           <strong>Email:</strong> {userProfileData.email}
         </p>
