@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import {
-  DynamoDBClient,
-  UpdateItemCommand,
-} from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -28,7 +25,7 @@ export async function POST(req: Request) {
     }
 
     const updateCommand = new UpdateItemCommand({
-      TableName: "Booking-pnrbd5j3jraz3p7qhb4mco6cwe-NONE",
+      TableName: "Booking-lp62gakperctdporhcqw5fsfxi-NONE",
       Key: {
         id: { S: bookingId },
       },
@@ -40,7 +37,7 @@ export async function POST(req: Request) {
 
     await ddbClient.send(updateCommand);
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       success: true,
       bookingDetails: {
         providerName: session.metadata?.providerName,
@@ -51,7 +48,8 @@ export async function POST(req: Request) {
         duration: session.metadata?.duration,
         totalCost: session.amount_total / 100,
         providerRate: session.metadata?.providerRate,
-      } });
+      },
+    });
   } catch (error) {
     console.error("Error updating booking:", error);
     return NextResponse.json(
