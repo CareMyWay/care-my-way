@@ -1,9 +1,9 @@
 "use client";
 
 import { Camera, User } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-dashboard-ui/card";
-import { Button } from "@/components/provider-dashboard-ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/provider-dashboard-ui/avatar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { type ProviderProfileData } from "@/actions/providerProfileActions";
 
 interface EditProfileHeaderProps {

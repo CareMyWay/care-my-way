@@ -1,7 +1,7 @@
 "use client";
 
 import { AlertTriangle, Phone, User } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-dashboard-ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { type ProviderProfileData } from "@/actions/providerProfileActions";
 
 interface EditEmergencyContactProps {

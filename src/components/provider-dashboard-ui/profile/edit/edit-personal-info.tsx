@@ -1,8 +1,8 @@
 "use client";
 
 import { User, Phone, Mail, Calendar, Users, X } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-dashboard-ui/card";
-import { Button } from "@/components/provider-dashboard-ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { type ProviderProfileData } from "@/actions/providerProfileActions";
 import { useState } from "react";
 import ISO6391 from "iso-639-1";

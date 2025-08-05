@@ -1,8 +1,8 @@
 "use client";
 
 import { Briefcase, DollarSign, Clock, Award, X, Plus } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-dashboard-ui/card";
-import { Button } from "@/components/provider-dashboard-ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { type ProviderProfileData } from "@/actions/providerProfileActions";
 import { healthcareServices, healthcareServiceCategories, type HealthcareService } from "@/utils/healthcare-services";
 import { useState } from "react";

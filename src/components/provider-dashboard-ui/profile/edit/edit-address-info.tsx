@@ -1,7 +1,7 @@
 "use client";
 
 import { MapPin, Home } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/provider-dashboard-ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { type ProviderProfileData } from "@/actions/providerProfileActions";
 import { getCanadianProvinces } from "@/utils/canadian-provinces";
 
