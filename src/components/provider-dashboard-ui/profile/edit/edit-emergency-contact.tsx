@@ -17,8 +17,8 @@ const RELATIONSHIP_OPTIONS = [
 
 export function EditEmergencyContact({ profileData, onUpdate }: EditEmergencyContactProps) {
     return (
-        <Card className="border border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardHeader className="bg-gradient-to-r from-red-50 to-orange-50 border-b">
+        <Card className="border border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 p-0">
+            <CardHeader className="bg-gradient-to-r from-red-50 to-orange-50 border-b px-6 py-6">
                 <CardTitle className="flex items-center gap-3 text-lg">
                     <div className="p-2 bg-red-500 rounded-xl">
                         <AlertTriangle className="h-5 w-5 text-white" />

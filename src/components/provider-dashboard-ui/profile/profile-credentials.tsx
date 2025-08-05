@@ -41,8 +41,8 @@ export function ProfileCredentials({ profileData }: ProfileCredentialsProps) {
 
       {/* Education */}
       {profileData.education && profileData.education.length > 0 && (
-        <Card className="border border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-          <CardHeader className="bg-gradient-to-r from-indigo-50 to-purple-50 border-b">
+        <Card className="border border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 p-0">
+          <CardHeader className="bg-gradient-to-r from-indigo-50 to-purple-50 border-b px-6 py-6">
             <CardTitle className="flex items-center gap-3 text-lg">
               <div className="p-2 bg-indigo-500 rounded-xl">
                 <BookOpen className="h-5 w-5 text-white" />
@@ -85,8 +85,8 @@ export function ProfileCredentials({ profileData }: ProfileCredentialsProps) {
 
       {/* Certifications */}
       {profileData.certifications && profileData.certifications.length > 0 && (
-        <Card className="border border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-          <CardHeader className="bg-gradient-to-r from-emerald-50 to-green-50 border-b">
+        <Card className="border border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 p-0">
+          <CardHeader className="bg-gradient-to-r from-emerald-50 to-green-50 border-b px-6 py-6">
             <CardTitle className="flex items-center gap-3 text-lg">
               <div className="p-2 bg-emerald-500 rounded-xl">
                 <Award className="h-5 w-5 text-white" />
@@ -140,8 +140,8 @@ export function ProfileCredentials({ profileData }: ProfileCredentialsProps) {
 
       {/* Work Experience */}
       {profileData.workExperience && profileData.workExperience.length > 0 && (
-        <Card className="border border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-          <CardHeader className="bg-gradient-to-r from-blue-50 to-cyan-50 border-b">
+        <Card className="border border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 p-0">
+          <CardHeader className="bg-gradient-to-r from-blue-50 to-cyan-50 border-b px-6 py-6">
             <CardTitle className="flex items-center gap-3 text-lg">
               <div className="p-2 bg-blue-500 rounded-xl">
                 <Briefcase className="h-5 w-5 text-white" />

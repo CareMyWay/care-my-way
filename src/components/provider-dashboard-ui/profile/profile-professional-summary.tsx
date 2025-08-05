@@ -14,8 +14,8 @@ export function ProfileProfessionalSummary({ profileData }: ProfileProfessionalS
     <div className="space-y-6">
 
       {/* Professional Bio */}
-      <Card className="border border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-        <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
+      <Card className="border border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 p-0">
+        <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b rounded-t-2xl px-6 py-6">
           <CardTitle className="flex items-center gap-3 text-lg">
             <div className="p-2 bg-blue-500 rounded-xl">
               <FileText className="h-5 w-5 text-white" />
@@ -40,8 +40,8 @@ export function ProfileProfessionalSummary({ profileData }: ProfileProfessionalS
       </Card>
 
       {/* Experience & Rates */}
-      <Card className="border border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-        <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 border-b">
+      <Card className="border border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 p-0">
+        <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 border-b px-6 py-6">
           <CardTitle className="flex items-center gap-3 text-lg">
             <div className="p-2 bg-green-500 rounded-xl">
               <Briefcase className="h-5 w-5 text-white" />
@@ -99,8 +99,8 @@ export function ProfileProfessionalSummary({ profileData }: ProfileProfessionalS
       </Card>
 
       {/* Services Offered */}
-      <Card className="border border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-        <CardHeader className="bg-gradient-to-r from-orange-50 to-amber-50 border-b">
+      <Card className="border border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 p-0">
+        <CardHeader className="bg-gradient-to-r from-orange-50 to-amber-50 border-b px-6 py-6">
           <CardTitle className="flex items-center gap-3 text-lg">
             <div className="p-2 bg-orange-500 rounded-xl">
               <Award className="h-5 w-5 text-white" />

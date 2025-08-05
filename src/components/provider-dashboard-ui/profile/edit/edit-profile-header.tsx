@@ -26,8 +26,8 @@ export function EditProfileHeader({ profileData, onUpdate }: EditProfileHeaderPr
     };
 
     return (
-        <Card className="border border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardHeader className="bg-gradient-to-r from-[#4A9B9B] via-[#5CAB9B] to-[#6CBB9B] text-white">
+        <Card className="border border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 p-0">
+            <CardHeader className="bg-gradient-to-r from-[#4A9B9B] via-[#5CAB9B] to-[#6CBB9B] text-white px-6 py-6">
                 <CardTitle className="flex items-center gap-3 text-xl">
                     <div className="p-2 bg-white/20 rounded-xl">
                         <User className="h-6 w-6 text-white" />
