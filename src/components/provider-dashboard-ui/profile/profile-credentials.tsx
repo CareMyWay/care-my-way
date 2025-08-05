@@ -106,7 +106,7 @@ function DocumentList({ documents, title }: { documents: string[]; title: string
         </div>
       ) : (
         // Clean attachment card layout for all documents
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-5 sm:grid-cols-6 lg:grid-cols-7 xl:grid-cols-8 gap-4">
           {documentUrls.map((doc, index) => (
             <div key={index} className="group relative bg-white rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-200 overflow-hidden">
 
