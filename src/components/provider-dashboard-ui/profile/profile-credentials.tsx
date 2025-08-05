@@ -1,8 +1,12 @@
 "use client";
 
-import { BookOpen, Award, Briefcase, Calendar, Building, GraduationCap } from "lucide-react";
+import { useState, useEffect } from "react";
+import { BookOpen, Award, Briefcase, Calendar, Building, GraduationCap, FileText, Download, ExternalLink } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { type ProviderProfileData } from "@/actions/providerProfileActions";
+import { getFileUrl } from "@/utils/s3-upload";
 
 // Types for credential entries
 interface EducationEntry {
@@ -33,6 +37,174 @@ interface WorkExperienceEntry {
 
 interface ProfileCredentialsProps {
   profileData: ProviderProfileData;
+}
+
+// Component to display document attachments
+function DocumentList({ documents, title }: { documents: string[]; title: string }) {
+  const [documentUrls, setDocumentUrls] = useState<{ key: string; url: string; name: string; fileType: string }[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const loadDocumentUrls = async () => {
+      if (!documents || documents.length === 0) return;
+
+      setIsLoading(true);
+      try {
+        const urlPromises = documents.map(async (s3Key) => {
+          const url = await getFileUrl(s3Key, 3600); // 1 hour expiry
+          const name = extractFileNameFromS3Key(s3Key);
+          const fileType = getFileType(name);
+          return { key: s3Key, url: url || '', name, fileType };
+        });
+
+        const results = await Promise.all(urlPromises);
+        console.log('📄 Document processing results:', results);
+        setDocumentUrls(results.filter(result => result.url)); // Only keep successful ones
+      } catch (error) {
+        console.error('Error loading document URLs:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadDocumentUrls();
+  }, [documents]);
+
+  // Helper function to extract filename from S3 key
+  const extractFileNameFromS3Key = (s3Key: string): string => {
+    const parts = s3Key.split('/');
+    const fullFileName = parts[parts.length - 1];
+    // Remove timestamp prefix (format: timestamp-filename)
+    const match = fullFileName.match(/^\d+-(.+)$/);
+    return match ? match[1] : fullFileName;
+  };
+
+  // Helper function to determine file type
+  const getFileType = (fileName: string): string => {
+    const extension = fileName.split('.').pop()?.toLowerCase() || '';
+    if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(extension)) return 'image';
+    if (['pdf'].includes(extension)) return 'pdf';
+    return 'document';
+  };
+
+  if (!documents || documents.length === 0) return null;
+
+  return (
+    <div className="mt-4 p-4 bg-white/70 rounded-xl border border-gray-200 shadow-sm">
+      <div className="flex items-center gap-2 mb-4">
+        <FileText className="h-4 w-4 text-gray-600" />
+        <span className="font-medium text-gray-700 text-sm">{title}</span>
+        <Badge variant="secondary" className="text-xs">
+          {documents.length} file{documents.length !== 1 ? 's' : ''}
+        </Badge>
+      </div>
+
+      {isLoading ? (
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-300 border-t-gray-600"></div>
+          <span>Loading documents...</span>
+        </div>
+      ) : (
+        // Clean attachment card layout for all documents
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {documentUrls.map((doc, index) => (
+            <div key={index} className="group relative bg-white rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-200 overflow-hidden">
+
+              {/* Action Icons - Top Right Corner */}
+              <div className="absolute top-2 right-2 z-10 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  className="h-8 w-8 p-0 bg-white/90 backdrop-blur-sm border-0 shadow-md hover:bg-white hover:shadow-lg"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.open(doc.url, '_blank');
+                  }}
+                  title="View document"
+                >
+                  <ExternalLink className="h-4 w-4 text-blue-600" />
+                </Button>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  className="h-8 w-8 p-0 bg-white/90 backdrop-blur-sm border-0 shadow-md hover:bg-white hover:shadow-lg"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const link = document.createElement('a');
+                    link.href = doc.url;
+                    link.download = doc.name;
+                    link.click();
+                  }}
+                  title="Download document"
+                >
+                  <Download className="h-4 w-4 text-green-600" />
+                </Button>
+              </div>
+
+              {/* Document Preview */}
+              <div className="cursor-pointer" onClick={() => window.open(doc.url, '_blank')}>
+                <div className="aspect-[4/3] w-full bg-gray-50 flex items-center justify-center overflow-hidden">
+                  {doc.fileType === 'image' ? (
+                    <img
+                      src={doc.url}
+                      alt={doc.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      onLoad={() => {
+                        console.log('✅ Image loaded successfully:', doc.name, doc.fileType, doc.url);
+                      }}
+                      onError={(e) => {
+                        console.log('❌ Image failed to load:', doc.name, doc.fileType, doc.url);
+                        // Fallback to file icon if image fails to load
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        const parent = target.parentElement;
+                        if (parent) {
+                          parent.innerHTML = `
+                            <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                              <div class="text-center">
+                                <svg class="w-12 h-12 text-gray-400 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
+                                </svg>
+                                <div class="text-xs text-gray-500">Image Preview</div>
+                              </div>
+                            </div>
+                          `;
+                        }
+                      }}
+                    />
+                  ) : doc.fileType === 'pdf' ? (
+                    <div className="w-full h-full flex items-center justify-center bg-red-50">
+                      <div className="text-center">
+                        <svg className="w-16 h-16 text-red-600 mx-auto mb-3" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
+                        </svg>
+                        <div className="text-red-600 font-bold text-lg">PDF</div>
+                        <div className="text-red-500 text-xs mt-1">Click to view</div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-blue-50">
+                      <div className="text-center">
+                        <FileText className="w-16 h-16 text-blue-600 mx-auto mb-3" />
+                        <div className="text-blue-600 font-bold text-lg">DOC</div>
+                        <div className="text-blue-500 text-xs mt-1">Click to view</div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* File Info */}
+              <div className="p-3 border-t border-gray-100">
+                <h4 className="font-medium text-gray-900 text-sm truncate mb-1">{doc.name}</h4>
+                <p className="text-xs text-gray-500 capitalize">{doc.fileType}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 export function ProfileCredentials({ profileData }: ProfileCredentialsProps) {
@@ -75,6 +247,11 @@ export function ProfileCredentials({ profileData }: ProfileCredentialsProps) {
                       <Calendar className="h-3 w-3" />
                       <span>Graduated {edu.graduationYear}</span>
                     </div>
+                  )}
+
+                  {/* Documents */}
+                  {edu.documents && edu.documents.length > 0 && (
+                    <DocumentList documents={edu.documents} title="Supporting Documents" />
                   )}
                 </div>
               </div>
@@ -131,6 +308,11 @@ export function ProfileCredentials({ profileData }: ProfileCredentialsProps) {
                       </span>
                     </div>
                   )}
+
+                  {/* Documents */}
+                  {cert.documents && cert.documents.length > 0 && (
+                    <DocumentList documents={cert.documents} title="Certification Documents" />
+                  )}
                 </div>
               </div>
             ))}
@@ -182,6 +364,11 @@ export function ProfileCredentials({ profileData }: ProfileCredentialsProps) {
                         {work.description}
                       </p>
                     </div>
+                  )}
+
+                  {/* Documents */}
+                  {work.documents && work.documents.length > 0 && (
+                    <DocumentList documents={work.documents} title="Work Documents" />
                   )}
                 </div>
               </div>

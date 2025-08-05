@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { MapPin, Clock, Edit } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,12 +8,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { type ProviderProfileData } from "@/actions/providerProfileActions";
+import { getFileUrl } from "@/utils/s3-upload";
 
 interface ProfileHeaderProps {
   profileData: ProviderProfileData;
 }
 
 export function ProfileHeader({ profileData }: ProfileHeaderProps) {
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState<string>("/placeholder.svg?height=128&width=128");
+  const [isLoadingPhoto, setIsLoadingPhoto] = useState(false);
+
   // Helper function to get initials
   const getInitials = (firstName?: string, lastName?: string) => {
     if (!firstName && !lastName) return "P";
@@ -24,6 +29,40 @@ export function ProfileHeader({ profileData }: ProfileHeaderProps) {
     const parts = [profileData.city, profileData.province].filter(Boolean);
     return parts.length > 0 ? parts.join(", ") : "Location not specified";
   };
+
+  // Load profile photo from S3 if it's an S3 key
+  useEffect(() => {
+    const loadProfilePhoto = async () => {
+      if (!profileData.profilePhoto) {
+        setProfilePhotoUrl("/placeholder.svg?height=128&width=128");
+        return;
+      }
+
+      // Check if it's already a full URL (starts with http)
+      if (profileData.profilePhoto.startsWith('http')) {
+        setProfilePhotoUrl(profileData.profilePhoto);
+        return;
+      }
+
+      // Assume it's an S3 key, get signed URL
+      try {
+        setIsLoadingPhoto(true);
+        const signedUrl = await getFileUrl(profileData.profilePhoto, 3600); // 1 hour expiry
+        if (signedUrl) {
+          setProfilePhotoUrl(signedUrl);
+        } else {
+          setProfilePhotoUrl("/placeholder.svg?height=128&width=128");
+        }
+      } catch (error) {
+        console.error('Error loading profile photo:', error);
+        setProfilePhotoUrl("/placeholder.svg?height=128&width=128");
+      } finally {
+        setIsLoadingPhoto(false);
+      }
+    };
+
+    loadProfilePhoto();
+  }, [profileData.profilePhoto]);
 
   return (
     <Card className="border-none bg-gradient-to-br from-[#4A9B9B] via-[#5CAB9B] to-[#6CBB9B] text-white rounded-3xl overflow-hidden shadow-2xl">
@@ -37,12 +76,16 @@ export function ProfileHeader({ profileData }: ProfileHeaderProps) {
             <div className="relative">
               <Avatar className="h-32 w-32 border-4 border-white/30 shadow-2xl ring-4 ring-white/20">
                 <AvatarImage
-                  src={profileData.profilePhoto || "/placeholder.svg?height=128&width=128"}
+                  src={profilePhotoUrl}
                   alt={`${profileData.firstName} ${profileData.lastName}`}
                   className="object-cover"
                 />
                 <AvatarFallback className="bg-white/20 text-white text-3xl font-bold backdrop-blur-sm">
-                  {getInitials(profileData.firstName, profileData.lastName)}
+                  {isLoadingPhoto ? (
+                    <div className="animate-spin rounded-full h-8 w-8 border-2 border-white/30 border-t-white"></div>
+                  ) : (
+                    getInitials(profileData.firstName, profileData.lastName)
+                  )}
                 </AvatarFallback>
               </Avatar>
             </div>
