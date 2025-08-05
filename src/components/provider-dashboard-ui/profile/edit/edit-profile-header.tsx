@@ -18,7 +18,7 @@ interface EditProfileHeaderProps {
 
 export function EditProfileHeader({ profileData, onUpdate }: EditProfileHeaderProps) {
     const [isUploading, setIsUploading] = useState(false);
-    const [profilePhotoUrl, setProfilePhotoUrl] = useState<string>("/placeholder.svg?height=128&width=128");
+    const [profilePhotoUrl, setProfilePhotoUrl] = useState<string>("/placeholder.svg?height=160&width=160");
     const [isLoadingPhoto, setIsLoadingPhoto] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -32,7 +32,7 @@ export function EditProfileHeader({ profileData, onUpdate }: EditProfileHeaderPr
     useEffect(() => {
         const loadProfilePhoto = async () => {
             if (!profileData.profilePhoto) {
-                setProfilePhotoUrl("/placeholder.svg?height=128&width=128");
+                setProfilePhotoUrl("/placeholder.svg?height=160&width=160");
                 return;
             }
 
@@ -49,11 +49,11 @@ export function EditProfileHeader({ profileData, onUpdate }: EditProfileHeaderPr
                 if (signedUrl) {
                     setProfilePhotoUrl(signedUrl);
                 } else {
-                    setProfilePhotoUrl("/placeholder.svg?height=128&width=128");
+                    setProfilePhotoUrl("/placeholder.svg?height=160&width=160");
                 }
             } catch (error) {
                 console.error('Error loading profile photo:', error);
-                setProfilePhotoUrl("/placeholder.svg?height=128&width=128");
+                setProfilePhotoUrl("/placeholder.svg?height=160&width=160");
             } finally {
                 setIsLoadingPhoto(false);
             }
@@ -156,7 +156,7 @@ export function EditProfileHeader({ profileData, onUpdate }: EditProfileHeaderPr
                     {/* Profile Photo Section */}
                     <div className="flex flex-col items-center space-y-4">
                         <div className="relative">
-                            <Avatar className="h-32 w-32 border-4 border-[#4A9B9B]/20 shadow-lg ring-4 ring-[#4A9B9B]/10">
+                            <Avatar className="!h-64 !w-64 border-4 border-[#4A9B9B]/20 shadow-lg ring-4 ring-[#4A9B9B]/10">
                                 <AvatarImage
                                     src={profilePhotoUrl}
                                     alt={`${profileData.firstName} ${profileData.lastName}`}

@@ -15,7 +15,7 @@ interface ProfileHeaderProps {
 }
 
 export function ProfileHeader({ profileData }: ProfileHeaderProps) {
-  const [profilePhotoUrl, setProfilePhotoUrl] = useState<string>("/placeholder.svg?height=128&width=128");
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState<string>("/placeholder.svg?height=160&width=160");
   const [isLoadingPhoto, setIsLoadingPhoto] = useState(false);
 
   // Helper function to get initials
@@ -34,7 +34,7 @@ export function ProfileHeader({ profileData }: ProfileHeaderProps) {
   useEffect(() => {
     const loadProfilePhoto = async () => {
       if (!profileData.profilePhoto) {
-        setProfilePhotoUrl("/placeholder.svg?height=128&width=128");
+        setProfilePhotoUrl("/placeholder.svg?height=160&width=160");
         return;
       }
 
@@ -51,11 +51,11 @@ export function ProfileHeader({ profileData }: ProfileHeaderProps) {
         if (signedUrl) {
           setProfilePhotoUrl(signedUrl);
         } else {
-          setProfilePhotoUrl("/placeholder.svg?height=128&width=128");
+          setProfilePhotoUrl("/placeholder.svg?height=160&width=160");
         }
       } catch (error) {
         console.error('Error loading profile photo:', error);
-        setProfilePhotoUrl("/placeholder.svg?height=128&width=128");
+        setProfilePhotoUrl("/placeholder.svg?height=160&width=160");
       } finally {
         setIsLoadingPhoto(false);
       }
@@ -74,7 +74,7 @@ export function ProfileHeader({ profileData }: ProfileHeaderProps) {
 
             {/* Avatar */}
             <div className="relative">
-              <Avatar className="h-32 w-32 border-4 border-white/30 shadow-2xl ring-4 ring-white/20">
+              <Avatar className="!h-64 !w-64 border-4 border-white/30 shadow-2xl ring-4 ring-white/20">
                 <AvatarImage
                   src={profilePhotoUrl}
                   alt={`${profileData.firstName} ${profileData.lastName}`}
