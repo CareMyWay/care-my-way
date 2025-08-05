@@ -9,35 +9,71 @@ import { Hub } from "aws-amplify/utils";
 import { useTransition } from "react";
 import { getErrorMessage } from "@/utils/get-error-message";
 import GreenButton from "../buttons/green-button";
-import { Menu, X } from "lucide-react"; // for hamburger icon
+import { Menu, X } from "lucide-react";
 
-export default function NavBar() {
+type NavBarProps = {
+  userGroups?: string[]; // Make userGroups optional
+};
+
+const defaultSharedRoutes = [
+  { href: "/", label: "Home" },
+  { href: "/marketplace", label: "Healthcare Directory" },
+];
+
+const roleRoutesMap: Record<
+  string,
+  { href: string; label: string; loggedIn: boolean }[]
+> = {
+  Admin: [{ href: "/admin-dashboard", label: "My Dashboard", loggedIn: true }],
+  Provider: [
+    { href: "/provider-dashboard", label: "My Dashboard", loggedIn: true },
+  ],
+  Client: [
+    { href: "/client-dashboard", label: "My Dashboard", loggedIn: true },
+    { href: "/client-dashboard/profile", label: "My Profile", loggedIn: true },
+  ],
+  Support: [
+    { href: "/support-dashboard", label: "Support Dashboard", loggedIn: true },
+  ],
+};
+
+export default function NavBar({ userGroups = [] }: NavBarProps) {
   const [authCheck, setAuthCheck] = useState<boolean | null>(null);
-
-  const [menuOpen, setMenuOpen] = useState(false); // mobile menu toggle
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [localUserGroups, setLocalUserGroups] = useState<string[]>(userGroups); // Local state for userGroups
   const [, startTransition] = useTransition();
   const router = useRouter();
 
   useEffect(() => {
+    // Initial auth check
     getCurrentUser()
-      .then(() => setAuthCheck(true))
-      .catch(() => setAuthCheck(false));
+      .then(() => {
+        setAuthCheck(true);
+        setLocalUserGroups(userGroups); // Set initial userGroups from props
+      })
+      .catch(() => {
+        setAuthCheck(false);
+        setLocalUserGroups([]); // Reset userGroups on auth failure
+      });
 
+    // Listen for auth events
     const hubListenerCancel = Hub.listen("auth", (data) => {
       switch (data.payload.event) {
         case "signedIn":
           setAuthCheck(true);
+          setLocalUserGroups(userGroups); // Update with prop value or fetch if needed
           startTransition(() => router.refresh());
           break;
         case "signedOut":
           setAuthCheck(false);
-          startTransition(() => router.refresh());
+          setLocalUserGroups([]); // Clear userGroups on sign out
+          startTransition(() => router.push("/login")); // Redirect to login
           break;
       }
     });
 
     return () => hubListenerCancel();
-  }, [router]);
+  }, [router, userGroups]);
 
   const handleSignOut = async () => {
     try {
@@ -45,44 +81,45 @@ export default function NavBar() {
     } catch (error) {
       console.log(getErrorMessage(error));
     }
-    redirect("/login");
   };
 
-  const defaultRoutes = [
-    { href: "/", label: "Home" },
-    { href: "/marketplace", label: "Healthcare Directory" },
-    { href: "/client-dashboard", label: "My Dashboard", loggedIn: true },
-    // { href: "/settings", label: "Settings", loggedIn: true },
-  ];
+  // Use localUserGroups for role-based routes
+  const roleBasedRoutes = authCheck
+    ? Array.from(
+        new Map(
+          localUserGroups
+            .flatMap((group) => roleRoutesMap[group] || [])
+            .map((route) => [route.href, route])
+        ).values()
+      )
+    : [];
 
-  const routes = defaultRoutes.filter(
-    (route) => route.loggedIn === authCheck || route.loggedIn === undefined
-  );
+  const combinedRoutes = [...defaultSharedRoutes, ...roleBasedRoutes];
+
+  const renderRoutes = (routes: typeof combinedRoutes) =>
+    routes.map(({ href, label }) => (
+      <Link
+        key={href}
+        href={href}
+        className="text-darkest-green hover:text-medium-green transition-colors duration-200 block"
+        onClick={() => setMenuOpen(false)}
+      >
+        {label}
+      </Link>
+    ));
 
   return (
     <>
       <nav className="w-full px-4 py-3 flex justify-between items-center border-b border-gray-200">
-        {/* Left: Logo + Links */}
         <div className="flex items-center gap-8">
           <div className="text-lg font-semibold text-darkest-green">
             Care My Way
           </div>
-
-          {/* Desktop Nav Links */}
           <div className="hidden lg:flex items-center gap-8">
-            {routes.map((route) => (
-              <Link
-                key={route.href}
-                href={route.href}
-                className="text-darkest-green"
-              >
-                {route.label}
-              </Link>
-            ))}
+            {renderRoutes(combinedRoutes)}
           </div>
         </div>
 
-        {/* Right: Auth Buttons */}
         <div className="hidden lg:flex items-center gap-4">
           {authCheck ? (
             <GreenButton variant="action" onClick={handleSignOut}>
@@ -94,13 +131,13 @@ export default function NavBar() {
                 variation="link"
                 style={{ color: "#173F3F", textTransform: "uppercase" }}
                 borderRadius="2rem"
-                onClick={() => router.push("/login")}
+                onClick={() => redirect("/login")}
               >
                 Log In
               </Button>
               <GreenButton
                 variant="action"
-                onClick={() => router.push("/sign-up/user")}
+                onClick={() => redirect("/sign-up/user")}
               >
                 Sign Up
               </GreenButton>
@@ -108,7 +145,6 @@ export default function NavBar() {
           )}
         </div>
 
-        {/* Hamburger Icon - Mobile Only */}
         <button
           className="lg:hidden text-darkest-green"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -118,21 +154,10 @@ export default function NavBar() {
         </button>
       </nav>
 
-      {/* Mobile Dropdown Menu */}
       {menuOpen && (
         <div className="lg:hidden px-4 py-4 space-y-4 bg-white border-b border-gray-200">
-          {routes.map((route) => (
-            <Link
-              key={route.href}
-              href={route.href}
-              className="block text-darkest-green"
-              onClick={() => setMenuOpen(false)}
-            >
-              {route.label}
-            </Link>
-          ))}
+          {renderRoutes(combinedRoutes)}
           <div className="my-4 border-t-2 border-darkest-green w-full" />
-
           {authCheck ? (
             <GreenButton variant="action" onClick={handleSignOut}>
               Sign Out
@@ -152,7 +177,7 @@ export default function NavBar() {
                 }}
                 borderRadius="2rem"
                 onClick={() => {
-                  router.push("/login");
+                  redirect("/login");
                   setMenuOpen(false);
                 }}
               >
@@ -161,7 +186,7 @@ export default function NavBar() {
               <GreenButton
                 variant="action"
                 onClick={() => {
-                  router.push("/sign-up/user");
+                  redirect("/sign-up/user");
                   setMenuOpen(false);
                 }}
               >

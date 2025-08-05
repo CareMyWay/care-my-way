@@ -1,14 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Clock, MapPin } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav";
 import GreenButton from "@/components/buttons/green-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-//import AppointmentsPage from "./appointments/page";
 import { format, startOfWeek, addDays, isSameDay, isSameMonth } from "date-fns";
 import { Button } from "@/components/ui/button";
+
+import { getCurrentUser } from "aws-amplify/auth";
+import { generateClient } from "aws-amplify/data";
+import type { Schema } from "@/../amplify/data/resource";
+
+const client = generateClient<Schema>();
 
 export default function HomeDashPage() {
   const todos = [
@@ -17,58 +22,57 @@ export default function HomeDashPage() {
       type: "future_task",
       href: "client-dashboard/to-dos/complete-profile",
       taskTitle: "Complete User Profile",
-      dueDate: "Jan 20, 2025",
-      dueTime: "8:00 AM - 10:00 AM",
+      // dueDate: "Jan 20, 2025",
+      // dueTime: "8:00 AM - 10:00 AM",
       completed: false,
-      description: "Provide personal care assistance for Sarah Johnson.",
-      createdAt: "2024-01-15T10:00:00Z",
+      description:
+        "You must complete your profile before gaining access to Care My Way services.",
     },
-    {
-      id: "2",
-      type: "future_task",
-      href: "client-dashboard/to-dos/complete-profile",
-      taskTitle: "Complete Booking with Provider",
-      dueDate: "Jan 20, 2025",
-      dueTime: "8:00 AM - 10:00 AM",
-      completed: false,
-      description: "Provide personal care assistance for Sarah Johnson.",
-      createdAt: "2024-01-15T10:00:00Z",
-    },
-    {
-      id: "3",
-      type: "future_task",
-      href: "client-dashboard/to-dos/complete-profile",
-      taskTitle: "Complete Booking with Provider",
-      dueDate: "Jan 20, 2025",
-      dueTime: "8:00 AM - 10:00 AM",
-      description: "Provide personal care assistance for Sarah Johnson.",
-      createdAt: "2024-01-15T10:00:00Z",
-    },
-    {
-      id: "4",
-      type: "future_task",
-      href: "client-dashboard/to-dos/complete-profile",
-      taskTitle: "Complete Booking with Provider",
-      dueDate: "Jan 20, 2025",
-      completed: false,
-      dueTime: "8:00 AM - 10:00 AM",
-      description: "Provide personal care assistance for Sarah Johnson.",
-      createdAt: "2024-01-15T10:00:00Z",
-    },
+    // {
+    //   id: "2",
+    //   type: "future_task",
+    //   href: "client-dashboard/to-dos/complete-profile",
+    //   taskTitle: "Complete Booking with Provider",
+    //   dueDate: "Jan 20, 2025",
+    //   dueTime: "8:00 AM - 10:00 AM",
+    //   completed: false,
+    //   description: "Something.",
+    // },
+    // {
+    //   id: "3",
+    //   type: "future_task",
+    //   href: "client-dashboard/to-dos/complete-profile",
+    //   taskTitle: "Complete Booking with Provider",
+    //   dueDate: "Jan 20, 2025",
+    //   dueTime: "8:00 AM - 10:00 AM",
+    //   description: "Provide personal care assistance for Sarah Johnson.",
+    // },
+    // {
+    //   id: "4",
+    //   type: "future_task",
+    //   href: "client-dashboard/to-dos/complete-profile",
+    //   taskTitle: "Complete Booking with Provider",
+    //   dueDate: "Jan 20, 2025",
+    //   completed: false,
+    //   dueTime: "8:00 AM - 10:00 AM",
+    //   description: "Provide personal care assistance for Sarah Johnson.",
+    // },
   ];
 
   const todayAppointment = {
-    patientName: "Emma Wilson",
+    providerName: "Emma Wilson",
     service: "Physical Therapy",
     time: "9:00 AM - 11:00 AM",
     date: "Jan 15, 2025",
     location: "123 Main Street, San Francisco, CA",
     notes:
-      "Focus on mobility exercises and strength training. Patient has been making good progress with previous sessions.",
+      "Focus on mobility exercises and strength training. provider has been making good progress with previous sessions.",
     avatar: "/placeholder.svg?height=60&width=60",
   };
 
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [profileCompleted, setProfileCompleted] = useState(false);
+
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 }); // Sunday
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
@@ -90,6 +94,33 @@ export default function HomeDashPage() {
     },
   ];
 
+  useEffect(() => {
+    const checkProfileCompletion = async () => {
+      try {
+        const user = await getCurrentUser();
+        const userId = user?.userId;
+        if (!userId) return;
+
+        const { data: profiles } = await client.models.ClientProfile.list({
+          filter: {
+            profileOwner: { eq: userId },
+          },
+        });
+
+        if (profiles.length > 0) {
+          setProfileCompleted(true);
+          console.log("Client profile found:", profiles[0]);
+        } else {
+          console.log("No profile found for user");
+        }
+      } catch (err) {
+        console.error("Error checking profile:", err);
+      }
+    };
+
+    checkProfileCompletion();
+  }, []);
+
   return (
     <>
       <TopNav title="My Dashboard" notificationCount={todos.length} />
@@ -98,48 +129,50 @@ export default function HomeDashPage() {
         {/* To Do List*/}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Notifications */}
-          <Card className="border border-gray-200 bg-white rounded-lg">
+          <Card className="border-1 drop-shadow-sm border-medium-green  rounded-lg">
             <CardHeader className="pb-4">
-              <CardTitle className="text-lg font-semibold dashboard-text-primary">
+              <CardTitle className="text-xl font-semibold dashboard-text-primary">
                 To-Do Items
               </CardTitle>
             </CardHeader>
-            <CardContent className="pt-0 space-y-4 max-h-[400px] overflow-y-auto">
+            <CardContent className="pt-0 space-y-4 max-h-[400px] overflow-y-auto px-10">
               {todos.map((task) => (
                 <div
                   key={task.id}
-                  className="bg-[var(--color-lightest-green,#e6f4f1)] p-4"
+                  className="bg-[#e7f2f3] border-1 border-medium-green rounded-md p-12 shadow-sm"
                 >
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-3 gap-2">
+                  <div className="flex flex-col md:flex-row md:justify-between mb-2 gap-2 md:items-stretch">
                     <div className="flex items-center gap-3">
                       <div>
-                        <div className="font-medium text-[var(--color-darkest-green)]">
+                        <div className="font-semibold text-xl text-darkest-green underline">
                           {task.taskTitle}
-                        </div>
-                        <div className="text-sm text-muted-foreground">
-                          Due: {task.dueDate}
                         </div>
                       </div>
                     </div>
-                    <div className="flex w-full md:w-auto justify-center md:justify-end">
-                      {!task.completed ? (
+                    <div className="flex w-full md:w-auto justify-center md:justify-end items-center">
+                      {task.taskTitle === "Complete User Profile" &&
+                      profileCompleted ? (
                         <GreenButton
                           variant="route"
-                          // href={`client-dashboard/to-dos/${task.id}`}
-                          href={task.href}
+                          href="/client-dashboard/profile"
                         >
-                          <span className="text-xs text-center">Start</span>
+                          <span className="text-md text-center">
+                            View Your Profile
+                          </span>
                         </GreenButton>
                       ) : (
-                        <span className="text-sm text-muted-foreground">
-                          Completed
-                        </span>
+                        <GreenButton variant="route" href={task.href}>
+                          <span className="text-md text-center">Start</span>
+                        </GreenButton>
                       )}
                     </div>
                   </div>
 
-                  <p className="text-sm text-[var(--color-darkest-green)]">
-                    {task.description}
+                  <p className="text-xl text-darkest-green leading-relaxed mt-6 ">
+                    {task.taskTitle === "Complete User Profile" &&
+                    profileCompleted
+                      ? "Your profile is complete. View and update your details as needed."
+                      : task.description}
                   </p>
                 </div>
               ))}
@@ -147,22 +180,22 @@ export default function HomeDashPage() {
           </Card>
 
           {/* Today's Schedule */}
-          <Card className="border border-gray-200 bg-white rounded-lg">
+          <Card className="border-1 drop-shadow-sm border-medium-green rounded-lg">
             <CardHeader className="pb-4">
-              <CardTitle className="text-lg font-semibold dashboard-text-primary">
+              <CardTitle className="text-xl font-semibold dashboard-text-primary">
                 Today&#39;s Schedule
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-0 space-y-4">
-              <div className="border border-gray-200 p-4">
+              <div className="border border-medium-green p-4 rounded-md">
                 <div className="flex items-start gap-3 mb-3">
                   <Avatar className="h-12 w-12">
                     <AvatarImage
                       src={todayAppointment.avatar || "/placeholder.svg"}
-                      alt={todayAppointment.patientName}
+                      alt={todayAppointment.providerName}
                     />
                     <AvatarFallback className="bg-teal-100 text-teal-800">
-                      {todayAppointment.patientName
+                      {todayAppointment.providerName
                         .split(" ")
                         .map((n) => n[0])
                         .join("")}
@@ -170,20 +203,20 @@ export default function HomeDashPage() {
                   </Avatar>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-sm dashboard-text-secondary">
-                        Patient:
+                      <span className="text-lg dashboard-text-secondary">
+                        Provider:
                       </span>
-                      <span className="font-medium dashboard-text-primary">
-                        {todayAppointment.patientName}
+                      <span className="text-lg font-medium dashboard-text-primary">
+                        {todayAppointment.providerName}
                       </span>
                     </div>
                   </div>
                 </div>
 
-                <h3 className="font-semibold dashboard-text-primary mb-2">
+                <h3 className="text-lg font-semibold dashboard-text-primary mb-2">
                   {todayAppointment.service}
                 </h3>
-                <p className="text-sm dashboard-text-primary mb-3 leading-relaxed">
+                <p className="text-md dashboard-text-primary mb-3 leading-relaxed">
                   {todayAppointment.notes}
                 </p>
 
@@ -204,13 +237,13 @@ export default function HomeDashPage() {
           </Card>
         </div>
         {/* Weekly Schedule */}
-        <Card className="border border-gray-200 bg-white rounded-lg">
+        <Card className="border-1 drop-shadow-sm border-medium-green  rounded-lg">
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg font-semibold dashboard-text-primary">
+              <CardTitle className="text-xl font-semibold text-darkest-green">
                 Weekly Schedule
               </CardTitle>
-              <div className="text-sm dashboard-text-secondary border border-gray-300 px-3 py-1">
+              <div className="text-md dashboard-text-secondary border border-medium-green px-3 py-1">
                 {format(weekDays[0], "MMM d")} -{" "}
                 {format(weekDays[6], "MMM d, yyyy")}
               </div>

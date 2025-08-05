@@ -11,9 +11,7 @@ export interface UserProfileData {
 export const getUserProfile = async (
   userId: string
 ): Promise<UserProfileData | null> => {
-  console.log("UserProfile userId", userId);
   const isSignedIn = await isAuthenticated();
-  console.log("isSignedIn", isSignedIn);
   let userProfileData: UserProfileData | null = null;
 
   try {
