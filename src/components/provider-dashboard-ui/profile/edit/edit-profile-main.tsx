@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import { getCurrentUser } from "aws-amplify/auth";
 import { AlertCircle, Save, ArrowLeft, User, Briefcase, BookOpen, Camera } from "lucide-react";
-import { Card, CardContent } from "@/components/provider-dashboard-ui/card";
-import { Button } from "@/components/provider-dashboard-ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav";
 import { EditProfileHeader } from "@/components/provider-dashboard-ui/profile/edit/edit-profile-header";
 import { EditPersonalInfo } from "@/components/provider-dashboard-ui/profile/edit/edit-personal-info";
