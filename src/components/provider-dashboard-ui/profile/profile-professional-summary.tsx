@@ -9,11 +9,10 @@ interface ProfileProfessionalSummaryProps {
   profileData: ProviderProfileData;
 }
 
-export function ProfileProfessionalSummary({
-  profileData,
-}: ProfileProfessionalSummaryProps) {
+export function ProfileProfessionalSummary({ profileData }: ProfileProfessionalSummaryProps) {
   return (
     <div className="space-y-6">
+
       {/* Professional Bio */}
       <Card className="border border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
         <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
@@ -52,15 +51,14 @@ export function ProfileProfessionalSummary({
         </CardHeader>
         <CardContent className="p-6 space-y-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
             {/* Years of Experience */}
             <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
               <div className="flex items-center gap-3 mb-2">
                 <div className="p-2 bg-gray-100 rounded-lg">
                   <Clock className="h-4 w-4 text-gray-600" />
                 </div>
-                <p className="text-sm text-gray-500 font-medium uppercase tracking-wide">
-                  Experience
-                </p>
+                <p className="text-sm text-gray-500 font-medium uppercase tracking-wide">Experience</p>
               </div>
               <p className="font-bold text-gray-900 text-xl">
                 {profileData.yearsExperience || "Not specified"}
@@ -91,9 +89,7 @@ export function ProfileProfessionalSummary({
               <div className="p-2 bg-gray-100 rounded-lg">
                 <Clock className="h-4 w-4 text-gray-600" />
               </div>
-              <p className="text-sm text-gray-500 font-medium uppercase tracking-wide">
-                Response Time
-              </p>
+              <p className="text-sm text-gray-500 font-medium uppercase tracking-wide">Response Time</p>
             </div>
             <p className="font-bold text-gray-900 text-lg">
               {profileData.responseTime || "Not specified"}
@@ -113,8 +109,7 @@ export function ProfileProfessionalSummary({
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6">
-          {profileData.servicesOffered &&
-          profileData.servicesOffered.length > 0 ? (
+          {profileData.servicesOffered && profileData.servicesOffered.length > 0 ? (
             <div className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {profileData.servicesOffered.map((service, index) => (
@@ -136,4 +131,4 @@ export function ProfileProfessionalSummary({
       </Card>
     </div>
   );
-}
+} 

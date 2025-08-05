@@ -18,6 +18,7 @@ export function ProfileContactInfo({ profileData }: ProfileContactInfoProps) {
 
   return (
     <div className="space-y-6">
+
       {/* Contact Information */}
       <Card className="border border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
         <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100 border-b">
@@ -34,12 +35,8 @@ export function ProfileContactInfo({ profileData }: ProfileContactInfoProps) {
               <Mail className="h-4 w-4 text-gray-600" />
             </div>
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-1">
-                Email
-              </p>
-              <span className="text-gray-900 font-medium">
-                {profileData.email}
-              </span>
+              <p className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-1">Email</p>
+              <span className="text-gray-900 font-medium">{profileData.email}</span>
             </div>
           </div>
 
@@ -48,12 +45,8 @@ export function ProfileContactInfo({ profileData }: ProfileContactInfoProps) {
               <Phone className="h-4 w-4 text-gray-600" />
             </div>
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-1">
-                Phone
-              </p>
-              <span className="text-gray-900 font-medium">
-                {profileData.phone}
-              </span>
+              <p className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-1">Phone</p>
+              <span className="text-gray-900 font-medium">{profileData.phone}</span>
             </div>
           </div>
 
@@ -62,9 +55,7 @@ export function ProfileContactInfo({ profileData }: ProfileContactInfoProps) {
               <MapPin className="h-4 w-4 text-gray-600" />
             </div>
             <div className="flex-1">
-              <p className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-1">
-                Address
-              </p>
+              <p className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-1">Address</p>
               <div className="text-gray-900 font-medium">
                 {profileData.address && (
                   <div className="mb-1">{profileData.address}</div>
@@ -78,13 +69,9 @@ export function ProfileContactInfo({ profileData }: ProfileContactInfoProps) {
           </div>
 
           <div className="pt-4 border-t border-gray-200">
-            <p className="text-sm text-gray-600 mb-2 font-medium">
-              Preferred Contact Method
-            </p>
+            <p className="text-sm text-gray-600 mb-2 font-medium">Preferred Contact Method</p>
             <div className="p-3 bg-[#4A9B9B]/10 rounded-xl border border-[#4A9B9B]/20">
-              <p className="font-semibold text-[#4A9B9B]">
-                {profileData.preferredContact || "Not specified"}
-              </p>
+              <p className="font-semibold text-[#4A9B9B]">{profileData.preferredContact || "Not specified"}</p>
             </div>
           </div>
         </CardContent>
@@ -136,9 +123,7 @@ export function ProfileContactInfo({ profileData }: ProfileContactInfoProps) {
           <CardContent className="p-6 space-y-4">
             <div className="p-4 bg-gray-80 rounded-xl border border-gray-100">
               <div className="mb-3">
-                <p className="font-semibold text-gray-900 text-lg">
-                  {profileData.emergencyContactName}
-                </p>
+                <p className="font-semibold text-gray-900 text-lg">{profileData.emergencyContactName}</p>
                 <p className="text-sm text-red-600 font-medium bg-gray inline-block px-2 py-1 rounded-lg mt-1">
                   {profileData.emergencyContactRelationship}
                 </p>
@@ -147,9 +132,7 @@ export function ProfileContactInfo({ profileData }: ProfileContactInfoProps) {
                 <div className="p-2 bg-gray-100 rounded-lg">
                   <Phone className="h-4 w-4 text-gray-600" />
                 </div>
-                <span className="text-gray-900 font-medium">
-                  {profileData.emergencyContactPhone}
-                </span>
+                <span className="text-gray-900 font-medium">{profileData.emergencyContactPhone}</span>
               </div>
             </div>
           </CardContent>
@@ -157,4 +140,4 @@ export function ProfileContactInfo({ profileData }: ProfileContactInfoProps) {
       )}
     </div>
   );
-}
+} 
