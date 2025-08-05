@@ -1,8 +1,11 @@
 "use client";
 
-import { BookOpen, Plus, Trash2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { BookOpen, Plus, Trash2, Upload, Download, ExternalLink, Loader2, X } from "lucide-react";
 import { type ProviderProfileData } from "@/actions/providerProfileActions";
-import { useState } from "react";
+import { uploadCredentialsDocument, deleteFile, getFileUrl } from "@/utils/s3-upload";
+import { getCurrentUser } from "aws-amplify/auth";
+import toast from "react-hot-toast";
 
 interface EditCredentialsInfoProps {
     profileData: Partial<ProviderProfileData>;
@@ -42,10 +45,106 @@ const currentYear = new Date().getFullYear();
 const graduationYears = Array.from({ length: 50 }, (_, i) => (currentYear - i).toString());
 
 export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsInfoProps) {
-    // Store files for each entry by type and index
-    const [educationFiles, setEducationFiles] = useState<{ [key: number]: File[] }>({});
-    const [certificationFiles, setCertificationFiles] = useState<{ [key: number]: File[] }>({});
-    const [workExperienceFiles, setWorkExperienceFiles] = useState<{ [key: number]: File[] }>({});
+    // Upload states for each entry type and index
+    const [uploadingStates, setUploadingStates] = useState<{ [key: string]: boolean }>({});
+
+    // Document URLs for display (S3 signed URLs)
+    const [documentUrls, setDocumentUrls] = useState<{
+        [key: string]: { key: string; url: string; name: string; fileType: string }[]
+    }>({});
+
+    // Helper function to get document display info
+    const getFileType = (fileName: string): string => {
+        const extension = fileName.split('.').pop()?.toLowerCase() || '';
+        if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(extension)) return 'image';
+        if (['pdf'].includes(extension)) return 'pdf';
+        return 'document';
+    };
+
+    const extractFileNameFromS3Key = (s3Key: string): string => {
+        const parts = s3Key.split('/');
+        const fullFileName = parts[parts.length - 1];
+        // Remove timestamp prefix (format: timestamp-filename)
+        const match = fullFileName.match(/^\d+-(.+)$/);
+        return match ? match[1] : fullFileName;
+    };
+
+    // Load existing documents when component mounts or data changes
+    useEffect(() => {
+        const loadDocuments = async () => {
+            const newDocumentUrls: typeof documentUrls = {};
+
+            // Load education documents
+            if (profileData.education) {
+                for (let i = 0; i < profileData.education.length; i++) {
+                    const edu = profileData.education[i] as EducationEntry;
+                    if (edu.documents && edu.documents.length > 0) {
+                        const key = `education-${i}`;
+                        try {
+                            const urlPromises = edu.documents.map(async (s3Key) => {
+                                const url = await getFileUrl(s3Key, 3600);
+                                const name = extractFileNameFromS3Key(s3Key);
+                                const fileType = getFileType(name);
+                                return { key: s3Key, url: url || '', name, fileType };
+                            });
+                            const results = await Promise.all(urlPromises);
+                            newDocumentUrls[key] = results.filter(result => result.url);
+                        } catch (error) {
+                            console.error(`Error loading education documents for index ${i}:`, error);
+                        }
+                    }
+                }
+            }
+
+            // Load certification documents
+            if (profileData.certifications) {
+                for (let i = 0; i < profileData.certifications.length; i++) {
+                    const cert = profileData.certifications[i] as CertificationEntry;
+                    if (cert.documents && cert.documents.length > 0) {
+                        const key = `certification-${i}`;
+                        try {
+                            const urlPromises = cert.documents.map(async (s3Key) => {
+                                const url = await getFileUrl(s3Key, 3600);
+                                const name = extractFileNameFromS3Key(s3Key);
+                                const fileType = getFileType(name);
+                                return { key: s3Key, url: url || '', name, fileType };
+                            });
+                            const results = await Promise.all(urlPromises);
+                            newDocumentUrls[key] = results.filter(result => result.url);
+                        } catch (error) {
+                            console.error(`Error loading certification documents for index ${i}:`, error);
+                        }
+                    }
+                }
+            }
+
+            // Load work experience documents
+            if (profileData.workExperience) {
+                for (let i = 0; i < profileData.workExperience.length; i++) {
+                    const work = profileData.workExperience[i] as WorkExperienceEntry;
+                    if (work.documents && work.documents.length > 0) {
+                        const key = `workExperience-${i}`;
+                        try {
+                            const urlPromises = work.documents.map(async (s3Key) => {
+                                const url = await getFileUrl(s3Key, 3600);
+                                const name = extractFileNameFromS3Key(s3Key);
+                                const fileType = getFileType(name);
+                                return { key: s3Key, url: url || '', name, fileType };
+                            });
+                            const results = await Promise.all(urlPromises);
+                            newDocumentUrls[key] = results.filter(result => result.url);
+                        } catch (error) {
+                            console.error(`Error loading work experience documents for index ${i}:`, error);
+                        }
+                    }
+                }
+            }
+
+            setDocumentUrls(newDocumentUrls);
+        };
+
+        loadDocuments();
+    }, [profileData.education, profileData.certifications, profileData.workExperience]);
 
     // Education functions
     const addEducation = () => {
@@ -122,190 +221,510 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
     };
 
     // Handle file upload for education entries
-    const handleEducationFileUpload = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleEducationFileUpload = async (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
-        if (files) {
-            const newFiles = Array.from(files);
-            const updatedFiles = { ...educationFiles };
-            updatedFiles[index] = [...(updatedFiles[index] || []), ...newFiles];
-            setEducationFiles(updatedFiles);
+        if (!files || files.length === 0) return;
 
-            // Update form data with file names
-            const fileNames = updatedFiles[index].map(file => file.name);
-            const updatedEducation = [...(profileData.education || [])];
-            updatedEducation[index] = { ...updatedEducation[index], documents: fileNames };
-            onUpdate({ education: updatedEducation });
+        const uploadKey = `education-${index}`;
+        setUploadingStates(prev => ({ ...prev, [uploadKey]: true }));
+
+        try {
+            const user = await getCurrentUser();
+            if (!user?.userId) {
+                toast.error('User not found');
+                return;
+            }
+
+            const uploadPromises = Array.from(files).map(async (file) => {
+                // Validate file
+                if (file.size > 10 * 1024 * 1024) { // 10MB limit
+                    toast.error(`File ${file.name} is too large (max 10MB)`);
+                    return null;
+                }
+
+                const result = await uploadCredentialsDocument(file, 'education');
+                return result.success ? result.key : null;
+            });
+
+            const uploadResults = await Promise.all(uploadPromises);
+            const successfulUploads = uploadResults.filter(key => key !== null) as string[];
+
+            if (successfulUploads.length > 0) {
+                // Update form data with new S3 keys
+                const updatedEducation = [...(profileData.education || [])];
+                const currentDocuments = (updatedEducation[index]?.documents as string[]) || [];
+                updatedEducation[index] = {
+                    ...updatedEducation[index],
+                    documents: [...currentDocuments, ...successfulUploads]
+                };
+                onUpdate({ education: updatedEducation });
+
+                // Update document URLs for immediate display
+                const newDocumentUrls = await Promise.all(
+                    successfulUploads.map(async (s3Key) => {
+                        const url = await getFileUrl(s3Key, 3600);
+                        const name = extractFileNameFromS3Key(s3Key);
+                        const fileType = getFileType(name);
+                        return { key: s3Key, url: url || '', name, fileType };
+                    })
+                );
+
+                setDocumentUrls(prev => ({
+                    ...prev,
+                    [uploadKey]: [...(prev[uploadKey] || []), ...newDocumentUrls.filter(doc => doc.url)]
+                }));
+
+                toast.success(`${successfulUploads.length} document(s) uploaded successfully!`);
+            }
+        } catch (error) {
+            console.error('Error uploading education documents:', error);
+            toast.error('Failed to upload documents. Please try again.');
+        } finally {
+            setUploadingStates(prev => ({ ...prev, [uploadKey]: false }));
+            // Reset file input
+            event.target.value = '';
         }
     };
 
     // Handle file upload for certification entries
-    const handleCertificationFileUpload = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleCertificationFileUpload = async (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
-        if (files) {
-            const newFiles = Array.from(files);
-            const updatedFiles = { ...certificationFiles };
-            updatedFiles[index] = [...(updatedFiles[index] || []), ...newFiles];
-            setCertificationFiles(updatedFiles);
+        if (!files || files.length === 0) return;
 
-            // Update form data with file names
-            const fileNames = updatedFiles[index].map(file => file.name);
-            const updatedCertifications = [...(profileData.certifications || [])];
-            updatedCertifications[index] = { ...updatedCertifications[index], documents: fileNames };
-            onUpdate({ certifications: updatedCertifications });
+        const uploadKey = `certification-${index}`;
+        setUploadingStates(prev => ({ ...prev, [uploadKey]: true }));
+
+        try {
+            const user = await getCurrentUser();
+            if (!user?.userId) {
+                toast.error('User not found');
+                return;
+            }
+
+            const uploadPromises = Array.from(files).map(async (file) => {
+                // Validate file
+                if (file.size > 10 * 1024 * 1024) { // 10MB limit
+                    toast.error(`File ${file.name} is too large (max 10MB)`);
+                    return null;
+                }
+
+                const result = await uploadCredentialsDocument(file, 'certification');
+                return result.success ? result.key : null;
+            });
+
+            const uploadResults = await Promise.all(uploadPromises);
+            const successfulUploads = uploadResults.filter(key => key !== null) as string[];
+
+            if (successfulUploads.length > 0) {
+                // Update form data with new S3 keys
+                const updatedCertifications = [...(profileData.certifications || [])];
+                const currentDocuments = (updatedCertifications[index]?.documents as string[]) || [];
+                updatedCertifications[index] = {
+                    ...updatedCertifications[index],
+                    documents: [...currentDocuments, ...successfulUploads]
+                };
+                onUpdate({ certifications: updatedCertifications });
+
+                // Update document URLs for immediate display
+                const newDocumentUrls = await Promise.all(
+                    successfulUploads.map(async (s3Key) => {
+                        const url = await getFileUrl(s3Key, 3600);
+                        const name = extractFileNameFromS3Key(s3Key);
+                        const fileType = getFileType(name);
+                        return { key: s3Key, url: url || '', name, fileType };
+                    })
+                );
+
+                setDocumentUrls(prev => ({
+                    ...prev,
+                    [uploadKey]: [...(prev[uploadKey] || []), ...newDocumentUrls.filter(doc => doc.url)]
+                }));
+
+                toast.success(`${successfulUploads.length} document(s) uploaded successfully!`);
+            }
+        } catch (error) {
+            console.error('Error uploading certification documents:', error);
+            toast.error('Failed to upload documents. Please try again.');
+        } finally {
+            setUploadingStates(prev => ({ ...prev, [uploadKey]: false }));
+            // Reset file input
+            event.target.value = '';
         }
     };
 
     // Handle file upload for work experience entries
-    const handleWorkExperienceFileUpload = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleWorkExperienceFileUpload = async (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
-        if (files) {
-            const newFiles = Array.from(files);
-            const updatedFiles = { ...workExperienceFiles };
-            updatedFiles[index] = [...(updatedFiles[index] || []), ...newFiles];
-            setWorkExperienceFiles(updatedFiles);
+        if (!files || files.length === 0) return;
 
-            // Update form data with file names
-            const fileNames = updatedFiles[index].map(file => file.name);
-            const updatedWorkExperience = [...(profileData.workExperience || [])];
-            updatedWorkExperience[index] = { ...updatedWorkExperience[index], documents: fileNames };
-            onUpdate({ workExperience: updatedWorkExperience });
+        const uploadKey = `workExperience-${index}`;
+        setUploadingStates(prev => ({ ...prev, [uploadKey]: true }));
+
+        try {
+            const user = await getCurrentUser();
+            if (!user?.userId) {
+                toast.error('User not found');
+                return;
+            }
+
+            const uploadPromises = Array.from(files).map(async (file) => {
+                // Validate file
+                if (file.size > 10 * 1024 * 1024) { // 10MB limit
+                    toast.error(`File ${file.name} is too large (max 10MB)`);
+                    return null;
+                }
+
+                const result = await uploadCredentialsDocument(file, 'work-experience');
+                return result.success ? result.key : null;
+            });
+
+            const uploadResults = await Promise.all(uploadPromises);
+            const successfulUploads = uploadResults.filter(key => key !== null) as string[];
+
+            if (successfulUploads.length > 0) {
+                // Update form data with new S3 keys
+                const updatedWorkExperience = [...(profileData.workExperience || [])];
+                const currentDocuments = (updatedWorkExperience[index]?.documents as string[]) || [];
+                updatedWorkExperience[index] = {
+                    ...updatedWorkExperience[index],
+                    documents: [...currentDocuments, ...successfulUploads]
+                };
+                onUpdate({ workExperience: updatedWorkExperience });
+
+                // Update document URLs for immediate display
+                const newDocumentUrls = await Promise.all(
+                    successfulUploads.map(async (s3Key) => {
+                        const url = await getFileUrl(s3Key, 3600);
+                        const name = extractFileNameFromS3Key(s3Key);
+                        const fileType = getFileType(name);
+                        return { key: s3Key, url: url || '', name, fileType };
+                    })
+                );
+
+                setDocumentUrls(prev => ({
+                    ...prev,
+                    [uploadKey]: [...(prev[uploadKey] || []), ...newDocumentUrls.filter(doc => doc.url)]
+                }));
+
+                toast.success(`${successfulUploads.length} document(s) uploaded successfully!`);
+            }
+        } catch (error) {
+            console.error('Error uploading work experience documents:', error);
+            toast.error('Failed to upload documents. Please try again.');
+        } finally {
+            setUploadingStates(prev => ({ ...prev, [uploadKey]: false }));
+            // Reset file input
+            event.target.value = '';
         }
     };
 
     // Remove file functions
-    const removeEducationFile = (entryIndex: number, fileIndex: number) => {
-        const updatedFiles = { ...educationFiles };
-        if (updatedFiles[entryIndex]) {
-            updatedFiles[entryIndex] = updatedFiles[entryIndex].filter((_, i) => i !== fileIndex);
-            setEducationFiles(updatedFiles);
+    const removeEducationFile = async (entryIndex: number, s3Key: string) => {
+        try {
+            // Delete from S3
+            await deleteFile(s3Key);
+            console.log('✅ File deleted from S3:', s3Key);
 
             // Update form data
-            const fileNames = updatedFiles[entryIndex].map(file => file.name);
             const updatedEducation = [...(profileData.education || [])];
-            updatedEducation[entryIndex] = { ...updatedEducation[entryIndex], documents: fileNames };
+            const currentDocuments = (updatedEducation[entryIndex]?.documents as string[]) || [];
+            updatedEducation[entryIndex] = {
+                ...updatedEducation[entryIndex],
+                documents: currentDocuments.filter(key => key !== s3Key)
+            };
             onUpdate({ education: updatedEducation });
+
+            // Update local document URLs
+            const uploadKey = `education-${entryIndex}`;
+            setDocumentUrls(prev => ({
+                ...prev,
+                [uploadKey]: (prev[uploadKey] || []).filter(doc => doc.key !== s3Key)
+            }));
+
+            toast.success('Document removed successfully!');
+        } catch (error) {
+            console.error('Error removing education file:', error);
+            toast.error('Failed to remove document. Please try again.');
         }
     };
 
-    const removeCertificationFile = (entryIndex: number, fileIndex: number) => {
-        const updatedFiles = { ...certificationFiles };
-        if (updatedFiles[entryIndex]) {
-            updatedFiles[entryIndex] = updatedFiles[entryIndex].filter((_, i) => i !== fileIndex);
-            setCertificationFiles(updatedFiles);
+    const removeCertificationFile = async (entryIndex: number, s3Key: string) => {
+        try {
+            // Delete from S3
+            await deleteFile(s3Key);
+            console.log('✅ File deleted from S3:', s3Key);
 
             // Update form data
-            const fileNames = updatedFiles[entryIndex].map(file => file.name);
             const updatedCertifications = [...(profileData.certifications || [])];
-            updatedCertifications[entryIndex] = { ...updatedCertifications[entryIndex], documents: fileNames };
+            const currentDocuments = (updatedCertifications[entryIndex]?.documents as string[]) || [];
+            updatedCertifications[entryIndex] = {
+                ...updatedCertifications[entryIndex],
+                documents: currentDocuments.filter(key => key !== s3Key)
+            };
             onUpdate({ certifications: updatedCertifications });
+
+            // Update local document URLs
+            const uploadKey = `certification-${entryIndex}`;
+            setDocumentUrls(prev => ({
+                ...prev,
+                [uploadKey]: (prev[uploadKey] || []).filter(doc => doc.key !== s3Key)
+            }));
+
+            toast.success('Document removed successfully!');
+        } catch (error) {
+            console.error('Error removing certification file:', error);
+            toast.error('Failed to remove document. Please try again.');
         }
     };
 
-    const removeWorkExperienceFile = (entryIndex: number, fileIndex: number) => {
-        const updatedFiles = { ...workExperienceFiles };
-        if (updatedFiles[entryIndex]) {
-            updatedFiles[entryIndex] = updatedFiles[entryIndex].filter((_, i) => i !== fileIndex);
-            setWorkExperienceFiles(updatedFiles);
+    const removeWorkExperienceFile = async (entryIndex: number, s3Key: string) => {
+        try {
+            // Delete from S3
+            await deleteFile(s3Key);
+            console.log('✅ File deleted from S3:', s3Key);
 
             // Update form data
-            const fileNames = updatedFiles[entryIndex].map(file => file.name);
             const updatedWorkExperience = [...(profileData.workExperience || [])];
-            updatedWorkExperience[entryIndex] = { ...updatedWorkExperience[entryIndex], documents: fileNames };
+            const currentDocuments = (updatedWorkExperience[entryIndex]?.documents as string[]) || [];
+            updatedWorkExperience[entryIndex] = {
+                ...updatedWorkExperience[entryIndex],
+                documents: currentDocuments.filter(key => key !== s3Key)
+            };
             onUpdate({ workExperience: updatedWorkExperience });
+
+            // Update local document URLs
+            const uploadKey = `workExperience-${entryIndex}`;
+            setDocumentUrls(prev => ({
+                ...prev,
+                [uploadKey]: (prev[uploadKey] || []).filter(doc => doc.key !== s3Key)
+            }));
+
+            toast.success('Document removed successfully!');
+        } catch (error) {
+            console.error('Error removing work experience file:', error);
+            toast.error('Failed to remove document. Please try again.');
         }
     };
 
     // Clean up files when entries are removed
-    const handleRemoveEducation = (index: number) => {
+    const handleRemoveEducation = async (index: number) => {
+        // Delete all associated files from S3
+        const education = profileData.education?.[index] as EducationEntry;
+        if (education?.documents && education.documents.length > 0) {
+            try {
+                await Promise.all(education.documents.map(s3Key => deleteFile(s3Key)));
+                console.log('✅ All education files deleted from S3');
+            } catch (error) {
+                console.warn('⚠️ Some education files could not be deleted from S3:', error);
+            }
+        }
+
+        // Remove from form data
         removeEducation(index);
-        const updatedFiles = { ...educationFiles };
-        delete updatedFiles[index];
-        setEducationFiles(updatedFiles);
+
+        // Clean up local state
+        const uploadKey = `education-${index}`;
+        setDocumentUrls(prev => {
+            const newState = { ...prev };
+            delete newState[uploadKey];
+            return newState;
+        });
     };
 
-    const handleRemoveCertification = (index: number) => {
+    const handleRemoveCertification = async (index: number) => {
+        // Delete all associated files from S3
+        const certification = profileData.certifications?.[index] as CertificationEntry;
+        if (certification?.documents && certification.documents.length > 0) {
+            try {
+                await Promise.all(certification.documents.map(s3Key => deleteFile(s3Key)));
+                console.log('✅ All certification files deleted from S3');
+            } catch (error) {
+                console.warn('⚠️ Some certification files could not be deleted from S3:', error);
+            }
+        }
+
+        // Remove from form data
         removeCertification(index);
-        const updatedFiles = { ...certificationFiles };
-        delete updatedFiles[index];
-        setCertificationFiles(updatedFiles);
+
+        // Clean up local state
+        const uploadKey = `certification-${index}`;
+        setDocumentUrls(prev => {
+            const newState = { ...prev };
+            delete newState[uploadKey];
+            return newState;
+        });
     };
 
-    const handleRemoveWorkExperience = (index: number) => {
+    const handleRemoveWorkExperience = async (index: number) => {
+        // Delete all associated files from S3
+        const workExperience = profileData.workExperience?.[index] as WorkExperienceEntry;
+        if (workExperience?.documents && workExperience.documents.length > 0) {
+            try {
+                await Promise.all(workExperience.documents.map(s3Key => deleteFile(s3Key)));
+                console.log('✅ All work experience files deleted from S3');
+            } catch (error) {
+                console.warn('⚠️ Some work experience files could not be deleted from S3:', error);
+            }
+        }
+
+        // Remove from form data
         removeWorkExperience(index);
-        const updatedFiles = { ...workExperienceFiles };
-        delete updatedFiles[index];
-        setWorkExperienceFiles(updatedFiles);
+
+        // Clean up local state
+        const uploadKey = `workExperience-${index}`;
+        setDocumentUrls(prev => {
+            const newState = { ...prev };
+            delete newState[uploadKey];
+            return newState;
+        });
     };
 
-    // File upload component
+    // File upload component for S3
     const FileUploadSection = ({
         entryIndex,
-        files,
+        entryType,
         onFileUpload,
         onFileRemove,
         uploadId,
         title
     }: {
         entryIndex: number;
-        files: File[];
+        entryType: 'education' | 'certification' | 'workExperience';
         // eslint-disable-next-line no-unused-vars
         onFileUpload: (index: number, event: React.ChangeEvent<HTMLInputElement>) => void;
         // eslint-disable-next-line no-unused-vars
-        onFileRemove: (entryIndex: number, fileIndex: number) => void;
+        onFileRemove: (entryIndex: number, s3Key: string) => void;
         uploadId: string;
         title: string;
-    }) => (
-        <div className="mt-4 space-y-2">
-            <label className="text-sm font-medium text-gray-700">{title}</label>
+    }) => {
+        const uploadKey = `${entryType}-${entryIndex}`;
+        const isUploading = uploadingStates[uploadKey] || false;
+        const documents = documentUrls[uploadKey] || [];
 
-            {/* Upload Area */}
-            <div className="border border-dashed border-gray-300 rounded-lg p-3 text-center hover:border-indigo-500 transition-colors">
-                <input
-                    id={uploadId}
-                    type="file"
-                    multiple
-                    accept=".pdf,.png,.jpg,.jpeg"
-                    className="hidden"
-                    onChange={(e) => onFileUpload(entryIndex, e)}
-                />
-                <label htmlFor={uploadId} className="cursor-pointer">
-                    <svg className="mx-auto h-8 w-8 text-gray-400 mb-2" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    <span className="text-sm font-medium text-gray-700">Upload Documents</span>
-                    <span className="block text-xs text-gray-500 mt-1">PDF, PNG, JPG up to 10MB each</span>
-                </label>
-            </div>
+        return (
+            <div className="mt-4 space-y-3">
+                <label className="text-sm font-medium text-gray-700">{title}</label>
 
-            {/* Uploaded Files Display */}
-            {files && files.length > 0 && (
-                <div className="space-y-2">
-                    {files.map((file, fileIndex) => (
-                        <div key={fileIndex} className="flex items-center justify-between bg-gray-50 p-2 rounded-md">
-                            <div className="flex items-center">
-                                <svg className="w-4 h-4 text-gray-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
-                                </svg>
-                                <span className="text-sm text-gray-900">{file.name}</span>
-                                <span className="text-xs text-gray-500 ml-2">
-                                    ({(file.size / 1024 / 1024).toFixed(1)} MB)
-                                </span>
-                            </div>
-                            <button
-                                type="button"
-                                onClick={() => onFileRemove(entryIndex, fileIndex)}
-                                className="text-red-500 hover:text-red-700"
-                            >
-                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                                </svg>
-                            </button>
-                        </div>
-                    ))}
+                {/* Upload Area */}
+                <div className="border border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-indigo-500 transition-colors">
+                    <input
+                        id={uploadId}
+                        type="file"
+                        multiple
+                        accept=".pdf,.png,.jpg,.jpeg,.gif,.webp,.bmp,.svg"
+                        className="hidden"
+                        onChange={(e) => onFileUpload(entryIndex, e)}
+                        disabled={isUploading}
+                    />
+                    <label htmlFor={uploadId} className={`cursor-pointer ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                        {isUploading ? (
+                            <Loader2 className="mx-auto h-8 w-8 text-indigo-500 mb-2 animate-spin" />
+                        ) : (
+                            <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
+                        )}
+                        <span className="text-sm font-medium text-gray-700">
+                            {isUploading ? 'Uploading...' : 'Upload Documents'}
+                        </span>
+                        <span className="block text-xs text-gray-500 mt-1">
+                            PDF, PNG, JPG, GIF, WebP up to 10MB each
+                        </span>
+                    </label>
                 </div>
-            )}
-        </div>
-    );
+
+                {/* Existing Documents Display */}
+                {documents.length > 0 && (
+                    <div className="space-y-2">
+                        <p className="text-xs font-medium text-gray-600">Uploaded Documents ({documents.length})</p>
+                        <div className="grid grid-cols-1 gap-3">
+                            {documents.map((doc, docIndex) => (
+                                <div key={doc.key} className="group bg-white border border-gray-200 rounded-lg p-3 hover:border-gray-300 transition-colors">
+                                    <div className="flex items-start gap-3">
+                                        {/* File preview/icon */}
+                                        <div className="flex-shrink-0">
+                                            {doc.fileType === 'image' ? (
+                                                <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-200">
+                                                    <img
+                                                        src={doc.url}
+                                                        alt={doc.name}
+                                                        className="w-full h-full object-cover"
+                                                        onError={(e) => {
+                                                            const target = e.target as HTMLImageElement;
+                                                            target.style.display = 'none';
+                                                            const parent = target.parentElement;
+                                                            if (parent) {
+                                                                parent.innerHTML = `
+                                                                    <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                                                                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                                                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
+                                                                        </svg>
+                                                                    </div>
+                                                                `;
+                                                            }
+                                                        }}
+                                                    />
+                                                </div>
+                                            ) : doc.fileType === 'pdf' ? (
+                                                <div className="w-12 h-12 bg-red-50 rounded-lg flex items-center justify-center border border-red-200">
+                                                    <svg className="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
+                                                    </svg>
+                                                </div>
+                                            ) : (
+                                                <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center border border-blue-200">
+                                                    <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
+                                                    </svg>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* File info */}
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-sm font-medium text-gray-900 truncate">{doc.name}</p>
+                                            <p className="text-xs text-gray-500 capitalize">{doc.fileType} document</p>
+                                        </div>
+
+                                        {/* Actions */}
+                                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <button
+                                                type="button"
+                                                onClick={() => window.open(doc.url, '_blank')}
+                                                className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                                                title="View document"
+                                            >
+                                                <ExternalLink className="w-4 h-4" />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const link = document.createElement('a');
+                                                    link.href = doc.url;
+                                                    link.download = doc.name;
+                                                    link.click();
+                                                }}
+                                                className="p-1.5 text-green-600 hover:bg-green-50 rounded-md transition-colors"
+                                                title="Download document"
+                                            >
+                                                <Download className="w-4 h-4" />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => onFileRemove(entryIndex, doc.key)}
+                                                className="p-1.5 text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                                                title="Remove document"
+                                            >
+                                                <X className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
+    };
 
     return (
         <div className="h-full bg-white rounded-lg border shadow-sm overflow-hidden">
@@ -416,7 +835,7 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                                         {/* File Upload for this Education Entry */}
                                         <FileUploadSection
                                             entryIndex={index}
-                                            files={educationFiles[index] || []}
+                                            entryType="education"
                                             onFileUpload={handleEducationFileUpload}
                                             onFileRemove={removeEducationFile}
                                             uploadId={`education-files-${index}`}
@@ -526,7 +945,7 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                                         {/* File Upload for this Certification Entry */}
                                         <FileUploadSection
                                             entryIndex={index}
-                                            files={certificationFiles[index] || []}
+                                            entryType="certification"
                                             onFileUpload={handleCertificationFileUpload}
                                             onFileRemove={removeCertificationFile}
                                             uploadId={`certification-files-${index}`}
@@ -636,7 +1055,7 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                                         {/* File Upload for this Work Experience Entry */}
                                         <FileUploadSection
                                             entryIndex={index}
-                                            files={workExperienceFiles[index] || []}
+                                            entryType="workExperience"
                                             onFileUpload={handleWorkExperienceFileUpload}
                                             onFileRemove={removeWorkExperienceFile}
                                             uploadId={`work-files-${index}`}
