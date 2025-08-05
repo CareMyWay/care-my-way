@@ -5,9 +5,11 @@ import { useState, useEffect } from "react";
 import { z } from "zod";
 import ISO6391 from "iso-639-1";
 import Image from "next/image";
+import toast from "react-hot-toast";
 import { useFormSection } from "@/hooks/useFormSection";
 import { FormSectionHeader } from "./form-section-header";
 import { PersonalContactData, BaseFormSectionProps } from "@/types/provider-profile-form";
+import { uploadProfilePhoto, deleteFile, extractS3Key, getFileUrl } from "@/utils/s3-upload";
 
 const personalContactSchema = z.object({
     firstName: z.string().min(1, "First name is required"),
@@ -46,6 +48,7 @@ export function PersonalContactSection({
         defaultValues?.languages || []
     );
     const [profilePhotoPreview, setProfilePhotoPreview] = useState<string>("");
+    const [isUploadingPhoto, setIsUploadingPhoto] = useState<boolean>(false);
     const [languageFilter, setLanguageFilter] = useState<string>("");
     const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState<boolean>(false);
 
@@ -108,16 +111,56 @@ export function PersonalContactSection({
     };
 
     // Handle profile photo upload
-    const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const result = e.target?.result as string;
-                setProfilePhotoPreview(result);
-                setValue("profilePhoto", result);
-            };
-            reader.readAsDataURL(file);
+        if (!file) return;
+
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error("File size must be less than 5MB");
+            return;
+        }
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            toast.error("Please select an image file");
+            return;
+        }
+
+        setIsUploadingPhoto(true);
+
+        try {
+            // Delete previous photo if exists
+            const currentPhoto = defaultValues?.profilePhoto;
+            if (currentPhoto) {
+                const s3Key = extractS3Key(currentPhoto);
+                if (s3Key) {
+                    await deleteFile(s3Key);
+                }
+            }
+
+            // Upload new photo to S3
+            const uploadResult = await uploadProfilePhoto(file);
+
+            if (uploadResult.success && uploadResult.key) {
+                // Set preview for immediate display
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    setProfilePhotoPreview(e.target?.result as string);
+                };
+                reader.readAsDataURL(file);
+
+                // Store S3 key in form data
+                setValue("profilePhoto", uploadResult.key);
+                toast.success("Profile photo uploaded successfully!");
+            } else {
+                toast.error(uploadResult.error || "Failed to upload photo");
+            }
+        } catch (error) {
+            console.error('Photo upload error:', error);
+            toast.error("Failed to upload photo");
+        } finally {
+            setIsUploadingPhoto(false);
         }
     };
 
@@ -125,6 +168,30 @@ export function PersonalContactSection({
     useEffect(() => {
         setValue("languages", selectedLanguages);
     }, [selectedLanguages, setValue]);
+
+    // Load existing profile photo from S3
+    useEffect(() => {
+        const loadExistingPhoto = async () => {
+            if (defaultValues?.profilePhoto) {
+                try {
+                    // If it's already a full URL (data URL or HTTP URL), use it directly
+                    if (defaultValues.profilePhoto.startsWith('data:') || defaultValues.profilePhoto.startsWith('http')) {
+                        setProfilePhotoPreview(defaultValues.profilePhoto);
+                    } else {
+                        // Otherwise, it's an S3 key, get the signed URL
+                        const signedUrl = await getFileUrl(defaultValues.profilePhoto);
+                        if (signedUrl) {
+                            setProfilePhotoPreview(signedUrl);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error loading existing profile photo:', error);
+                }
+            }
+        };
+
+        loadExistingPhoto();
+    }, [defaultValues?.profilePhoto]);
 
     return (
         <div className="h-full bg-white rounded-lg border shadow-sm overflow-hidden">
@@ -424,25 +491,30 @@ export function PersonalContactSection({
                                     accept="image/*"
                                     onChange={handlePhotoUpload}
                                     className="hidden"
+                                    disabled={isUploadingPhoto}
                                 />
                                 <label
                                     htmlFor="profilePhoto"
-                                    className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4A9B9B] cursor-pointer"
+                                    className={`inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4A9B9B] ${isUploadingPhoto ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
                                 >
-                                    <svg
-                                        className="w-4 h-4 mr-2"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                                        />
-                                    </svg>
-                                    {profilePhotoPreview ? "Change Photo" : "Upload Photo"}
+                                    {isUploadingPhoto ? (
+                                        <div className="w-4 h-4 mr-2 animate-spin rounded-full border-2 border-gray-300 border-t-[#4A9B9B]"></div>
+                                    ) : (
+                                        <svg
+                                            className="w-4 h-4 mr-2"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                            />
+                                        </svg>
+                                    )}
+                                    {isUploadingPhoto ? "Uploading..." : (profilePhotoPreview ? "Change Photo" : "Upload Photo")}
                                 </label>
                                 <p className="text-xs text-gray-500 mt-1">
                                     JPG or PNG only (max 5MB)
