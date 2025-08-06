@@ -18,6 +18,9 @@ export default async function Home() {
         <FeaturesSection />
         <MeetOurProviders />
         <HowItWorks />
+        <ContactSection />
+        {/* Temp location */}
+        <Footer />
       </main>
     </div>
   );
