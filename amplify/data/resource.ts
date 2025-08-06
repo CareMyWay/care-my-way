@@ -190,6 +190,54 @@ const schema = a
         allow.authenticated().to(["create", "read", "update"]),
         allow.group("Admin"),
       ]),
+
+      // Notification schema for booking requests and updates
+      Notification: a
+      .model({
+        id: a.string().required(),
+        recipientId: a.string().required(),
+        recipientType: a.string().required(),
+        senderId: a.string().required(),
+        senderName: a.string().required(),
+        type: a.string().required(),
+        title: a.string().required(),
+        message: a.string().required(),
+        bookingId: a.string(),
+        isRead: a.boolean().default(false),
+        isActioned: a.boolean().default(false),
+        expiresAt: a.datetime(),
+        metadata: a.json(),
+      })
+      .secondaryIndexes((index) => [
+        index("recipientId"),
+        index("bookingId"),
+      ])
+      .authorization((allow) => [
+        allow.authenticated().to(["create", "read", "update", "delete"]),
+        allow.group("Admin"),
+      ]),
+
+      //Message schema for chat between client and provider
+      Message: a
+      .model({
+        id: a.string().required(),
+        bookingId: a.string().required(),
+        senderId: a.string().required(),
+        senderName: a.string().required(),
+        recipientId: a.string().required(),
+        recipientName: a.string().required(),
+        content: a.string().required(),
+        timestamp: a.datetime().required(),
+      })
+      .secondaryIndexes((index) => [
+        index("bookingId"),
+        index("recipientId"),
+        index("senderId"),
+      ])
+      .authorization((allow) => [
+        allow.authenticated().to(["create", "read"]),
+        allow.group("Admin").to(["create", "read", "update", "delete"]),
+      ]),
   })
   .authorization((allow) => [allow.resource(postConfirmation)]);
 
