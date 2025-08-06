@@ -6,6 +6,8 @@ import MarketplaceSearchBar from "@/components/marketplace/search-bar";
 import MarketplaceFilter from "@/components/marketplace/filter";
 import {fetchProviders} from "@/actions/fetchProviderMarketPlace";
 import Loading from "@/app/loading";
+import LanguageSwitcher from "@/components/language-switch/LanguageSwhitcher";
+import { useTranslation } from "react-i18next";
 
 export interface Provider {
   name: string;
@@ -22,6 +24,7 @@ const landingProviders: Provider[] = [];
 // MOCK_PROVIDERS.push(... demo_data);
 
 export default function MarketplaceFrame() {
+  const { t } = useTranslation();
   const thisSliderMinValue = 0;
   const thisSliderMaxValue = 200;
 
@@ -103,6 +106,7 @@ export default function MarketplaceFrame() {
 
   return (
     <div className="relative">
+      <LanguageSwitcher    />
 
       {/* Back to Top Button */}
       {(showBackToTopButton || true) && (
@@ -139,7 +143,7 @@ export default function MarketplaceFrame() {
                 pageDoneLoading ? (
                   fetchedProviders.length === 0 ? (
                     <div className="text-center text-darkest-green text-lg py-10">
-                      There are no matching providers for your search.
+                      {t("There are no matching providers for your search")}
                     </div>
                   ) : (
                     fetchedProviders.map((provider, idx) => (

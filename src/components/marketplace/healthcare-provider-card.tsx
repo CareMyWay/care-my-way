@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import OrangeButton from "@/components/buttons/orange-button";
+import {useTranslation} from "react-i18next";
 
 interface HealthcareProviderCardProps {
   id?: string;
@@ -37,6 +38,8 @@ const HealthcareProviderCard: React.FC<HealthcareProviderCardProps> = ({
     return `${nameParts[0].charAt(0)}${nameParts[nameParts.length - 1].charAt(0)}`.toUpperCase();
   };
 
+  const { t } = useTranslation();
+
   return (
     <div className="flex flex-col md:flex-row justify-between items-stretch gap-6 p-6 bg-primary-white rounded-xl border border-gray-200 shadow-md hover:shadow-lg transition-shadow">
       {/* Left Section: Image and Info */}
@@ -66,18 +69,18 @@ const HealthcareProviderCard: React.FC<HealthcareProviderCardProps> = ({
               {name}
             </h3>
             <p className="text-body4-size text-medium-green">
-              {title} | {location}
+              {t(title)} | {location.split(",").map(r => {return t(r.trim());}).join(", ")}
             </p>
             <p className="text-body4-size text-darkest-green mt-1">
-              {experience} experience
+              {t(experience)} {t("experience")}
             </p>
             <p className="text-body4-size text-darkest-green">
-              {languages.join(", ")}
+              {languages.map(r => {return t(r);}).join(", ")}
             </p>
 
             {/* Services */}
             <p className="text-body4-size text-darkest-green mt-2 mb-1 font-semibold">
-              Services:
+              {t("Services")}:
             </p>
             <div className="flex flex-wrap gap-2">
               {services.slice(0, 3).map((service, idx) => (
@@ -85,12 +88,12 @@ const HealthcareProviderCard: React.FC<HealthcareProviderCardProps> = ({
                   key={idx}
                   className="bg-light-green text-darkest-green px-3 py-1 rounded-full text-sm"
                 >
-                  {service}
+                  {t(service)}
                 </span>
               ))}
               {services.length > 3 && (
                 <span className="text-body4-size text-medium-green font-medium">
-                  more...
+                  {t("more")}...
                 </span>
               )}
             </div>
@@ -101,7 +104,7 @@ const HealthcareProviderCard: React.FC<HealthcareProviderCardProps> = ({
       {/* Right Section: Rate and Button */}
       <div className="flex flex-col md:items-end md:text-right text-left items-start justify-between shrink-0 mt-6 md:mt-0 w-full md:w-40">
         <div className="text-body4-size text-darkest-green">
-          <span className="block text-sm">Starting From</span>
+          <span className="block text-sm">{t("Starting From")}</span>
           <span className="text-h5-size font-bold">${hourlyRate}/hr</span>
         </div>
         <OrangeButton
@@ -109,7 +112,7 @@ const HealthcareProviderCard: React.FC<HealthcareProviderCardProps> = ({
           href={profileLink}
           className="!px-4 !py-1.5 !text-md mt-4"
         >
-          View Profile
+          {t("View Profile")}
         </OrangeButton>
       </div>
     </div>

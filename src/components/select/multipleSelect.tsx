@@ -1,38 +1,46 @@
 import {Input} from "@/components/inputs/input";
 import React, {useState} from "react";
+import {useTranslation} from "react-i18next";
 
 const MultipleSelect = (
   {
     subTitle,
-    itemOptions,
+    itemOptionLabels,
+    itemOptionValues,
     selectedItems,
     setSelectedItems
   }: {
     subTitle: string;
-    itemOptions: string[];
+    itemOptionLabels: string[];
+    itemOptionValues: string[];
     selectedItems: string[];
     setSelectedItems: React.Dispatch<React.SetStateAction<string[]>>;
   } ) => {
+
+  const { t } = useTranslation();
 
   // const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   const [itemFilter, setItemFilter] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
-  const optionsPool = [... itemOptions];
+  const optionsLabelPool = [... itemOptionLabels];
+  const optionsValuePool = [... itemOptionValues];
 
-  const updSelectedItems = (itemName : string , isAdding: boolean) =>{
+  const updSelectedItems = (itemLabel : string , isAdding: boolean) =>{
 
-    if (selectedItems.some((item) => itemName === item)){
+    const itemValue = optionsValuePool[optionsLabelPool.findIndex(option => option === itemLabel)];
+
+    if (selectedItems.some((item) => itemValue === item)){
       if(isAdding){
         return;
       } else {
-        const index = selectedItems.indexOf(itemName);
+        const index = selectedItems.indexOf(itemValue);
         setSelectedItems(selectedItems.filter((_, idx) => idx !== index));
       }
     } else {
       if(isAdding){
-        setSelectedItems([...selectedItems, itemName.trim()]);
+        setSelectedItems([...selectedItems, itemValue.trim()]);
       } else {
         return;
       }
@@ -45,7 +53,7 @@ const MultipleSelect = (
     setTimeout(() => setIsOpen(false), 250);
   };
 
-  const filteredOptions = optionsPool.filter(option =>
+  const filteredOptions = optionsLabelPool.filter(option =>
     option.toLowerCase().includes(itemFilter.toLowerCase())
   );
 
@@ -56,21 +64,21 @@ const MultipleSelect = (
         {
           selectedItems.map((item, index) => (
             <div key={index} className="px-4 py-1 rounded-full border border-input-border-gray text-darkest-green text-sm hover:bg-gray-200">
-              {item}
+              {t(item)}
               <button
                 className="font-extrabold text-[23px] ml-2 align-middle"
-                onClick={() => updSelectedItems(item, false)}>&times;</button>
+                onClick={() => updSelectedItems(t(item), false)}>&times;</button>
             </div>
           ))
         }
       </div>
 
 
-      <div className="relative w-64">
+      <div className="relative">
         <Input
           type="text"
           value={itemFilter}
-          placeholder="Search languages"
+          placeholder={t("Search")}
           className="w-full h-[41px]"
           onFocus={() => setIsOpen(true)}
           onBlur={handleBlur}

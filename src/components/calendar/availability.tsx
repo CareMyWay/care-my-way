@@ -1,16 +1,22 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import GreenButton from "@/components/buttons/green-button";
+import {useTranslation} from "react-i18next";
+//import "/i18n";
 
 export function Availability({subtitle, selectedAvailability, setSelectedAvailability}:{
   subtitle: string;
   selectedAvailability: string[];
   setSelectedAvailability: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
+  const { t } = useTranslation();
+
   const DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   const DAYS_LEAP = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  const DAYS_OF_THE_WEEK = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
-  const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+  const DAYS_OF_THE_WEEK = [t("MON"), t("TUE"), t("WED"), t("THU"), t("FRI"), t("SAT"), t("SUN")];
+  const MONTHS = [
+    t("JAN"), t("FEB"), t("MAR"), t("APR"), t("MAY"), t("JUN"),
+    t("JUL"), t("AUG"), t("SEP"), t("OCT"), t("NOV"), t("DEC")];
   const HOURS_AM = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"];
   const HOURS_PM = ["12", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"];
 
@@ -88,7 +94,7 @@ export function Availability({subtitle, selectedAvailability, setSelectedAvailab
           ))
         }
       </div>
-      <GreenButton className={"mt-6"} variant={"action"} onClick={() => {setIsOpen(!isOpen);}} >Add</GreenButton>
+      <GreenButton className={"mt-6"} variant={"action"} onClick={() => {setIsOpen(!isOpen);}} >{t("Add")}</GreenButton>
       {isOpen && <div className={"absolute z-10 bg-primary-white border mt-1 overflow-y-auto shadow-md"}>
         <div className={" min-w-[650px]  shadow-amber-500 shadow-[2px]"}>
           <div className={" text-[40px] font-bold  pt-2.5 px-2.5 pb-1.25 flex justify-between bg-light-green"}>
@@ -162,7 +168,7 @@ export function Availability({subtitle, selectedAvailability, setSelectedAvailab
           </div>
         </div>
         <div className={"w-[100%] flex justify-end mt-4"}>
-          <GreenButton className={"m-3"} variant={"action"} onClick={handleSave}>Save</GreenButton>
+          <GreenButton className={"m-3"} variant={"action"} onClick={handleSave}>{t("Save")}</GreenButton>
         </div>
       </div>}
     </div>
