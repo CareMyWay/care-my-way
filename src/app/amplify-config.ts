@@ -5,7 +5,10 @@ import { Amplify } from "aws-amplify";
 
 import amplifyconfig from "@/../amplify_outputs.json";
 
-Amplify.configure(amplifyconfig as ResourcesConfig, { ssr: true });
+// Configure Amplify with SSR support
+Amplify.configure(amplifyconfig as ResourcesConfig, { 
+  ssr: true
+});
 
 export default function ConfigureAmplifyClientSide() {
   return null;
