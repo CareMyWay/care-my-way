@@ -1,15 +1,18 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Input } from "@/components/ui/input";
 import { translateText } from "@/components/translate/translateText";
 
 const MarketplaceSearchBar = () => {
+  useEffect(() => {
+    translateText().then(() => {console.log("text translated");});
+  }, []);
   return (
     <>
       {/* Navigation Bar */}
       <div className="flex-col ml-5">
         <div>
           <h3 className="font-bold text-h4-size md:text-h3-size text-darkest-green mb-2">
-            {translateText("Find a Caregiver", "zh-cn", "en-us")}
+            Find a Caregiver
           </h3>
         </div>
         <div className="sm:flex-col sm:items-center lg:flex lg:flex-row lg:justify-between mb-6">

@@ -28,7 +28,7 @@
     "@stripe/react-stripe-js": "^3.7.0",
     "@stripe/stripe-js": "^7.4.0",
     "@types/aws-sdk": "^0.0.42",
-    "aws-amplify": "^6.15.0",
+    "aws-amplify": "^6.15.5",
     "aws-sdk": "^2.1692.0",
     "bad-words": "^4.0.0",
     "class-variance-authority": "^0.7.1",

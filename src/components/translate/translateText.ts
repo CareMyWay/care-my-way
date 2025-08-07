@@ -1,20 +1,25 @@
-import { Predictions } from "@aws-amplify/predictions";
+import { TranslateClient } from "@aws-sdk/client-translate";
+import { TranslateTextCommand, } from "@aws-sdk/client-translate";
 
-export async function translateText(textToTranslate: string, targetLanguage: string, sourceLanguage: string = "en") {
-  try {
-    const result = await Predictions.convert({
-      translateText: {
-        source: {
-          text: textToTranslate,
-          language: sourceLanguage // Optional: defaults configured on amplifyconfiguration.json
-        },
-        targetLanguage: targetLanguage
-      }
-    });
-    console.log("Translated text:", result.text);
-    return result.text;
-  } catch (err) {
-    console.error("Translation error:", err);
-    return null;
-  }
-}
+const translateClient = new TranslateClient({
+  region: "canada-central", // your region
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!, // load from env
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+  },
+});
+
+export const translateText = async (
+  text: string,
+  targetLanguage: string,
+  sourceLanguage: string = "en"
+): Promise<string> => {
+  const command = new TranslateTextCommand({
+    Text: text,
+    SourceLanguageCode: sourceLanguage,
+    TargetLanguageCode: targetLanguage,
+  });
+
+  const response = await translateClient.send(command);
+  return response.TranslatedText || "";
+};
