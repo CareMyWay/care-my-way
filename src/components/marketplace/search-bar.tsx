@@ -1,5 +1,6 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
+import { translateText } from "@/components/translate/translateText";
 
 const MarketplaceSearchBar = () => {
   return (
@@ -8,7 +9,7 @@ const MarketplaceSearchBar = () => {
       <div className="flex-col ml-5">
         <div>
           <h3 className="font-bold text-h4-size md:text-h3-size text-darkest-green mb-2">
-            Find a Caregiver
+            {translateText("Find a Caregiver", "zh-cn", "en-us")}
           </h3>
         </div>
         <div className="sm:flex-col sm:items-center lg:flex lg:flex-row lg:justify-between mb-6">
