@@ -1,7 +1,7 @@
 "use client";
 
 import { generateClient } from "aws-amplify/data";
-import type { Schema } from "amplify/data/resource";
+import type { Schema } from "@/../amplify/data/resource";
 import { v4 as uuidv4 } from "uuid";
 
 const client = generateClient<Schema>();
@@ -25,19 +25,20 @@ export class NotificationService {
     try {
       const notificationId = uuidv4();
       
+      // Use type assertion to work with current generated types
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const result = await (client.models.Notification.create as any)({
         id: notificationId,
-        recipientId: [params.recipientId],
-        recipientType: [params.recipientType],
-        senderId: [params.senderId],
-        senderName: [params.senderName],
-        type: [params.type],
-        title: [params.title],
-        message: [params.message],
-        bookingId: [params.bookingId || ""],
-        metadata: [params.metadata ? JSON.stringify(params.metadata) : ""],
-        expiresAt: [params.expiresAt?.toISOString() || ""],
+        recipientId: params.recipientId,
+        recipientType: params.recipientType,
+        senderId: params.senderId,
+        senderName: params.senderName,
+        type: params.type,
+        title: params.title,
+        message: params.message,
+        ...(params.bookingId && { bookingId: params.bookingId }),
+        ...(params.metadata && { metadata: params.metadata }),
+        ...(params.expiresAt && { expiresAt: params.expiresAt }),
       });
 
       return result;

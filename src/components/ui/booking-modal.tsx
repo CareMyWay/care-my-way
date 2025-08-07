@@ -14,7 +14,7 @@ import type { Schema } from "amplify/data/resource";
 import { v4 as uuidv4 } from "uuid";
 import { getCurrentUser } from "@aws-amplify/auth";
 import { DialogDescription } from "@radix-ui/react-dialog";
-import Calendar from "./ui/calendar";
+import Calendar from "./calendar";
 import { formatDateKey } from "@/utils/calendar-date-format";
 
 const client = generateClient<Schema>();

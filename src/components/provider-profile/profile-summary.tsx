@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import OrangeButton from "../buttons/orange-button";
 import { type ProviderProfileData } from "@/actions/providerProfileActions";
-import BookingModal from "../booking-modal";
+import BookingModal from "../ui/booking-modal";
 import { useRouter } from "next/navigation";
 import { getCurrentUser } from "@aws-amplify/auth";
 

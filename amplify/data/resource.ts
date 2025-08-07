@@ -182,7 +182,7 @@ const schema = a
         time: a.string().required(),
         clientId: a.string().required(),
         clientName: a.string(),
-        bookingStatus: a.string().default("For Confirmation"),
+        bookingStatus: a.string().default("Pending"),
         duration: a.float().required(),
         totalCost: a.float(),
       })

@@ -1,85 +1,178 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CheckCircle, XCircle, Clock, MapPin } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/./components/ui/card";
 import { TopNav } from "@/components/provider-dashboard-ui/dashboard-topnav";
 import GreenButton from "@/components/buttons/green-button";
 import OrangeButton from "@/components/buttons/orange-button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-//import AppointmentsPage from "./appointments/page";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
 import { format, startOfWeek, addDays, isSameDay, isSameMonth } from "date-fns";
 import { Button } from "@/components/ui/button";
+import { getCurrentUser } from "@aws-amplify/auth";
+import { BookingService } from "@/services/bookingService";
+
+interface BookingRequest {
+  id: string;
+  clientId: string;
+  clientName: string | string[];
+  date: string;
+  time: string;
+  duration: number;
+  totalCost: number;
+  service: string;
+  createdAt: string;
+}
+
+interface CurrentUser {
+  userId: string;
+  username?: string;
+}
 
 export default function HomeDashPage() {
-  const [notifications, setNotifications] = useState([
-    {
-      id: "1",
-      type: "appointment_request",
-      patientName: "Sarah Johnson",
-      service: "Physical Therapy",
-      date: "2024-01-15",
-      time: "10:00 AM",
-      message:
-        "Requests Personal Care Assistance on March 1, 2025 @ 8:00 AM - 10:00 AM",
-      timestamp: "2 hours ago",
-    },
-    {
-      id: "2",
-      type: "appointment_request",
-      patientName: "Michael Chen",
-      service: "Occupational Therapy",
-      date: "2024-01-16",
-      time: "2:00 PM",
-      message: "Recurring appointment request for weekly OT sessions",
-      timestamp: "4 hours ago",
-    },
-  ]);
-
-  const todayAppointment = {
-    patientName: "Emma Wilson",
-    service: "Physical Therapy",
-    time: "9:00 AM - 11:00 AM",
-    date: "Jan 15, 2025",
-    location: "123 Main Street, San Francisco, CA",
-    notes:
-      "Focus on mobility exercises and strength training. Patient has been making good progress with previous sessions.",
-    avatar: "/placeholder.svg?height=60&width=60",
-  };
-
-  const handleAcceptAppointment = (notificationId: string) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
-  };
-
-  const handleDeclineAppointment = (notificationId: string) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
-  };
-
+  const [bookingRequests, setBookingRequests] = useState<BookingRequest[]>([]);
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [notificationCount, setNotificationCount] = useState(0);
   const [currentDate, setCurrentDate] = useState(new Date());
+
+  // Fetch current user and their booking requests
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const user = await getCurrentUser();
+        setCurrentUser(user);
+        
+        // Fetch pending bookings for this provider
+        const pendingBookings = await BookingService.getPendingBookingsForProvider(user.userId);
+        
+        const requests = pendingBookings.map(booking => ({
+          id: booking.id,
+          clientId: booking.clientId,
+          clientName: Array.isArray(booking.clientName) ? booking.clientName[0] : booking.clientName || "Unknown",
+          date: booking.date,
+          time: booking.time,
+          duration: booking.duration,
+          totalCost: booking.totalCost,
+          service: "Care Services", // You can make this dynamic
+          createdAt: booking.createdAt,
+        }));
+        
+        setBookingRequests(requests);
+        setNotificationCount(requests.length);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleAcceptAppointment = async (requestId: string) => {
+    if (!currentUser) return;
+    
+    try {
+      await BookingService.acceptBooking(
+        requestId,
+        currentUser.userId,
+        currentUser.username || "Provider"
+      );
+      
+      // Remove from pending requests and update count
+      setBookingRequests(prev => {
+        const updated = prev.filter(req => req.id !== requestId);
+        setNotificationCount(updated.length);
+        return updated;
+      });
+      
+      // Show success message or toast here
+      console.log("Booking accepted successfully!");
+    } catch (error) {
+      console.error("Error accepting booking:", error);
+      // Show error message here
+    }
+  };
+
+  const handleDeclineAppointment = async (requestId: string) => {
+    if (!currentUser) return;
+    
+    try {
+      await BookingService.declineBooking(
+        requestId,
+        currentUser.userId,
+        currentUser.username || "Provider"
+      );
+      
+      // Remove from pending requests and update count
+      setBookingRequests(prev => {
+        const updated = prev.filter(req => req.id !== requestId);
+        setNotificationCount(updated.length);
+        return updated;
+      });
+      
+      // Show success message or toast here
+      console.log("Booking declined successfully!");
+    } catch (error) {
+      console.error("Error declining booking:", error);
+      // Show error message here
+    }
+  };
+
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 }); // Sunday
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
-  // Example: appointments for the current week (replace with your real data)
+  // Example appointments - you can replace this with real data
   const appointments = [
     {
       id: "1",
-      date: "2025-06-25",
+      date: "2025-08-05",
       time: "9:00 AM - 10:00 AM",
       client: "Emma Wilson",
       color: "bg-blue-200",
     },
     {
       id: "2",
-      date: "2025-06-27",
+      date: "2025-08-07",
       time: "2:00 PM - 3:00 PM",
       client: "Carol Cooper",
       color: "bg-green-200",
     },
   ];
 
+  // Example today's appointment
+  const todayAppointment = {
+    patientName: "Emma Wilson",
+    service: "Physical Therapy",
+    time: "9:00 AM - 11:00 AM",
+    date: "Aug 3, 2025",
+    location: "123 Main Street, San Francisco, CA",
+    notes:
+      "Focus on mobility exercises and strength training. Patient has been making good progress with previous sessions.",
+    avatar: "/placeholder.svg?height=60&width=60",
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-lg">Loading...</div>
+      </div>
+    );
+  }
+
   return (
     <>
-      <TopNav title="My Dashboard" notificationCount={notifications.length} />
+      <TopNav title="My Dashboard" notificationCount={notificationCount} />
 
       <div className="space-y-6">
         {/* Weekly Schedule */}
@@ -152,67 +245,83 @@ export default function HomeDashPage() {
           </CardContent>
         </Card>
 
-        {/* Appoitment requests */}
+        {/* Appointment Requests */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Notifications */}
+          {/* Booking Requests */}
           <Card className="border border-gray-200 bg-white rounded-lg">
             <CardHeader className="pb-4">
               <CardTitle className="text-lg font-semibold dashboard-text-primary">
                 Appointment Requests
               </CardTitle>
+              {bookingRequests.length > 0 && (
+                <p className="text-sm text-amber-600 mt-2">
+                  ⏰ You must respond within 24 hours of receiving these requests
+                </p>
+              )}
             </CardHeader>
             <CardContent className="pt-0 space-y-4">
-              {notifications.map((notification) => (
-                <div
-                  key={notification.id}
-                  className="bg-[var(--color-lightest-green,#e6f4f1)] p-4"
-                >
-                  <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-3 gap-2">
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-8 w-8">
-                        <AvatarFallback className="bg-white text-teal-700">
-                          {notification.patientName
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        {/* <div className="font-medium text-[var(--color-darkest-green)]">Booking Request</div> */}
-                        <div className="font-medium text-[var(--color-darkest-green)]">
-                          {notification.patientName}
+              {bookingRequests.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  <Clock className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                  <p>No pending appointment requests</p>
+                  <p className="text-sm">New requests will appear here</p>
+                </div>
+              ) : (
+                bookingRequests.map((request) => (
+                  <div
+                    key={request.id}
+                    className="bg-[var(--color-lightest-green,#e6f4f1)] p-4 rounded-lg"
+                  >
+                    <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-3 gap-2">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-8 w-8">
+                          <AvatarFallback className="bg-white text-teal-700">
+                            {typeof request.clientName === "string"
+                              ? request.clientName
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")
+                              : "?"}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="font-medium text-[var(--color-darkest-green)]">
+                            {request.clientName}
+                          </div>
+                          <div className="text-sm text-gray-600">
+                            ${request.totalCost} for {request.duration} hours
+                          </div>
                         </div>
                       </div>
+                      {/* Action buttons */}
+                      <div className="flex flex-col w-full md:w-auto md:flex-row gap-2">
+                        <GreenButton
+                          variant="action"
+                          onClick={() => handleAcceptAppointment(request.id)}
+                          aria-label="Accept"
+                        >
+                          <CheckCircle className="h-3 w-3" />
+                          <span className="text-xs">Accept</span>
+                        </GreenButton>
+                        <OrangeButton
+                          variant="action"
+                          onClick={() => handleDeclineAppointment(request.id)}
+                          aria-label="Decline"
+                        >
+                          <XCircle className="h-3 w-3" />
+                          <span className="text-xs">Decline</span>
+                        </OrangeButton>
+                      </div>
                     </div>
-                    {/* Buttons: stack vertically on mobile */}
-                    <div className="flex flex-col w-full md:w-auto md:flex-row gap-2 md:gap-2">
-                      <GreenButton
-                        // size="sm"
-                        variant="action"
-                        // label="Accept"
-                        onClick={() => handleAcceptAppointment(notification.id)}
-                        aria-label="Accept"
-                      >
-                        <CheckCircle className="h-3 w-3" />
-                        <span className="text-xs text-center">Accept</span>
-                      </GreenButton>
-                      <OrangeButton
-                        variant="action"
-                        onClick={() =>
-                          handleDeclineAppointment(notification.id)
-                        }
-                        aria-label="Decline"
-                      >
-                        <XCircle className="h-3 w-3" />
-                        <span className="text-xs text-center">Decline</span>
-                      </OrangeButton>
+                    <div className="text-sm text-[var(--color-darkest-green)]">
+                      <p className="font-medium">
+                        {request.date} at {request.time}
+                      </p>
+                      <p>Requested {request.service} for {request.duration} hours</p>
                     </div>
                   </div>
-                  <p className="text-sm text-[var(--color-darkest-green)]">
-                    {notification.message}
-                  </p>
-                </div>
-              ))}
+                ))
+              )}
             </CardContent>
           </Card>
 

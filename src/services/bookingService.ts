@@ -1,7 +1,7 @@
 "use client";
 
 import { generateClient } from "aws-amplify/data";
-import type { Schema } from "amplify/data/resource";
+import type { Schema } from "@/../amplify/data/resource";
 import { NotificationService } from "./notificationService";
 
 const client = generateClient<Schema>();
@@ -25,9 +25,7 @@ export class BookingService {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await (client.models.Booking.update as any)({
         id: bookingId,
-        bookingStatus: ["Accepted"],
-        providerResponse: ["accepted"],
-        responseAt: [new Date().toISOString()],
+        bookingStatus: "Confirmed",
       });
 
       // Create notification for client
@@ -68,9 +66,7 @@ export class BookingService {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await (client.models.Booking.update as any)({
         id: bookingId,
-        bookingStatus: ["Declined"],
-        providerResponse: ["declined"],
-        responseAt: [new Date().toISOString()],
+        bookingStatus: "Declined",
       });
 
       // Create notification for client
