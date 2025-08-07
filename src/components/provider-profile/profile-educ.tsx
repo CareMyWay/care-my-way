@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { type ProviderProfileData } from "@/actions/providerProfileActions";
+import { getFileUrl } from "@/utils/s3-upload";
 
 interface ProfileEducationProps {
     profileData: ProviderProfileData;
@@ -10,6 +11,7 @@ interface EducationEntry {
     degree?: string;
     fieldOfStudy?: string;
     graduationYear?: string;
+    documents?: string[];
 }
 
 interface CertificationEntry {
@@ -18,6 +20,7 @@ interface CertificationEntry {
     issueDate?: string;
     expiryDate?: string;
     licenseNumber?: string;
+    documents?: string[];
 }
 
 interface WorkExperienceEntry {
@@ -26,7 +29,144 @@ interface WorkExperienceEntry {
     startDate?: string;
     endDate?: string;
     description?: string;
+    documents?: string[];
 }
+
+// Document display component
+const DocumentList: React.FC<{ documents: string[] }> = ({ documents }) => {
+    const [documentUrls, setDocumentUrls] = useState<Record<string, string>>({});
+
+    useEffect(() => {
+        const loadDocuments = async () => {
+            const urlPromises = documents.map(async (s3Key) => {
+                try {
+                    const url = await getFileUrl(s3Key, 3600); // 1 hour expiry
+                    return { s3Key, url };
+                } catch (error) {
+                    console.error('Error loading document:', error);
+                    return { s3Key, url: null };
+                }
+            });
+
+            const results = await Promise.all(urlPromises);
+            const urlMap = results.reduce((acc, { s3Key, url }) => {
+                if (url) acc[s3Key] = url;
+                return acc;
+            }, {} as Record<string, string>);
+
+            setDocumentUrls(urlMap);
+        };
+
+        if (documents.length > 0) {
+            loadDocuments();
+        }
+    }, [documents]);
+
+    const getFileType = (s3Key: string): 'image' | 'pdf' | 'document' => {
+        const extension = s3Key.split('.').pop()?.toLowerCase();
+        if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'].includes(extension || '')) {
+            return 'image';
+        }
+        if (extension === 'pdf') {
+            return 'pdf';
+        }
+        return 'document';
+    };
+
+    const getFileName = (s3Key: string): string => {
+        return s3Key.split('/').pop()?.split('-').slice(1).join('-') || s3Key;
+    };
+
+    const FilePreview: React.FC<{ s3Key: string; url: string }> = ({ s3Key, url }) => {
+        const fileType = getFileType(s3Key);
+        const fileName = getFileName(s3Key);
+
+        if (fileType === 'image') {
+            return (
+                <img
+                    src={url}
+                    alt={fileName}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                        console.log('Image failed to load:', url);
+                        (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                />
+            );
+        }
+
+        if (fileType === 'pdf') {
+            return (
+                <svg className="w-8 h-8 text-red-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8.267 14.68c-.184 0-.308.018-.372.036v1.178c.076.018.171.023.302.023.479 0 .774-.242.774-.651 0-.366-.254-.586-.704-.586zm3.487.012c-.2 0-.33.018-.407.036v2.61c.077.018.201.018.313.018.817.006 1.349-.444 1.349-1.396.006-.83-.479-1.268-1.255-1.268z" />
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM9.498 16.19c-.309.29-.765.42-1.296.42a2.23 2.23 0 0 1-.308-.018v1.426H7v-3.936A7.558 7.558 0 0 1 8.219 14c.557 0 .953.106 1.22.319.254.202.426.533.426.923-.001.392-.131.723-.367.948zm3.807 1.355c-.42.349-1.059.515-1.84.515-.468 0-.799-.03-1.024-.06v-3.917A7.947 7.947 0 0 1 11.66 14c.757 0 1.249.136 1.633.426.415.308.675.799.675 1.504 0 .763-.279 1.29-.663 1.615zM17 14.77h-1.532v.911H16.9v.734h-1.432v1.604h-.906V14.03H17v.74zM14 9h-1V4l5 5h-4z" />
+                </svg>
+            );
+        }
+
+        return (
+            <svg className="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+        );
+    };
+
+    if (documents.length === 0) {
+        return null;
+    }
+
+    return (
+        <div className="mt-3">
+            <p className="text-sm font-medium text-gray-700 mb-2">Attachments:</p>
+            <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
+                {documents.map((s3Key) => {
+                    const url = documentUrls[s3Key];
+                    const fileName = getFileName(s3Key);
+
+                    return (
+                        <div key={s3Key} className="group relative bg-gray-50 rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+                            <div className="aspect-square flex items-center justify-center p-2">
+                                {url ? (
+                                    <FilePreview s3Key={s3Key} url={url} />
+                                ) : (
+                                    <div className="animate-pulse bg-gray-200 w-8 h-8 rounded"></div>
+                                )}
+                            </div>
+
+                            {/* Action buttons on hover */}
+                            <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                                {url && (
+                                    <>
+                                        <button
+                                            onClick={() => window.open(url, '_blank')}
+                                            className="bg-blue-500 hover:bg-blue-600 text-white p-1 rounded-full shadow-sm"
+                                            title="View"
+                                        >
+                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            </svg>
+                                        </button>
+                                        <a
+                                            href={url}
+                                            download={fileName}
+                                            className="bg-green-500 hover:bg-green-600 text-white p-1 rounded-full shadow-sm"
+                                            title="Download"
+                                        >
+                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                            </svg>
+                                        </a>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+};
 
 const ProfileEducation: React.FC<ProfileEducationProps> = ({ profileData }) => {
     const education = (profileData.education as EducationEntry[]) || [];
@@ -93,6 +233,11 @@ const ProfileEducation: React.FC<ProfileEducationProps> = ({ profileData }) => {
                                             {work.description}
                                         </div>
                                     )}
+
+                                    {/* Work Experience Documents */}
+                                    {work.documents && work.documents.length > 0 && (
+                                        <DocumentList documents={work.documents} />
+                                    )}
                                 </div>
                             </div>
                         ))}
@@ -138,6 +283,11 @@ const ProfileEducation: React.FC<ProfileEducationProps> = ({ profileData }) => {
                                             )}
                                         </div>
                                     </div>
+
+                                    {/* Education Documents */}
+                                    {edu.documents && edu.documents.length > 0 && (
+                                        <DocumentList documents={edu.documents} />
+                                    )}
                                 </div>
                             </div>
                         ))}
@@ -186,6 +336,11 @@ const ProfileEducation: React.FC<ProfileEducationProps> = ({ profileData }) => {
                                             )}
                                         </div>
                                     </div>
+
+                                    {/* Certification Documents */}
+                                    {cert.documents && cert.documents.length > 0 && (
+                                        <DocumentList documents={cert.documents} />
+                                    )}
                                 </div>
                             </div>
                         ))}
