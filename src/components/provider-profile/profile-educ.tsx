@@ -43,7 +43,7 @@ const DocumentList: React.FC<{ documents: string[] }> = ({ documents }) => {
                     const url = await getFileUrl(s3Key, 3600); // 1 hour expiry
                     return { s3Key, url };
                 } catch (error) {
-                    console.error('Error loading document:', error);
+                    console.error("Error loading document:", error);
                     return { s3Key, url: null };
                 }
             });
@@ -62,40 +62,40 @@ const DocumentList: React.FC<{ documents: string[] }> = ({ documents }) => {
         }
     }, [documents]);
 
-    const getFileType = (s3Key: string): 'image' | 'pdf' | 'document' => {
-        const extension = s3Key.split('.').pop()?.toLowerCase();
-        if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'].includes(extension || '')) {
-            return 'image';
+    const getFileType = (s3Key: string): "image" | "pdf" | "document" => {
+        const extension = s3Key.split(".").pop()?.toLowerCase();
+        if (["jpg", "jpeg", "png", "gif", "bmp", "webp", "svg"].includes(extension || "")) {
+            return "image";
         }
-        if (extension === 'pdf') {
-            return 'pdf';
+        if (extension === "pdf") {
+            return "pdf";
         }
-        return 'document';
+        return "document";
     };
 
     const getFileName = (s3Key: string): string => {
-        return s3Key.split('/').pop()?.split('-').slice(1).join('-') || s3Key;
+        return s3Key.split("/").pop()?.split("-").slice(1).join("-") || s3Key;
     };
 
     const FilePreview: React.FC<{ s3Key: string; url: string }> = ({ s3Key, url }) => {
         const fileType = getFileType(s3Key);
         const fileName = getFileName(s3Key);
 
-        if (fileType === 'image') {
+        if (fileType === "image") {
             return (
                 <img
                     src={url}
                     alt={fileName}
                     className="w-full h-full object-cover"
                     onError={(e) => {
-                        console.log('Image failed to load:', url);
-                        (e.target as HTMLImageElement).style.display = 'none';
+                        console.log("Image failed to load:", url);
+                        (e.target as HTMLImageElement).style.display = "none";
                     }}
                 />
             );
         }
 
-        if (fileType === 'pdf') {
+        if (fileType === "pdf") {
             return (
                 <svg className="w-8 h-8 text-red-600" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M8.267 14.68c-.184 0-.308.018-.372.036v1.178c.076.018.171.023.302.023.479 0 .774-.242.774-.651 0-.366-.254-.586-.704-.586zm3.487.012c-.2 0-.33.018-.407.036v2.61c.077.018.201.018.313.018.817.006 1.349-.444 1.349-1.396.006-.83-.479-1.268-1.255-1.268z" />
@@ -138,7 +138,7 @@ const DocumentList: React.FC<{ documents: string[] }> = ({ documents }) => {
                                 {url && (
                                     <>
                                         <button
-                                            onClick={() => window.open(url, '_blank')}
+                                            onClick={() => window.open(url, "_blank")}
                                             className="bg-blue-500 hover:bg-blue-600 text-white p-1 rounded-full shadow-sm"
                                             title="View"
                                         >

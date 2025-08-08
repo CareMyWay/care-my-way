@@ -39,7 +39,7 @@ export function ProfileHeader({ profileData }: ProfileHeaderProps) {
       }
 
       // Check if it's already a full URL (starts with http)
-      if (profileData.profilePhoto.startsWith('http')) {
+      if (profileData.profilePhoto.startsWith("http")) {
         setProfilePhotoUrl(profileData.profilePhoto);
         return;
       }
@@ -54,7 +54,7 @@ export function ProfileHeader({ profileData }: ProfileHeaderProps) {
           setProfilePhotoUrl("/placeholder.svg?height=160&width=160");
         }
       } catch (error) {
-        console.error('Error loading profile photo:', error);
+        console.error("Error loading profile photo:", error);
         setProfilePhotoUrl("/placeholder.svg?height=160&width=160");
       } finally {
         setIsLoadingPhoto(false);

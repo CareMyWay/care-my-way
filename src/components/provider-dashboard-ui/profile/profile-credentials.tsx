@@ -54,14 +54,14 @@ function DocumentList({ documents, title }: { documents: string[]; title: string
           const url = await getFileUrl(s3Key, 3600); // 1 hour expiry
           const name = extractFileNameFromS3Key(s3Key);
           const fileType = getFileType(name);
-          return { key: s3Key, url: url || '', name, fileType };
+          return { key: s3Key, url: url || "", name, fileType };
         });
 
         const results = await Promise.all(urlPromises);
-        console.log('📄 Document processing results:', results);
+        console.log("📄 Document processing results:", results);
         setDocumentUrls(results.filter(result => result.url)); // Only keep successful ones
       } catch (error) {
-        console.error('Error loading document URLs:', error);
+        console.error("Error loading document URLs:", error);
       } finally {
         setIsLoading(false);
       }
@@ -72,7 +72,7 @@ function DocumentList({ documents, title }: { documents: string[]; title: string
 
   // Helper function to extract filename from S3 key
   const extractFileNameFromS3Key = (s3Key: string): string => {
-    const parts = s3Key.split('/');
+    const parts = s3Key.split("/");
     const fullFileName = parts[parts.length - 1];
     // Remove timestamp prefix (format: timestamp-filename)
     const match = fullFileName.match(/^\d+-(.+)$/);
@@ -81,10 +81,10 @@ function DocumentList({ documents, title }: { documents: string[]; title: string
 
   // Helper function to determine file type
   const getFileType = (fileName: string): string => {
-    const extension = fileName.split('.').pop()?.toLowerCase() || '';
-    if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(extension)) return 'image';
-    if (['pdf'].includes(extension)) return 'pdf';
-    return 'document';
+    const extension = fileName.split(".").pop()?.toLowerCase() || "";
+    if (["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg"].includes(extension)) return "image";
+    if (["pdf"].includes(extension)) return "pdf";
+    return "document";
   };
 
   if (!documents || documents.length === 0) return null;
@@ -95,7 +95,7 @@ function DocumentList({ documents, title }: { documents: string[]; title: string
         <FileText className="h-4 w-4 text-gray-600" />
         <span className="font-medium text-gray-700 text-sm">{title}</span>
         <Badge variant="secondary" className="text-xs">
-          {documents.length} file{documents.length !== 1 ? 's' : ''}
+          {documents.length} file{documents.length !== 1 ? "s" : ""}
         </Badge>
       </div>
 
@@ -118,7 +118,7 @@ function DocumentList({ documents, title }: { documents: string[]; title: string
                   className="h-8 w-8 p-0 bg-white/90 backdrop-blur-sm border-0 shadow-md hover:bg-white hover:shadow-lg"
                   onClick={(e) => {
                     e.stopPropagation();
-                    window.open(doc.url, '_blank');
+                    window.open(doc.url, "_blank");
                   }}
                   title="View document"
                 >
@@ -130,7 +130,7 @@ function DocumentList({ documents, title }: { documents: string[]; title: string
                   className="h-8 w-8 p-0 bg-white/90 backdrop-blur-sm border-0 shadow-md hover:bg-white hover:shadow-lg"
                   onClick={(e) => {
                     e.stopPropagation();
-                    const link = document.createElement('a');
+                    const link = document.createElement("a");
                     link.href = doc.url;
                     link.download = doc.name;
                     link.click();
@@ -142,21 +142,21 @@ function DocumentList({ documents, title }: { documents: string[]; title: string
               </div>
 
               {/* Document Preview */}
-              <div className="cursor-pointer" onClick={() => window.open(doc.url, '_blank')}>
+              <div className="cursor-pointer" onClick={() => window.open(doc.url, "_blank")}>
                 <div className="aspect-[4/3] w-full bg-gray-50 flex items-center justify-center overflow-hidden">
-                  {doc.fileType === 'image' ? (
+                  {doc.fileType === "image" ? (
                     <img
                       src={doc.url}
                       alt={doc.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       onLoad={() => {
-                        console.log('✅ Image loaded successfully:', doc.name, doc.fileType, doc.url);
+                        console.log("✅ Image loaded successfully:", doc.name, doc.fileType, doc.url);
                       }}
                       onError={(e) => {
-                        console.log('❌ Image failed to load:', doc.name, doc.fileType, doc.url);
+                        console.log("❌ Image failed to load:", doc.name, doc.fileType, doc.url);
                         // Fallback to file icon if image fails to load
                         const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
+                        target.style.display = "none";
                         const parent = target.parentElement;
                         if (parent) {
                           parent.innerHTML = `
@@ -172,7 +172,7 @@ function DocumentList({ documents, title }: { documents: string[]; title: string
                         }
                       }}
                     />
-                  ) : doc.fileType === 'pdf' ? (
+                  ) : doc.fileType === "pdf" ? (
                     <div className="w-full h-full flex items-center justify-center bg-red-50">
                       <div className="text-center">
                         <svg className="w-16 h-16 text-red-600 mx-auto mb-3" fill="currentColor" viewBox="0 0 20 20">

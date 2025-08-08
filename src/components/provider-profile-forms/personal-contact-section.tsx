@@ -122,7 +122,7 @@ export function PersonalContactSection({
         }
 
         // Validate file type
-        if (!file.type.startsWith('image/')) {
+        if (!file.type.startsWith("image/")) {
             toast.error("Please select an image file");
             return;
         }
@@ -157,7 +157,7 @@ export function PersonalContactSection({
                 toast.error(uploadResult.error || "Failed to upload photo");
             }
         } catch (error) {
-            console.error('Photo upload error:', error);
+            console.error("Photo upload error:", error);
             toast.error("Failed to upload photo");
         } finally {
             setIsUploadingPhoto(false);
@@ -175,7 +175,7 @@ export function PersonalContactSection({
             if (defaultValues?.profilePhoto) {
                 try {
                     // If it's already a full URL (data URL or HTTP URL), use it directly
-                    if (defaultValues.profilePhoto.startsWith('data:') || defaultValues.profilePhoto.startsWith('http')) {
+                    if (defaultValues.profilePhoto.startsWith("data:") || defaultValues.profilePhoto.startsWith("http")) {
                         setProfilePhotoPreview(defaultValues.profilePhoto);
                     } else {
                         // Otherwise, it's an S3 key, get the signed URL
@@ -185,7 +185,7 @@ export function PersonalContactSection({
                         }
                     }
                 } catch (error) {
-                    console.error('Error loading existing profile photo:', error);
+                    console.error("Error loading existing profile photo:", error);
                 }
             }
         };
@@ -495,7 +495,7 @@ export function PersonalContactSection({
                                 />
                                 <label
                                     htmlFor="profilePhoto"
-                                    className={`inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4A9B9B] ${isUploadingPhoto ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+                                    className={`inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4A9B9B] ${isUploadingPhoto ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
                                 >
                                     {isUploadingPhoto ? (
                                         <div className="w-4 h-4 mr-2 animate-spin rounded-full border-2 border-gray-300 border-t-[#4A9B9B]"></div>

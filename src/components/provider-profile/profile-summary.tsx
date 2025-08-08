@@ -38,7 +38,7 @@ const ProfileSummary: React.FC<ProfileSummaryProps> = ({ profileData }) => {
             }
 
             // Check if it's already a full URL (starts with http)
-            if (profileData.profilePhoto.startsWith('http')) {
+            if (profileData.profilePhoto.startsWith("http")) {
                 setProfilePhotoUrl(profileData.profilePhoto);
                 return;
             }
@@ -53,7 +53,7 @@ const ProfileSummary: React.FC<ProfileSummaryProps> = ({ profileData }) => {
                     setProfilePhotoUrl(null);
                 }
             } catch (error) {
-                console.error('Error loading profile photo:', error);
+                console.error("Error loading profile photo:", error);
                 setProfilePhotoUrl(null);
             } finally {
                 setIsLoadingPhoto(false);

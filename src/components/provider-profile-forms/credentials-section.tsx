@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { useFormSection } from "@/hooks/useFormSection";
 import { FormSectionHeader } from "./form-section-header";
 import { CredentialsData, BaseFormSectionProps } from "@/types/provider-profile-form";
-import { uploadCredentialsDocument, deleteFile, extractS3Key } from "@/utils/s3-upload";
+import { uploadCredentialsDocument, deleteFile } from "@/utils/s3-upload";
 
 // Individual entry schemas - all optional
 const educationEntrySchema = z.object({
@@ -142,7 +142,7 @@ export function CredentialsSection({
                     return null;
                 }
 
-                const result = await uploadCredentialsDocument(file, 'education');
+                const result = await uploadCredentialsDocument(file, "education");
                 return result.success ? result.key! : null;
             });
 
@@ -159,8 +159,8 @@ export function CredentialsSection({
                 toast.success(`${validKeys.length} file(s) uploaded successfully!`);
             }
         } catch (error) {
-            console.error('Error uploading education files:', error);
-            toast.error('Failed to upload files');
+            console.error("Error uploading education files:", error);
+            toast.error("Failed to upload files");
         } finally {
             setUploadingStates(prev => ({ ...prev, [uploadKey]: false }));
         }
@@ -182,7 +182,7 @@ export function CredentialsSection({
                     return null;
                 }
 
-                const result = await uploadCredentialsDocument(file, 'certification');
+                const result = await uploadCredentialsDocument(file, "certification");
                 return result.success ? result.key! : null;
             });
 
@@ -199,8 +199,8 @@ export function CredentialsSection({
                 toast.success(`${validKeys.length} file(s) uploaded successfully!`);
             }
         } catch (error) {
-            console.error('Error uploading certification files:', error);
-            toast.error('Failed to upload files');
+            console.error("Error uploading certification files:", error);
+            toast.error("Failed to upload files");
         } finally {
             setUploadingStates(prev => ({ ...prev, [uploadKey]: false }));
         }
@@ -222,7 +222,7 @@ export function CredentialsSection({
                     return null;
                 }
 
-                const result = await uploadCredentialsDocument(file, 'work-experience');
+                const result = await uploadCredentialsDocument(file, "work-experience");
                 return result.success ? result.key! : null;
             });
 
@@ -239,8 +239,8 @@ export function CredentialsSection({
                 toast.success(`${validKeys.length} file(s) uploaded successfully!`);
             }
         } catch (error) {
-            console.error('Error uploading work experience files:', error);
-            toast.error('Failed to upload files');
+            console.error("Error uploading work experience files:", error);
+            toast.error("Failed to upload files");
         } finally {
             setUploadingStates(prev => ({ ...prev, [uploadKey]: false }));
         }
@@ -256,7 +256,7 @@ export function CredentialsSection({
             try {
                 await deleteFile(s3Key);
             } catch (error) {
-                console.error('Error deleting file from S3:', error);
+                console.error("Error deleting file from S3:", error);
             }
 
             // Update local state
@@ -277,7 +277,7 @@ export function CredentialsSection({
             try {
                 await deleteFile(s3Key);
             } catch (error) {
-                console.error('Error deleting file from S3:', error);
+                console.error("Error deleting file from S3:", error);
             }
 
             // Update local state
@@ -298,7 +298,7 @@ export function CredentialsSection({
             try {
                 await deleteFile(s3Key);
             } catch (error) {
-                console.error('Error deleting file from S3:', error);
+                console.error("Error deleting file from S3:", error);
             }
 
             // Update local state
@@ -334,7 +334,7 @@ export function CredentialsSection({
 
     // Helper function to extract filename from S3 key
     const getFileNameFromS3Key = (s3Key: string): string => {
-        const parts = s3Key.split('/');
+        const parts = s3Key.split("/");
         const fullFileName = parts[parts.length - 1];
         // Remove timestamp prefix (format: timestamp-filename)
         const match = fullFileName.match(/^\d+-(.+)$/);
@@ -357,7 +357,7 @@ export function CredentialsSection({
         uploadId: string;
         title: string;
     }) => {
-        const isUploading = uploadingStates[uploadId.replace('-files', '')];
+        const isUploading = uploadingStates[uploadId.replace("-files", "")];
 
         return (
             <div className="mt-4 space-y-2">
@@ -374,7 +374,7 @@ export function CredentialsSection({
                         onChange={(e) => onFileUpload(entryIndex, e)}
                         disabled={isUploading}
                     />
-                    <label htmlFor={uploadId} className={`cursor-pointer ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                    <label htmlFor={uploadId} className={`cursor-pointer ${isUploading ? "opacity-50 cursor-not-allowed" : ""}`}>
                         {isUploading ? (
                             <div className="flex flex-col items-center">
                                 <div className="w-8 h-8 mx-auto mb-2 animate-spin rounded-full border-2 border-gray-300 border-t-[#4A9B9B]"></div>

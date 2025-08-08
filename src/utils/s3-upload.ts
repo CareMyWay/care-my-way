@@ -1,5 +1,5 @@
-import { uploadData, getUrl, remove } from 'aws-amplify/storage';
-import { getCurrentUser } from 'aws-amplify/auth';
+import { uploadData, getUrl, remove } from "aws-amplify/storage";
+import { getCurrentUser } from "aws-amplify/auth";
 
 export interface UploadResult {
     success: boolean;
@@ -16,7 +16,7 @@ export async function uploadProfilePhoto(file: File): Promise<UploadResult> {
         const user = await getCurrentUser();
         const fileKey = `profile-photos/${user.userId}/avatar-${Date.now()}-${file.name}`;
 
-        const result = await uploadData({
+        await uploadData({
             key: fileKey,
             data: file,
             options: {
@@ -42,10 +42,10 @@ export async function uploadProfilePhoto(file: File): Promise<UploadResult> {
             key: fileKey
         };
     } catch (error) {
-        console.error('Error uploading profile photo:', error);
+        console.error("Error uploading profile photo:", error);
         return {
             success: false,
-            error: error instanceof Error ? error.message : 'Upload failed'
+            error: error instanceof Error ? error.message : "Upload failed"
         };
     }
 }
@@ -58,7 +58,7 @@ export async function uploadCredentialsDocument(file: File, category: string): P
         const user = await getCurrentUser();
         const fileKey = `credentials/${user.userId}/${category}/${Date.now()}-${file.name}`;
 
-        const result = await uploadData({
+        await uploadData({
             key: fileKey,
             data: file,
             options: {
@@ -85,10 +85,10 @@ export async function uploadCredentialsDocument(file: File, category: string): P
             key: fileKey
         };
     } catch (error) {
-        console.error('Error uploading credentials document:', error);
+        console.error("Error uploading credentials document:", error);
         return {
             success: false,
-            error: error instanceof Error ? error.message : 'Upload failed'
+            error: error instanceof Error ? error.message : "Upload failed"
         };
     }
 }
@@ -117,7 +117,7 @@ export async function deleteFile(key: string): Promise<boolean> {
         await remove({ key });
         return true;
     } catch (error) {
-        console.error('Error deleting file:', error);
+        console.error("Error deleting file:", error);
         return false;
     }
 }
@@ -133,7 +133,7 @@ export async function getFileUrl(key: string, expiresIn: number = 3600): Promise
         });
         return result.url.toString();
     } catch (error) {
-        console.error('Error getting file URL:', error);
+        console.error("Error getting file URL:", error);
         return null;
     }
 }
@@ -146,16 +146,16 @@ export function extractS3Key(url: string): string | null {
         // Parse URLs like: https://amplify-storage-bucket.s3.region.amazonaws.com/profile-photos/userId/filename
         // or signed URLs
         const urlObj = new URL(url);
-        const pathParts = urlObj.pathname.split('/').filter(part => part.length > 0);
+        const pathParts = urlObj.pathname.split("/").filter(part => part.length > 0);
 
         // If it's a signed URL, the key might be in the path differently
         if (pathParts.length >= 2) {
-            return pathParts.slice(1).join('/'); // Remove the first part which is usually empty or bucket info
+            return pathParts.slice(1).join("/"); // Remove the first part which is usually empty or bucket info
         }
 
         return null;
     } catch (error) {
-        console.error('Error extracting S3 key:', error);
+        console.error("Error extracting S3 key:", error);
         return null;
     }
 }
