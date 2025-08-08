@@ -23,10 +23,11 @@ export default function MarketplacePage() {
         setIsLoading(true);
         setError(null);
 
+        // get all public provider profiles
         const profiles = await getPublicProviderProfiles();
-        const transformedProviders = profiles.map(
-          transformProviderForMarketplace
-        );
+        // transform provider profiles for marketplace display
+        const transformedProviders = profiles.map(transformProviderForMarketplace);
+        //Update State
         setProviders(transformedProviders);
 
         if (transformedProviders.length === 0) {

@@ -4,9 +4,11 @@
 import { useState } from "react";
 import { useFieldArray } from "react-hook-form";
 import { z } from "zod";
+import toast from "react-hot-toast";
 import { useFormSection } from "@/hooks/useFormSection";
 import { FormSectionHeader } from "./form-section-header";
 import { CredentialsData, BaseFormSectionProps } from "@/types/provider-profile-form";
+import { uploadCredentialsDocument, deleteFile } from "@/utils/s3-upload";
 
 // Individual entry schemas - all optional
 const educationEntrySchema = z.object({
@@ -14,7 +16,7 @@ const educationEntrySchema = z.object({
     degree: z.string().optional(),
     fieldOfStudy: z.string().optional(),
     graduationYear: z.string().optional(),
-    documents: z.array(z.string()).optional(), // File names/paths
+    documents: z.array(z.string()).optional(), // S3 URLs
 });
 
 const certificationEntrySchema = z.object({
@@ -23,7 +25,7 @@ const certificationEntrySchema = z.object({
     issueDate: z.string().optional(),
     expiryDate: z.string().optional(),
     licenseNumber: z.string().optional(),
-    documents: z.array(z.string()).optional(), // File names/paths
+    documents: z.array(z.string()).optional(), // S3 URLs
 });
 
 const workExperienceEntrySchema = z.object({
@@ -32,7 +34,7 @@ const workExperienceEntrySchema = z.object({
     startDate: z.string().optional(),
     endDate: z.string().optional(),
     description: z.string().optional(),
-    documents: z.array(z.string()).optional(), // File names/paths
+    documents: z.array(z.string()).optional(), // S3 URLs
 });
 
 // Main schema with arrays - everything optional
@@ -53,10 +55,13 @@ export function CredentialsSection({
     isCompleted,
     defaultValues,
 }: CredentialsSectionProps) {
-    // Store files for each entry by type and index
-    const [educationFiles, setEducationFiles] = useState<{ [key: number]: File[] }>({});
-    const [certificationFiles, setCertificationFiles] = useState<{ [key: number]: File[] }>({});
-    const [workExperienceFiles, setWorkExperienceFiles] = useState<{ [key: number]: File[] }>({});
+    // Store uploaded file URLs for each entry by type and index
+    const [educationFiles, setEducationFiles] = useState<{ [key: number]: string[] }>({});
+    const [certificationFiles, setCertificationFiles] = useState<{ [key: number]: string[] }>({});
+    const [workExperienceFiles, setWorkExperienceFiles] = useState<{ [key: number]: string[] }>({});
+
+    // Store uploading states
+    const [uploadingStates, setUploadingStates] = useState<{ [key: string]: boolean }>({});
 
     const {
         register,
@@ -122,84 +127,186 @@ export function CredentialsSection({
     };
 
     // Handle file upload for education entries
-    const handleEducationFileUpload = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleEducationFileUpload = async (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
-        if (files) {
-            const newFiles = Array.from(files);
-            const updatedFiles = { ...educationFiles };
-            updatedFiles[index] = [...(updatedFiles[index] || []), ...newFiles];
-            setEducationFiles(updatedFiles);
+        if (!files || files.length === 0) return;
 
-            // Update form data with file names
-            const fileNames = updatedFiles[index].map(file => file.name);
-            setValue(`education.${index}.documents`, fileNames);
+        const uploadKey = `education-${index}`;
+        setUploadingStates(prev => ({ ...prev, [uploadKey]: true }));
+
+        try {
+            const uploadPromises = Array.from(files).map(async (file) => {
+                // Validate file size (10MB limit)
+                if (file.size > 10 * 1024 * 1024) {
+                    toast.error(`File ${file.name} is too large. Maximum size is 10MB.`);
+                    return null;
+                }
+
+                const result = await uploadCredentialsDocument(file, "education");
+                return result.success ? result.key! : null;
+            });
+
+            const uploadedKeys = await Promise.all(uploadPromises);
+            const validKeys = uploadedKeys.filter(key => key !== null) as string[];
+
+            if (validKeys.length > 0) {
+                const updatedFiles = { ...educationFiles };
+                updatedFiles[index] = [...(updatedFiles[index] || []), ...validKeys];
+                setEducationFiles(updatedFiles);
+
+                // Update form data with S3 keys
+                setValue(`education.${index}.documents`, updatedFiles[index]);
+                toast.success(`${validKeys.length} file(s) uploaded successfully!`);
+            }
+        } catch (error) {
+            console.error("Error uploading education files:", error);
+            toast.error("Failed to upload files");
+        } finally {
+            setUploadingStates(prev => ({ ...prev, [uploadKey]: false }));
         }
     };
 
     // Handle file upload for certification entries
-    const handleCertificationFileUpload = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleCertificationFileUpload = async (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
-        if (files) {
-            const newFiles = Array.from(files);
-            const updatedFiles = { ...certificationFiles };
-            updatedFiles[index] = [...(updatedFiles[index] || []), ...newFiles];
-            setCertificationFiles(updatedFiles);
+        if (!files || files.length === 0) return;
 
-            // Update form data with file names
-            const fileNames = updatedFiles[index].map(file => file.name);
-            setValue(`certifications.${index}.documents`, fileNames);
+        const uploadKey = `certification-${index}`;
+        setUploadingStates(prev => ({ ...prev, [uploadKey]: true }));
+
+        try {
+            const uploadPromises = Array.from(files).map(async (file) => {
+                // Validate file size (10MB limit)
+                if (file.size > 10 * 1024 * 1024) {
+                    toast.error(`File ${file.name} is too large. Maximum size is 10MB.`);
+                    return null;
+                }
+
+                const result = await uploadCredentialsDocument(file, "certification");
+                return result.success ? result.key! : null;
+            });
+
+            const uploadedKeys = await Promise.all(uploadPromises);
+            const validKeys = uploadedKeys.filter(key => key !== null) as string[];
+
+            if (validKeys.length > 0) {
+                const updatedFiles = { ...certificationFiles };
+                updatedFiles[index] = [...(updatedFiles[index] || []), ...validKeys];
+                setCertificationFiles(updatedFiles);
+
+                // Update form data with S3 keys
+                setValue(`certifications.${index}.documents`, updatedFiles[index]);
+                toast.success(`${validKeys.length} file(s) uploaded successfully!`);
+            }
+        } catch (error) {
+            console.error("Error uploading certification files:", error);
+            toast.error("Failed to upload files");
+        } finally {
+            setUploadingStates(prev => ({ ...prev, [uploadKey]: false }));
         }
     };
 
     // Handle file upload for work experience entries
-    const handleWorkExperienceFileUpload = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleWorkExperienceFileUpload = async (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
-        if (files) {
-            const newFiles = Array.from(files);
-            const updatedFiles = { ...workExperienceFiles };
-            updatedFiles[index] = [...(updatedFiles[index] || []), ...newFiles];
-            setWorkExperienceFiles(updatedFiles);
+        if (!files || files.length === 0) return;
 
-            // Update form data with file names
-            const fileNames = updatedFiles[index].map(file => file.name);
-            setValue(`workExperience.${index}.documents`, fileNames);
+        const uploadKey = `workExperience-${index}`;
+        setUploadingStates(prev => ({ ...prev, [uploadKey]: true }));
+
+        try {
+            const uploadPromises = Array.from(files).map(async (file) => {
+                // Validate file size (10MB limit)
+                if (file.size > 10 * 1024 * 1024) {
+                    toast.error(`File ${file.name} is too large. Maximum size is 10MB.`);
+                    return null;
+                }
+
+                const result = await uploadCredentialsDocument(file, "work-experience");
+                return result.success ? result.key! : null;
+            });
+
+            const uploadedKeys = await Promise.all(uploadPromises);
+            const validKeys = uploadedKeys.filter(key => key !== null) as string[];
+
+            if (validKeys.length > 0) {
+                const updatedFiles = { ...workExperienceFiles };
+                updatedFiles[index] = [...(updatedFiles[index] || []), ...validKeys];
+                setWorkExperienceFiles(updatedFiles);
+
+                // Update form data with S3 keys
+                setValue(`workExperience.${index}.documents`, updatedFiles[index]);
+                toast.success(`${validKeys.length} file(s) uploaded successfully!`);
+            }
+        } catch (error) {
+            console.error("Error uploading work experience files:", error);
+            toast.error("Failed to upload files");
+        } finally {
+            setUploadingStates(prev => ({ ...prev, [uploadKey]: false }));
         }
     };
 
     // Remove file functions
-    const removeEducationFile = (entryIndex: number, fileIndex: number) => {
+    const removeEducationFile = async (entryIndex: number, fileIndex: number) => {
         const updatedFiles = { ...educationFiles };
         if (updatedFiles[entryIndex]) {
+            const s3Key = updatedFiles[entryIndex][fileIndex];
+
+            // Delete from S3
+            try {
+                await deleteFile(s3Key);
+            } catch (error) {
+                console.error("Error deleting file from S3:", error);
+            }
+
+            // Update local state
             updatedFiles[entryIndex] = updatedFiles[entryIndex].filter((_, i) => i !== fileIndex);
             setEducationFiles(updatedFiles);
 
             // Update form data
-            const fileNames = updatedFiles[entryIndex].map(file => file.name);
-            setValue(`education.${entryIndex}.documents`, fileNames);
+            setValue(`education.${entryIndex}.documents`, updatedFiles[entryIndex]);
         }
     };
 
-    const removeCertificationFile = (entryIndex: number, fileIndex: number) => {
+    const removeCertificationFile = async (entryIndex: number, fileIndex: number) => {
         const updatedFiles = { ...certificationFiles };
         if (updatedFiles[entryIndex]) {
+            const s3Key = updatedFiles[entryIndex][fileIndex];
+
+            // Delete from S3
+            try {
+                await deleteFile(s3Key);
+            } catch (error) {
+                console.error("Error deleting file from S3:", error);
+            }
+
+            // Update local state
             updatedFiles[entryIndex] = updatedFiles[entryIndex].filter((_, i) => i !== fileIndex);
             setCertificationFiles(updatedFiles);
 
             // Update form data
-            const fileNames = updatedFiles[entryIndex].map(file => file.name);
-            setValue(`certifications.${entryIndex}.documents`, fileNames);
+            setValue(`certifications.${entryIndex}.documents`, updatedFiles[entryIndex]);
         }
     };
 
-    const removeWorkExperienceFile = (entryIndex: number, fileIndex: number) => {
+    const removeWorkExperienceFile = async (entryIndex: number, fileIndex: number) => {
         const updatedFiles = { ...workExperienceFiles };
         if (updatedFiles[entryIndex]) {
+            const s3Key = updatedFiles[entryIndex][fileIndex];
+
+            // Delete from S3
+            try {
+                await deleteFile(s3Key);
+            } catch (error) {
+                console.error("Error deleting file from S3:", error);
+            }
+
+            // Update local state
             updatedFiles[entryIndex] = updatedFiles[entryIndex].filter((_, i) => i !== fileIndex);
             setWorkExperienceFiles(updatedFiles);
 
             // Update form data
-            const fileNames = updatedFiles[entryIndex].map(file => file.name);
-            setValue(`workExperience.${entryIndex}.documents`, fileNames);
+            setValue(`workExperience.${entryIndex}.documents`, updatedFiles[entryIndex]);
         }
     };
 
@@ -225,6 +332,15 @@ export function CredentialsSection({
         setWorkExperienceFiles(updatedFiles);
     };
 
+    // Helper function to extract filename from S3 key
+    const getFileNameFromS3Key = (s3Key: string): string => {
+        const parts = s3Key.split("/");
+        const fullFileName = parts[parts.length - 1];
+        // Remove timestamp prefix (format: timestamp-filename)
+        const match = fullFileName.match(/^\d+-(.+)$/);
+        return match ? match[1] : fullFileName;
+    };
+
     // File upload component
     const FileUploadSection = ({
         entryIndex,
@@ -235,63 +351,78 @@ export function CredentialsSection({
         title
     }: {
         entryIndex: number;
-        files: File[];
+        files: string[]; // Now S3 keys instead of File objects
         onFileUpload: (index: number, event: React.ChangeEvent<HTMLInputElement>) => void;
         onFileRemove: (entryIndex: number, fileIndex: number) => void;
         uploadId: string;
         title: string;
-    }) => (
-        <div className="mt-4 space-y-2">
-            <label className="text-sm font-medium text-gray-700">{title}</label>
+    }) => {
+        const isUploading = uploadingStates[uploadId.replace("-files", "")];
 
-            {/* Upload Area */}
-            <div className="border border-dashed border-gray-300 rounded-lg p-3 text-center hover:border-[#4A9B9B] transition-colors">
-                <input
-                    id={uploadId}
-                    type="file"
-                    multiple
-                    accept=".pdf,.png,.jpg,.jpeg"
-                    className="hidden"
-                    onChange={(e) => onFileUpload(entryIndex, e)}
-                />
-                <label htmlFor={uploadId} className="cursor-pointer">
-                    <svg className="mx-auto h-8 w-8 text-gray-400 mb-2" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    <span className="text-sm font-medium text-gray-700">Upload Documents</span>
-                    <span className="block text-xs text-gray-500 mt-1">PDF, PNG, JPG up to 10MB each</span>
-                </label>
-            </div>
+        return (
+            <div className="mt-4 space-y-2">
+                <label className="text-sm font-medium text-gray-700">{title}</label>
 
-            {/* Uploaded Files Display */}
-            {files && files.length > 0 && (
-                <div className="space-y-2">
-                    {files.map((file, fileIndex) => (
-                        <div key={fileIndex} className="flex items-center justify-between bg-gray-50 p-2 rounded-md">
-                            <div className="flex items-center">
-                                <svg className="w-4 h-4 text-gray-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
-                                </svg>
-                                <span className="text-sm text-gray-900">{file.name}</span>
-                                <span className="text-xs text-gray-500 ml-2">
-                                    ({(file.size / 1024 / 1024).toFixed(1)} MB)
-                                </span>
+                {/* Upload Area */}
+                <div className="border border-dashed border-gray-300 rounded-lg p-3 text-center hover:border-[#4A9B9B] transition-colors">
+                    <input
+                        id={uploadId}
+                        type="file"
+                        multiple
+                        accept=".pdf,.png,.jpg,.jpeg"
+                        className="hidden"
+                        onChange={(e) => onFileUpload(entryIndex, e)}
+                        disabled={isUploading}
+                    />
+                    <label htmlFor={uploadId} className={`cursor-pointer ${isUploading ? "opacity-50 cursor-not-allowed" : ""}`}>
+                        {isUploading ? (
+                            <div className="flex flex-col items-center">
+                                <div className="w-8 h-8 mx-auto mb-2 animate-spin rounded-full border-2 border-gray-300 border-t-[#4A9B9B]"></div>
+                                <span className="text-sm font-medium text-gray-700">Uploading...</span>
+                                <span className="block text-xs text-gray-500 mt-1">Please wait</span>
                             </div>
-                            <button
-                                type="button"
-                                onClick={() => onFileRemove(entryIndex, fileIndex)}
-                                className="text-red-500 hover:text-red-700"
-                            >
-                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                        ) : (
+                            <>
+                                <svg className="mx-auto h-8 w-8 text-gray-400 mb-2" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
-                            </button>
-                        </div>
-                    ))}
+                                <span className="text-sm font-medium text-gray-700">Upload Documents</span>
+                                <span className="block text-xs text-gray-500 mt-1">PDF, PNG, JPG up to 10MB each</span>
+                            </>
+                        )}
+                    </label>
                 </div>
-            )}
-        </div>
-    );
+
+                {/* Uploaded Files Display */}
+                {files && files.length > 0 && (
+                    <div className="space-y-2">
+                        {files.map((s3Key, fileIndex) => (
+                            <div key={fileIndex} className="flex items-center justify-between bg-gray-50 p-2 rounded-md">
+                                <div className="flex items-center">
+                                    <svg className="w-4 h-4 text-gray-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
+                                    </svg>
+                                    <span className="text-sm text-gray-900">{getFileNameFromS3Key(s3Key)}</span>
+                                    <span className="text-xs text-gray-500 ml-2">
+                                        (Uploaded to S3)
+                                    </span>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => onFileRemove(entryIndex, fileIndex)}
+                                    className="text-red-500 hover:text-red-700"
+                                >
+                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                    </svg>
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+        );
+    };
 
     return (
         <div className="h-full bg-white rounded-lg border shadow-sm overflow-hidden">
@@ -648,4 +779,4 @@ export function CredentialsSection({
             </div>
         </div>
     );
-} 
+}  
