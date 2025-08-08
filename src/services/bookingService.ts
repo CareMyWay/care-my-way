@@ -3,8 +3,21 @@
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/../amplify/data/resource";
 import { NotificationService } from "./notificationService";
+import { getProviderProfileById } from "@/actions/providerProfileActions";
 
 const client = generateClient<Schema>();
+
+const getProviderServiceName = async (providerId: string): Promise<string> => {
+  try {
+    const providerProfile = await getProviderProfileById(providerId);
+    if (providerProfile?.servicesOffered && providerProfile.servicesOffered.length > 0) {
+      return providerProfile.servicesOffered[0]; // Use the first service
+    }
+  } catch (error) {
+    console.error("Error fetching provider profile for service:", error);
+  }
+  return "Care Services"; // Fallback
+};
 
 export class BookingService {
   // Accept a booking request
@@ -29,6 +42,7 @@ export class BookingService {
       });
 
       // Create notification for client
+      const serviceName = await getProviderServiceName(providerId);
       await NotificationService.createBookingAcceptedNotification(
         bookingId,
         booking.data.clientId,
@@ -37,7 +51,7 @@ export class BookingService {
         {
           date: booking.data.date,
           time: booking.data.time,
-          service: "Care Services", // You can make this dynamic based on provider profile
+          service: serviceName,
         }
       );
 
@@ -70,6 +84,7 @@ export class BookingService {
       });
 
       // Create notification for client
+      const serviceName = await getProviderServiceName(providerId);
       await NotificationService.createBookingDeclinedNotification(
         bookingId,
         booking.data.clientId,
@@ -78,7 +93,7 @@ export class BookingService {
         {
           date: booking.data.date,
           time: booking.data.time,
-          service: "Care Services", // You can make this dynamic based on provider profile
+          service: serviceName,
         }
       );
 

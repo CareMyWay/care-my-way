@@ -15,7 +15,6 @@ export interface CreateNotificationParams {
   title: string;
   message: string;
   bookingId?: string;
-  metadata?: Record<string, unknown>;
   expiresAt?: Date;
 }
 
@@ -23,11 +22,36 @@ export class NotificationService {
   // Create a new notification
   static async createNotification(params: CreateNotificationParams) {
     try {
-      const notificationId = uuidv4();
+      console.log("=== NOTIFICATION CREATION START ===");
+      console.log("Creating notification with params:", params);
+      console.log("DEBUG - recipientId:", params.recipientId, "type:", typeof params.recipientId);
+      console.log("DEBUG - senderId:", params.senderId, "type:", typeof params.senderId);
+      console.log("DEBUG - senderName:", params.senderName, "type:", typeof params.senderName);
+      console.log("DEBUG - bookingId:", params.bookingId, "type:", typeof params.bookingId);
       
-      // Use type assertion to work with current generated types
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result = await (client.models.Notification.create as any)({
+      // Check for undefined required fields
+      const requiredFields = ["recipientId", "recipientType", "senderId", "senderName", "type", "title", "message"];
+      const missingFields = requiredFields.filter(field => !params[field as keyof CreateNotificationParams]);
+      if (missingFields.length > 0) {
+        console.error("❌ MISSING REQUIRED FIELDS:", missingFields);
+        throw new Error(`Missing required fields: ${missingFields.join(", ")}`);
+      }
+      
+      const notificationId = uuidv4();
+      console.log("Generated notification ID:", notificationId);
+      
+      // Additional validation for enum-like fields
+      if (!["provider", "client"].includes(params.recipientType)) {
+        console.error("❌ Invalid recipientType:", params.recipientType);
+        throw new Error(`Invalid recipientType: ${params.recipientType}. Must be 'provider' or 'client'`);
+      }
+      
+      if (!["booking_request", "booking_accepted", "booking_declined"].includes(params.type)) {
+        console.error("❌ Invalid notification type:", params.type);
+        throw new Error(`Invalid notification type: ${params.type}`);
+      }
+      
+      const createData = {
         id: notificationId,
         recipientId: params.recipientId,
         recipientType: params.recipientType,
@@ -37,13 +61,38 @@ export class NotificationService {
         title: params.title,
         message: params.message,
         ...(params.bookingId && { bookingId: params.bookingId }),
-        ...(params.metadata && { metadata: params.metadata }),
-        ...(params.expiresAt && { expiresAt: params.expiresAt }),
-      });
+        ...(params.expiresAt && { expiresAt: params.expiresAt.toISOString() }),
+      };
+      
+      console.log("Attempting to create notification with data:", createData);
+      
+      // Use type assertion to work with current generated types
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const result = await (client.models.Notification.create as any)(createData);
 
+      console.log("✅ Notification created successfully:", result);
+      
+      // Check if there are errors in the result
+      if (result.errors && result.errors.length > 0) {
+        console.error("🚨 NOTIFICATION CREATION RETURNED ERRORS:", result.errors);
+        throw new Error(`Notification creation failed: ${JSON.stringify(result.errors)}`);
+      }
+      
+      if (!result.data) {
+        console.error("🚨 NOTIFICATION CREATION RETURNED NULL DATA");
+        throw new Error("Notification creation returned null data");
+      }
+      
+      console.log("=== NOTIFICATION CREATION END ===");
       return result;
     } catch (error) {
-      console.error("Error creating notification:", error);
+      console.error("❌ NOTIFICATION CREATION FAILED:", error);
+      console.error("Error details:", {
+        name: error?.name,
+        message: error?.message,
+        stack: error?.stack,
+      });
+      console.log("=== NOTIFICATION CREATION ERROR END ===");
       throw error;
     }
   }
@@ -62,10 +111,18 @@ export class NotificationService {
       location?: string;
     }
   ) {
+    console.log("Creating booking request notification:", {
+      bookingId,
+      providerId,
+      clientId,
+      clientName,
+      bookingDetails
+    });
+
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + 24); // 24 hour expiry
 
-    return this.createNotification({
+    const result = await this.createNotification({
       recipientId: providerId,
       recipientType: "provider",
       senderId: clientId,
@@ -75,11 +132,10 @@ export class NotificationService {
       message: `${clientName} has requested a booking for ${bookingDetails.service} on ${bookingDetails.date} at ${bookingDetails.time} for ${bookingDetails.duration} hours.`,
       bookingId,
       expiresAt,
-      metadata: {
-        bookingDetails,
-        mustRespondBy: expiresAt.toISOString(),
-      },
     });
+
+    console.log("Notification creation result:", result);
+    return result;
   }
 
   // Create booking acceptance notification for client
@@ -103,7 +159,6 @@ export class NotificationService {
       title: "Booking Confirmed",
       message: `${providerName} has accepted your booking request for ${bookingDetails.service} on ${bookingDetails.date} at ${bookingDetails.time}.`,
       bookingId,
-      metadata: { bookingDetails },
     });
   }
 
@@ -128,7 +183,6 @@ export class NotificationService {
       title: "Booking Declined",
       message: `${providerName} has declined your booking request for ${bookingDetails.service} on ${bookingDetails.date} at ${bookingDetails.time}. Please try booking with another provider.`,
       bookingId,
-      metadata: { bookingDetails },
     });
   }
 

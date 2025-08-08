@@ -106,13 +106,14 @@ const ProfileSummary: React.FC<ProfileSummaryProps> = ({ profileData }) => {
                 <BookingModal
                     isOpen={isBookingModalOpen}
                     onOpenChange={setIsBookingModalOpen}
-                    providerId={profileData.id}
+                    providerId={profileData.userId}
                     providerName={providerName}
                     providerPhoto={profileData.profilePhoto}
                     providerTitle={providerTitle}
                     providerRate={String(profileData.askingRate ? `$${profileData.askingRate}/hour` : "Rate on request")}
                     providerRateFloat={profileData.askingRate}
                     providerLocation={String(location)}
+                    providerServices={profileData.servicesOffered || []}
                 />
             )}
             </div>

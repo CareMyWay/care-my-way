@@ -16,6 +16,7 @@ import { getCurrentUser } from "@aws-amplify/auth";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import Calendar from "./calendar";
 import { formatDateKey } from "@/utils/calendar-date-format";
+import { NotificationService } from "@/services/notificationService";
 
 const client = generateClient<Schema>();
 
@@ -82,6 +83,7 @@ interface BookingModalProps {
   providerPhoto?: string;
   providerRateFloat?: number;
   providerLocation?: string;
+  providerServices?: string[];
 }
 
 export default function BookingModal({
@@ -94,11 +96,19 @@ export default function BookingModal({
   providerPhoto,
   providerTitle,
   providerLocation,
+  providerServices = [],
 }: BookingModalProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [selectedDuration, setSelectedDuration] = useState<string | null>(null);
+
+  const getServiceName = (): string => {
+    if (providerServices && providerServices.length > 0) {
+      return providerServices[0]; // Use the first service
+    }
+    return "Care Services";
+  };
 
   const durationOptions = [
     { value: "0.5", label: "30 minutes" },
@@ -118,7 +128,7 @@ export default function BookingModal({
         .filter(([, slots]) => slots.length > 0)
         .map(([date]) => date)
     );
-  }, [mockAvailability]);
+  }, []);
 
   const isDateAvailable = (year: number, month: number, day: number) => {
     const key = formatDateKey(year, month, day);
@@ -150,26 +160,104 @@ export default function BookingModal({
   };
 
   const handleBooking = async () => {
+    console.log("BOOKING PROCESS STARTED");
     if (selectedDate && selectedTime) {
       try {
+        console.log("Step 1: Getting current user...");
         const user = await getCurrentUser();
         const clientId = user.userId;
+        
+        console.log("Step 2: Validating providerId...");
+        // Safeguard: Ensure providerId exists and looks like a Cognito userId
+        if (!providerId || providerId.trim() === "") {
+          throw new Error("Provider ID is missing or invalid");
+        }
+
+        console.log("Step 3: Checking providerId format...");
+        // Cognito userIds typically look like: "12345678-1234-1234-1234-123456789abc"
+        // If it doesn't look like a UUID, it might be a database record ID instead
+        const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        if (!uuidPattern.test(providerId)) {
+          console.warn("WARNING: providerId doesn't look like a Cognito userId:", providerId);
+        }
+
+        console.log("Step 4: Getting client full name...");
+        // Get client's full name from their profile
+        let clientFullName = user.username ;
+        try {
+          const { data: clientProfiles } = await client.models.ClientProfile.list({
+            filter: { userId: { eq: clientId } },
+          });
+          
+          if (clientProfiles && clientProfiles.length > 0) {
+            const clientProfile = clientProfiles[0];
+            const firstName = clientProfile.firstName || "";
+            const lastName = clientProfile.lastName || "";
+            if (firstName || lastName) {
+              clientFullName = `${firstName} ${lastName}`.trim();
+            }
+          }
+        } catch (profileError) {
+          console.warn("Could not fetch client profile, using username:", profileError);
+        }
+
         const totalCost =
           providerRateFloat * Number.parseFloat(selectedDuration);
 
         const bookingId = uuidv4();
-        const result = await client.models.Booking.create({
+        console.log("🏥 ABOUT TO CREATE BOOKING with ID:", bookingId);
+        
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const result = await (client.models.Booking.create as any)({
           id: bookingId,
-          providerId,
-          providerName,
-          providerRate,
+          providerId: providerId,
+          providerName: providerName,
+          providerRate: providerRate,
           date: selectedDate,
           time: selectedTime,
-          clientId,
-          clientName: [user.username],
+          clientId: clientId,
+          clientName: clientFullName,
           duration: Number.parseFloat(selectedDuration),
           totalCost: totalCost,
         });
+
+        console.log("BOOKING CREATED SUCCESSFULLY:", result);
+
+        // Debug logging to verify providerId is Cognito userId
+        console.log("=== BOOKING MODAL DEBUG ===");
+        console.log("DEBUG - providerId:", providerId, "type:", typeof providerId, "length:", providerId?.length);
+        console.log("DEBUG - clientId:", clientId, "type:", typeof clientId, "length:", clientId?.length);
+        console.log("DEBUG - clientFullName:", clientFullName, "type:", typeof clientFullName);
+        console.log("DEBUG - user object:", user);
+        console.log("=== END BOOKING MODAL DEBUG ===");
+
+        console.log("Creating booking with:", {
+          bookingId,
+          providerId,
+          clientId,
+          userName: user.username
+        });
+
+        // Create notification for provider about the new booking request
+        console.log("ABOUT TO CREATE NOTIFICATION for provider:", providerId);
+        try {
+          await NotificationService.createBookingRequestNotification(
+            bookingId,
+            providerId,
+            clientId,
+            clientFullName,
+            {
+              date: selectedDate,
+              time: selectedTime,
+              service: getServiceName(),
+              duration: Number.parseFloat(selectedDuration),
+            }
+          );
+          console.log(" NOTIFICATION CREATED SUCCESSFULLY");
+        } catch (notificationError) {
+          console.error(" NOTIFICATION CREATION FAILED:", notificationError);
+          // Don't let notification failure break booking
+        }
 
         {
           /* Stripe Checkout Data */

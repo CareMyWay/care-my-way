@@ -186,6 +186,11 @@ const schema = a
         duration: a.float().required(),
         totalCost: a.float(),
       })
+      .secondaryIndexes((index) => [
+        index("providerId"), // Add index for provider queries
+        index("clientId"),   // Add index for client queries
+        index("bookingStatus"), // Add index for status filtering
+      ])
       .authorization((allow) => [
         allow.authenticated().to(["create", "read", "update"]),
         allow.group("Admin"),
@@ -206,11 +211,12 @@ const schema = a
         isRead: a.boolean().default(false),
         isActioned: a.boolean().default(false),
         expiresAt: a.datetime(),
-        metadata: a.json(),
       })
       .secondaryIndexes((index) => [
         index("recipientId"),
         index("bookingId"),
+        index("senderId"),
+        index("type"),
       ])
       .authorization((allow) => [
         allow.authenticated().to(["create", "read", "update", "delete"]),

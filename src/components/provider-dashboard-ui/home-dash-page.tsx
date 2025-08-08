@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { CheckCircle, XCircle, Clock, MapPin } from "lucide-react";
+import { Clock, MapPin } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -19,18 +19,37 @@ import {
 import { format, startOfWeek, addDays, isSameDay, isSameMonth } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@aws-amplify/auth";
+import { generateClient } from "aws-amplify/data";
+import type { Schema } from "@/../amplify/data/resource";
 import { BookingService } from "@/services/bookingService";
+import NotificationModal from "@/components/ui/notification-modal";
+import { getProviderProfileById } from "@/actions/providerProfileActions";
+import { NotificationService } from "@/services/notificationService";
+
+const client = generateClient<Schema>();
 
 interface BookingRequest {
   id: string;
   clientId: string;
-  clientName: string | string[];
+  clientName: string;
   date: string;
   time: string;
   duration: number;
   totalCost: number;
   service: string;
   createdAt: string;
+}
+
+interface TodoItem {
+  id: string;
+  type: "booking_request" | "profile_completion" | "notification";
+  taskTitle: string;
+  description: string;
+  completed?: boolean;
+  href?: string;
+  bookingRequest?: BookingRequest;
+  dueDate?: string;
+  dueTime?: string;
 }
 
 interface CurrentUser {
@@ -44,40 +63,136 @@ export default function HomeDashPage() {
   const [loading, setLoading] = useState(true);
   const [notificationCount, setNotificationCount] = useState(0);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
+  const [providerServices, setProviderServices] = useState<string[]>([]);
+
+  // Helper function to check if a string looks like a client ID (UUID format)
+  const isClientId = (str: string): boolean => {
+    const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    return uuidPattern.test(str);
+  };
+
+  // Helper function to get client name from their profile
+  const getClientName = async (clientId: string, storedName: string): Promise<string> => {
+    console.log(`Getting client name for clientId: ${clientId}, storedName: ${storedName}`);
+    
+    // If stored name looks like a proper name (not a UUID), use it
+    if (!isClientId(storedName) && storedName && storedName !== "Unknown Client" && storedName.trim().length > 0) {
+      console.log("Using stored name:", storedName);
+      return storedName;
+    }
+
+    // Otherwise, fetch the client's profile to get their full name
+    console.log("Fetching client profile for userId:", clientId);
+    try {
+      const { data: clientProfiles } = await client.models.ClientProfile.list({
+        filter: { userId: { eq: clientId } },
+      });
+      
+      console.log("Found client profiles:", clientProfiles);
+      
+      if (clientProfiles && clientProfiles.length > 0) {
+        const clientProfile = clientProfiles[0];
+        const firstName = clientProfile.firstName || "";
+        const lastName = clientProfile.lastName || "";
+        console.log("Client profile details:", { firstName, lastName });
+        
+        if (firstName || lastName) {
+          const fullName = `${firstName} ${lastName}`.trim();
+          console.log("Resolved full name:", fullName);
+          return fullName;
+        }
+      } else {
+        console.log("No client profile found for userId:", clientId);
+      }
+    } catch (error) {
+      console.error("Error fetching client profile:", error);
+    }
+
+    // Fallback to "Unknown Client" 
+    console.log("Using fallback name");
+    return "Unknown Client";
+  };
 
   // Fetch current user and their booking requests
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const user = await getCurrentUser();
-        setCurrentUser(user);
-        
-        // Fetch pending bookings for this provider
-        const pendingBookings = await BookingService.getPendingBookingsForProvider(user.userId);
-        
-        const requests = pendingBookings.map(booking => ({
-          id: booking.id,
-          clientId: booking.clientId,
-          clientName: Array.isArray(booking.clientName) ? booking.clientName[0] : booking.clientName || "Unknown",
-          date: booking.date,
-          time: booking.time,
-          duration: booking.duration,
-          totalCost: booking.totalCost,
-          service: "Care Services", // You can make this dynamic
-          createdAt: booking.createdAt,
-        }));
-        
-        setBookingRequests(requests);
-        setNotificationCount(requests.length);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const user = await getCurrentUser();
+      setCurrentUser(user);
+      
+      // Get provider profile to fetch their services
+      const providerProfile = await getProviderProfileById(user.userId);
+      if (providerProfile?.servicesOffered) {
+        setProviderServices(providerProfile.servicesOffered);
+      }
+      
+      // Fetch pending bookings for this provider
+      const pendingBookings = await BookingService.getPendingBookingsForProvider(user.userId);
+      
+      // Fetch notifications for notification count
+      const notifications = await NotificationService.getNotificationsForUser(user.userId);
+      const unactionedNotifications = notifications.filter(notification => 
+        notification.type === "booking_request" && !notification.isActioned
+      );
+      
+      console.log("Fetched notifications:", notifications);
+      console.log("Unactioned notifications:", unactionedNotifications);
+      
+      // Resolve client names for all booking requests
+      const requests = await Promise.all(
+        pendingBookings.map(async (booking) => {
+          console.log("Processing booking with stored clientName:", booking.clientName);
+          const resolvedClientName = await getClientName(
+            booking.clientId,
+            Array.isArray(booking.clientName) ? booking.clientName.join(" ") : booking.clientName
+          );
+          console.log("Resolved clientName:", resolvedClientName);
+          
+          return {
+            id: booking.id,
+            clientId: booking.clientId,
+            clientName: resolvedClientName,
+            date: booking.date,
+            time: booking.time,
+            duration: booking.duration,
+            totalCost: booking.totalCost,
+            service: getServiceFromProviderServices(providerProfile?.servicesOffered || []) || "Care Services",
+            createdAt: booking.createdAt,
+          };
+        })
+      );
+      
+      setBookingRequests(requests);
+      // Set notification count based on actual unactioned notifications, not just bookings
+      setNotificationCount(unactionedNotifications.length);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getServiceFromProviderServices = (services: string[]): string => {
+    if (services && services.length > 0) {
+      return services[0]; // Use the first service
+    }
+    return "Care Services";
+  };
+
+  const handleNotificationClick = () => {
+    setIsNotificationModalOpen(true);
+  };
+
+  const handleNotificationUpdate = () => {
+    // Refresh the booking requests when notifications are updated
+    fetchData();
+  };
 
   const handleAcceptAppointment = async (requestId: string) => {
     if (!currentUser) return;
@@ -150,10 +265,10 @@ export default function HomeDashPage() {
     },
   ];
 
-  // Example today's appointment
+  // Example today's appointment - make service dynamic
   const todayAppointment = {
     patientName: "Emma Wilson",
-    service: "Physical Therapy",
+    service: getServiceFromProviderServices(providerServices) || "Physical Therapy",
     time: "9:00 AM - 11:00 AM",
     date: "Aug 3, 2025",
     location: "123 Main Street, San Francisco, CA",
@@ -172,7 +287,11 @@ export default function HomeDashPage() {
 
   return (
     <>
-      <TopNav title="My Dashboard" notificationCount={notificationCount} />
+      <TopNav 
+        title="My Dashboard" 
+        notificationCount={notificationCount} 
+        onNotificationClick={handleNotificationClick}
+      />
 
       <div className="space-y-6">
         {/* Weekly Schedule */}
@@ -272,52 +391,108 @@ export default function HomeDashPage() {
                     key={request.id}
                     className="bg-[var(--color-lightest-green,#e6f4f1)] p-4 rounded-lg"
                   >
-                    <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-3 gap-2">
+                    <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-3">
-                        <Avatar className="h-8 w-8">
+                        <Avatar className="h-10 w-10">
                           <AvatarFallback className="bg-white text-teal-700">
-                            {typeof request.clientName === "string"
-                              ? request.clientName
+                            {(() => {
+                              if (typeof request.clientName === "string" && request.clientName) {
+                                // If it looks like a client ID, show "C"
+                                if (isClientId(request.clientName)) {
+                                  return "C";
+                                }
+                                // Otherwise, generate initials from name
+                                return request.clientName
                                   .split(" ")
                                   .map((n) => n[0])
                                   .join("")
-                              : "?"}
+                                  .toUpperCase();
+                              }
+                              return "?";
+                            })()}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <div className="font-medium text-[var(--color-darkest-green)]">
-                            {request.clientName}
+                          <div className="font-semibold text-[var(--color-darkest-green)]">
+                            Booking Request
                           </div>
                           <div className="text-sm text-gray-600">
-                            ${request.totalCost} for {request.duration} hours
+                            From: {request.clientName}
                           </div>
                         </div>
                       </div>
-                      {/* Action buttons */}
-                      <div className="flex flex-col w-full md:w-auto md:flex-row gap-2">
-                        <GreenButton
-                          variant="action"
-                          onClick={() => handleAcceptAppointment(request.id)}
-                          aria-label="Accept"
-                        >
-                          <CheckCircle className="h-3 w-3" />
-                          <span className="text-xs">Accept</span>
-                        </GreenButton>
-                        <OrangeButton
-                          variant="action"
-                          onClick={() => handleDeclineAppointment(request.id)}
-                          aria-label="Decline"
-                        >
-                          <XCircle className="h-3 w-3" />
-                          <span className="text-xs">Decline</span>
-                        </OrangeButton>
+                      <span className="text-xs text-gray-500">
+                        {new Date(request.createdAt).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric"
+                        })}
+                      </span>
+                    </div>
+
+                    {/* Booking Details Grid - Same format as notification modal */}
+                    <div className="bg-gray-50 rounded-lg p-3 mb-3">
+                      <div className="grid grid-cols-2 gap-2 text-sm">
+                        <div>
+                          <span className="text-gray-500">Date:</span>
+                          <span className="ml-2 font-medium">
+                            {new Date(request.date).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric"
+                            })}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">Time:</span>
+                          <span className="ml-2 font-medium">
+                            {request.time}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">Duration:</span>
+                          <span className="ml-2 font-medium">
+                            {request.duration} hours
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">Service:</span>
+                          <span className="ml-2 font-medium">
+                            {request.service}
+                          </span>
+                        </div>
+                        <div className="col-span-2">
+                          <span className="text-gray-500">Total Cost:</span>
+                          <span className="ml-2 font-medium text-green-600">
+                            ${request.totalCost}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                    <div className="text-sm text-[var(--color-darkest-green)]">
-                      <p className="font-medium">
-                        {request.date} at {request.time}
-                      </p>
-                      <p>Requested {request.service} for {request.duration} hours</p>
+
+                    {/* Action buttons */}
+                    <div className="flex flex-col sm:flex-row gap-2 mb-2">
+                      <GreenButton
+                        variant="action"
+                        onClick={() => handleAcceptAppointment(request.id)}
+                        aria-label="Accept"
+                        className="rounded-none flex-1 sm:flex-none"
+                      >
+                        <span className="text-xs">✓ Accept</span>
+                      </GreenButton>
+                      <OrangeButton
+                        variant="action"
+                        onClick={() => handleDeclineAppointment(request.id)}
+                        aria-label="Decline"
+                        className="rounded-none flex-1 sm:flex-none"
+                      >
+                        <span className="text-xs">✗ Decline</span>
+                      </OrangeButton>
+                    </div>
+
+                    {/* Urgency Badge */}
+                    <div className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-md px-2 py-1 inline-flex items-center">
+                      ⏰ Please respond within 24 hours
                     </div>
                   </div>
                 ))
@@ -383,6 +558,13 @@ export default function HomeDashPage() {
           </Card>
         </div>
       </div>
+
+      {/* Notification Modal */}
+      <NotificationModal
+        isOpen={isNotificationModalOpen}
+        onOpenChange={setIsNotificationModalOpen}
+        onNotificationUpdate={handleNotificationUpdate}
+      />
     </>
   );
 }
