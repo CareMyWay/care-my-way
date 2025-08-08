@@ -15,18 +15,20 @@ const client = generateClient<Schema>();
 interface Conversation {
   id: string;
   bookingId: string;
-  clientId: string;
-  clientName: string;
-  clientAvatar?: string;
+  providerId: string;
+  providerName: string;
+  providerTitle: string;
+  providerAvatar?: string;
   lastMessage: string;
   timestamp: string;
   unreadCount: number;
   isOnline?: boolean;
   bookingDate: string;
   bookingTime: string;
+  providerRate: string;
 }
 
-export default function MessagesPage() {
+export default function ClientMessagesPage() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -53,10 +55,10 @@ export default function MessagesPage() {
       try {
         if (!currentUserId) return;
 
-        // Fetch approved bookings for this provider
+        // Fetch approved bookings for this client
         const { data: bookings } = await client.models.Booking.list({
           filter: {
-            providerId: { eq: currentUserId },
+            clientId: { eq: currentUserId },
             bookingStatus: { eq: "Approved" }
           }
         });
@@ -65,6 +67,14 @@ export default function MessagesPage() {
 
         // Create conversations from bookings
         const conversationPromises = bookings.map(async (booking) => {
+          // Get provider profile for additional details
+          const { data: providerProfiles } = await client.models.ProviderProfile.list({
+            filter: { userId: { eq: booking.providerId } },
+            limit: 1
+          });
+
+          const providerProfile = providerProfiles[0];
+
           // Get the last message for this booking
           const { data: messages } = await client.models.Message.list({
             filter: { bookingId: { eq: booking.id } },
@@ -88,14 +98,17 @@ export default function MessagesPage() {
           return {
             id: booking.id,
             bookingId: booking.id,
-            clientId: booking.clientId,
-            clientName: booking.clientName || "Unknown Client",
+            providerId: booking.providerId,
+            providerName: booking.providerName || "Unknown Provider",
+            providerTitle: providerProfile?.profileTitle || "Healthcare Provider",
+            providerAvatar: providerProfile?.profilePhoto,
             lastMessage: lastMessage?.content || "No messages yet",
             timestamp: lastMessage?.timestamp || booking.createdAt || new Date().toISOString(),
             unreadCount: actualUnreadMessages.length,
             isOnline: false, // Could be enhanced with real-time presence
             bookingDate: booking.date,
             bookingTime: booking.time,
+            providerRate: booking.providerRate,
           } as Conversation;
         });
 
@@ -127,7 +140,8 @@ export default function MessagesPage() {
   }, [currentUserId]);
 
   const filteredConversations = conversations.filter(conv =>
-    conv.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    conv.providerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    conv.providerTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
     conv.lastMessage.toLowerCase().includes(searchTerm.toLowerCase()) ||
     conv.bookingDate.includes(searchTerm) ||
     conv.bookingTime.toLowerCase().includes(searchTerm.toLowerCase())
@@ -157,7 +171,7 @@ export default function MessagesPage() {
   if (isLoading) {
     return (
       <>
-        <TopNav title="Messages" notificationCount={totalUnreadCount} />
+        <TopNav title="Messages" notificationCount={totalUnreadCount} showClientTabs={true} />
         <div className="flex justify-center items-center h-64">
           <div className="text-gray-500">Loading conversations...</div>
         </div>
@@ -167,7 +181,7 @@ export default function MessagesPage() {
 
   return (
     <>
-      <TopNav title="Messages" notificationCount={totalUnreadCount} />
+      <TopNav title="Messages" notificationCount={totalUnreadCount} showClientTabs={true} />
       
       <div className="flex h-[calc(100vh-120px)] gap-4">
         {/* Conversations List */}
@@ -176,12 +190,12 @@ export default function MessagesPage() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold dashboard-text-primary">
-                  Conversations
+                  Your Providers
                 </h2>
                 <div className="flex items-center gap-2">
                   <MessageCircle className="h-4 w-4 text-teal-600" />
                   <span className="text-sm dashboard-text-secondary">
-                    {conversations.length} active
+                    {conversations.length} conversations
                   </span>
                 </div>
               </div>
@@ -189,7 +203,7 @@ export default function MessagesPage() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <input
                   type="text"
-                  placeholder="Search conversations..."
+                  placeholder="Search providers..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 dashboard-input focus:outline-none focus:ring-2 focus:ring-teal-500"
@@ -204,13 +218,19 @@ export default function MessagesPage() {
                     {conversations.length === 0 ? (
                       <div>
                         <p className="font-medium mb-2">No conversations yet</p>
-                        <p className="text-sm mb-4">You&apos;ll see conversations here once you approve client bookings</p>
+                        <p className="text-sm mb-4">You&apos;ll see conversations here with providers once your bookings are approved</p>
                         <div className="flex flex-col gap-2">
                           <a 
-                            href="/provider-dashboard/appointments" 
+                            href="/marketplace" 
                             className="text-teal-600 hover:text-teal-700 text-sm font-medium"
                           >
-                            View Pending Bookings →
+                            Browse Providers →
+                          </a>
+                          <a 
+                            href="/client-dashboard/to-dos" 
+                            className="text-teal-600 hover:text-teal-700 text-sm font-medium"
+                          >
+                            Check Booking Status →
                           </a>
                         </div>
                       </div>
@@ -233,11 +253,11 @@ export default function MessagesPage() {
                         <div className="relative">
                           <Avatar className="h-12 w-12">
                             <AvatarImage
-                              src={conversation.clientAvatar || "/placeholder.svg"}
-                              alt={conversation.clientName}
+                              src={conversation.providerAvatar || "/placeholder.svg"}
+                              alt={conversation.providerName}
                             />
                             <AvatarFallback className="bg-teal-100 text-teal-800">
-                              {conversation.clientName
+                              {conversation.providerName
                                 .split(" ")
                                 .map((n) => n[0])
                                 .join("")}
@@ -251,9 +271,12 @@ export default function MessagesPage() {
                           <div className="flex items-center justify-between mb-1">
                             <div>
                               <h4 className="font-medium dashboard-text-primary truncate">
-                                {conversation.clientName}
+                                {conversation.providerName}
                               </h4>
                               <p className="text-xs text-teal-600 truncate">
+                                {conversation.providerTitle}
+                              </p>
+                              <p className="text-xs text-gray-500 truncate">
                                 {conversation.bookingDate} at {conversation.bookingTime}
                               </p>
                             </div>
@@ -288,8 +311,8 @@ export default function MessagesPage() {
               <CardContent className="p-0 h-full">
                 <ChatInterface
                   bookingId={selectedConversation.bookingId}
-                  recipientId={selectedConversation.clientId}
-                  recipientName={selectedConversation.clientName}
+                  recipientId={selectedConversation.providerId}
+                  recipientName={selectedConversation.providerName}
                   className="h-full border-0 rounded-none"
                 />
               </CardContent>
@@ -299,8 +322,8 @@ export default function MessagesPage() {
               <CardContent className="flex items-center justify-center h-full">
                 <div className="text-center text-gray-500">
                   <MessageCircle className="h-16 w-16 mx-auto mb-4 text-gray-300" />
-                  <h3 className="text-lg font-medium mb-2">Select a conversation</h3>
-                  <p>Choose a conversation from the list to start messaging</p>
+                  <h3 className="text-lg font-medium mb-2">Select a provider</h3>
+                  <p>Choose a provider from the list to start messaging</p>
                 </div>
               </CardContent>
             </Card>

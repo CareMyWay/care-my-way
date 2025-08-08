@@ -12,6 +12,8 @@ import {
   //Settings,
   Users,
   LogOut,
+  Menu,
+  X,
   //LayoutDashboard,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -27,11 +29,12 @@ interface ProviderInfo {
   username?: string;
 }
 
-export function SidebarNav() {
+export function SidebarNav({ isTopNavOpen = false }: { isTopNavOpen?: boolean }) {
   const pathname = usePathname();
   const router = useRouter();
   const [providerInfo, setProviderInfo] = useState<ProviderInfo | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Fetch provider information
   useEffect(() => {
@@ -150,10 +153,59 @@ export function SidebarNav() {
     }
   };
 
+  // Close mobile menu when clicking on a link
+  const handleLinkClick = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   return (
-    <nav className="w-64 dashboard-sidebar min-h-screen flex flex-col">
-      {/* Profile Section */}
-      <div className="p-6 border-b border-teal-700">
+    <>
+      {/* Mobile Menu Button */}
+      <button
+        className={`lg:hidden fixed left-0 z-30 bg-teal-600 text-white p-2 rounded-r-md shadow-lg transition-all duration-300 ${
+          isTopNavOpen ? "top-32" : "top-16"
+        }`}
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        aria-label="Toggle menu"
+      >
+        {isMobileMenuOpen ? (
+          <span className="sr-only">Close menu</span>
+        ) : (
+          <Menu className="h-5 w-5" />
+        )}
+      </button>
+
+      {/* Mobile Overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <nav className={`
+        fixed lg:relative z-40
+        w-64 dashboard-sidebar flex flex-col
+        transition-transform duration-300 ease-in-out
+        ${isMobileMenuOpen ? "top-16 h-[calc(100vh-4rem)]" : "top-0 min-h-screen lg:min-h-screen"}
+        ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+      `}>
+        {/* Close button for mobile - positioned at top right of sidebar */}
+        {isMobileMenuOpen && (
+          <div className="lg:hidden flex justify-end p-4">
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-white hover:text-teal-200 transition-colors"
+              aria-label="Close menu"
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
+        )}
+        
+        {/* Profile Section */}
+        <div className={`p-6 border-b border-teal-700 ${isMobileMenuOpen ? "pt-2" : ""}`}>
         {/* <div className="mb-4">
           <h1 className="text-primary-white text-h5 font-bold">CareMyWay</h1>
         </div> */}
@@ -203,6 +255,7 @@ export function SidebarNav() {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={handleLinkClick}
                 className={`dashboard-sidebar-link flex items-center w-full justify-start h-12 px-4 rounded-md font-medium transition
                   ${isActive ? "dashboard-sidebar-active" : "dashboard-sidebar-hover"}
                 `}
@@ -237,5 +290,6 @@ export function SidebarNav() {
         </button>
       </div>
     </nav>
+    </>
   );
 }

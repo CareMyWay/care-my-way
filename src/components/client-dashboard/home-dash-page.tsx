@@ -123,7 +123,7 @@ export default function HomeDashPage() {
 
   return (
     <>
-      <TopNav title="My Dashboard" notificationCount={todos.length} />
+      <TopNav title="My Dashboard" notificationCount={todos.length} showClientTabs={true} />
 
       <div className="space-y-6">
         {/* To Do List*/}

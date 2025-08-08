@@ -1,5 +1,6 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 import { postConfirmation } from "../auth/post-confirmation/resource";
+//import { messageModerationFunction } from "../functions/message-moderation/resource";
 /*== STEP 1 ===============================================================
 The section below creates a UserProfile database table with a "content" field. Try
 adding a new "isDone" field as a boolean. The authorization rule below
@@ -223,7 +224,7 @@ const schema = a
         allow.group("Admin"),
       ]),
 
-      //Message schema for chat between client and provider
+      //Message schema for chat between client and provider with moderation
       Message: a
       .model({
         id: a.string().required(),
@@ -234,14 +235,21 @@ const schema = a
         recipientName: a.string().required(),
         content: a.string().required(),
         timestamp: a.datetime().required(),
+        isRead: a.boolean().default(false),
       })
       .secondaryIndexes((index) => [
         index("bookingId"),
         index("recipientId"),
         index("senderId"),
+        index("timestamp"), // For message ordering
       ])
+      // Add preprocessing function for message creation
       .authorization((allow) => [
-        allow.authenticated().to(["create", "read"]),
+        // Only the sender can create and delete their own messages
+        allow.ownerDefinedIn("senderId").to(["create", "read", "delete"]),
+        // Authenticated users can read messages (recipient access handled by business logic)
+        allow.authenticated().to(["read"]),
+        // Admins have full access for moderation
         allow.group("Admin").to(["create", "read", "update", "delete"]),
       ]),
   })

@@ -152,7 +152,6 @@ export default function CompletedClientProfile() {
   ];
 
   return (
-    // <div className="min-h-screen flex flex-col lg:flex-row">
     <div className="min-h-screen flex flex-col lg:flex-row">
       {/* Mobile Vertical Top Nav */}
       <div className="lg:hidden px-4 py-2">

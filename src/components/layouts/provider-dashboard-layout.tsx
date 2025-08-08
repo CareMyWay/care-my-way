@@ -22,11 +22,12 @@ export default async function ProviderDashboardLayout({
 
   return (
     <div className="min-h-screen flex bg-dashboard-bg font-manrope">
-      <aside className="w-64 dashboard-sidebar min-h-screen flex flex-col">
-        <SidebarNav />
-      </aside>
-      <div className="flex flex-col min-h-screen w-full">
-        <main className="flex-1 p-6 overflow-y-auto">{children}</main>
+      {/* Sidebar - now responsive */}
+      <SidebarNav />
+      
+      {/* Main content */}
+      <div className="flex flex-col min-h-screen w-full lg:ml-0">
+        <main className="flex-1 p-6 lg:pt-6 pt-20 overflow-y-auto">{children}</main>
       </div>
     </div>
   );

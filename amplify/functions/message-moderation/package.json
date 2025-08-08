@@ -1,0 +1,11 @@
+{
+  "name": "message-moderation",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "bad-words": "^3.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0"
+  }
+}
