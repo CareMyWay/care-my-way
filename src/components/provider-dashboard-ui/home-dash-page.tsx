@@ -58,13 +58,13 @@ interface CurrentUser {
 }
 
 export default function HomeDashPage() {
-  const [bookingRequests, setBookingRequests] = useState<BookingRequest[]>([]);
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [loading, setLoading] = useState(true);
-  const [notificationCount, setNotificationCount] = useState(0);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
   const [providerServices, setProviderServices] = useState<string[]>([]);
+  const [todos, setTodos] = useState<TodoItem[]>([]);
+  const [profileCompleted, setProfileCompleted] = useState(false);
 
   // Helper function to check if a string looks like a client ID (UUID format)
   const isClientId = (str: string): boolean => {
@@ -126,11 +126,15 @@ export default function HomeDashPage() {
       const user = await getCurrentUser();
       setCurrentUser(user);
       
-      // Get provider profile to fetch their services
+      // Get provider profile to fetch their services and check completion
       const providerProfile = await getProviderProfileById(user.userId);
       if (providerProfile?.servicesOffered) {
         setProviderServices(providerProfile.servicesOffered);
       }
+      
+      // Check if provider profile is complete
+      const isProviderProfileComplete = providerProfile?.isProfileComplete || false;
+      setProfileCompleted(isProviderProfileComplete);
       
       // Fetch pending bookings for this provider
       const pendingBookings = await BookingService.getPendingBookingsForProvider(user.userId);
@@ -168,9 +172,48 @@ export default function HomeDashPage() {
         })
       );
       
-      setBookingRequests(requests);
-      // Set notification count based on actual unactioned notifications, not just bookings
-      setNotificationCount(unactionedNotifications.length);
+      // Create todos from booking requests and notifications
+      const todoItems: TodoItem[] = [];
+
+      // Add booking requests as todos
+      requests.forEach((request) => {
+        todoItems.push({
+          id: `booking-${request.id}`,
+          type: "booking_request",
+          taskTitle: `Booking Request from ${request.clientName}`,
+          description: `Respond to booking request for ${request.service} on ${new Date(request.date).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+          })} at ${request.time} for ${request.duration} hours. Total cost: $${request.totalCost}`,
+          bookingRequest: request,
+          dueDate: "Within 24 hours",
+          dueTime: "Response required"
+        });
+      });
+
+      // Add unactioned notifications as todos
+      unactionedNotifications.forEach((notification) => {
+        if (notification.type === "booking_request") {
+          // Skip if we already added this as a booking request todo
+          const existingBookingTodo = todoItems.find(todo => 
+            todo.type === "booking_request" && 
+            todo.bookingRequest?.id === notification.bookingId
+          );
+          if (!existingBookingTodo) {
+            todoItems.push({
+              id: `notification-${notification.id}`,
+              type: "notification",
+              taskTitle: notification.title,
+              description: notification.message,
+              dueDate: "Within 24 hours",
+              dueTime: "Response required"
+            });
+          }
+        }
+      });
+
+      setTodos(todoItems);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -190,7 +233,7 @@ export default function HomeDashPage() {
   };
 
   const handleNotificationUpdate = () => {
-    // Refresh the booking requests when notifications are updated
+    // Refresh the todos and data when notifications are updated
     fetchData();
   };
 
@@ -204,12 +247,10 @@ export default function HomeDashPage() {
         currentUser.username || "Provider"
       );
       
-      // Remove from pending requests and update count
-      setBookingRequests(prev => {
-        const updated = prev.filter(req => req.id !== requestId);
-        setNotificationCount(updated.length);
-        return updated;
-      });
+      // Remove from todos
+      setTodos(prev => prev.filter(todo => 
+        !(todo.type === "booking_request" && todo.bookingRequest?.id === requestId)
+      ));
       
       // Show success message or toast here
       console.log("Booking accepted successfully!");
@@ -229,12 +270,10 @@ export default function HomeDashPage() {
         currentUser.username || "Provider"
       );
       
-      // Remove from pending requests and update count
-      setBookingRequests(prev => {
-        const updated = prev.filter(req => req.id !== requestId);
-        setNotificationCount(updated.length);
-        return updated;
-      });
+      // Remove from todos
+      setTodos(prev => prev.filter(todo => 
+        !(todo.type === "booking_request" && todo.bookingRequest?.id === requestId)
+      ));
       
       // Show success message or toast here
       console.log("Booking declined successfully!");
@@ -289,7 +328,7 @@ export default function HomeDashPage() {
     <>
       <TopNav 
         title="My Dashboard" 
-        notificationCount={notificationCount} 
+        notificationCount={todos.length} 
         onNotificationClick={handleNotificationClick}
       />
 
@@ -364,136 +403,148 @@ export default function HomeDashPage() {
           </CardContent>
         </Card>
 
-        {/* Appointment Requests */}
+        {/* To-Do Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Booking Requests */}
-          <Card className="border border-gray-200 bg-white rounded-lg">
+          {/* To-Do Items */}
+          <Card className="border-1 drop-shadow-sm border-gray-200 bg-white rounded-lg">
             <CardHeader className="pb-4">
               <CardTitle className="text-lg font-semibold dashboard-text-primary">
-                Appointment Requests
+                To-Do Items
               </CardTitle>
-              {bookingRequests.length > 0 && (
+              {todos.length > 0 && (
                 <p className="text-sm text-amber-600 mt-2">
-                  ⏰ You must respond within 24 hours of receiving these requests
+                  ⏰ You have {todos.length} item{todos.length > 1 ? "s" : ""} requiring your attention
                 </p>
               )}
             </CardHeader>
-            <CardContent className="pt-0 space-y-4">
-              {bookingRequests.length === 0 ? (
+            <CardContent className="pt-0 space-y-4 max-h-[500px] overflow-y-auto">
+              {todos.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
                   <Clock className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                  <p>No pending appointment requests</p>
-                  <p className="text-sm">New requests will appear here</p>
+                  <p>No pending to-do items</p>
+                  <p className="text-sm">You&apos;re all caught up!</p>
                 </div>
               ) : (
-                bookingRequests.map((request) => (
+                todos.map((todo) => (
                   <div
-                    key={request.id}
-                    className="bg-[var(--color-lightest-green,#e6f4f1)] p-4 rounded-lg"
+                    key={todo.id}
+                    className="bg-[var(--color-lightest-green,#e6f4f1)] border-1 border-gray-200 rounded-lg p-4 shadow-sm"
                   >
-                    <div className="flex items-start justify-between mb-3">
+                    <div className="flex flex-col md:flex-row md:justify-between mb-3 gap-2">
                       <div className="flex items-center gap-3">
                         <Avatar className="h-10 w-10">
                           <AvatarFallback className="bg-white text-teal-700">
-                            {(() => {
-                              if (typeof request.clientName === "string" && request.clientName) {
-                                // If it looks like a client ID, show "C"
-                                if (isClientId(request.clientName)) {
-                                  return "C";
-                                }
-                                // Otherwise, generate initials from name
-                                return request.clientName
-                                  .split(" ")
-                                  .map((n) => n[0])
-                                  .join("")
-                                  .toUpperCase();
-                              }
-                              return "?";
-                            })()}
+                            {todo.type === "booking_request" ? "📅" : "🔔"}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <div className="font-semibold text-[var(--color-darkest-green)]">
-                            Booking Request
+                          <div className="font-semibold text-[var(--color-darkest-green)] underline">
+                            {todo.taskTitle}
                           </div>
-                          <div className="text-sm text-gray-600">
-                            From: {request.clientName}
+                          {todo.dueDate && (
+                            <div className="text-sm text-amber-600">
+                              ⏰ {todo.dueDate}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Action buttons for booking requests */}
+                      {todo.type === "booking_request" && todo.bookingRequest && (
+                        <div className="flex flex-col sm:flex-row gap-2">
+                          <GreenButton
+                            variant="action"
+                            onClick={() => handleAcceptAppointment(todo.bookingRequest!.id)}
+                            aria-label="Accept"
+                            className="rounded-none flex-1 sm:flex-none"
+                          >
+                            <span className="text-xs">✓ Accept</span>
+                          </GreenButton>
+                          <OrangeButton
+                            variant="action"
+                            onClick={() => handleDeclineAppointment(todo.bookingRequest!.id)}
+                            aria-label="Decline"
+                            className="rounded-none flex-1 sm:flex-none"
+                          >
+                            <span className="text-xs">✗ Decline</span>
+                          </OrangeButton>
+                        </div>
+                      )}
+
+                      {/* Start button for profile completion */}
+                      {todo.type === "profile_completion" && (
+                        <div className="flex w-full md:w-auto justify-center md:justify-end items-center">
+                          <GreenButton
+                            variant="route"
+                            href={todo.href || "/provider-dashboard/profile"}
+                          >
+                            <span className="text-md text-center">
+                              {profileCompleted ? "View Your Profile" : "Start"}
+                            </span>
+                          </GreenButton>
+                        </div>
+                      )}
+
+                      {/* View button for notifications */}
+                      {todo.type === "notification" && (
+                        <div className="flex w-full md:w-auto justify-center md:justify-end items-center">
+                          <GreenButton
+                            variant="action"
+                            onClick={handleNotificationClick}
+                            className="rounded-none"
+                          >
+                            <span className="text-xs">View Details</span>
+                          </GreenButton>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Booking Details for booking requests */}
+                    {todo.type === "booking_request" && todo.bookingRequest && (
+                      <div className="bg-gray-50 rounded-lg p-3 mb-3">
+                        <div className="grid grid-cols-2 gap-2 text-sm">
+                          <div>
+                            <span className="text-gray-500">Date:</span>
+                            <span className="ml-2 font-medium">
+                              {new Date(todo.bookingRequest.date).toLocaleDateString("en-US", {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric"
+                              })}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-gray-500">Time:</span>
+                            <span className="ml-2 font-medium">
+                              {todo.bookingRequest.time}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-gray-500">Duration:</span>
+                            <span className="ml-2 font-medium">
+                              {todo.bookingRequest.duration} hours
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-gray-500">Service:</span>
+                            <span className="ml-2 font-medium">
+                              {todo.bookingRequest.service}
+                            </span>
+                          </div>
+                          <div className="col-span-2">
+                            <span className="text-gray-500">Total Cost:</span>
+                            <span className="ml-2 font-medium text-green-600">
+                              ${todo.bookingRequest.totalCost}
+                            </span>
                           </div>
                         </div>
                       </div>
-                      <span className="text-xs text-gray-500">
-                        {new Date(request.createdAt).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric"
-                        })}
-                      </span>
-                    </div>
+                    )}
 
-                    {/* Booking Details Grid - Same format as notification modal */}
-                    <div className="bg-gray-50 rounded-lg p-3 mb-3">
-                      <div className="grid grid-cols-2 gap-2 text-sm">
-                        <div>
-                          <span className="text-gray-500">Date:</span>
-                          <span className="ml-2 font-medium">
-                            {new Date(request.date).toLocaleDateString("en-US", {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric"
-                            })}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="text-gray-500">Time:</span>
-                          <span className="ml-2 font-medium">
-                            {request.time}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="text-gray-500">Duration:</span>
-                          <span className="ml-2 font-medium">
-                            {request.duration} hours
-                          </span>
-                        </div>
-                        <div>
-                          <span className="text-gray-500">Service:</span>
-                          <span className="ml-2 font-medium">
-                            {request.service}
-                          </span>
-                        </div>
-                        <div className="col-span-2">
-                          <span className="text-gray-500">Total Cost:</span>
-                          <span className="ml-2 font-medium text-green-600">
-                            ${request.totalCost}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Action buttons */}
-                    <div className="flex flex-col sm:flex-row gap-2 mb-2">
-                      <GreenButton
-                        variant="action"
-                        onClick={() => handleAcceptAppointment(request.id)}
-                        aria-label="Accept"
-                        className="rounded-none flex-1 sm:flex-none"
-                      >
-                        <span className="text-xs">✓ Accept</span>
-                      </GreenButton>
-                      <OrangeButton
-                        variant="action"
-                        onClick={() => handleDeclineAppointment(request.id)}
-                        aria-label="Decline"
-                        className="rounded-none flex-1 sm:flex-none"
-                      >
-                        <span className="text-xs">✗ Decline</span>
-                      </OrangeButton>
-                    </div>
-
-                    {/* Urgency Badge */}
-                    <div className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-md px-2 py-1 inline-flex items-center">
-                      ⏰ Please respond within 24 hours
-                    </div>
+                    {/* Description */}
+                    <p className="text-sm text-[var(--color-darkest-green)] leading-relaxed">
+                      {todo.description}
+                    </p>
                   </div>
                 ))
               )}
