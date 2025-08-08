@@ -55,14 +55,14 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
 
     // Helper function to get document display info
     const getFileType = (fileName: string): string => {
-        const extension = fileName.split('.').pop()?.toLowerCase() || '';
-        if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(extension)) return 'image';
-        if (['pdf'].includes(extension)) return 'pdf';
-        return 'document';
+        const extension = fileName.split(".").pop()?.toLowerCase() || "";
+        if (["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg"].includes(extension)) return "image";
+        if (["pdf"].includes(extension)) return "pdf";
+        return "document";
     };
 
     const extractFileNameFromS3Key = (s3Key: string): string => {
-        const parts = s3Key.split('/');
+        const parts = s3Key.split("/");
         const fullFileName = parts[parts.length - 1];
         // Remove timestamp prefix (format: timestamp-filename)
         const match = fullFileName.match(/^\d+-(.+)$/);
@@ -85,7 +85,7 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                                 const url = await getFileUrl(s3Key, 3600);
                                 const name = extractFileNameFromS3Key(s3Key);
                                 const fileType = getFileType(name);
-                                return { key: s3Key, url: url || '', name, fileType };
+                                return { key: s3Key, url: url || "", name, fileType };
                             });
                             const results = await Promise.all(urlPromises);
                             newDocumentUrls[key] = results.filter(result => result.url);
@@ -107,7 +107,7 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                                 const url = await getFileUrl(s3Key, 3600);
                                 const name = extractFileNameFromS3Key(s3Key);
                                 const fileType = getFileType(name);
-                                return { key: s3Key, url: url || '', name, fileType };
+                                return { key: s3Key, url: url || "", name, fileType };
                             });
                             const results = await Promise.all(urlPromises);
                             newDocumentUrls[key] = results.filter(result => result.url);
@@ -129,7 +129,7 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                                 const url = await getFileUrl(s3Key, 3600);
                                 const name = extractFileNameFromS3Key(s3Key);
                                 const fileType = getFileType(name);
-                                return { key: s3Key, url: url || '', name, fileType };
+                                return { key: s3Key, url: url || "", name, fileType };
                             });
                             const results = await Promise.all(urlPromises);
                             newDocumentUrls[key] = results.filter(result => result.url);
@@ -231,7 +231,7 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
         try {
             const user = await getCurrentUser();
             if (!user?.userId) {
-                toast.error('User not found');
+                toast.error("User not found");
                 return;
             }
 
@@ -242,7 +242,7 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                     return null;
                 }
 
-                const result = await uploadCredentialsDocument(file, 'education');
+                const result = await uploadCredentialsDocument(file, "education");
                 return result.success ? result.key : null;
             });
 
@@ -265,7 +265,7 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                         const url = await getFileUrl(s3Key, 3600);
                         const name = extractFileNameFromS3Key(s3Key);
                         const fileType = getFileType(name);
-                        return { key: s3Key, url: url || '', name, fileType };
+                        return { key: s3Key, url: url || "", name, fileType };
                     })
                 );
 
@@ -277,12 +277,12 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                 toast.success(`${successfulUploads.length} document(s) uploaded successfully!`);
             }
         } catch (error) {
-            console.error('Error uploading education documents:', error);
-            toast.error('Failed to upload documents. Please try again.');
+            console.error("Error uploading education documents:", error);
+            toast.error("Failed to upload documents. Please try again.");
         } finally {
             setUploadingStates(prev => ({ ...prev, [uploadKey]: false }));
             // Reset file input
-            event.target.value = '';
+            event.target.value = "";
         }
     };
 
@@ -297,7 +297,7 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
         try {
             const user = await getCurrentUser();
             if (!user?.userId) {
-                toast.error('User not found');
+                toast.error("User not found");
                 return;
             }
 
@@ -308,7 +308,7 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                     return null;
                 }
 
-                const result = await uploadCredentialsDocument(file, 'certification');
+                const result = await uploadCredentialsDocument(file, "certification");
                 return result.success ? result.key : null;
             });
 
@@ -331,7 +331,7 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                         const url = await getFileUrl(s3Key, 3600);
                         const name = extractFileNameFromS3Key(s3Key);
                         const fileType = getFileType(name);
-                        return { key: s3Key, url: url || '', name, fileType };
+                        return { key: s3Key, url: url || "", name, fileType };
                     })
                 );
 
@@ -343,12 +343,12 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                 toast.success(`${successfulUploads.length} document(s) uploaded successfully!`);
             }
         } catch (error) {
-            console.error('Error uploading certification documents:', error);
-            toast.error('Failed to upload documents. Please try again.');
+            console.error("Error uploading certification documents:", error);
+            toast.error("Failed to upload documents. Please try again.");
         } finally {
             setUploadingStates(prev => ({ ...prev, [uploadKey]: false }));
             // Reset file input
-            event.target.value = '';
+            event.target.value = "";
         }
     };
 
@@ -363,7 +363,7 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
         try {
             const user = await getCurrentUser();
             if (!user?.userId) {
-                toast.error('User not found');
+                toast.error("User not found");
                 return;
             }
 
@@ -374,7 +374,7 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                     return null;
                 }
 
-                const result = await uploadCredentialsDocument(file, 'work-experience');
+                const result = await uploadCredentialsDocument(file, "work-experience");
                 return result.success ? result.key : null;
             });
 
@@ -397,7 +397,7 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                         const url = await getFileUrl(s3Key, 3600);
                         const name = extractFileNameFromS3Key(s3Key);
                         const fileType = getFileType(name);
-                        return { key: s3Key, url: url || '', name, fileType };
+                        return { key: s3Key, url: url || "", name, fileType };
                     })
                 );
 
@@ -409,12 +409,12 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                 toast.success(`${successfulUploads.length} document(s) uploaded successfully!`);
             }
         } catch (error) {
-            console.error('Error uploading work experience documents:', error);
-            toast.error('Failed to upload documents. Please try again.');
+            console.error("Error uploading work experience documents:", error);
+            toast.error("Failed to upload documents. Please try again.");
         } finally {
             setUploadingStates(prev => ({ ...prev, [uploadKey]: false }));
             // Reset file input
-            event.target.value = '';
+            event.target.value = "";
         }
     };
 
@@ -423,7 +423,7 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
         try {
             // Delete from S3
             await deleteFile(s3Key);
-            console.log('✅ File deleted from S3:', s3Key);
+            console.log("✅ File deleted from S3:", s3Key);
 
             // Update form data
             const updatedEducation = [...(profileData.education || [])];
@@ -441,10 +441,10 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                 [uploadKey]: (prev[uploadKey] || []).filter(doc => doc.key !== s3Key)
             }));
 
-            toast.success('Document removed successfully!');
+            toast.success("Document removed successfully!");
         } catch (error) {
-            console.error('Error removing education file:', error);
-            toast.error('Failed to remove document. Please try again.');
+            console.error("Error removing education file:", error);
+            toast.error("Failed to remove document. Please try again.");
         }
     };
 
@@ -452,7 +452,7 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
         try {
             // Delete from S3
             await deleteFile(s3Key);
-            console.log('✅ File deleted from S3:', s3Key);
+            console.log("✅ File deleted from S3:", s3Key);
 
             // Update form data
             const updatedCertifications = [...(profileData.certifications || [])];
@@ -470,10 +470,10 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                 [uploadKey]: (prev[uploadKey] || []).filter(doc => doc.key !== s3Key)
             }));
 
-            toast.success('Document removed successfully!');
+            toast.success("Document removed successfully!");
         } catch (error) {
-            console.error('Error removing certification file:', error);
-            toast.error('Failed to remove document. Please try again.');
+            console.error("Error removing certification file:", error);
+            toast.error("Failed to remove document. Please try again.");
         }
     };
 
@@ -481,7 +481,7 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
         try {
             // Delete from S3
             await deleteFile(s3Key);
-            console.log('✅ File deleted from S3:', s3Key);
+            console.log("✅ File deleted from S3:", s3Key);
 
             // Update form data
             const updatedWorkExperience = [...(profileData.workExperience || [])];
@@ -499,10 +499,10 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                 [uploadKey]: (prev[uploadKey] || []).filter(doc => doc.key !== s3Key)
             }));
 
-            toast.success('Document removed successfully!');
+            toast.success("Document removed successfully!");
         } catch (error) {
-            console.error('Error removing work experience file:', error);
-            toast.error('Failed to remove document. Please try again.');
+            console.error("Error removing work experience file:", error);
+            toast.error("Failed to remove document. Please try again.");
         }
     };
 
@@ -513,9 +513,9 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
         if (education?.documents && education.documents.length > 0) {
             try {
                 await Promise.all(education.documents.map(s3Key => deleteFile(s3Key)));
-                console.log('✅ All education files deleted from S3');
+                console.log("✅ All education files deleted from S3");
             } catch (error) {
-                console.warn('⚠️ Some education files could not be deleted from S3:', error);
+                console.warn("⚠️ Some education files could not be deleted from S3:", error);
             }
         }
 
@@ -537,9 +537,9 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
         if (certification?.documents && certification.documents.length > 0) {
             try {
                 await Promise.all(certification.documents.map(s3Key => deleteFile(s3Key)));
-                console.log('✅ All certification files deleted from S3');
+                console.log("✅ All certification files deleted from S3");
             } catch (error) {
-                console.warn('⚠️ Some certification files could not be deleted from S3:', error);
+                console.warn("⚠️ Some certification files could not be deleted from S3:", error);
             }
         }
 
@@ -561,9 +561,9 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
         if (workExperience?.documents && workExperience.documents.length > 0) {
             try {
                 await Promise.all(workExperience.documents.map(s3Key => deleteFile(s3Key)));
-                console.log('✅ All work experience files deleted from S3');
+                console.log("✅ All work experience files deleted from S3");
             } catch (error) {
-                console.warn('⚠️ Some work experience files could not be deleted from S3:', error);
+                console.warn("⚠️ Some work experience files could not be deleted from S3:", error);
             }
         }
 
@@ -589,7 +589,7 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
         title
     }: {
         entryIndex: number;
-        entryType: 'education' | 'certification' | 'workExperience';
+        entryType: "education" | "certification" | "workExperience";
         // eslint-disable-next-line no-unused-vars
         onFileUpload: (index: number, event: React.ChangeEvent<HTMLInputElement>) => void;
         // eslint-disable-next-line no-unused-vars
@@ -616,14 +616,14 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                         onChange={(e) => onFileUpload(entryIndex, e)}
                         disabled={isUploading}
                     />
-                    <label htmlFor={uploadId} className={`cursor-pointer ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                    <label htmlFor={uploadId} className={`cursor-pointer ${isUploading ? "opacity-50 cursor-not-allowed" : ""}`}>
                         {isUploading ? (
                             <Loader2 className="mx-auto h-8 w-8 text-indigo-500 mb-2 animate-spin" />
                         ) : (
                             <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
                         )}
                         <span className="text-sm font-medium text-gray-700">
-                            {isUploading ? 'Uploading...' : 'Upload Documents'}
+                            {isUploading ? "Uploading..." : "Upload Documents"}
                         </span>
                         <span className="block text-xs text-gray-500 mt-1">
                             PDF, PNG, JPG, GIF, WebP up to 10MB each
@@ -636,12 +636,12 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                     <div className="space-y-2">
                         <p className="text-xs font-medium text-gray-600">Uploaded Documents ({documents.length})</p>
                         <div className="grid grid-cols-1 gap-3">
-                            {documents.map((doc, docIndex) => (
+                            {documents.map((doc) => (
                                 <div key={doc.key} className="group bg-white border border-gray-200 rounded-lg p-3 hover:border-gray-300 transition-colors">
                                     <div className="flex items-start gap-3">
                                         {/* File preview/icon */}
                                         <div className="flex-shrink-0">
-                                            {doc.fileType === 'image' ? (
+                                            {doc.fileType === "image" ? (
                                                 <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-200">
                                                     <img
                                                         src={doc.url}
@@ -649,7 +649,7 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                                                         className="w-full h-full object-cover"
                                                         onError={(e) => {
                                                             const target = e.target as HTMLImageElement;
-                                                            target.style.display = 'none';
+                                                            target.style.display = "none";
                                                             const parent = target.parentElement;
                                                             if (parent) {
                                                                 parent.innerHTML = `
@@ -663,7 +663,7 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                                                         }}
                                                     />
                                                 </div>
-                                            ) : doc.fileType === 'pdf' ? (
+                                            ) : doc.fileType === "pdf" ? (
                                                 <div className="w-12 h-12 bg-red-50 rounded-lg flex items-center justify-center border border-red-200">
                                                     <svg className="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
                                                         <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
@@ -688,7 +688,7 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                                         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                             <button
                                                 type="button"
-                                                onClick={() => window.open(doc.url, '_blank')}
+                                                onClick={() => window.open(doc.url, "_blank")}
                                                 className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
                                                 title="View document"
                                             >
@@ -697,7 +697,7 @@ export function EditCredentialsInfo({ profileData, onUpdate }: EditCredentialsIn
                                             <button
                                                 type="button"
                                                 onClick={() => {
-                                                    const link = document.createElement('a');
+                                                    const link = document.createElement("a");
                                                     link.href = doc.url;
                                                     link.download = doc.name;
                                                     link.click();

@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { type ProviderProfileData } from "@/actions/providerProfileActions";
-import { uploadProfilePhoto, deleteFile, getFileUrl, extractS3Key } from "@/utils/s3-upload";
+import { uploadProfilePhoto, deleteFile, getFileUrl } from "@/utils/s3-upload";
 import { getCurrentUser } from "aws-amplify/auth";
 import toast from "react-hot-toast";
 
@@ -37,7 +37,7 @@ export function EditProfileHeader({ profileData, onUpdate }: EditProfileHeaderPr
             }
 
             // Check if it's already a full URL (starts with http)
-            if (profileData.profilePhoto.startsWith('http')) {
+            if (profileData.profilePhoto.startsWith("http")) {
                 setProfilePhotoUrl(profileData.profilePhoto);
                 return;
             }
@@ -52,7 +52,7 @@ export function EditProfileHeader({ profileData, onUpdate }: EditProfileHeaderPr
                     setProfilePhotoUrl("/placeholder.svg?height=160&width=160");
                 }
             } catch (error) {
-                console.error('Error loading profile photo:', error);
+                console.error("Error loading profile photo:", error);
                 setProfilePhotoUrl("/placeholder.svg?height=160&width=160");
             } finally {
                 setIsLoadingPhoto(false);
@@ -68,13 +68,13 @@ export function EditProfileHeader({ profileData, onUpdate }: EditProfileHeaderPr
         if (!file) return;
 
         // Validate file
-        if (!file.type.startsWith('image/')) {
-            toast.error('Please select an image file');
+        if (!file.type.startsWith("image/")) {
+            toast.error("Please select an image file");
             return;
         }
 
         if (file.size > 5 * 1024 * 1024) { // 5MB limit
-            toast.error('Image must be smaller than 5MB');
+            toast.error("Image must be smaller than 5MB");
             return;
         }
 
@@ -84,17 +84,17 @@ export function EditProfileHeader({ profileData, onUpdate }: EditProfileHeaderPr
             // Get current user
             const user = await getCurrentUser();
             if (!user?.userId) {
-                toast.error('User not found');
+                toast.error("User not found");
                 return;
             }
 
             // Delete old profile photo if it exists and is an S3 key
-            if (profileData.profilePhoto && !profileData.profilePhoto.startsWith('http')) {
+            if (profileData.profilePhoto && !profileData.profilePhoto.startsWith("http")) {
                 try {
                     await deleteFile(profileData.profilePhoto);
-                    console.log('✅ Old profile photo deleted from S3');
+                    console.log("✅ Old profile photo deleted from S3");
                 } catch (error) {
-                    console.warn('⚠️ Could not delete old profile photo:', error);
+                    console.warn("⚠️ Could not delete old profile photo:", error);
                     // Continue anyway - don't block the upload
                 }
             }
@@ -111,18 +111,18 @@ export function EditProfileHeader({ profileData, onUpdate }: EditProfileHeaderPr
                     setProfilePhotoUrl(newSignedUrl);
                 }
 
-                toast.success('Profile photo updated successfully!');
+                toast.success("Profile photo updated successfully!");
             } else {
-                throw new Error('Upload failed - no key returned');
+                throw new Error("Upload failed - no key returned");
             }
         } catch (error) {
-            console.error('Error uploading profile photo:', error);
-            toast.error('Failed to upload photo. Please try again.');
+            console.error("Error uploading profile photo:", error);
+            toast.error("Failed to upload photo. Please try again.");
         } finally {
             setIsUploading(false);
             // Reset file input
             if (fileInputRef.current) {
-                fileInputRef.current.value = '';
+                fileInputRef.current.value = "";
             }
         }
     };
@@ -199,7 +199,7 @@ export function EditProfileHeader({ profileData, onUpdate }: EditProfileHeaderPr
                                 ) : (
                                     <>
                                         <Upload className="h-4 w-4 mr-2" />
-                                        {profileData.profilePhoto ? 'Change Photo' : 'Upload Photo'}
+                                        {profileData.profilePhoto ? "Change Photo" : "Upload Photo"}
                                     </>
                                 )}
                             </Button>

@@ -50,7 +50,7 @@ const HealthcareProviderCard: React.FC<HealthcareProviderCardProps> = ({
       }
 
       // Check if it's already a full URL (starts with http)
-      if (imageSrc.startsWith('http')) {
+      if (imageSrc.startsWith("http")) {
         setProfilePhotoUrl(imageSrc);
         return;
       }
@@ -65,7 +65,7 @@ const HealthcareProviderCard: React.FC<HealthcareProviderCardProps> = ({
           setProfilePhotoUrl(null);
         }
       } catch (error) {
-        console.error('Error loading profile photo:', error);
+        console.error("Error loading profile photo:", error);
         setProfilePhotoUrl(null);
       } finally {
         setIsLoadingPhoto(false);
