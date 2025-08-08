@@ -29,7 +29,6 @@ export default async function ProviderDashboardLayout({
 
       <div className="ml-64 flex flex-col min-h-screen w-full">
         <header className="w-full border-b border-gray-200 bg-white z-10">
-          <NavBar />
         </header>
         <p>
           <strong>Email:</strong> {userProfileData.email}

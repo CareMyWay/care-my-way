@@ -10,7 +10,6 @@ import {
 } from "@/actions/providerProfileActions";
 import toast from "react-hot-toast";
 import { useSearchParams, useRouter } from "next/navigation";
-import Navbar from "@/components/nav-bars/navbar";
 
 export default function ProviderProfilePage() {
   const params = useParams();
@@ -84,7 +83,6 @@ export default function ProviderProfilePage() {
     if (isLoading) {
         return (
             <div>
-                <Navbar />
                 <div className="min-h-screen flex items-center justify-center">
                     <div className="text-center space-y-4">
                         <div className="animate-spin rounded-full h-12 w-12 border-4 border-medium-green border-t-transparent mx-auto"></div>
@@ -98,7 +96,6 @@ export default function ProviderProfilePage() {
     if (error || !profileData) {
         return (
             <div>
-                <Navbar />
                 <div className="min-h-screen flex items-center justify-center">
                     <div className="text-center space-y-4">
                         <h2 className="text-2xl font-bold text-darkest-green">Provider Not Found</h2>
