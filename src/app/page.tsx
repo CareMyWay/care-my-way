@@ -9,14 +9,10 @@ import "@/app/amplify-config";
 
 // import NavBar from "@/components/nav-bars/navbar";
 
-
-
 export default async function Home() {
   return (
     <div>
       <main>
-        {/* Temp location of navbar */}
-        {/* <NavBar /> */}
         <HeroSection />
         <AboutSection />
         <FeaturesSection />
