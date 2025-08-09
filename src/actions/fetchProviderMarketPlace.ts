@@ -1,4 +1,4 @@
-// import { DynamoClient } from "./dynamoConfig";
+import { DynamoClient } from "./dynamoConfig";
 // import { DemoData } from "./DemoData";
 
 export interface Provider {

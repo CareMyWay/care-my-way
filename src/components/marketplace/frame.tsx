@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import ProviderCard from "@/components/marketplace/healthcare-provider-card";
-import MarketplaceSearchBar from "@/components/marketplace/search-bar";
-import MarketplaceFilter from "@/components/marketplace/filter";
+import MarketplaceSearchBar from "@/components/marketplace/marketplace-search-bar";
+import MarketplaceFilter from "@/components/marketplace/marketplace-filter";
 import { fetchProviders } from "@/actions/fetchProviderMarketPlace";
 import Loading from "@/app/loading";
 

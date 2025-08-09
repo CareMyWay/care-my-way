@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import ProviderCard from "@/components/marketplace/healthcare-provider-card";
-import MarketplaceSearchBar from "@/components/marketplace/search-bar";
-import MarketplaceFilter from "@/components/marketplace/filter";
+import MarketplaceSearchBar from "@/components/marketplace/marketplace-search-bar";
+import MarketplaceFilter from "@/components/marketplace/marketplace-filter";
 import {
   getPublicProviderProfiles,
   transformProviderForMarketplace,
@@ -50,7 +50,9 @@ export default function MarketplacePage() {
         <div className="flex items-center justify-center py-20">
           <div className="text-center space-y-4">
             <div className="animate-spin rounded-full h-12 w-12 border-4 border-medium-green border-t-transparent mx-auto"></div>
-            <p className="text-darkest-green text-lg">Loading care providers...</p>
+            <p className="text-darkest-green text-lg">
+              Loading Healthcare Providers...
+            </p>
           </div>
         </div>
       );
@@ -74,10 +76,12 @@ export default function MarketplacePage() {
       return (
         <div className="text-center text-darkest-green text-lg py-20">
           <div className="space-y-4">
-            <h3 className="text-xl font-semibold">No Healthcare Providers Available</h3>
+            <h3 className="text-xl font-semibold">
+              No Healthcare Providers Available
+            </h3>
             <p className="text-gray-600">
-              There are currently no healthcare providers with completed profiles
-              available in the marketplace.
+              There are currently no healthcare providers with completed
+              profiles available in the marketplace.
             </p>
             <p className="text-sm text-gray-500">
               Check back later as new healthcare providers join our platform!
@@ -98,7 +102,11 @@ export default function MarketplacePage() {
         <div className="container mx-auto flex flex-col md:h-screen">
           <div>
             <div>
-              <MarketplaceSearchBar />
+              <MarketplaceSearchBar
+                searchKey={searchKey}
+                setSearchKey={setSearchKey}
+                triggerFetch={triggerFetch}
+              />
             </div>
           </div>
           <div className="flex flex-col lg:flex-row gap-6 md:flex-1 md:min-h-0">

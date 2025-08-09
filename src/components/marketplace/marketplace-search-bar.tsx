@@ -1,7 +1,17 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
 
-const MarketplaceSearchBar = ({ searchKey, setSearchKey, triggerFetch }) => {
+interface MarketplaceSearchBarProps {
+  searchKey: string;
+  setSearchKey: React.Dispatch<React.SetStateAction<string>>;
+  triggerFetch: () => void;
+}
+
+const MarketplaceSearchBar = ({
+  searchKey,
+  setSearchKey,
+  triggerFetch,
+}: MarketplaceSearchBarProps) => {
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       triggerFetch();
