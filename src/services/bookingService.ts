@@ -45,7 +45,7 @@ export class BookingService {
       await client.models.Notification.update({
         id: notificationId,
         isActioned: true,
-      });
+      } as { id: string } & Schema["Notification"]["type"]);
 
       // Create notification for client
       const serviceName = await getProviderServiceName(providerId);
@@ -93,7 +93,7 @@ export class BookingService {
       await client.models.Notification.update({
         id: notificationId,
         isActioned: true,
-      });
+      } as { id:string } & Schema["Notification"]["type"]);
 
       // Create notification for client
       const serviceName = await getProviderServiceName(providerId);
