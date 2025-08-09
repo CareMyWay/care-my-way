@@ -24,7 +24,8 @@ export class BookingService {
   static async acceptBooking(
     bookingId: string,
     providerId: string,
-    providerName: string
+    providerName: string,
+    notificationId: string
   ) {
     try {
       // First get the booking details
@@ -39,6 +40,11 @@ export class BookingService {
       await (client.models.Booking.update as any)({
         id: bookingId,
         bookingStatus: "Confirmed",
+      });
+
+      await client.models.Notification.update({
+        id: notificationId,
+        isActioned: true,
       });
 
       // Create notification for client
@@ -66,7 +72,8 @@ export class BookingService {
   static async declineBooking(
     bookingId: string,
     providerId: string,
-    providerName: string
+    providerName: string,
+    notificationId: string
   ) {
     try {
       // First get the booking details
@@ -81,6 +88,11 @@ export class BookingService {
       await (client.models.Booking.update as any)({
         id: bookingId,
         bookingStatus: "Declined",
+      });
+
+      await client.models.Notification.update({
+        id: notificationId,
+        isActioned: true,
       });
 
       // Create notification for client

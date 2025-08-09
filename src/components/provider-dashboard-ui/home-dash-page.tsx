@@ -50,6 +50,7 @@ interface TodoItem {
   bookingRequest?: BookingRequest;
   dueDate?: string;
   dueTime?: string;
+  notificationId?: string;
 }
 
 interface CurrentUser {
@@ -177,6 +178,10 @@ export default function HomeDashPage() {
 
       // Add booking requests as todos
       requests.forEach((request) => {
+        const relatedNotification = unactionedNotifications.find(
+          (notification) => notification.bookingId === request.id
+        );
+
         todoItems.push({
           id: `booking-${request.id}`,
           type: "booking_request",
@@ -186,6 +191,7 @@ export default function HomeDashPage() {
             month: "long",
             day: "numeric"
           })} at ${request.time} for ${request.duration} hours. Total cost: $${request.totalCost}`,
+          notificationId: relatedNotification?.id,
           bookingRequest: request,
           dueDate: "Within 24 hours",
           dueTime: "Response required"
@@ -239,12 +245,17 @@ export default function HomeDashPage() {
 
   const handleAcceptAppointment = async (requestId: string) => {
     if (!currentUser) return;
+
+    const todo = todos.find(todo =>
+      todo.type === "booking_request" && todo.bookingRequest?.id === requestId
+    );
     
     try {
       await BookingService.acceptBooking(
         requestId,
         currentUser.userId,
-        currentUser.username || "Provider"
+        currentUser.username || "Provider",
+        todo.notificationId
       );
       
       // Remove from todos
@@ -262,12 +273,17 @@ export default function HomeDashPage() {
 
   const handleDeclineAppointment = async (requestId: string) => {
     if (!currentUser) return;
+
+    const todo = todos.find(todo =>
+      todo.type === "booking_request" && todo.bookingRequest?.id === requestId
+    );
     
     try {
       await BookingService.declineBooking(
         requestId,
         currentUser.userId,
-        currentUser.username || "Provider"
+        currentUser.username || "Provider",
+        todo.notificationId
       );
       
       // Remove from todos

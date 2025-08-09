@@ -20,6 +20,7 @@ import { NotificationService } from "@/services/notificationService";
 import { addDays, format } from "date-fns";
 import { formatTimeToAMPM } from "@/utils/booking-time-format";
 import timeStringToDate, { isOverlap, filterNonOverlappingDurations } from "@/utils/booking-overlap-helper";
+import { string } from "zod/v3";
 
 const client = generateClient<Schema>();
 
@@ -84,6 +85,7 @@ export default function BookingModal({
   const [selectedDuration, setSelectedDuration] = useState<string | null>(null);
   const [availabilityMap, setAvailabilityMap] = useState<Record<string, string[]>>({});
   const [existingBookings, setExistingBookings] = useState<{ date: string; time: string; duration: number }[]>([]);
+  const [bookingSuccess, setBookingSuccess] = useState<string | null>(null);
 
   const getServiceName = (): string => {
     if (providerServices && providerServices.length > 0) {
@@ -114,8 +116,9 @@ export default function BookingModal({
         }
 
         // Fetch the provider profile
+        console.log("Fetching provider profile for ID:", providerId);
         const { data: profiles } = await client.models.ProviderProfile.list({
-          filter: { id: { eq: providerId} },
+          filter: { userId: { eq: providerId} },
         });
 
         const profile = profiles?.[0];
@@ -197,7 +200,7 @@ export default function BookingModal({
     };
 
     loadAvailability();
-  }, [providerId]);
+  }, [providerId, bookingSuccess]);
 
   const availableDates = useMemo(() => {
     return new Set(
@@ -345,44 +348,7 @@ export default function BookingModal({
           // Don't let notification failure break booking
         }
 
-        {
-          /* Stripe Checkout Data */
-        }
-        console.log("Booking data:", {
-          providerRate,
-          providerLocation,
-        });
-        const res = await fetch("/api/create-checkout-session", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: `Care Aide with ${providerName} on ${selectedDate}, ${selectedTime} - ${getEndTime(selectedTime, Number.parseFloat(selectedDuration))}`,
-            amount: totalCost,
-            quantity: 1,
-            bookingId,
-            providerId,
-            providerPhoto,
-            providerName,
-            providerRate,
-            providerTitle,
-            providerLocation,
-            date: selectedDate,
-            time: `${selectedTime} - ${getEndTime(selectedTime, Number.parseFloat(selectedDuration))}`,
-            duration: selectedDuration,
-          }),
-        });
-
-        const data = await res.json();
-        if (data?.url) {
-          window.location.href = data.url;
-        } else {
-          alert("Checkout failed");
-        }
-
-        console.log("Booking result:", JSON.stringify(result, null, 2));
-        onOpenChange(false);
+        setBookingSuccess("Booking successful! Please wait for provider confirmation.");
         setSelectedDate(null);
         setSelectedTime(null);
         setSelectedDuration(null);
@@ -413,6 +379,12 @@ export default function BookingModal({
               onDateSelect={handleDateSelect}
               availableDates={availableDates}
             />
+
+            {bookingSuccess && (
+              <div className="mt-4 p-3 bg-green-50 text-green-800 rounded-md">
+                {bookingSuccess}
+              </div>
+            )}
           </div>
 
           {/* Time Slots Section */}

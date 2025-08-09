@@ -11,7 +11,7 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    const { name, amount, quantity, bookingId, providerId, providerPhoto, providerName, providerTitle, providerLocation, providerRate, date, time, duration } = body;
+    const { name, amount, quantity, bookingId, providerId, providerPhoto, providerName, providerTitle, providerLocation, providerRate, date, time, duration, notificationId } = body;
 
     if (!name || !amount || !quantity || !bookingId || !providerId) {
       return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
       ],
       mode: "payment",
       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/provider/${providerId}?cancelled=true&bookingId=${bookingId}`,
+      cancel_url: `${origin}/?cancelled=true&bookingId=${bookingId}`,
       metadata: {
         bookingId,
         providerName,
@@ -43,6 +43,7 @@ export async function POST(req: Request) {
         date,
         time,
         duration,
+        notificationId
       },
     });
 

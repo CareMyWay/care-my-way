@@ -42,6 +42,59 @@ const schema = a
         allow.authenticated().to(["read"]),
       ]),
 
+    ClientProfile: a
+      .model({
+        userId: a.string().required(),
+        userType: a.string().default("Client"),
+        profileOwner: a
+          .string()
+          .authorization((allow) => [
+            allow.ownerDefinedIn("profileOwner").to(["read", "create"]),
+            allow.group("Admin").to(["read", "update"]),
+          ]),
+        firstName: a.string(),
+        lastName: a.string(),
+        gender: a.string(),
+        dateOfBirth: a.date(),
+        email: a.string(),
+        phoneNumber: a.string(),
+        address: a.string(),
+        city: a.string(),
+        province: a.string(),
+        postalCode: a.string(),
+        emergencyContactFirstName: a.string(),
+        emergencyContactLastName: a.string(),
+        emergencyRelationship: a.string(),
+        emergencyContactPhone: a.string(),
+        hasRepSupportPerson: a.boolean(),
+        supportFirstName: a.string(),
+        supportLastName: a.string(),
+        supportRelationship: a.string(),
+        supportContactPhone: a.string(),
+        medicalConditions: a.string(),
+        surgeriesOrHospitalizations: a.string(),
+        chronicIllnesses: a.string(),
+        allergies: a.string(),
+        medications: a.string(),
+        mobilityStatus: a.string(),
+        cognitiveDifficulties: a.string(),
+        cognitiveDifficultiesOther: a.string(),
+        sensoryImpairments: a.string(),
+        sensoryImpairmentsOther: a.string(),
+        typicalDay: a.string(),
+        physicalActivity: a.string(),
+        dietaryPreferences: a.string(),
+        sleepHours: a.string(),
+        hobbies: a.string(),
+        socialTime: a.string(),
+      })
+      .authorization((allow) => [
+        allow.ownerDefinedIn("profileOwner").to(["read", "update", "create"]),
+        allow.groups(["Admin"]).to(["read", "update", "create", "delete"]),
+        allow.groups(["Provider"]).to(["read"]),
+        allow.authenticated().to(["read", "create"]), // Add "create" for regular users
+      ]),
+
     // Availability schema for providers - single record per provider
     ProviderAvailability: a
       .model({
