@@ -110,7 +110,8 @@ export default function NotificationModal({
       await BookingService.acceptBooking(
         bookingId,
         user.userId,
-        user.username || "Provider"
+        user.username || "Provider",
+        notificationId
       );
       
       // Mark notification as actioned
@@ -138,7 +139,8 @@ export default function NotificationModal({
       await BookingService.declineBooking(
         bookingId,
         user.userId,
-        user.username || "Provider"
+        user.username || "Provider",
+        notificationId
       );
       
       // Mark notification as actioned
