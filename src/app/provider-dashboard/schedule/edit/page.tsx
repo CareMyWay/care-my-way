@@ -127,7 +127,7 @@ export default function EditSchedulePage() {
         id: existing.data[0].id,
         weeklyTemplate: JSON.stringify(weeklyTemplate),
         lastUpdated: new Date().toISOString()
-      });
+      } as { id:string } & Schema["ProviderAvailability"]["type"]);
     } else {
       // Create new availability
       await provider.models.ProviderAvailability.create({
@@ -135,7 +135,7 @@ export default function EditSchedulePage() {
         profileOwner: profile.userId,
         weeklyTemplate: JSON.stringify(weeklyTemplate),
         lastUpdated: new Date().toISOString()
-      });
+      } as Schema["ProviderAvailability"]["type"]);
     }
 
     // Redirect after successful save

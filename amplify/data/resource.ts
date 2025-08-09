@@ -106,7 +106,7 @@ const schema = a
         availabilityData: a.json(), // Array of availability objects: [{date: "2025-07-21", time: "09:00", duration: 1.0, isAvailable: true}, ...]
         
         // Weekly template for recurring availability
-        weeklyTemplate: a.json(), // Template for weekly recurring schedule: {monday: ["09:00", "10:00"], tuesday: [...], ...}
+        weeklyTemplate: a.string().required(), // Template for weekly recurring schedule: {monday: ["09:00", "10:00"], tuesday: [...], ...}
         
         // Metadata
         lastUpdated: a.datetime(),
