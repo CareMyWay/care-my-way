@@ -102,11 +102,7 @@ export default function MarketplacePage() {
         <div className="container mx-auto flex flex-col md:h-screen">
           <div>
             <div>
-              <MarketplaceSearchBar
-                searchKey={searchKey}
-                setSearchKey={setSearchKey}
-                triggerFetch={triggerFetch}
-              />
+              <MarketplaceSearchBar />
             </div>
           </div>
           <div className="flex flex-col lg:flex-row gap-6 md:flex-1 md:min-h-0">

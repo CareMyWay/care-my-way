@@ -27,19 +27,20 @@ const MarketplaceSearchBar = ({
       <div className="flex-col mg-5">
         <div>
           <h3 className="font-bold text-h4-size md:text-h3-size text-darkest-green mb-2">
-            Find a Caregiver
+            Find a Healthcare Provider
           </h3>
         </div>
         <div className="flex-col items-center lg:flex lg:flex-row lg:justify-between mb-6">
           <p className="text-body4-size lg:text-body3-size ">
-            Connect with professional caregivers that match your special needs
+            Connect with professional healthcare providers that match your
+            special needs
           </p>
           <div className="relative lg:w-80 w-full">
             <Input
               type="text"
               value={searchKey}
               onChange={handleKeyDown}
-              placeholder="Search Caregivers..."
+              placeholder="Search Healthcare Providers"
               className="mt-2 lg:mt-0 h-[60px] text-[20px] border-gray-300 rounded-md"
               onKeyDown={handleKeyDown}
             />
