@@ -16,7 +16,6 @@ import type { Schema } from "@/../amplify/data/resource";
 import { BookingService } from "@/services/bookingService";
 import { getProviderProfileById } from "@/actions/providerProfileActions";
 import { NotificationService } from "@/services/notificationService";
-import { todo } from "node:test";
 
 const client = generateClient<Schema>();
 
@@ -56,8 +55,8 @@ interface CurrentUser {
 }
 
 export default function HomeDashPage() {
-  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [, setCurrentUser] = useState<CurrentUser | null>(null);
+  const [, setLoading] = useState(true);
   const [todos, setTodos] = useState<TodoItem[]>([]);
   const [providerServices, setProviderServices] = useState<string[]>([]);
 

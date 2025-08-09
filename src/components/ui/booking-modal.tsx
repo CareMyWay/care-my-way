@@ -20,7 +20,6 @@ import { NotificationService } from "@/services/notificationService";
 import { addDays, format } from "date-fns";
 import { formatTimeToAMPM } from "@/utils/booking-time-format";
 import timeStringToDate, { isOverlap, filterNonOverlappingDurations } from "@/utils/booking-overlap-helper";
-import { string } from "zod/v3";
 
 const client = generateClient<Schema>();
 
@@ -74,9 +73,9 @@ export default function BookingModal({
   providerRate,
   providerRateFloat,
   providerId,
-  providerPhoto,
-  providerTitle,
-  providerLocation,
+  // providerPhoto, can be used for future UI enhancements
+  // providerTitle,
+  // providerLocation,
   providerServices = [],
 }: BookingModalProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
