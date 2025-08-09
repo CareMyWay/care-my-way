@@ -95,6 +95,38 @@ const schema = a
         allow.authenticated().to(["read", "create"]), // Add "create" for regular users
       ]),
 
+    // Availability schema for providers - single record per provider
+    ProviderAvailability: a
+      .model({
+        id: a.string().required(),
+        providerId: a.string().required(), // Links to UserProfile.userId where userType = "Provider"
+        profileOwner: a.string().required(), // For authorization
+        
+        // Store all availability as JSON array
+        availabilityData: a.json(), // Array of availability objects: [{date: "2025-07-21", time: "09:00", duration: 1.0, isAvailable: true}, ...]
+        
+        // Weekly template for recurring availability
+        weeklyTemplate: a.json(), // Template for weekly recurring schedule: {monday: ["09:00", "10:00"], tuesday: [...], ...}
+        
+        // Metadata
+        lastUpdated: a.datetime(),
+        timezone: a.string().default("Alberta/Edmonton"), // Default timezone for Alberta
+        notes: a.string(), // Optional notes for the provider
+      })
+      .secondaryIndexes((index) => [
+        index("providerId"), // Query by provider
+      ])
+      .authorization((allow) => [
+        // Provider owns their availability - full access
+        allow.ownerDefinedIn("profileOwner").to(["create", "read", "update", "delete"]),
+        // Admins have full access
+        allow.group("Admin").to(["create", "read", "update", "delete"]),
+        // Authenticated users can read availability (for booking)
+        allow.authenticated().to(["read", "create", "update", "delete"]),
+        // Guests can read availability (for marketplace browsing)
+        allow.guest().to(["read"]),
+      ]),
+
     ProviderProfile: a
       .model({
         userId: a.string().required(),
@@ -140,11 +172,12 @@ const schema = a
         certifications: a.json(), // Array of certification objects
         workExperience: a.json(), // Array of work experience objects
 
-        // Availability
-        availability: a.string().array(), // "yyyy-mm-dd:HH24" (e.g., "2025-07-20:09" for July 20, 2025, at 9:00 AM).
+        // Availability - stores hourly time slots
+        availability: a.string().array(), // "yyyy-mm-dd:HH" format (e.g., "2025-07-20:09" for July 20, 2025, at 9:00 AM - 1 hour slot)
 
         // Profile completion status
         isProfileComplete: a.boolean().default(false),
+        setupComplete: a.boolean().default(false),
 
         // Public visibility settings
         isPubliclyVisible: a.boolean().default(true),
@@ -160,9 +193,7 @@ const schema = a
       ])
       .authorization((allow) => [
         // Provider owns their profile - full access
-        allow
-          .ownerDefinedIn("profileOwner")
-          .to(["create", "read", "update", "delete"]),
+        allow.ownerDefinedIn("profileOwner").to(["create", "read", "update", "delete"]),
         // Admins have full access
         allow.group("Admin").to(["create", "read", "update", "delete"]),
         // Authenticated users can read profiles (for marketplace)
@@ -170,25 +201,79 @@ const schema = a
         // Guests can read profiles (for marketplace browsing)
         allow.guest().to(["read"]),
       ]),
-
-    // Booking schema
-    Booking: a
+      
+      // Booking schema
+      Booking: a
       .model({
         id: a.string().required(),
-        providerId: a.string().required(), // Include this field after DynamoDB is set up to record provider ID
+        providerId: a.string().required(),
         providerName: a.string().required(),
         providerRate: a.string().required(),
         date: a.string().required(),
         time: a.string().required(),
         clientId: a.string().required(),
         clientName: a.string(),
-        bookingStatus: a.string().default("For Confirmation"),
+        bookingStatus: a.string().default("Pending"),
         duration: a.float().required(),
         totalCost: a.float(),
       })
+      .secondaryIndexes((index) => [
+        index("providerId"), // Add index for provider queries
+        index("clientId"),   // Add index for client queries
+        index("bookingStatus"), // Add index for status filtering
+      ])
       .authorization((allow) => [
         allow.authenticated().to(["create", "read", "update"]),
         allow.group("Admin"),
+      ]),
+
+      // Notification schema for booking requests and updates
+      Notification: a
+      .model({
+        id: a.string().required(),
+        recipientId: a.string().required(),
+        recipientType: a.string().required(),
+        senderId: a.string().required(),
+        senderName: a.string().required(),
+        type: a.string().required(),
+        title: a.string().required(),
+        message: a.string().required(),
+        bookingId: a.string(),
+        isRead: a.boolean().default(false),
+        isActioned: a.boolean().default(false),
+        expiresAt: a.datetime(),
+      })
+      .secondaryIndexes((index) => [
+        index("recipientId"),
+        index("bookingId"),
+        index("senderId"),
+        index("type"),
+      ])
+      .authorization((allow) => [
+        allow.authenticated().to(["create", "read", "update", "delete"]),
+        allow.group("Admin"),
+      ]),
+
+      //Message schema for chat between client and provider
+      Message: a
+      .model({
+        id: a.string().required(),
+        bookingId: a.string().required(),
+        senderId: a.string().required(),
+        senderName: a.string().required(),
+        recipientId: a.string().required(),
+        recipientName: a.string().required(),
+        content: a.string().required(),
+        timestamp: a.datetime().required(),
+      })
+      .secondaryIndexes((index) => [
+        index("bookingId"),
+        index("recipientId"),
+        index("senderId"),
+      ])
+      .authorization((allow) => [
+        allow.authenticated().to(["create", "read"]),
+        allow.group("Admin").to(["create", "read", "update", "delete"]),
       ]),
   })
   .authorization((allow) => [allow.resource(postConfirmation)]);

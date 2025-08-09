@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import OrangeButton from "../buttons/orange-button";
 import { type ProviderProfileData } from "@/actions/providerProfileActions";
-import BookingModal from "../booking-modal";
+import BookingModal from "../ui/booking-modal";
 import { useRouter } from "next/navigation";
 import { getCurrentUser } from "@aws-amplify/auth";
 
@@ -106,13 +106,14 @@ const ProfileSummary: React.FC<ProfileSummaryProps> = ({ profileData }) => {
                 <BookingModal
                     isOpen={isBookingModalOpen}
                     onOpenChange={setIsBookingModalOpen}
-                    providerId={profileData.id}
+                    providerId={profileData.userId}
                     providerName={providerName}
                     providerPhoto={profileData.profilePhoto}
                     providerTitle={providerTitle}
                     providerRate={String(profileData.askingRate ? `$${profileData.askingRate}/hour` : "Rate on request")}
                     providerRateFloat={profileData.askingRate}
                     providerLocation={String(location)}
+                    providerServices={profileData.servicesOffered || []}
                 />
             )}
             </div>

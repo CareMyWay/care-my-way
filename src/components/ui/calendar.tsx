@@ -13,7 +13,7 @@ interface CalendarProps {
   onMonthChange: (dir: "prev" | "next") => void;
   // eslint-disable-next-line no-unused-vars
   onDateSelect: (day: number) => void;
-  availableDates: Set<string>; // Changed from Record<string, string[]>
+  availableDates: Set<string>;
 }
 
 export default function Calendar({

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "@/app/globals.css";
-import ConfigureAmplifyClientSide from "@/app/amplify-config";
 import AuthProvider from "@/components/auth/auth";
 import { Toaster } from "react-hot-toast";
 import NavBar from "@/components/nav-bars/navbar";
@@ -44,7 +43,6 @@ export default async function RootLayout({
         <Toaster position="top-right" />
 
         <AuthProvider>
-          <ConfigureAmplifyClientSide />
           <NavBar userGroups={userGroups} />
           {children}
         </AuthProvider>
