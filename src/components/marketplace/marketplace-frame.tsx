@@ -64,7 +64,6 @@ export default function MarketplaceFrame() {
           imageSrc: ele.imageSrc,
         }));
 
-        console.info("front rst cnt: ", transformed.length, transformed);
         setFetchedProviders(transformed);
       })
       .catch((e) => {

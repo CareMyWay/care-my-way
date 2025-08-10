@@ -23,7 +23,6 @@ export default function MarketplacePage() {
         setError(null);
 
         const profiles = await getPublicProviderProfiles();
-        console.log("Raw profiles count:", profiles.length, profiles);
 
         const transformedProviders = profiles.map(
           transformProviderForMarketplace

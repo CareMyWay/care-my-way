@@ -71,7 +71,7 @@ const MultipleSelect = ({
         <Input
           type="text"
           value={itemFilter}
-          placeholder="Search languages"
+          placeholder="Search..."
           className="w-full h-[41px]"
           onFocus={() => setIsOpen(true)}
           onBlur={handleBlur}
