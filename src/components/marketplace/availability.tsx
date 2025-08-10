@@ -135,7 +135,7 @@ export function Availability({
 
   return (
     <div className={"relative mb-6"}>
-      <h3 className="text-[32px] text-darkest-green mb-3">{subtitle}</h3>
+      <h3 className="text-[18px] text-darkest-green mb-3">{subtitle}</h3>
       <div className="flex flex-wrap gap-2 mb-3">
         {selectedAvailability.map((item, index) => (
           <div

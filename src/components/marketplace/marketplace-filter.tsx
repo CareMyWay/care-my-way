@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import { RangeSlider } from "@/components/ui/range-slider";
 import { Input } from "@/components/ui/input";
-import GreenButton from "@/components/buttons/green-button";
+// import GreenButton from "@/components/buttons/green-button";
 import { MultipleSelect } from "@/components/select/multi-select";
-import { Availability } from "@/components/marketplace/availability";
+// import { Availability } from "@/components/marketplace/availability";
 import { Select } from "@/components/select/standard-select";
 import ISO6391 from "iso-639-1";
 import { getServiceNames } from "@/utils/healthcare-services";
@@ -13,17 +13,17 @@ import { getServiceNames } from "@/utils/healthcare-services";
 const MarketplaceFilter = ({
   minPrice,
   maxPrice,
-  availability,
+  // availability,
   experience,
   specialty,
   languagePreference,
   setMinPrice,
   setMaxPrice,
-  setAvailability,
+  // setAvailability,
   setExperience,
   setSpecialty,
   setLanguagePreference,
-  triggerFetch,
+  // triggerFetch,
 }: {
   minPrice: number;
   maxPrice: number;
@@ -61,29 +61,37 @@ const MarketplaceFilter = ({
 
   const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setMinPrice(parseInt(value, 10));
-    if (
-      Number(value) >= thisSliderMinValue &&
-      Number(value) <= Number(maxPrice)
-    ) {
-      setPriceRange([Number(value), priceRange[1]]);
+    const parsed = parseInt(value, 10);
+
+    if (value === "") {
+      setMinPrice(thisSliderMinValue);
+      setPriceRange([thisSliderMinValue, priceRange[1]]);
+    } else if (!isNaN(parsed)) {
+      if (parsed >= thisSliderMinValue && parsed <= maxPrice) {
+        setMinPrice(parsed);
+        setPriceRange([parsed, priceRange[1]]);
+      }
     }
   };
 
   const handleMaxPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setMaxPrice(parseInt(value, 10));
-    if (
-      Number(value) >= Number(minPrice) &&
-      Number(value) <= thisSliderMaxValue
-    ) {
-      setPriceRange([priceRange[0], Number(value)]);
+    const parsed = parseInt(value, 10);
+
+    if (value === "") {
+      setMaxPrice(thisSliderMaxValue);
+      setPriceRange([priceRange[0], thisSliderMaxValue]);
+    } else if (!isNaN(parsed)) {
+      if (parsed >= minPrice && parsed <= thisSliderMaxValue) {
+        setMaxPrice(parsed);
+        setPriceRange([priceRange[0], parsed]);
+      }
     }
   };
 
-  const handleApply = () => {
-    triggerFetch();
-  };
+  // const handleApply = () => {
+  //   triggerFetch();
+  // };
 
   const handleClearFilters = () => {
     window.location.reload();
@@ -141,11 +149,11 @@ const MarketplaceFilter = ({
             </div>
           </div>
 
-          <Availability
+          {/* <Availability
             subtitle={"Availability"}
             selectedAvailability={availability}
             setSelectedAvailability={setAvailability}
-          />
+          /> */}
 
           {/* Experience */}
           <div className="mb-6">
@@ -154,8 +162,13 @@ const MarketplaceFilter = ({
               className="mt-4"
               value={`${experience.min}-${experience.max}`}
               onChange={(e) => {
-                const [min, max] = e.target.value.split("-").map(Number);
-                setExperience({ min, max });
+                if (e.target.value === "") {
+                  // Reset experience to default range when placeholder is selected
+                  setExperience({ min: 0, max: 100 });
+                } else {
+                  const [min, max] = e.target.value.split("-").map(Number);
+                  setExperience({ min, max });
+                }
               }}
             >
               <option value="">Select years of experience</option>
@@ -180,19 +193,19 @@ const MarketplaceFilter = ({
           />
 
           <div className="flex items-center justify-center gap-4">
-            <GreenButton
+            {/* <GreenButton
               variant="action"
               className={"mt-6"}
               onClick={handleApply}
             >
               Apply
-            </GreenButton>
+            </GreenButton> */}
             <button
               onClick={handleClearFilters}
               className="mt-6 px-4 py-2 rounded-lg border border-gray-300 text-gray-600 text-sm hover:bg-gray-100 transition"
               type="button"
             >
-              Refresh
+              Clear Filters
             </button>
           </div>
         </div>

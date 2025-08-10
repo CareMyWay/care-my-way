@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState, useEffect } from "react";
 import ProviderCard from "@/components/marketplace/healthcare-provider-card";
 import MarketplaceSearchBar from "@/components/marketplace/marketplace-search-bar";
 import MarketplaceFilter from "@/components/marketplace/marketplace-filter";
-import { fetchProviders } from "@/actions/fetchProviderMarketPlace";
 import Loading from "@/app/loading";
 
 export interface Provider {
@@ -18,7 +17,13 @@ export interface Provider {
   imageSrc: string;
 }
 
-export default function MarketplaceFrame() {
+interface MarketplaceFrameProps {
+  initialProviders: Provider[];
+}
+
+export default function MarketplaceFrame({
+  initialProviders,
+}: MarketplaceFrameProps) {
   const thisSliderMinValue = 0;
   const thisSliderMaxValue = 200;
 
@@ -33,54 +38,84 @@ export default function MarketplaceFrame() {
   const [specialty, setSpecialty] = useState<string[]>([]);
   const [languagePreference, setLanguagePreference] = useState<string[]>([]);
 
-  const [fetchedProviders, setFetchedProviders] = useState<Provider[]>([]);
-  const [pageDoneLoading, setPageDoneLoading] = useState<boolean>(true);
+  const [filteredProviders, setFilteredProviders] =
+    useState<Provider[]>(initialProviders);
+  const [pageDoneLoading, setPageDoneLoading] = useState(true);
 
-  const triggerFetch = () => {
+  const parseExperience = (exp: string | number) => {
+    if (typeof exp === "number") return exp;
+    const match = exp.match(/[\d.]+/);
+    return match ? parseFloat(match[0]) : 0;
+  };
+
+  // Filtering function - you can customize this logic as needed
+  const applyFilters = () => {
     setPageDoneLoading(false);
 
     const tmpSearchKeySet = searchKey
+      .toLowerCase()
       .split(" ")
       .filter((word) => word.length > 0);
 
-    fetchProviders(
-      languagePreference,
-      availability,
-      experience,
-      specialty,
-      minPrice,
-      maxPrice,
-      tmpSearchKeySet
-    )
-      .then((r) => {
-        const transformed = r.map((ele) => ({
-          name: `${ele.firstName} ${ele.lastName}`,
-          title: ele.title,
-          location: ele.location,
-          experience: ele.experience,
-          languages: Array.from(ele.languages.values()),
-          services: Array.from(ele.services.values()),
-          hourlyRate: ele.hourlyRate,
-          imageSrc: ele.imageSrc,
-        }));
+    const filtered = initialProviders.filter((provider) => {
+      const searchableString = `${provider.name} ${provider.title} ${
+        provider.location
+      } ${provider.services.join(" ")}`.toLowerCase();
 
-        setFetchedProviders(transformed);
-      })
-      .catch((e) => {
-        console.error(e);
-      })
-      .finally(() => {
-        setPageDoneLoading(true);
-      });
+      const matchesSearchKey = tmpSearchKeySet.every((word) =>
+        searchableString.includes(word)
+      );
+
+      const matchesPrice =
+        provider.hourlyRate >= minPrice && provider.hourlyRate <= maxPrice;
+
+      const providerExp = parseExperience(provider.experience);
+      const matchesExperience =
+        providerExp >= experience.min && providerExp <= experience.max;
+
+      // Availability filter
+      // const matchesAvailability =
+      //   availability.length === 0 ||
+      //   availability.some((avail) => provider.availability?.includes(avail));
+
+      // Specialty filter
+      const matchesSpecialty =
+        specialty.length === 0 ||
+        specialty.some((specialty) => provider.services.includes(specialty));
+
+      // Language filter
+      const matchesLanguage =
+        languagePreference.length === 0 ||
+        languagePreference.some((language) =>
+          provider.languages.includes(language)
+        );
+
+      return (
+        matchesSearchKey &&
+        matchesPrice &&
+        matchesExperience &&
+        // matchesAvailability &&
+        matchesSpecialty &&
+        matchesLanguage
+      );
+    });
+
+    setFilteredProviders(filtered);
+    setPageDoneLoading(true);
   };
 
-  //  Prevent double fetch in dev due to React Strict Mode
-  const didFetchRef = useRef(false);
+  // Trigger filtering when filters change
   useEffect(() => {
-    if (didFetchRef.current) return;
-    didFetchRef.current = true;
-    triggerFetch();
-  }, []);
+    applyFilters();
+  }, [
+    searchKey,
+    minPrice,
+    maxPrice,
+    availability,
+    experience,
+    specialty,
+    languagePreference,
+  ]);
 
   const [showBackToTopButton, setShowBackToTopButton] = useState(false);
 
@@ -118,7 +153,7 @@ export default function MarketplaceFrame() {
           <MarketplaceSearchBar
             searchKey={searchKey}
             setSearchKey={setSearchKey}
-            triggerFetch={triggerFetch}
+            triggerFetch={applyFilters} // here trigger filtering
           />
         </div>
 
@@ -137,18 +172,18 @@ export default function MarketplaceFrame() {
               setExperience={setExperience}
               setSpecialty={setSpecialty}
               setLanguagePreference={setLanguagePreference}
-              triggerFetch={triggerFetch}
+              triggerFetch={applyFilters}
             />
           </div>
           <div className="flex-auto overflow-y-auto">
             <div className="space-y-6 w-full lg:overflow-auto">
               {pageDoneLoading ? (
-                fetchedProviders.length === 0 ? (
+                filteredProviders.length === 0 ? (
                   <div className="text-center text-darkest-green text-lg py-10">
                     There are no matching providers for your search.
                   </div>
                 ) : (
-                  fetchedProviders.map((provider, idx) => (
+                  filteredProviders.map((provider, idx) => (
                     <ProviderCard key={idx} {...provider} />
                   ))
                 )
