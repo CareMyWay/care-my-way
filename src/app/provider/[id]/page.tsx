@@ -9,6 +9,7 @@ import {
   type ProviderProfileData,
 } from "@/actions/providerProfileActions";
 import toast from "react-hot-toast";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export default function ProviderProfilePage() {
   const params = useParams();
@@ -20,9 +21,12 @@ export default function ProviderProfilePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const loadProviderProfile = async () => {
-      if (!providerId) return;
+    const searchParams = useSearchParams();
+    const router = useRouter();
+
+    useEffect(() => {
+        const loadProviderProfile = async () => {
+            if (!providerId) return;
 
       try {
         setIsLoading(true);
@@ -52,8 +56,61 @@ export default function ProviderProfilePage() {
       }
     };
 
-    loadProviderProfile();
-  }, [providerId]);
+        loadProviderProfile();
+    }, [providerId]);
+
+    useEffect(() => {
+    const cancelled = searchParams.get("cancelled");
+    const bookingId = searchParams.get("bookingId");
+
+        if (cancelled === "true" && bookingId) {
+            fetch("/api/cancel-booking", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ bookingId }),
+            })
+            .then(res => res.json())
+            .catch(err => {
+                console.error("Error cancelling booking:", err);
+                toast.error("Failed to cancel booking");
+            })
+            .finally(() => {
+                router.replace(`/provider/${providerId}`);
+            });
+        }
+    }, [searchParams, providerId, router]);
+
+    if (isLoading) {
+        return (
+            <div>
+                <div className="min-h-screen flex items-center justify-center">
+                    <div className="text-center space-y-4">
+                        <div className="animate-spin rounded-full h-12 w-12 border-4 border-medium-green border-t-transparent mx-auto"></div>
+                        <p className="text-darkest-green text-lg">Loading provider profile...</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (error || !profileData) {
+        return (
+            <div>
+                <div className="min-h-screen flex items-center justify-center">
+                    <div className="text-center space-y-4">
+                        <h2 className="text-2xl font-bold text-darkest-green">Provider Not Found</h2>
+                        <p className="text-gray-600">{error || "The requested provider profile could not be found."}</p>
+                        <button
+                            onClick={() => window.history.back()}
+                            className="px-6 py-2 bg-medium-green text-white rounded-lg hover:bg-darkest-green transition-colors"
+                        >
+                            Go Back
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
   if (isLoading) {
     return (

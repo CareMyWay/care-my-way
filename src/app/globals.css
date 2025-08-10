@@ -76,6 +76,12 @@
   --color-hover-orange: #B93F23;
 
   --color-input-border-gray: #B5BAC0;
+  
+  /* Schedule availability colors */
+  --color-available-green: #dcfce7;
+  --color-success-green: #16a34a;
+  --color-light-gray: #f3f4f6;
+  --color-medium-gray: #d1d5db;
 
   /* BUTTON STYLES */
   --text-btn-font-size: 16px;

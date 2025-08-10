@@ -47,7 +47,11 @@ export default function SuccessPage() {
   }
 
   if (status === "loading") {
-    return <p className="p-10">Updating your booking status...</p>;
+    return (
+    <div className="flex items-center justify-center min-h-screen">
+      <p className="p-10 font-medium">Updating your booking status...</p>
+    </div>
+  );
   }
 
   if (status === "error") {

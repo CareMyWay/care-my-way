@@ -1,3 +1,4 @@
+// components/layouts/ProviderDashboardLayout.tsx
 import {
   getCurrentUserServer,
   checkIsInGroup,
@@ -25,7 +26,17 @@ export default async function ProviderDashboardLayout({
       <aside className="w-64 dashboard-sidebar min-h-screen flex flex-col">
         <SidebarNav />
       </aside>
-      <div className="flex flex-col min-h-screen w-full">
+
+      <div className="ml-64 flex flex-col min-h-screen w-full">
+        <header className="w-full border-b border-gray-200 bg-white z-10">
+        </header>
+        <p>
+          <strong>Email:</strong> {userProfileData.email}
+        </p>
+        <p>
+          <strong>User Type:</strong> {userProfileData.userType}
+        </p>
+
         <main className="flex-1 p-6 overflow-y-auto">{children}</main>
       </div>
     </div>

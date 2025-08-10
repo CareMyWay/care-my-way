@@ -13,55 +13,106 @@ import { getCurrentUser } from "aws-amplify/auth";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/../amplify/data/resource";
 
+import { BookingService } from "@/services/bookingService";
+import { getProviderProfileById } from "@/actions/providerProfileActions";
+import { NotificationService } from "@/services/notificationService";
+
 const client = generateClient<Schema>();
 
+interface BookingRequest {
+  id: string;
+  clientId: string;
+  clientName: string;
+  providerId: string;
+  providerName?: string;
+  providerTitle?: string;
+  providerRate?: string;
+  providerLocation?: string;
+  providerPhoto?: string;
+  date: string;
+  time: string;
+  duration: number;
+  totalCost: number;
+  service: string;
+  createdAt: string;
+}
+
+interface TodoItem {
+  id: string;
+  type: "booking_accepted" | "profile_completion" | "notification" | "booking_declined";
+  taskTitle: string;
+  description: string;
+  completed?: boolean;
+  href?: string;
+  bookingRequest?: BookingRequest;
+  dueDate?: string;
+  dueTime?: string;
+}
+
+interface CurrentUser {
+  userId: string;
+  username?: string;
+}
+
 export default function HomeDashPage() {
-  const todos = [
-    {
-      id: "1",
-      type: "future_task",
-      href: "client-dashboard/to-dos/complete-profile",
-      taskTitle: "Complete User Profile",
-      // dueDate: "Jan 20, 2025",
-      // dueTime: "8:00 AM - 10:00 AM",
-      completed: false,
-      description:
-        "You must complete your profile before gaining access to Care My Way services.",
-    },
-    // {
-    //   id: "2",
-    //   type: "future_task",
-    //   href: "client-dashboard/to-dos/complete-profile",
-    //   taskTitle: "Complete Booking with Provider",
-    //   dueDate: "Jan 20, 2025",
-    //   dueTime: "8:00 AM - 10:00 AM",
-    //   completed: false,
-    //   description: "Something.",
-    // },
-    // {
-    //   id: "3",
-    //   type: "future_task",
-    //   href: "client-dashboard/to-dos/complete-profile",
-    //   taskTitle: "Complete Booking with Provider",
-    //   dueDate: "Jan 20, 2025",
-    //   dueTime: "8:00 AM - 10:00 AM",
-    //   description: "Provide personal care assistance for Sarah Johnson.",
-    // },
-    // {
-    //   id: "4",
-    //   type: "future_task",
-    //   href: "client-dashboard/to-dos/complete-profile",
-    //   taskTitle: "Complete Booking with Provider",
-    //   dueDate: "Jan 20, 2025",
-    //   completed: false,
-    //   dueTime: "8:00 AM - 10:00 AM",
-    //   description: "Provide personal care assistance for Sarah Johnson.",
-    // },
-  ];
+  const [, setCurrentUser] = useState<CurrentUser | null>(null);
+  const [, setLoading] = useState(true);
+  const [todos, setTodos] = useState<TodoItem[]>([]);
+  const [providerServices, setProviderServices] = useState<string[]>([]);
+
+  // const todos = [
+  //   {
+  //     id: "1",
+  //     type: "future_task",
+  //     href: "client-dashboard/to-dos/complete-profile",
+  //     taskTitle: "Complete User Profile",
+  //     // dueDate: "Jan 20, 2025",
+  //     // dueTime: "8:00 AM - 10:00 AM",
+  //     completed: false,
+  //     description:
+  //       "You must complete your profile before gaining access to Care My Way services.",
+  //   },
+  //   // {
+  //   //   id: "2",
+  //   //   type: "future_task",
+  //   //   href: "client-dashboard/to-dos/complete-profile",
+  //   //   taskTitle: "Complete Booking with Provider",
+  //   //   dueDate: "Jan 20, 2025",
+  //   //   dueTime: "8:00 AM - 10:00 AM",
+  //   //   completed: false,
+  //   //   description: "Something.",
+  //   // },
+  //   // {
+  //   //   id: "3",
+  //   //   type: "future_task",
+  //   //   href: "client-dashboard/to-dos/complete-profile",
+  //   //   taskTitle: "Complete Booking with Provider",
+  //   //   dueDate: "Jan 20, 2025",
+  //   //   dueTime: "8:00 AM - 10:00 AM",
+  //   //   description: "Provide personal care assistance for Sarah Johnson.",
+  //   // },
+  //   // {
+  //   //   id: "4",
+  //   //   type: "future_task",
+  //   //   href: "client-dashboard/to-dos/complete-profile",
+  //   //   taskTitle: "Complete Booking with Provider",
+  //   //   dueDate: "Jan 20, 2025",
+  //   //   completed: false,
+  //   //   dueTime: "8:00 AM - 10:00 AM",
+  //   //   description: "Provide personal care assistance for Sarah Johnson.",
+  //   // },
+  // ];
+
+  const getServiceFromProviderServices = (services: string[]): string => {
+          if (services && services.length > 0) {
+            return services[0]; // Use the first service
+          }
+          return "Care Services";
+        };
 
   const todayAppointment = {
     providerName: "Emma Wilson",
-    service: "Physical Therapy",
+    service: getServiceFromProviderServices(providerServices) || "Physical Therapy",
     time: "9:00 AM - 11:00 AM",
     date: "Jan 15, 2025",
     location: "123 Main Street, San Francisco, CA",
@@ -93,6 +144,256 @@ export default function HomeDashPage() {
       color: "bg-green-200",
     },
   ];
+
+    // Helper function to check if a string looks like a client ID (UUID format)
+  const isClientId = (str: string): boolean => {
+    const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    return uuidPattern.test(str);
+  };
+
+    // Helper function to get client name from their profile
+  const getClientName = async (clientId: string, storedName: string): Promise<string> => {
+    console.log(`Getting client name for clientId: ${clientId}, storedName: ${storedName}`);
+    
+    // If stored name looks like a proper name (not a UUID), use it
+    if (!isClientId(storedName) && storedName && storedName !== "Unknown Client" && storedName.trim().length > 0) {
+      console.log("Using stored name:", storedName);
+      return storedName;
+    }
+
+    // Otherwise, fetch the client's profile to get their full name
+    console.log("Fetching client profile for userId:", clientId);
+    try {
+      const { data: clientProfiles } = await client.models.ClientProfile.list({
+        filter: { userId: { eq: clientId } },
+      });
+      
+      console.log("Found client profiles:", clientProfiles);
+      
+      if (clientProfiles && clientProfiles.length > 0) {
+        const clientProfile = clientProfiles[0];
+        const firstName = clientProfile.firstName || "";
+        const lastName = clientProfile.lastName || "";
+        console.log("Client profile details:", { firstName, lastName });
+        
+        if (firstName || lastName) {
+          const fullName = `${firstName} ${lastName}`.trim();
+          console.log("Resolved full name:", fullName);
+          return fullName;
+        }
+      } else {
+        console.log("No client profile found for userId:", clientId);
+      }
+    } catch (error) {
+      console.error("Error fetching client profile:", error);
+    }
+
+    // Fallback to "Unknown Client" 
+    console.log("Using fallback name");
+    return "Unknown Client";
+  };
+
+  const handleNotificationUpdate = () => {
+    // Refresh the todos and data when notifications are updated
+    fetchData();
+  };
+
+    // Fetch current user and their booking requests
+  useEffect(() => {
+    fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const fetchData = async () => {
+      try {
+        setLoading(true);
+        const user = await getCurrentUser();
+        setCurrentUser(user);
+        
+        // Get provider profile to fetch their services and check completion
+        const providerProfile = await getProviderProfileById(user.userId);
+        if (providerProfile?.servicesOffered) {
+          setProviderServices(providerProfile.servicesOffered);
+        }
+        
+        // Check if provider profile is complete
+        const isProviderProfileComplete = providerProfile?.isProfileComplete || false;
+        setProfileCompleted(isProviderProfileComplete);
+        
+        // Fetch pending bookings for this provider
+        const clientBookings = await BookingService.getBookingsForClient(user.userId);
+        
+        // Fetch notifications for notification count
+        const notifications = await NotificationService.getNotificationsForUser(user.userId);
+        const unactionedNotifications = notifications.filter(notification => 
+          ["booking_accepted", "booking_declined"].includes(notification.type) &&
+          !notification.isActioned
+        );
+        
+        console.log("Fetched notifications:", notifications);
+        console.log("Unactioned notifications:", unactionedNotifications);
+
+        // Resolve client names for all booking requests
+        const requests = await Promise.all(
+          clientBookings.map(async (booking) => {
+            console.log("Processing booking with stored clientName:", booking.clientName);
+            const resolvedClientName = await getClientName(
+              booking.clientId,
+              Array.isArray(booking.clientName) ? booking.clientName.join(" ") : booking.clientName
+            );
+            console.log("Resolved clientName:", resolvedClientName);
+            
+            return {
+              id: booking.id,
+              clientId: booking.clientId,
+              clientName: resolvedClientName,
+              providerId: booking.providerId,
+              providerName: booking.providerName,
+              providerRate: booking.providerRate,
+              providerTitle: Array.isArray(booking.providerTitle) ? booking.providerTitle.join(", ") : booking.providerTitle,
+              providerLocation: Array.isArray(booking.providerLocation) ? booking.providerLocation.join(", ") : booking.providerLocation,
+              date: booking.date,
+              time: booking.time,
+              duration: booking.duration,
+              totalCost: booking.totalCost,
+              service: getServiceFromProviderServices(providerProfile?.servicesOffered || []) || "Care Services",
+              createdAt: booking.createdAt,
+            };
+          })
+        );
+        
+        // Create todos from booking requests and notifications
+        const todoItems: TodoItem[] = [];
+
+        console.log("Resolved booking requests:", requests);
+  
+        // // Add booking requests as todos
+        // requests.forEach((request) => {
+        //   todoItems.push({
+        //     id: `booking-${request.id}`,
+        //     type: "booking_accepted",
+        //     taskTitle: `Booking Request from ${request.clientName}`,
+        //     description: `Respond to booking request for ${request.service} on ${new Date(request.date).toLocaleDateString("en-US", {
+        //       year: "numeric",
+        //       month: "long",
+        //       day: "numeric"
+        //     })} at ${request.time} for ${request.duration} hours. Total cost: $${request.totalCost}`,
+        //     bookingRequest: request,
+        //     dueDate: "Within 24 hours",
+        //     dueTime: "Response required"
+        //   });
+        // });
+  
+        // Add unactioned notifications as todos
+        unactionedNotifications.forEach((notification) => {
+          if (notification.type === "booking_accepted") {
+            const bookingDetails = requests.find(req => req.id === notification.bookingId);
+
+            if (bookingDetails) {
+              todoItems.push({
+                id: `notification-${notification.id}`,
+                type: "booking_accepted",
+                taskTitle: `Booking Accepted by ${notification.senderName}`,
+                description: `You have an accepted a booking request from ${bookingDetails.clientName} for ${bookingDetails.service} on ${new Date(bookingDetails.date).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric"
+                })} at ${bookingDetails.time}.`,
+                bookingRequest: bookingDetails,
+                dueDate: "Within 24 hours",
+                dueTime: "Payment required",
+              });
+            }
+          } else if (notification.type === "booking_declined") {
+            const bookingDetails = requests.find(req => req.id === notification.bookingId);
+
+            if (bookingDetails) {
+              todoItems.push({
+                id: `notification-${notification.id}`,
+                type: "booking_declined",
+                taskTitle: `Booking Declined by ${notification.senderName}`,
+                description: `Your booking request for ${bookingDetails.service} on ${new Date(bookingDetails.date).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric"
+                })} at ${bookingDetails.time} was declined.`,
+                bookingRequest: bookingDetails,
+                dueDate: "No further action",
+                dueTime: "—"
+              });
+            }
+        }
+        });
+  
+        setTodos(todoItems);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const handleCheckout = async (todo: TodoItem) => {
+      if (!todo.bookingRequest) {
+        alert("Missing booking details for checkout");
+        return;
+      }
+
+      const booking = todo.bookingRequest;
+
+      const res = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: `Care Aide with ${booking.providerName} on ${booking.date}, ${booking.time}`,
+          amount: booking.totalCost,
+          quantity: 1,
+          bookingId: booking.id,
+          providerId: booking.providerId, // if you have photo URL, else empty string
+          providerName: booking.providerName,
+          providerTitle: booking.providerTitle || "Provider Title",
+          providerPhoto: booking.providerPhoto || "",
+          providerLocation: booking.providerLocation || "Provider Location",
+          providerRate: Number(booking.providerRate),
+          date: booking.date,
+          time: booking.time,
+          duration: booking.duration,
+          notificationId: todo.id,
+        }),
+      });
+
+      const data = await res.json();
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        alert("Checkout failed");
+      }
+    };
+
+    async function handleCloseRejected(todo: TodoItem) {
+      if (!todo.bookingRequest) {
+        console.warn("No booking request associated with this todo");
+        return;
+      }
+
+      try {
+        // Update notification as actioned (assuming you have notificationId stored or can find it)
+        await NotificationService.updateNotification(todo.id.replace("notification-", ""), {
+          isActioned: true,
+        });
+
+        // Optionally update local state to remove or update this todo
+        setTodos((prevTodos) =>
+          prevTodos.map((t) =>
+            t.id === todo.id ? { ...t, isActioned: true } : t
+          )
+        );
+
+        // Optionally show a success message or refresh data
+      } catch (error) {
+        console.error("Error closing declined booking:", error);
+      }
+    }
 
   useEffect(() => {
     const checkProfileCompletion = async () => {
@@ -135,47 +436,92 @@ export default function HomeDashPage() {
                 To-Do Items
               </CardTitle>
             </CardHeader>
-            <CardContent className="pt-0 space-y-4 max-h-[400px] overflow-y-auto px-10">
-              {todos.map((task) => (
-                <div
-                  key={task.id}
-                  className="bg-[#e7f2f3] border-1 border-medium-green rounded-md p-12 shadow-sm"
-                >
-                  <div className="flex flex-col md:flex-row md:justify-between mb-2 gap-2 md:items-stretch">
-                    <div className="flex items-center gap-3">
-                      <div>
-                        <div className="font-semibold text-xl text-darkest-green underline">
-                          {task.taskTitle}
+            <CardContent className="pt-0 space-y-4 max-h-[500px] overflow-y-auto">
+              {todos.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  <Clock className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                  <p>No pending to-do items</p>
+                  <p className="text-sm">You&apos;re all caught up!</p>
+                </div>
+              ) : (
+                todos.map((todo) => (
+                  <div
+                    key={todo.id}
+                    className="bg-[var(--color-lightest-green,#e6f4f1)] border-1 border-gray-200 rounded-lg p-4 shadow-sm"
+                  >
+                    <div className="flex md:flex-col md:justify-between md:items-center mb-3 gap-2">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-10 w-10">
+                          <AvatarFallback className="bg-white text-teal-700">
+                            {todo.type === "booking_accepted" ? "📅" : "🔔"}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="font-semibold text-[var(--color-darkest-green)] underline">
+                            {todo.taskTitle}
+                          </div>
+                          {todo.dueDate && (
+                            <div className="text-sm text-amber-600">
+                              ⏰ {todo.dueDate}
+                            </div>
+                          )}
                         </div>
                       </div>
-                    </div>
-                    <div className="flex w-full md:w-auto justify-center md:justify-end items-center">
-                      {task.taskTitle === "Complete User Profile" &&
-                      profileCompleted ? (
-                        <GreenButton
-                          variant="route"
-                          href="/client-dashboard/profile"
-                        >
-                          <span className="text-md text-center">
-                            View Your Profile
-                          </span>
-                        </GreenButton>
-                      ) : (
-                        <GreenButton variant="route" href={task.href}>
-                          <span className="text-md text-center">Start</span>
-                        </GreenButton>
-                      )}
-                    </div>
-                  </div>
+                      
 
-                  <p className="text-xl text-darkest-green leading-relaxed mt-6 ">
-                    {task.taskTitle === "Complete User Profile" &&
-                    profileCompleted
-                      ? "Your profile is complete. View and update your details as needed."
-                      : task.description}
-                  </p>
+                      {/* Start button for profile completion */}
+                      {todo.type === "profile_completion" && (
+                        <div className="flex w-full md:w-auto justify-center md:justify-end items-center">
+                          <GreenButton
+                            variant="route"
+                            href={todo.href || "/provider-dashboard/profile"}
+                          >
+                            <span className="text-md text-center">
+                              {profileCompleted ? "View Your Profile" : "Start"}
+                            </span>
+                          </GreenButton>
+                        </div>
+                      )}
+
+                    {/* Description */}
+                    <p className="text-sm text-[var(--color-darkest-green)] leading-relaxed">
+                      {todo.description}
+                    </p>
+
+                    {todo.type === "booking_accepted" && todo.bookingRequest && (
+                        <div className="flex flex-col sm:flex-row gap-2">
+                            <GreenButton
+                            variant="action"
+                            onClick={() => handleCheckout(todo)}
+                            aria-label="Pay"
+                            className="rounded-none flex-1 sm:flex-none hover:cursor-pointer"
+                          >
+                          <span className="text-xs">Pay</span>
+                          </GreenButton>
+                        </div>
+                      )}
+
+                      {todo.type === "booking_declined" && todo.bookingRequest && (
+                        <div className="flex flex-col sm:flex-row gap-2">
+                            <GreenButton
+                            variant="action"
+                            onClick={() => {
+                              handleCloseRejected(todo);
+                              handleNotificationUpdate();
+                            }}
+                            aria-label="Pay"
+                            className="rounded-none flex-1 sm:flex-none hover:cursor-pointer"
+                          >
+                          <span className="text-xs">Close Booking</span>
+                          </GreenButton>
+                        </div>
+                      )}
+                  </div>
                 </div>
-              ))}
+                ))            
+              )}
+
+              
             </CardContent>
           </Card>
 
