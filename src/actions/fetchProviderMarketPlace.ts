@@ -1,5 +1,4 @@
 import { DynamoClient } from "./dynamoConfig";
-// import { DemoData } from "./DemoData";
 
 export interface Provider {
   lastName: string;
@@ -16,7 +15,7 @@ export interface Provider {
 export const fetchProviders = async (
   languageItems: string[],
   availabilityItems: string[],
-  experience: number,
+  experience: { min: number; max: number }, // <-- CHANGED to object
   specialtyItems: string[],
   minPrice: number,
   maxPrice: number,
@@ -26,31 +25,14 @@ export const fetchProviders = async (
   console.info("searchKey: ", searchNameKeys.join(","));
 
   try {
-    // const resultD0 = await DynamoClient.models.ProviderProfile.delete({id: "90add315-05ec-4b83-ab5f-b565934c35d1"}); console.info("-->: ", resultD0);
-    // const resultD1 = await DynamoClient.models.ProviderProfile.delete({id: "d65c88d3-4017-416f-8305-c59436ef5ab4"}); console.info("-->: ", resultD1);
-    // const resultD2 = await DynamoClient.models.ProviderProfile.delete({id: "71521873-0484-4e52-9d66-d1ed7ded8e10"}); console.info("-->: ", resultD2);
-    // const resultD3 = await DynamoClient.models.ProviderProfile.delete({id: "179c9690-1981-4dfe-8191-27faccfc53ba"}); console.info("-->: ", resultD3);
-    // const resultD4 = await DynamoClient.models.ProviderProfile.delete({id: "673666fb-1bd8-44a9-96d9-0128d6e5a7c2"}); console.info("-->: ", resultD4);
-    // const result0 = await DynamoClient.models.ProviderProfile.create(DemoData[0]);    console.info("-->: ", result0);
-    // const result1 = await DynamoClient.models.ProviderProfile.create(DemoData[1]);    console.info("-->: ", result1);
-    // const result2 = await DynamoClient.models.ProviderProfile.create(DemoData[2]);    console.info("-->: ", result2);
-    // const result3 = await DynamoClient.models.ProviderProfile.create(DemoData[3]);    console.info("-->: ", result3);
-    // const result4 = await DynamoClient.models.ProviderProfile.create(DemoData[4]);    console.info("-->: ", result4);
-
     const attrFilter = { filter: { and: [] } };
-    /*
-      Filter Demo:
-      {
-        filter: {
-          and: [
-            { col_1: { eq: 1 } },
-            { col_2: { gt: 2 } },
-            { or: [ { col_1: { eq: 1 } }, { col_2: { gt: 2 } } ]} ]
-        }
-      }
-    */
 
-    attrFilter.filter.and.push({ yearExperienceFloat: { gt: experience } });
+    // Experience filter as a range
+    attrFilter.filter.and.push({
+      yearExperienceFloat: { between: [experience.min, experience.max] },
+    });
+
+    // Price range filter
     attrFilter.filter.and.push({
       askingRate: { between: [minPrice, maxPrice] },
     });
@@ -60,7 +42,8 @@ export const fetchProviders = async (
     const availCondAnd = { and: [] };
     const specCondAnd = { and: [] };
 
-    searchNameKeys.map((sk) => {
+    // Name search
+    searchNameKeys.forEach((sk) => {
       nameCondAnd.and.push({
         or: [
           { firstNameLower: { contains: sk } },
@@ -69,47 +52,42 @@ export const fetchProviders = async (
       });
     });
 
-    languageItems.map((lang) => {
+    // Languages filter
+    languageItems.forEach((lang) => {
       langCondOr.or.push({ languages: { contains: lang } });
     });
 
-    availabilityItems.map((avail) => {
+    // Availability filter
+    availabilityItems.forEach((avail) => {
       availCondAnd.and.push({ availability: { contains: avail } });
     });
 
-    specialtyItems.map((spec) => {
+    // Specialty filter
+    specialtyItems.forEach((spec) => {
       specCondAnd.and.push({ servicesOffered: { contains: spec } });
     });
 
-    if (nameCondAnd.and.length > 0) {
-      attrFilter.filter.and.push(nameCondAnd);
-    }
-    if (langCondOr.or.length > 0) {
-      attrFilter.filter.and.push(langCondOr);
-    }
-    if (availCondAnd.and.length > 0) {
-      attrFilter.filter.and.push(availCondAnd);
-    }
-    if (specCondAnd.and.length > 0) {
-      attrFilter.filter.and.push(specCondAnd);
-    }
+    if (nameCondAnd.and.length > 0) attrFilter.filter.and.push(nameCondAnd);
+    if (langCondOr.or.length > 0) attrFilter.filter.and.push(langCondOr);
+    if (availCondAnd.and.length > 0) attrFilter.filter.and.push(availCondAnd);
+    if (specCondAnd.and.length > 0) attrFilter.filter.and.push(specCondAnd);
 
     console.info("attrFilter: ", attrFilter);
 
     const response = await DynamoClient.models.ProviderProfile.list(attrFilter);
 
     if (response.data) {
-      response.data.map((item) => {
+      response.data.forEach((item) => {
         console.info("-=> item: ", item.id);
         providers.push({
           lastName: item.lastName,
           firstName: item.firstName,
           title: item.profileTitle,
-          location: item.city.concat(", ").concat(item.province),
+          location: `${item.city}, ${item.province}`,
           experience: item.yearsExperience,
           languages: item.languages,
           services: item.servicesOffered,
-          hourlyRate: item.askingRate, // ?
+          hourlyRate: item.askingRate,
           imageSrc: item.profilePhoto,
         });
       });
@@ -117,5 +95,6 @@ export const fetchProviders = async (
   } catch (error) {
     console.error("error", error);
   }
+
   return providers;
 };

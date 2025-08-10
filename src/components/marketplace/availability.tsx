@@ -288,6 +288,13 @@ export function Availability({
             <GreenButton
               className={"m-3"}
               variant={"action"}
+              onClick={() => setIsOpen(false)}
+            >
+              Cancel
+            </GreenButton>
+            <GreenButton
+              className={"m-3"}
+              variant={"action"}
               onClick={handleSave}
             >
               Save

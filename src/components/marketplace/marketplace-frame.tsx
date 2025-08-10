@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ProviderCard from "@/components/marketplace/healthcare-provider-card";
 import MarketplaceSearchBar from "@/components/marketplace/marketplace-search-bar";
 import MarketplaceFilter from "@/components/marketplace/marketplace-filter";
@@ -18,22 +18,19 @@ export interface Provider {
   imageSrc: string;
 }
 
-const landingProviders: Provider[] = [];
-// MOCK_PROVIDERS.push(... demo_data);
-
 export default function MarketplaceFrame() {
   const thisSliderMinValue = 0;
   const thisSliderMaxValue = 200;
 
   const [searchKey, setSearchKey] = useState<string>("");
-
   const [minPrice, setMinPrice] = useState(thisSliderMinValue);
   const [maxPrice, setMaxPrice] = useState(thisSliderMaxValue);
-
   const [availability, setAvailability] = useState<string[]>([]);
-  const [experience, setExperience] = useState<number>(0);
+  const [experience, setExperience] = useState<{ min: number; max: number }>({
+    min: 0,
+    max: 100,
+  });
   const [specialty, setSpecialty] = useState<string[]>([]);
-
   const [languagePreference, setLanguagePreference] = useState<string[]>([]);
 
   const [fetchedProviders, setFetchedProviders] = useState<Provider[]>([]);
@@ -41,14 +38,10 @@ export default function MarketplaceFrame() {
 
   const triggerFetch = () => {
     setPageDoneLoading(false);
-    landingProviders.length = 0;
 
-    const tmpSearchKeySet: string[] = [];
-    searchKey.split(" ").map((word: string) => {
-      if (word.length > 0) {
-        tmpSearchKeySet.push(word);
-      }
-    });
+    const tmpSearchKeySet = searchKey
+      .split(" ")
+      .filter((word) => word.length > 0);
 
     fetchProviders(
       languagePreference,
@@ -60,53 +53,51 @@ export default function MarketplaceFrame() {
       tmpSearchKeySet
     )
       .then((r) => {
-        r.map((ele) => {
-          landingProviders.push({
-            name: ele.firstName.concat(" ".concat(ele.lastName)),
-            title: ele.title,
-            location: ele.location,
-            experience: ele.experience,
-            languages: Array.from(ele.languages.values()),
-            services: Array.from(ele.services.values()),
-            hourlyRate: ele.hourlyRate,
-            imageSrc: ele.imageSrc,
-          });
-        });
-      })
-      .then(() => {
-        console.info(
-          "front rst cnt: ",
-          Object.values(landingProviders).length,
-          landingProviders
-        );
-        setFetchedProviders(landingProviders);
-        setPageDoneLoading(true);
+        const transformed = r.map((ele) => ({
+          name: `${ele.firstName} ${ele.lastName}`,
+          title: ele.title,
+          location: ele.location,
+          experience: ele.experience,
+          languages: Array.from(ele.languages.values()),
+          services: Array.from(ele.services.values()),
+          hourlyRate: ele.hourlyRate,
+          imageSrc: ele.imageSrc,
+        }));
+
+        console.info("front rst cnt: ", transformed.length, transformed);
+        setFetchedProviders(transformed);
       })
       .catch((e) => {
-        console.log(e);
+        console.error(e);
+      })
+      .finally(() => {
+        setPageDoneLoading(true);
       });
   };
+
+  //  Prevent double fetch in dev due to React Strict Mode
+  const didFetchRef = useRef(false);
+  useEffect(() => {
+    if (didFetchRef.current) return;
+    didFetchRef.current = true;
+    triggerFetch();
+  }, []);
 
   const [showBackToTopButton, setShowBackToTopButton] = useState(false);
 
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth", // For smooth scrolling animation
+      behavior: "smooth",
     });
   };
 
   useEffect(() => {
     const toggleVisibility = () => {
-      if (window.pageYOffset > 300) {
-        setShowBackToTopButton(true);
-      } else {
-        setShowBackToTopButton(false);
-      }
+      setShowBackToTopButton(window.pageYOffset > 300);
     };
 
     window.addEventListener("scroll", toggleVisibility);
-
     return () => {
       window.removeEventListener("scroll", toggleVisibility);
     };
@@ -114,7 +105,6 @@ export default function MarketplaceFrame() {
 
   return (
     <div className="relative">
-      {/* Back to Top Button */}
       {(showBackToTopButton || true) && (
         <button
           onClick={scrollToTop}
@@ -124,8 +114,8 @@ export default function MarketplaceFrame() {
         </button>
       )}
 
-      <div className={"w-full h-[100%] flex flex-col"}>
-        <div className={"flex-initial"}>
+      <div className="w-full h-[100%] flex flex-col">
+        <div className="flex-initial">
           <MarketplaceSearchBar
             searchKey={searchKey}
             setSearchKey={setSearchKey}
@@ -151,8 +141,8 @@ export default function MarketplaceFrame() {
               triggerFetch={triggerFetch}
             />
           </div>
-          <div className={"flex-auto overflow-y-auto"}>
-            <div className="space-y-6 w-full  lg:overflow-auto">
+          <div className="flex-auto overflow-y-auto">
+            <div className="space-y-6 w-full lg:overflow-auto">
               {pageDoneLoading ? (
                 fetchedProviders.length === 0 ? (
                   <div className="text-center text-darkest-green text-lg py-10">

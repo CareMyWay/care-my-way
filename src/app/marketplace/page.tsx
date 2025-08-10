@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import ProviderCard from "@/components/marketplace/healthcare-provider-card";
-import MarketplaceSearchBar from "@/components/marketplace/marketplace-search-bar";
-import MarketplaceFilter from "@/components/marketplace/marketplace-filter";
+import MarketplaceFrame from "@/components/marketplace/marketplace-frame";
 import {
   getPublicProviderProfiles,
   transformProviderForMarketplace,
@@ -24,6 +23,8 @@ export default function MarketplacePage() {
         setError(null);
 
         const profiles = await getPublicProviderProfiles();
+        console.log("Raw profiles count:", profiles.length, profiles);
+
         const transformedProviders = profiles.map(
           transformProviderForMarketplace
         );
@@ -51,7 +52,7 @@ export default function MarketplacePage() {
           <div className="text-center space-y-4">
             <div className="animate-spin rounded-full h-12 w-12 border-4 border-medium-green border-t-transparent mx-auto"></div>
             <p className="text-darkest-green text-lg">
-              Loading Healthcare Providers...
+              Loading care providers...
             </p>
           </div>
         </div>
@@ -98,21 +99,9 @@ export default function MarketplacePage() {
 
   return (
     <div>
-      <section className="min-h-screen px-4 py-12 md:px-16 bg-primary-white">
-        <div className="container mx-auto flex flex-col md:h-screen">
-          <div>
-            <div>
-              <MarketplaceSearchBar />
-            </div>
-          </div>
-          <div className="flex flex-col lg:flex-row gap-6 md:flex-1 md:min-h-0">
-            <div>
-              <MarketplaceFilter />
-            </div>
-            <div className="space-y-6 w-full md:overflow-y-auto">
-              {renderContent()}
-            </div>
-          </div>
+      <section className="h-auto px-4 py-12 md:px-16 bg-primary-white">
+        <div className="container mx-auto flex flex-col md:h-auto">
+          <MarketplaceFrame />
         </div>
       </section>
     </div>
