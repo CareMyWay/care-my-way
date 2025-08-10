@@ -48,10 +48,10 @@ const MarketplaceFilter = ({
     setExperience(Number(e.target.value));
   };
 
-  const languageLabelPool = [...ISO6391.getAllNames().sort().map(r => {return t(r);}), "Other"];
-  const languageValuePool = [...ISO6391.getAllNames().sort(), "Other"];
-  const serviceLabelPool = getServiceNames();
-  const serviceValuePool = getServiceNames().map((e) => { return t(e); });
+  const languageLabelPool = [...ISO6391.getAllNames().sort().map(r => {return t(r);})]; // , t("Other")
+  const languageValuePool = [...ISO6391.getAllNames().sort()]; // , "Other"
+  const serviceLabelPool = getServiceNames().map((e) => { return t(e); });
+  const serviceValuePool = getServiceNames();
 
   // console.info(ISO6391.getAllCodes());
   // console.info(ISO6391.getAllNames());

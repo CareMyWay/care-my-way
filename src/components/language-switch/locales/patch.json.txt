@@ -1,0 +1,153 @@
+fr^#^5+ years experience^#^Plus de 5 ans d'expérience
+fr^#^3-5 years experience^#^3 à 5 ans d'expérience
+fr^#^5+ years experience^#^Plus de 5 ans d'expérience
+fr^#^Less than 1 year experience^#^Moins d'un an d'expérience
+fr^#^3-5 years experience^#^3 à 5 ans d'expérience
+fr^#^1-2 years experience^#^1 à 2 ans d'expérience
+fr^#^1-2 years experience^#^1 à 2 ans d'expérience
+es^#^3-5 years experience^#^3-5 años de experiencia
+es^#^5+ years experience^#^Más de 5 años de experiencia
+es^#^3-5 years experience^#^3-5 años de experiencia
+es^#^1-2 years experience^#^1-2 años de experiencia
+es^#^5+ years experience^#^Más de 5 años de experiencia
+es^#^1-2 years experience^#^1-2 años de experiencia
+es^#^Less than 1 year experience^#^Menos de 1 año de experiencia
+es^#^Less than 1 year experience^#^Menos de 1 año de experiencia
+zh^#^3-5 years experience^#^3-5 年工作经验
+zh^#^5+ years experience^#^5 年以上经验
+zh^#^5+ years experience^#^5 年以上经验
+zh^#^1-2 years experience^#^1-2 年工作经验
+zh^#^3-5 years experience^#^3-5 年工作经验
+zh^#^1-2 years experience^#^1-2 年工作经验
+zh^#^Less than 1 year experience^#^少于 1 年的经验
+zh^#^Less than 1 year experience^#^少于 1 年的经验
+pa^#^3-5 years experience^#^3-5 ਸਾਲਾਂ ਦਾ ਤਜਰਬਾ
+pa^#^1-2 years experience^#^1-2 ਸਾਲਾਂ ਦਾ ਤਜਰਬਾ
+pa^#^5+ years experience^#^5+ ਸਾਲਾਂ ਦਾ ਤਜਰਬਾ
+pa^#^1-2 years experience^#^1-2 ਸਾਲਾਂ ਦਾ ਤਜਰਬਾ
+pa^#^5+ years experience^#^5+ ਸਾਲਾਂ ਦਾ ਤਜਰਬਾ
+pa^#^3-5 years experience^#^3-5 ਸਾਲਾਂ ਦਾ ਤਜਰਬਾ
+pa^#^Less than 1 year experience^#^1 ਸਾਲ ਤੋਂ ਘੱਟ ਤਜਰਬਾ
+pa^#^Less than 1 year experience^#^1 ਸਾਲ ਤੋਂ ਘੱਟ ਤਜਰਬਾ
+hi^#^3-5 years experience^#^3-5 साल का अनुभव
+hi^#^5+ years experience^#^5+ वर्ष का अनुभव
+hi^#^3-5 years experience^#^3-5 साल का अनुभव
+hi^#^1-2 years experience^#^1-2 साल का अनुभव
+hi^#^1-2 years experience^#^1-2 साल का अनुभव
+hi^#^5+ years experience^#^5+ वर्ष का अनुभव
+hi^#^Less than 1 year experience^#^1 वर्ष से कम का अनुभव
+hi^#^Less than 1 year experience^#^1 वर्ष से कम का अनुभव
+tl^#^3-5 years experience^#^3-5 taong karanasan
+tl^#^1-2 years experience^#^1-2 taon na karanasan
+tl^#^1-2 years experience^#^1-2 taon na karanasan
+tl^#^5+ years experience^#^5+ taon na karanasan
+tl^#^3-5 years experience^#^3-5 taong karanasan
+tl^#^5+ years experience^#^5+ taon na karanasan
+tl^#^Less than 1 year experience^#^Mas mababa sa 1 taong karanasan
+tl^#^Less than 1 year experience^#^Mas mababa sa 1 taong karanasan
+it^#^3-5 years experience^#^3-5 anni di esperienza
+it^#^3-5 years experience^#^3-5 anni di esperienza
+it^#^5+ years experience^#^5+ anni di esperienza
+it^#^1-2 years experience^#^1-2 anni di esperienza
+it^#^5+ years experience^#^5+ anni di esperienza
+it^#^1-2 years experience^#^1-2 anni di esperienza
+it^#^Less than 1 year experience^#^Meno di 1 anno di esperienza
+it^#^Less than 1 year experience^#^Meno di 1 anno di esperienza
+de^#^1-2 years experience^#^1-2 Jahre Erfahrung
+de^#^5+ years experience^#^5+ Jahre Erfahrung
+de^#^5+ years experience^#^5+ Jahre Erfahrung
+de^#^3-5 years experience^#^3-5 Jahre Erfahrung
+de^#^3-5 years experience^#^3-5 Jahre Erfahrung
+de^#^1-2 years experience^#^1-2 Jahre Erfahrung
+de^#^Less than 1 year experience^#^Weniger als 1 Jahr Erfahrung
+de^#^Less than 1 year experience^#^Weniger als 1 Jahr Erfahrung
+pt^#^3-5 years experience^#^3-5 anos de experiência
+pt^#^3-5 years experience^#^3-5 anos de experiência
+pt^#^5+ years experience^#^Mais de 5 anos de experiência
+pt^#^1-2 years experience^#^1-2 anos de experiência
+pt^#^5+ years experience^#^Mais de 5 anos de experiência
+pt^#^1-2 years experience^#^1-2 anos de experiência
+pt^#^Less than 1 year experience^#^Menos de 1 ano de experiência
+pt^#^Less than 1 year experience^#^Menos de 1 ano de experiência
+ru^#^3-5 years experience^#^3-5 лет опыта
+ru^#^5+ years experience^#^Опыт работы более 5 лет
+ru^#^3-5 years experience^#^3-5 лет опыта
+ru^#^5+ years experience^#^Опыт работы более 5 лет
+ru^#^1-2 years experience^#^Опыт работы 1-2 года
+ru^#^1-2 years experience^#^Опыт работы 1-2 года
+ru^#^Less than 1 year experience^#^Опыт работы менее 1 года
+ru^#^Less than 1 year experience^#^Опыт работы менее 1 года
+ta^#^3-5 years experience^#^3-5 ஆண்டுகள் அனுபவம்
+ta^#^3-5 years experience^#^3-5 ஆண்டுகள் அனுபவம்
+ta^#^1-2 years experience^#^1-2 வருட அனுபவம்
+ta^#^5+ years experience^#^5+ ஆண்டுகள் அனுபவம்
+ta^#^5+ years experience^#^5+ ஆண்டுகள் அனுபவம்
+ta^#^1-2 years experience^#^1-2 வருட அனுபவம்
+ta^#^Less than 1 year experience^#^1 வருடத்திற்கும் குறைவான அனுபவம்
+ta^#^Less than 1 year experience^#^1 வருடத்திற்கும் குறைவான அனுபவம்
+vi^#^3-5 years experience^#^3-5 năm kinh nghiệm
+vi^#^1-2 years experience^#^1-2 năm kinh nghiệm
+vi^#^3-5 years experience^#^3-5 năm kinh nghiệm
+vi^#^5+ years experience^#^Hơn 5 năm kinh nghiệm
+vi^#^Less than 1 year experience^#^Ít hơn 1 năm kinh nghiệm
+vi^#^5+ years experience^#^Hơn 5 năm kinh nghiệm
+vi^#^1-2 years experience^#^1-2 năm kinh nghiệm
+vi^#^Less than 1 year experience^#^Ít hơn 1 năm kinh nghiệm
+gu^#^1-2 years experience^#^1-2 વર્ષનો અનુભવ
+gu^#^5+ years experience^#^5+ વર્ષનો અનુભવ
+gu^#^5+ years experience^#^5+ વર્ષનો અનુભવ
+gu^#^1-2 years experience^#^1-2 વર્ષનો અનુભવ
+gu^#^3-5 years experience^#^3-5 વર્ષનો અનુભવ
+gu^#^3-5 years experience^#^3-5 વર્ષનો અનુભવ
+gu^#^3-5 years experience^#^3-5 વર્ષનો અનુભવ
+gu^#^3-5 years experience^#^3-5 વર્ષનો અનુભવ
+gu^#^Less than 1 year experience^#^1 વર્ષથી ઓછો અનુભવ
+gu^#^Less than 1 year experience^#^1 વર્ષથી ઓછો અનુભવ
+ko^#^5+ years experience^#^5년 이상의 경험
+ko^#^3-5 years experience^#^3-5 년의 경험
+ko^#^3-5 years experience^#^3-5 년의 경험
+ko^#^5+ years experience^#^5년 이상의 경험
+ko^#^1-2 years experience^#^1-2년의 경험
+ko^#^1-2 years experience^#^1-2년의 경험
+ko^#^Less than 1 year experience^#^경력 1년 미만
+ko^#^Less than 1 year experience^#^경력 1년 미만
+pl^#^1-2 years experience^#^1-2 lata doświadczenia
+pl^#^5+ years experience^#^5+ lat doświadczenia
+pl^#^1-2 years experience^#^1-2 lata doświadczenia
+pl^#^3-5 years experience^#^3-5 lat doświadczenia
+pl^#^3-5 years experience^#^3-5 lat doświadczenia
+pl^#^5+ years experience^#^5+ lat doświadczenia
+pl^#^Less than 1 year experience^#^Mniej niż 1 rok doświadczenia
+pl^#^Less than 1 year experience^#^Mniej niż 1 rok doświadczenia
+el^#^3-5 years experience^#^3-5 έτη εμπειρίας
+el^#^3-5 years experience^#^3-5 έτη εμπειρίας
+el^#^5+ years experience^#^5+ έτη εμπειρίας
+el^#^1-2 years experience^#^1-2 χρόνια εμπειρίας
+el^#^5+ years experience^#^5+ έτη εμπειρίας
+el^#^1-2 years experience^#^1-2 χρόνια εμπειρίας
+el^#^Less than 1 year experience^#^Λιγότερο από 1 έτος εμπειρίας
+el^#^Less than 1 year experience^#^Λιγότερο από 1 έτος εμπειρίας
+uk^#^3-5 years experience^#^3-5 років досвіду
+uk^#^1-2 years experience^#^Досвід роботи 1-2 роки
+uk^#^5+ years experience^#^5+ років досвіду
+uk^#^5+ years experience^#^5+ років досвіду
+uk^#^3-5 years experience^#^3-5 років досвіду
+uk^#^1-2 years experience^#^Досвід роботи 1-2 роки
+uk^#^Less than 1 year experience^#^Досвід роботи менше 1 року
+uk^#^Less than 1 year experience^#^Досвід роботи менше 1 року
+bn^#^3-5 years experience^#^3-5 বছরের অভিজ্ঞতা
+bn^#^3-5 years experience^#^3-5 বছরের অভিজ্ঞতা
+bn^#^1-2 years experience^#^1-2 বছরের অভিজ্ঞতা
+bn^#^5+ years experience^#^5+ বছরের অভিজ্ঞতা
+bn^#^1-2 years experience^#^1-2 বছরের অভিজ্ঞতা
+bn^#^5+ years experience^#^5+ বছরের অভিজ্ঞতা
+bn^#^Less than 1 year experience^#^1 বছরেরও কম অভিজ্ঞতা
+bn^#^Less than 1 year experience^#^1 বছরেরও কম অভিজ্ঞতা
+ro^#^3-5 years experience^#^3-5 ani de experiență
+ro^#^5+ years experience^#^5+ ani de experiență
+ro^#^5+ years experience^#^5+ ani de experiență
+ro^#^1-2 years experience^#^1-2 ani de experiență
+ro^#^3-5 years experience^#^3-5 ani de experiență
+ro^#^1-2 years experience^#^1-2 ani de experiență
+ro^#^Less than 1 year experience^#^Experiență mai mică de 1 an
+ro^#^Less than 1 year experience^#^Experiență mai mică de 1 an

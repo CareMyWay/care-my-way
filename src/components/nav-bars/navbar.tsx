@@ -9,7 +9,8 @@ import { Hub } from "aws-amplify/utils";
 import { useTransition } from "react";
 import { getErrorMessage } from "@/utils/get-error-message";
 import GreenButton from "../buttons/green-button";
-import { Menu, X } from "lucide-react"; // for hamburger icon
+import { Menu, X } from "lucide-react";
+import LanguageSwitcher from "@/components/language-switch/LanguageSwhitcher"; // for hamburger icon
 
 export default function NavBar() {
   const [authCheck, setAuthCheck] = useState<boolean | null>(null);
@@ -84,14 +85,16 @@ export default function NavBar() {
 
         {/* Right: Auth Buttons */}
         <div className="hidden lg:flex items-center gap-4">
+          <LanguageSwitcher    />
           {authCheck ? (
-            <GreenButton variant="action" onClick={handleSignOut}>
+            <GreenButton className={"whitespace-nowrap"} variant="action" onClick={handleSignOut}>
               Sign Out
             </GreenButton>
           ) : (
             <>
               <Button
                 variation="link"
+                className={"whitespace-nowrap"}
                 style={{ color: "#173F3F", textTransform: "uppercase" }}
                 borderRadius="2rem"
                 onClick={() => router.push("/login")}
@@ -99,6 +102,7 @@ export default function NavBar() {
                 Log In
               </Button>
               <GreenButton
+                className={"whitespace-nowrap"}
                 variant="action"
                 onClick={() => router.push("/sign-up/user")}
               >

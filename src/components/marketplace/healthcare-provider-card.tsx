@@ -69,10 +69,10 @@ const HealthcareProviderCard: React.FC<HealthcareProviderCardProps> = ({
               {name}
             </h3>
             <p className="text-body4-size text-medium-green">
-              {t(title)} | {location.split(",").map(r => {return t(r.trim());}).join(", ")}
+              {title} | {location}
             </p>
             <p className="text-body4-size text-darkest-green mt-1">
-              {t(experience)} {t("experience")}
+              {t(`${experience} experience`)}
             </p>
             <p className="text-body4-size text-darkest-green">
               {languages.map(r => {return t(r);}).join(", ")}
@@ -88,12 +88,12 @@ const HealthcareProviderCard: React.FC<HealthcareProviderCardProps> = ({
                   key={idx}
                   className="bg-light-green text-darkest-green px-3 py-1 rounded-full text-sm"
                 >
-                  {t(service)}
+                  {service}
                 </span>
               ))}
               {services.length > 3 && (
                 <span className="text-body4-size text-medium-green font-medium">
-                  {t("more")}...
+                  {t("more...")}
                 </span>
               )}
             </div>

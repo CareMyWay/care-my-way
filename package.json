@@ -8,6 +8,11 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false
+  },
   "dependencies": {
     "@aws-amplify/adapter-nextjs": "^1.6.2",
     "@aws-amplify/auth": "^6.13.0",
@@ -20,6 +25,7 @@
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-tabs": "^1.1.12",
     "aws-amplify": "^6.15.0",
+    "aws-sdk": "^2.1692.0",
     "bad-words": "^4.0.0",
     "class-variance-authority": "^0.7.1",
     "country-region-data": "^3.1.0",
@@ -64,7 +70,8 @@
     "eslint-plugin-react": "^7.37.5",
     "i18next-parser": "^9.3.0",
     "tailwindcss": "^4",
-    "tsx": "^4.19.4",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   },
   "overrides": {
