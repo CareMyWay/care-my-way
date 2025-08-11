@@ -1,6 +1,6 @@
 import React from "react";
 import GreenButton from "../buttons/green-button";
-// import {useTranslation} from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 const AboutSection = () => {
   const translationStrSet = {

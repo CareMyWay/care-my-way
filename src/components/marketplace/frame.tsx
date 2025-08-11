@@ -6,7 +6,7 @@ import MarketplaceSearchBar from "@/components/marketplace/search-bar";
 import MarketplaceFilter from "@/components/marketplace/filter";
 import {fetchProviders} from "@/actions/fetchProviderMarketPlace";
 import Loading from "@/app/loading";
-import LanguageSwitcher from "@/components/language-switch/LanguageSwhitcher";
+// import LanguageSwitcher from "@/components/language-switch/LanguageSwhitcher";
 import { useTranslation } from "react-i18next";
 
 export interface Provider {
@@ -106,7 +106,7 @@ export default function MarketplaceFrame() {
 
   return (
     <div className="relative">
-      <LanguageSwitcher    />
+      {/*<LanguageSwitcher    />*/}
 
       {/* Back to Top Button */}
       {(showBackToTopButton || true) && (

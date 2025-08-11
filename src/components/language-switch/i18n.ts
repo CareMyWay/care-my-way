@@ -1,7 +1,8 @@
 import i18n from "i18next";
-import { initReactI18next } from "react-i18next";
 import {getTranslation} from "@/components/language-switch/awsTranslate";
 import lanSrcJson from "src/components/language-switch/locales-common.json";
+import { initReactI18next } from "react-i18next";
+// import LanguageDetector from "i18next-browser-languagedetector";
 
 i18n
   // .use(HttpApi) // loads translations via HTTP (e.g. from /public/locales)

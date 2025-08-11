@@ -1,6 +1,6 @@
 import { Select } from "@/components/select/standardSelect";
 import { useTranslation } from "react-i18next";
-import "/src/components/language-switch/i18n";
+// import i18n from "@/components/language-switch/i18n";
 
 
 export default function LanguageSwitcher( ) {

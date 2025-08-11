@@ -10,9 +10,11 @@ import { useTransition } from "react";
 import { getErrorMessage } from "@/utils/get-error-message";
 import GreenButton from "../buttons/green-button";
 import { Menu, X } from "lucide-react";
-import LanguageSwitcher from "@/components/language-switch/LanguageSwhitcher"; // for hamburger icon
+import LanguageSwitcher from "@/components/language-switch/LanguageSwhitcher";
+import {useTranslation} from "react-i18next"; // for hamburger icon
 
 export default function NavBar() {
+  const { t } = useTranslation();
   const [authCheck, setAuthCheck] = useState<boolean | null>(null);
 
   const [menuOpen, setMenuOpen] = useState(false); // mobile menu toggle
@@ -50,9 +52,9 @@ export default function NavBar() {
   };
 
   const defaultRoutes = [
-    { href: "/", label: "Home" },
-    { href: "/marketplace", label: "Healthcare Directory" },
-    { href: "/client-dashboard", label: "My Dashboard", loggedIn: true },
+    { href: "/", label: t("Home") },
+    { href: "/marketplace", label: t("Healthcare Directory") },
+    { href: "/client-dashboard", label: t("My Dashboard"), loggedIn: true },
     // { href: "/settings", label: "Settings", loggedIn: true },
   ];
 
@@ -88,14 +90,13 @@ export default function NavBar() {
           <LanguageSwitcher    />
           {authCheck ? (
             <GreenButton className={"whitespace-nowrap"} variant="action" onClick={handleSignOut}>
-              Sign Out
+              {t("Sign Out")}
             </GreenButton>
           ) : (
             <>
               <Button
                 variation="link"
-                className={"whitespace-nowrap"}
-                style={{ color: "#173F3F", textTransform: "uppercase" }}
+                style={{ color: "#173F3F", textTransform: "uppercase", whiteSpace: "nowrap" }}
                 borderRadius="2rem"
                 onClick={() => router.push("/login")}
               >
@@ -106,7 +107,7 @@ export default function NavBar() {
                 variant="action"
                 onClick={() => router.push("/sign-up/user")}
               >
-                Sign Up
+                {t("Sign Up")}
               </GreenButton>
             </>
           )}
@@ -136,15 +137,16 @@ export default function NavBar() {
             </Link>
           ))}
           <div className="my-4 border-t-2 border-darkest-green w-full" />
-
+          <LanguageSwitcher    />
           {authCheck ? (
-            <GreenButton variant="action" onClick={handleSignOut}>
-              Sign Out
+            <GreenButton variant="action" onClick={handleSignOut} className={"whitespace-nowrap"}>
+              {t("Sign Out")}
             </GreenButton>
           ) : (
             <div className="flex flex-col gap-3">
               <Button
                 variation="link"
+                className={"whitespace-nowrap"}
                 style={{
                   color: "#173F3F",
                   border: "2px solid #173F3F",
@@ -160,16 +162,17 @@ export default function NavBar() {
                   setMenuOpen(false);
                 }}
               >
-                Log In
+                {t("Log In")}
               </Button>
               <GreenButton
+                className={"whitespace-nowrap"}
                 variant="action"
                 onClick={() => {
                   router.push("/sign-up/user");
                   setMenuOpen(false);
                 }}
               >
-                Sign Up
+                {t("Sign Up")}
               </GreenButton>
             </div>
           )}
