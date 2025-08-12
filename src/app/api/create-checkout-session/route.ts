@@ -2,14 +2,26 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
 export async function POST(req: Request) {
   try {
+    console.log("env vars loaded:", {
+      STRIPE_SECRET_KEY: !!process.env.STRIPE_SECRET_KEY,
+      BOOKING_TABLE_NAME: !!process.env.BOOKING_TABLE_NAME,
+      NOTIFICATION_TABLE_NAME: !!process.env.NOTIFICATION_TABLE_NAME,
+      REGION: !!process.env.REGION,
+      SDK_ACCESS_KEY_ID: !!process.env.SDK_ACCESS_KEY_ID,
+      SDK_SECRET_ACCESS_KEY: !!process.env.SDK_SECRET_ACCESS_KEY,
+    });
+
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
     const headersList = await headers();
     const origin = headersList.get("origin");
 
-    const body = await req.json();
+    const reqClone = req.clone();
+    const body = await reqClone.json();
+
+    console.log("Received checkout request body:", body);
+    console.log("STRIPE_SECRET_KEY length:", process.env.STRIPE_SECRET_KEY?.length);
 
     const { name, amount, quantity, bookingId, providerId, providerPhoto, providerName, providerTitle, providerLocation, providerRate, date, time, duration, notificationId } = body;
 
@@ -49,8 +61,16 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ url: session.url });
   } catch (err: unknown) {
-    if (err instanceof Stripe.errors.StripeError) 
-      return  NextResponse.json({ error: err.message }, { status: 500 });
+    console.error("Error creating checkout session:", err);
+    if (err instanceof Error) {
+      console.error(err.stack);
+    }
+
+    if (err instanceof Stripe.errors.StripeError) {
+      return NextResponse.json({ error: err.message }, { status: 500 });
+    }
+
+    // fallback for unknown errors
+    return NextResponse.json({ error: "Unknown error" }, { status: 500 });
   }
-    return NextResponse.json({ error: "Unknown error"}, { status: 500 });
 }
