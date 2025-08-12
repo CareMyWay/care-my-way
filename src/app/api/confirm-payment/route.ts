@@ -6,19 +6,20 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 // GOLIVE TODO: Implement a stripe webhook to handle payment confirmation (needed a public domain for this)
 const ddbClient = new DynamoDBClient({
-  region: "ca-central-1",
+  region: process.env.REGION!,
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+    accessKeyId: process.env.SDK_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.SDK_SECRET_ACCESS_KEY!,
   },
 });
 
 export async function POST(req: Request) {
   try {
-    const { sessionId, notificationId } = await req.json();
+    const { sessionId } = await req.json();
 
     const session = await stripe.checkout.sessions.retrieve(sessionId);
     const bookingId = session.metadata?.bookingId;
+    const notificationId = session.metadata?.notificationId;
 
     if (!bookingId) {
       throw new Error("Missing booking ID from Stripe metadata");
