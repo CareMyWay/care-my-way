@@ -15,7 +15,7 @@ const ddbClient = new DynamoDBClient({
 
 export async function POST(req: Request) {
   try {
-    const { sessionId } = await req.json();
+    const { sessionId, notificationId } = await req.json();
 
     const session = await stripe.checkout.sessions.retrieve(sessionId);
     const bookingId = session.metadata?.bookingId;
@@ -24,8 +24,9 @@ export async function POST(req: Request) {
       throw new Error("Missing booking ID from Stripe metadata");
     }
 
+    // Update the booking status in DynamoDB
     const updateCommand = new UpdateItemCommand({
-      TableName: "Booking-pnrbd5j3jraz3p7qhb4mco6cwe-NONE",
+      TableName: process.env.BOOKING_TABLE_NAME!,
       Key: {
         id: { S: bookingId },
       },
@@ -36,6 +37,21 @@ export async function POST(req: Request) {
     });
 
     await ddbClient.send(updateCommand);
+
+    // Update notification as actioned if notificationId provided
+    if (notificationId) {
+      const updateNotificationCmd = new UpdateItemCommand({
+        TableName: process.env.NOTIFICATION_TABLE_NAME!,
+        Key: {
+          id: { S: notificationId },
+        },
+        UpdateExpression: "SET isActioned = :true",
+        ExpressionAttributeValues: {
+          ":true": { BOOL: true },
+        },
+      });
+      await ddbClient.send(updateNotificationCmd);
+    }
 
     return NextResponse.json({ 
       success: true,
