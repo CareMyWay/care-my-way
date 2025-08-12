@@ -10,6 +10,8 @@ import { useTransition } from "react";
 import { getErrorMessage } from "@/utils/get-error-message";
 import GreenButton from "../buttons/green-button";
 import { Menu, X } from "lucide-react";
+import LanguageSwitcher from "@/components/language-switch/LanguageSwhitcher";
+import { useTranslation } from "react-i18next";
 
 type NavBarProps = {
   userGroups?: string[]; // Make userGroups optional
@@ -104,9 +106,11 @@ export default function NavBar({ userGroups = [] }: NavBarProps) {
         className="text-darkest-green hover:text-medium-green transition-colors duration-200 block"
         onClick={() => setMenuOpen(false)}
       >
-        {label}
+        {t(label)}
       </Link>
     ));
+
+  const { t } = useTranslation();
 
   return (
     <>
@@ -121,15 +125,16 @@ export default function NavBar({ userGroups = [] }: NavBarProps) {
         </div>
 
         <div className="hidden lg:flex items-center gap-4">
+          <LanguageSwitcher    />
           {authCheck ? (
-            <GreenButton variant="action" onClick={handleSignOut}>
-              Sign Out
+            <GreenButton className={"whitespace-nowrap"} variant="action" onClick={handleSignOut}>
+              {t("Sign Out")}
             </GreenButton>
           ) : (
             <>
               <Button
                 variation="link"
-                style={{ color: "#173F3F", textTransform: "uppercase" }}
+                style={{ color: "#173F3F", textTransform: "uppercase", whiteSpace: "nowrap" }}
                 borderRadius="2rem"
                 onClick={() => redirect("/login")}
               >
@@ -137,9 +142,10 @@ export default function NavBar({ userGroups = [] }: NavBarProps) {
               </Button>
               <GreenButton
                 variant="action"
+                className={"whitespace-nowrap"}
                 onClick={() => redirect("/sign-up/user")}
               >
-                Sign Up
+                {t("Sign Up")}
               </GreenButton>
             </>
           )}
@@ -158,9 +164,10 @@ export default function NavBar({ userGroups = [] }: NavBarProps) {
         <div className="lg:hidden px-4 py-4 space-y-4 bg-white border-b border-gray-200">
           {renderRoutes(combinedRoutes)}
           <div className="my-4 border-t-2 border-darkest-green w-full" />
+          <LanguageSwitcher    />
           {authCheck ? (
-            <GreenButton variant="action" onClick={handleSignOut}>
-              Sign Out
+            <GreenButton className={"whitespace-nowrap"} variant="action" onClick={handleSignOut}>
+              {t("Sign Out")}
             </GreenButton>
           ) : (
             <div className="flex flex-col gap-3">
@@ -174,6 +181,7 @@ export default function NavBar({ userGroups = [] }: NavBarProps) {
                   fontWeight: "600",
                   textTransform: "uppercase",
                   backgroundColor: "transparent",
+                  whiteSpace: "nowrap",
                 }}
                 borderRadius="2rem"
                 onClick={() => {
@@ -184,13 +192,14 @@ export default function NavBar({ userGroups = [] }: NavBarProps) {
                 Log In
               </Button>
               <GreenButton
+                className={"whitespace-nowrap"}
                 variant="action"
                 onClick={() => {
                   redirect("/sign-up/user");
                   setMenuOpen(false);
                 }}
               >
-                Sign Up
+                {t("Sign Up")}
               </GreenButton>
             </div>
           )}

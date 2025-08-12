@@ -1,0 +1,957 @@
+pa^#^Sign Out^#^ਸਾਈਨ ਆਉਟ
+fr^#^Sign Out^#^Déconnectez-vous
+es^#^Sign Out^#^Cerrar sesión
+zh^#^Sign Out^#^注销
+pa^#^Sign Out^#^ਸਾਈਨ ਆਉਟ
+hi^#^Sign Out^#^साइन आउट करें
+tl^#^Sign Out^#^Mag-sign out
+it^#^Sign Out^#^Esci
+de^#^Sign Out^#^Abmelden
+pt^#^Sign Out^#^Sair
+ru^#^Sign Out^#^Выйти
+ta^#^Sign Out^#^உள்நுழைவு
+vi^#^Sign Out^#^Đăng xuất
+gu^#^Sign Out^#^સાઇન આઉટ
+ko^#^Sign Out^#^로그아웃
+pl^#^Sign Out^#^Wyloguj się
+el^#^Sign Out^#^Αποσύνδεση
+uk^#^Sign Out^#^Вийти
+bn^#^Sign Out^#^সাইন আউট
+ro^#^Sign Out^#^Deconectați-vă
+fr^#^Home^#^Accueil
+fr^#^Healthcare Directory^#^Répertoire des soins de santé
+fr^#^My Dashboard^#^Mon tableau de bord
+fr^#^My Profile^#^Mon profil
+es^#^Home^#^Inicio
+es^#^Healthcare Directory^#^Directorio de atención médica
+es^#^My Dashboard^#^Mi panel
+es^#^My Profile^#^Mi perfil
+zh^#^Home^#^主页
+zh^#^Healthcare Directory^#^医疗保健名录
+zh^#^My Dashboard^#^我的控制面板
+zh^#^My Profile^#^我的个人资料
+pa^#^Home^#^ਘਰ
+pa^#^Healthcare Directory^#^ਹੈਲਥਕੇਅਰ ਡਾਇਰ
+pa^#^My Dashboard^#^ਮੇਰਾ ਡੈਸ਼ਬੋਰਡ
+pa^#^My Profile^#^ਮੇਰਾ ਪ੍ਰੋਫਾਈਲ
+hi^#^Home^#^होम
+hi^#^Healthcare Directory^#^हेल्थकेयर निर्देशिका
+hi^#^My Dashboard^#^मेरा डैशबोर्ड
+hi^#^My Profile^#^मेरी प्रोफ़ाइल
+tl^#^Home^#^Bahay
+tl^#^Healthcare Directory^#^Direktoryo ng Kalusugan
+tl^#^My Dashboard^#^Ang aking Dashboard
+tl^#^My Profile^#^Ang Aking Profile
+it^#^Home^#^Home
+it^#^Healthcare Directory^#^Elenco sanitario
+it^#^My Dashboard^#^La mia dashboard
+it^#^My Profile^#^Il mio profilo
+de^#^Home^#^Zuhause
+de^#^Healthcare Directory^#^Verzeichnis für das Gesundheitswesen
+de^#^My Dashboard^#^Mein Dashboard
+de^#^My Profile^#^Mein Profil
+pt^#^Home^#^Início
+pt^#^Healthcare Directory^#^Diretório de saúde
+pt^#^My Dashboard^#^Meu painel
+pt^#^My Profile^#^Meu perfil
+ru^#^Home^#^Главная
+ru^#^Healthcare Directory^#^Справочник по здравоохранению
+ru^#^My Dashboard^#^Моя панель управления
+ru^#^My Profile^#^Мой профиль
+ta^#^Home^#^முகப்பு
+ta^#^Healthcare Directory^#^சுகாதார கோப்பகம்
+ta^#^My Dashboard^#^எனது டாஷ்போ
+ta^#^My Profile^#^எனது சுயவிவரம்
+vi^#^Home^#^Trang chủ
+vi^#^Healthcare Directory^#^Danh bạ chăm sóc sức khỏe
+vi^#^My Dashboard^#^Bảng điều khiển của tôi
+vi^#^My Profile^#^Hồ sơ của tôi
+gu^#^Home^#^ઘર
+gu^#^Healthcare Directory^#^હેલ્થકેર ડિરે
+gu^#^My Dashboard^#^મારો ડેશબોર્ડ
+gu^#^My Profile^#^મારી પ્રોફાઇલ
+ko^#^Home^#^홈
+ko^#^Healthcare Directory^#^헬스케어 디렉토리
+ko^#^My Dashboard^#^내 대시보드
+ko^#^My Profile^#^내 프로필
+pl^#^Home^#^Strona główna
+pl^#^Healthcare Directory^#^Katalog opieki zdrowotnej
+pl^#^My Dashboard^#^Mój pulpit nawigacyjny
+pl^#^My Profile^#^Mój profil
+el^#^Home^#^Σπιτικό
+el^#^Healthcare Directory^#^Κατάλογος Υγείας
+el^#^My Dashboard^#^Ο πίνακας ελέγχου μου
+el^#^My Profile^#^Το προφίλ μου
+uk^#^Home^#^Головна
+uk^#^Healthcare Directory^#^Довідник охорони здоров'я
+uk^#^My Dashboard^#^Моя інформаційна панель
+uk^#^My Profile^#^Мій профіль
+bn^#^Home^#^বাড়ি
+bn^#^Healthcare Directory^#^স্বাস্থ্যসেবা ডিরে
+bn^#^My Dashboard^#^আমার ড্যাশবোর্ড
+bn^#^My Profile^#^আমার প্রোফাইল
+zh-TW^#^Home^#^首頁
+zh-TW^#^Healthcare Directory^#^醫療保健目錄
+zh-TW^#^My Dashboard^#^我的儀表板
+zh-TW^#^My Profile^#^我的個人資料
+fr^#^Home^#^Accueil
+fr^#^Healthcare Directory^#^Répertoire des soins de santé
+fr^#^My Dashboard^#^Mon tableau de bord
+fr^#^My Profile^#^Mon profil
+fr^#^Find a Healthcare Provider^#^Trouvez un professionnel de santé
+es^#^Home^#^Inicio
+es^#^Healthcare Directory^#^Directorio de atención médica
+es^#^My Dashboard^#^Mi panel
+es^#^My Profile^#^Mi perfil
+es^#^Find a Healthcare Provider^#^Encuentre un proveedor de atención médica
+zh-TW^#^Home^#^首頁
+zh-TW^#^Healthcare Directory^#^醫療保健目錄
+zh-TW^#^My Dashboard^#^我的儀表板
+zh-TW^#^My Profile^#^我的個人資料
+zh-TW^#^Find a Healthcare Provider^#^尋找醫療保健提供者
+zh^#^Home^#^主页
+zh^#^Healthcare Directory^#^医疗保健名录
+zh^#^My Dashboard^#^我的控制面板
+zh^#^My Profile^#^我的个人资料
+zh^#^Find a Healthcare Provider^#^寻找医疗保健提供商
+pa^#^Home^#^ਘਰ
+pa^#^Healthcare Directory^#^ਹੈਲਥਕੇਅਰ ਡਾਇਰ
+pa^#^My Dashboard^#^ਮੇਰਾ ਡੈਸ਼ਬੋਰਡ
+pa^#^My Profile^#^ਮੇਰਾ ਪ੍ਰੋਫਾਈਲ
+pa^#^Find a Healthcare Provider^#^ਇੱਕ ਸਿਹਤ ਸੰਭਾਲ ਪ੍ਰਦਾਤਾ ਲੱਭੋ
+hi^#^Home^#^होम
+hi^#^Healthcare Directory^#^हेल्थकेयर निर्देशिका
+hi^#^My Dashboard^#^मेरा डैशबोर्ड
+hi^#^My Profile^#^मेरी प्रोफ़ाइल
+hi^#^Find a Healthcare Provider^#^एक हेल्थकेयर प्रोवाइडर ढूंढें
+tl^#^Home^#^Bahay
+tl^#^Healthcare Directory^#^Direktoryo ng Kalusugan
+tl^#^My Dashboard^#^Ang aking Dashboard
+tl^#^My Profile^#^Ang Aking Profile
+tl^#^Find a Healthcare Provider^#^Maghanap ng isang Tagabigay ng Pang
+it^#^Find a Healthcare Provider^#^Trova un operatore sanitario
+de^#^Find a Healthcare Provider^#^Finden Sie einen Gesundheitsdienstleister
+pt^#^Find a Healthcare Provider^#^Encontre um profissional de saúde
+ru^#^Find a Healthcare Provider^#^Найдите поставщика медицинских услуг
+ta^#^Find a Healthcare Provider^#^ஒரு சுகாதார வழங்குநரைக் கண்ட
+vi^#^Find a Healthcare Provider^#^Tìm nhà cung cấp dịch vụ chăm sóc sức khỏe
+gu^#^Find a Healthcare Provider^#^હેલ્થકેર પ્રદાતા શોધો
+ko^#^Find a Healthcare Provider^#^의료 서비스 제공자 찾기
+pl^#^Find a Healthcare Provider^#^Znajdź dostawcę opieki zdrowotnej
+el^#^Find a Healthcare Provider^#^Βρείτε έναν πάροχο υγειονομικής περίθαλψης
+uk^#^Find a Healthcare Provider^#^Знайдіть постачальника медичних послуг
+bn^#^Find a Healthcare Provider^#^স্বাস্থ্যসেবা সরবরাহকারী খুঁজ
+ro^#^Home^#^Acasă
+ro^#^Healthcare Directory^#^Directorul asistenței medicale
+ro^#^My Dashboard^#^Tabloul meu de bord
+ro^#^My Profile^#^Profilul meu
+ro^#^Find a Healthcare Provider^#^Găsiți un furnizor de asistență medicală
+fr^#^Needing healthcare help at home can happen when you least expect it.^#^Avoir besoin de soins de santé à domicile peut survenir au moment où vous vous y attendez le moins.
+es^#^Needing healthcare help at home can happen when you least expect it.^#^Es posible que necesite ayuda médica en el hogar cuando menos lo espera.
+zh-TW^#^Needing healthcare help at home can happen when you least expect it.^#^在您最不期待的情況下，可能會發生在家中需要醫療保健幫助。
+zh^#^Needing healthcare help at home can happen when you least expect it.^#^在家中需要医疗保健帮助可能会在你意想不到的时候发生。
+pa^#^Needing healthcare help at home can happen when you least expect it.^#^ਘਰ ਵਿਚ ਸਿਹਤ ਸੰਭਾਲ ਸਹਾਇਤਾ ਦੀ ਜ਼ਰੂਰਤ ਉਦੋਂ ਹੋ ਸਕਦੀ ਹੈ ਜਦੋਂ ਤੁਸੀਂ ਘੱਟ ਤੋਂ ਘੱਟ ਇਸਦੀ ਉਮੀਦ ਕਰਦੇ ਹੋ.
+hi^#^Needing healthcare help at home can happen when you least expect it.^#^घर पर स्वास्थ्य देखभाल सहायता की आवश्यकता तब हो सकती है जब आप इसकी उम्मीद कम से कम करते हैं।
+tl^#^Needing healthcare help at home can happen when you least expect it.^#^Ang kailangan ng tulong sa pangangalaga sa pangangalaga sa bahay ay maaaring mangyari kapag hindi mo ito inaasahan
+it^#^Needing healthcare help at home can happen when you least expect it.^#^Avere bisogno di assistenza sanitaria a casa può succedere quando meno te lo aspetti.
+de^#^Needing healthcare help at home can happen when you least expect it.^#^Wenn Sie zu Hause medizinische Hilfe benötigen, kann dies passieren, wenn Sie es am wenigsten erwarten.
+pt^#^Needing healthcare help at home can happen when you least expect it.^#^A necessidade de ajuda médica em casa pode acontecer quando você menos espera.
+ru^#^Needing healthcare help at home can happen when you least expect it.^#^Медицинская помощь на дому может понадобиться тогда, когда вы меньше всего этого ожидаете.
+ta^#^Needing healthcare help at home can happen when you least expect it.^#^வீட்டில் சுகாதார உதவி தேவைப்படுவது நீங்கள் குறைந்தபட்சம் எதிர்பார்க்கும் போது ஏற்படலாம்.
+vi^#^Needing healthcare help at home can happen when you least expect it.^#^Cần trợ giúp chăm sóc sức khỏe tại nhà có thể xảy ra khi bạn ít mong đợi nhất.
+gu^#^Needing healthcare help at home can happen when you least expect it.^#^જ્યારે તમે ઓછામાં ઓછી અપેક્ષા રાખો ત્યારે ઘરે આરોગ્યસંભાળ સહાયની જરૂર પડી શકે છે.
+ko^#^Needing healthcare help at home can happen when you least expect it.^#^예상치 못한 상황에서 집에서 의료 지원이 필요할 수 있습니다.
+pl^#^Needing healthcare help at home can happen when you least expect it.^#^Potrzebowanie pomocy medycznej w domu może się zdarzyć, gdy najmniej się tego spodziewasz.
+el^#^Needing healthcare help at home can happen when you least expect it.^#^Η ανάγκη υγειονομικής περίθαλψης στο σπίτι μπορεί να συμβεί όταν το περιμένετε λιγότερο.
+uk^#^Needing healthcare help at home can happen when you least expect it.^#^Необхідність медичної допомоги вдома може статися тоді, коли ви найменше цього очікуєте.
+bn^#^Needing healthcare help at home can happen when you least expect it.^#^বাড়িতে স্বাস্থ্যসেবা সহায়তার প্রয়োজন তখন ঘটতে পারে যখন আপনি এটি কম আশা করেন।
+zh-TW^#^Find Compassionate Care, Simplified.^#^找到簡化的同情護理。
+zh-TW^#^Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless.^#^無論您是在尋找可靠的醫療保健援助，還是希望提供您的服務，Care My Way 都能讓這個過程變得輕鬆。
+zh-TW^#^We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs.^#^我們提供一個值得信賴的平台，家庭可以在其中與符合您獨特需求的合格醫療輔助工具聯繫。
+zh-TW^#^Find a Healthcare provider^#^尋找醫療保健提供者
+zh-TW^#^Effortless Booking^#^輕鬆預訂
+zh-TW^#^Book Now^#^立即預訂
+zh-TW^#^Verified Professionals^#^驗證的專業人士
+zh-TW^#^Meet Providers^#^認識供應商
+zh-TW^#^Personalized Matches^#^個性化比賽
+zh-TW^#^Find Your Match^#^尋找您的匹配
+zh-TW^#^Our Features^#^我們的特色
+zh-TW^#^Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.^#^在幾秒鐘內預訂護理提供者。我們直觀的平台使您只需點擊按鈕就可以輕鬆找到幫助。
+zh-TW^#^Every provider is background-checked and verified, so you can trust the care you receive.^#^每個提供者都經過背景檢查和驗證，因此您可以信任您收到的護理。
+zh-TW^#^Get matched with providers who fit your unique needs and preferences, every time.^#^每次都可以與符合您獨特需求和喜好的提供商匹配。
+zh-TW^#^How It Works^#^它的工作原理
+zh-TW^#^For Clients^#^對於客戶
+zh-TW^#^For Healthcare Providers^#^對於醫療保健提供者
+zh-TW^#^Join as a Provider^#^以供應商身份加入
+zh-TW^#^Step 1^#^第一步
+zh-TW^#^Create Your Profile^#^建立您的個人資料
+zh-TW^#^Showcase your skills, experience, and availability to potential clients. Highlight your certifications and areas of expertise.^#^向潛在客戶展示您的技能、經驗和可用性。突出您的認證和專業領域。
+zh-TW^#^Step 2^#^第二步
+zh-TW^#^Get Matched^#^獲得匹配
+zh-TW^#^Receive requests from clients who need your expertise. Review their needs and accept the opportunities that fit your schedule.^#^接收需要您專業知識的客戶的請求。檢視他們的需求，並接受適合您的日程時間表的機會。
+zh-TW^#^Step 3^#^第三步
+zh-TW^#^Start Providing Care^#^開始提供護理
+zh-TW^#^Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.^#^接受預訂，與客戶聯繫，並在您的社區創造改變。輕鬆管理您的約會和個人資料。
+zh-TW^#^Tell Us Your Needs^#^告訴我們您的需求
+zh-TW^#^Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.^#^回答有關您正在尋找的護理的幾個快速問題。分享您的偏好，時間表和任何特殊要求，以幫助我們將您與合適的提供商匹配。
+zh-TW^#^We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.^#^我們將與符合您需求的合格、值得信賴的供應商聯繫起來。查看設定檔、檢查認證，並選擇適合您的提供者。
+zh-TW^#^Book & Begin Care^#^預訂並開始護理
+zh-TW^#^Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.^#^安排您的第一次訪問並獲得您需要的支持。通過我們的平台直接管理約會並與您的提供者溝通。
+zh-TW^#^Find Compassionate Care, Simplified.^#^找到簡化的同情護理。
+zh-TW^#^Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless.^#^無論您是在尋找可靠的醫療保健援助，還是希望提供您的服務，Care My Way 都能讓這個過程變得輕鬆。
+zh-TW^#^We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs.^#^我們提供一個值得信賴的平台，家庭可以在其中與符合您獨特需求的合格醫療輔助工具聯繫。
+zh-TW^#^Find a Healthcare provider^#^尋找醫療保健提供者
+zh-TW^#^Our Features^#^我們的特色
+zh-TW^#^Effortless Booking^#^輕鬆預訂
+zh-TW^#^Book Now^#^立即預訂
+zh-TW^#^Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.^#^在幾秒鐘內預訂護理提供者。我們直觀的平台使您只需點擊按鈕就可以輕鬆找到幫助。
+zh-TW^#^Verified Professionals^#^驗證的專業人士
+zh-TW^#^Meet Providers^#^認識供應商
+zh-TW^#^Every provider is background-checked and verified, so you can trust the care you receive.^#^每個提供者都經過背景檢查和驗證，因此您可以信任您收到的護理。
+zh-TW^#^Personalized Matches^#^個性化比賽
+zh-TW^#^Find Your Match^#^尋找您的匹配
+zh-TW^#^Get matched with providers who fit your unique needs and preferences, every time.^#^每次都可以與符合您獨特需求和喜好的提供商匹配。
+zh-TW^#^Meet Our Healthcare Professionals^#^認識我們的醫療專業人員
+zh-TW^#^How It Works^#^它的工作原理
+zh-TW^#^For Clients^#^對於客戶
+zh-TW^#^Step 1^#^第一步
+zh-TW^#^Tell Us Your Needs^#^告訴我們您的需求
+zh-TW^#^Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.^#^回答有關您正在尋找的護理的幾個快速問題。分享您的偏好，時間表和任何特殊要求，以幫助我們將您與合適的提供商匹配。
+zh-TW^#^Step 2^#^第二步
+zh-TW^#^Get Matched^#^獲得匹配
+zh-TW^#^We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.^#^我們將與符合您需求的合格、值得信賴的供應商聯繫起來。查看設定檔、檢查認證，並選擇適合您的提供者。
+zh-TW^#^Step 3^#^第三步
+zh-TW^#^Book & Begin Care^#^預訂並開始護理
+zh-TW^#^Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.^#^安排您的第一次訪問並獲得您需要的支持。通過我們的平台直接管理約會並與您的提供者溝通。
+zh-TW^#^For Healthcare Providers^#^對於醫療保健提供者
+zh-TW^#^Create Your Profile^#^建立您的個人資料
+zh-TW^#^Showcase your skills, experience, and availability to potential clients. Highlight your certifications and areas of expertise.^#^向潛在客戶展示您的技能、經驗和可用性。突出您的認證和專業領域。
+zh-TW^#^Receive requests from clients who need your expertise. Review their needs and accept the opportunities that fit your schedule.^#^接收需要您專業知識的客戶的請求。檢視他們的需求，並接受適合您的日程時間表的機會。
+zh-TW^#^Start Providing Care^#^開始提供護理
+zh-TW^#^Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.^#^接受預訂，與客戶聯繫，並在您的社區創造改變。輕鬆管理您的約會和個人資料。
+zh-TW^#^Join as a Provider^#^以供應商身份加入
+zh-TW^#^Get to know the compassionate professionals behind Care My Way.^#^認識 Care My Way 背後的慈悲專業人士。
+zh-TW^#^Each caregiver is verified, experienced, and dedicated to supporting you or your loved one with kindness, respect, and personalized care.^#^每個照顧者都經過驗證、經驗豐富，並致力於以善良、尊重和個性化的照顧為您或您的親人提供支持。
+fr^#^Find Compassionate Care, Simplified.^#^Trouvez des soins compatissants, simplifiés.
+fr^#^Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless.^#^Que vous recherchiez une aide médicale fiable ou que vous souhaitiez proposer vos services, Care My Way simplifie le processus.
+fr^#^We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs.^#^Nous fournissons une plateforme fiable où les familles peuvent entrer en contact avec des aides sanitaires qualifiées qui répondent à vos besoins uniques.
+fr^#^Find a Healthcare provider^#^Trouvez un professionnel de santé
+fr^#^Our Features^#^Nos fonctionnalités
+fr^#^Effortless Booking^#^Réservation en toute simplicité
+fr^#^Book Now^#^Réservez dès maintenant
+fr^#^Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.^#^Réservez un fournisseur de soins en quelques secondes. Notre plateforme intuitive permet de trouver de l'aide en appuyant simplement sur un bouton.
+fr^#^Verified Professionals^#^Professionnels vérifiés
+fr^#^Meet Providers^#^Rencontrez des fournisseurs
+fr^#^Every provider is background-checked and verified, so you can trust the care you receive.^#^Les antécédents de chaque fournisseur sont vérifiés, vous pouvez donc avoir confiance dans les soins que vous recevez.
+fr^#^Personalized Matches^#^Matchs personnalisés
+fr^#^Find Your Match^#^Trouvez votre partenaire
+fr^#^Get matched with providers who fit your unique needs and preferences, every time.^#^Mettez-vous en relation avec des prestataires qui répondent à vos besoins et préférences uniques, à chaque fois.
+fr^#^Meet Our Healthcare Professionals^#^Rencontrez nos professionnels de santé
+fr^#^Get to know the compassionate professionals behind Care My Way.^#^Apprenez à connaître les professionnels compatissants qui sont à l'origine de Care My Way.
+fr^#^Each caregiver is verified, experienced, and dedicated to supporting you or your loved one with kindness, respect, and personalized care.^#^Chaque soignant est vérifié, expérimenté et dévoué à vous soutenir, vous ou votre proche, avec gentillesse, respect et soins personnalisés.
+fr^#^How It Works^#^Comment ça marche
+fr^#^For Clients^#^Pour les clients
+fr^#^Step 1^#^Étape 1
+fr^#^Tell Us Your Needs^#^Faites-nous part de vos besoins
+fr^#^Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.^#^Répondez à quelques questions rapides sur les soins que vous recherchez. Faites-nous part de vos préférences, de votre calendrier et de toute exigence particulière pour nous aider à vous mettre en contact avec le bon fournisseur.
+fr^#^Step 2^#^Étape 2
+fr^#^Get Matched^#^Faites-vous correspondre
+fr^#^We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.^#^Nous vous mettrons en contact avec des fournisseurs qualifiés et fiables qui répondent à vos besoins. Passez en revue les profils, vérifiez les informations d'identification et choisissez le fournisseur qui vous convient le mieux.
+fr^#^Step 3^#^Étape 3
+fr^#^Book & Begin Care^#^Réservez et commencez les soins
+fr^#^Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.^#^Planifiez votre première visite et bénéficiez de l'assistance dont vous avez besoin. Gérez les rendez-vous et communiquez avec votre fournisseur directement via notre plateforme.
+fr^#^For Healthcare Providers^#^Pour les prestataires de soins
+fr^#^Create Your Profile^#^Créez votre profil
+fr^#^Showcase your skills, experience, and availability to potential clients. Highlight your certifications and areas of expertise.^#^Présentez vos compétences, votre expérience et votre disponibilité à des clients potentiels. Mettez en valeur vos certifications et vos domaines d'expertise.
+fr^#^Receive requests from clients who need your expertise. Review their needs and accept the opportunities that fit your schedule.^#^Recevez les demandes de clients qui ont besoin de votre expertise. Passez en revue leurs besoins et acceptez les opportunités qui correspondent à votre emploi du temps.
+fr^#^Start Providing Care^#^Commencez à prodiguer des soins
+fr^#^Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.^#^Acceptez les réservations, entrez en contact avec les clients et faites la différence dans votre communauté. Gérez facilement vos rendez-vous et votre profil.
+fr^#^Join as a Provider^#^Inscrivez-vous en tant que fournisseur
+es^#^Find Compassionate Care, Simplified.^#^Encuentre una atención compasiva, simplificada.
+es^#^Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless.^#^Ya sea que esté buscando una ayuda médica confiable o que quiera ofrecer sus servicios, Care My Way facilita el proceso.
+es^#^We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs.^#^Brindamos una plataforma confiable donde las familias pueden conectarse con ayudas de salud calificadas que se adaptan a sus necesidades únicas.
+es^#^Find a Healthcare provider^#^Encuentre un proveedor de atención médica
+es^#^Our Features^#^Nuestras características
+es^#^Effortless Booking^#^Reserva sin esfuerzo
+es^#^Book Now^#^Reserva ahora
+es^#^Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.^#^Reserva un proveedor de atención médica en cuestión de segundos. Nuestra plataforma intuitiva hace que encontrar ayuda sea tan fácil como tocar un botón.
+es^#^Verified Professionals^#^Profesionales verificados
+es^#^Meet Providers^#^Conozca a los proveedores
+es^#^Every provider is background-checked and verified, so you can trust the care you receive.^#^Se comprueban los antecedentes y se verifican los antecedentes de cada proveedor, por lo que puede confiar en la atención que recibe.
+es^#^Personalized Matches^#^Partidos personalizados
+es^#^Find Your Match^#^Encuentra tu pareja
+es^#^Get matched with providers who fit your unique needs and preferences, every time.^#^Póngase en contacto con proveedores que se adapten a sus necesidades y preferencias únicas, en todo momento.
+es^#^Meet Our Healthcare Professionals^#^Conozca a nuestros profesionales de la salud
+es^#^Get to know the compassionate professionals behind Care My Way.^#^Conozca a los compasivos profesionales detrás de Care My Way.
+es^#^Each caregiver is verified, experienced, and dedicated to supporting you or your loved one with kindness, respect, and personalized care.^#^Cada cuidador está verificado, tiene experiencia y se dedica a apoyarlo a usted o a su ser querido con amabilidad, respeto y atención personalizada.
+es^#^How It Works^#^Cómo funciona
+es^#^For Clients^#^Para clientes
+es^#^Step 1^#^Paso 1
+es^#^Tell Us Your Needs^#^Cuéntanos tus necesidades
+es^#^Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.^#^Responda algunas preguntas rápidas sobre la atención que busca. Comparta sus preferencias, su horario y cualquier requisito especial para ayudarnos a encontrar el proveedor adecuado.
+es^#^Step 2^#^Paso 2
+es^#^Get Matched^#^Consigue pareja
+es^#^We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.^#^Lo pondremos en contacto con proveedores calificados y confiables que se adapten a sus necesidades. Revisa los perfiles, comprueba las credenciales y elige el proveedor adecuado para ti.
+es^#^Step 3^#^Paso 3
+es^#^Book & Begin Care^#^Reserve y comience a cuidar
+es^#^Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.^#^Programe su primera visita y obtenga el apoyo que necesita. Gestione las citas y comuníquese con su proveedor directamente a través de nuestra plataforma.
+es^#^For Healthcare Providers^#^Para proveedores de atención médica
+es^#^Create Your Profile^#^Crea tu perfil
+es^#^Showcase your skills, experience, and availability to potential clients. Highlight your certifications and areas of expertise.^#^Muestre sus habilidades, experiencia y disponibilidad a los clientes potenciales. Destaque sus certificaciones y áreas de especialización.
+es^#^Receive requests from clients who need your expertise. Review their needs and accept the opportunities that fit your schedule.^#^Reciba solicitudes de clientes que necesitan su experiencia. Revisa sus necesidades y acepta las oportunidades que se ajusten a tu agenda.
+es^#^Start Providing Care^#^Comience a brindar atención
+es^#^Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.^#^Acepta reservas, conecta con los clientes y marca la diferencia en tu comunidad. Gestiona tus citas y tu perfil con facilidad.
+es^#^Join as a Provider^#^Únase como proveedor
+es^#^Find Compassionate Care, Simplified.^#^Encuentre una atención compasiva, simplificada.
+es^#^Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless.^#^Ya sea que esté buscando una ayuda médica confiable o que quiera ofrecer sus servicios, Care My Way facilita el proceso.
+es^#^We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs.^#^Brindamos una plataforma confiable donde las familias pueden conectarse con ayudas de salud calificadas que se adaptan a sus necesidades únicas.
+es^#^Find a Healthcare provider^#^Encuentre un proveedor de atención médica
+es^#^Our Features^#^Nuestras características
+es^#^Effortless Booking^#^Reserva sin esfuerzo
+es^#^Book Now^#^Reserva ahora
+es^#^Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.^#^Reserva un proveedor de atención médica en cuestión de segundos. Nuestra plataforma intuitiva hace que encontrar ayuda sea tan fácil como tocar un botón.
+es^#^Verified Professionals^#^Profesionales verificados
+es^#^Meet Providers^#^Conozca a los proveedores
+es^#^Every provider is background-checked and verified, so you can trust the care you receive.^#^Se comprueban los antecedentes y se verifican los antecedentes de cada proveedor, por lo que puede confiar en la atención que recibe.
+es^#^Personalized Matches^#^Partidos personalizados
+es^#^Find Your Match^#^Encuentra tu pareja
+es^#^Get matched with providers who fit your unique needs and preferences, every time.^#^Póngase en contacto con proveedores que se adapten a sus necesidades y preferencias únicas, en todo momento.
+es^#^Meet Our Healthcare Professionals^#^Conozca a nuestros profesionales de la salud
+es^#^Get to know the compassionate professionals behind Care My Way.^#^Conozca a los compasivos profesionales detrás de Care My Way.
+es^#^Each caregiver is verified, experienced, and dedicated to supporting you or your loved one with kindness, respect, and personalized care.^#^Cada cuidador está verificado, tiene experiencia y se dedica a apoyarlo a usted o a su ser querido con amabilidad, respeto y atención personalizada.
+es^#^How It Works^#^Cómo funciona
+es^#^For Clients^#^Para clientes
+es^#^Step 1^#^Paso 1
+es^#^Tell Us Your Needs^#^Cuéntanos tus necesidades
+es^#^Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.^#^Responda algunas preguntas rápidas sobre la atención que busca. Comparta sus preferencias, su horario y cualquier requisito especial para ayudarnos a encontrar el proveedor adecuado.
+es^#^Step 2^#^Paso 2
+es^#^Get Matched^#^Consigue pareja
+es^#^We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.^#^Lo pondremos en contacto con proveedores calificados y confiables que se adapten a sus necesidades. Revisa los perfiles, comprueba las credenciales y elige el proveedor adecuado para ti.
+es^#^Step 3^#^Paso 3
+es^#^Book & Begin Care^#^Reserve y comience a cuidar
+es^#^Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.^#^Programe su primera visita y obtenga el apoyo que necesita. Gestione las citas y comuníquese con su proveedor directamente a través de nuestra plataforma.
+es^#^For Healthcare Providers^#^Para proveedores de atención médica
+es^#^Create Your Profile^#^Crea tu perfil
+es^#^Showcase your skills, experience, and availability to potential clients. Highlight your certifications and areas of expertise.^#^Muestre sus habilidades, experiencia y disponibilidad a los clientes potenciales. Destaque sus certificaciones y áreas de especialización.
+es^#^Receive requests from clients who need your expertise. Review their needs and accept the opportunities that fit your schedule.^#^Reciba solicitudes de clientes que necesitan su experiencia. Revisa sus necesidades y acepta las oportunidades que se ajusten a tu agenda.
+es^#^Start Providing Care^#^Comience a brindar atención
+es^#^Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.^#^Acepta reservas, conecta con los clientes y marca la diferencia en tu comunidad. Gestiona tus citas y tu perfil con facilidad.
+es^#^Join as a Provider^#^Únase como proveedor
+zh^#^Find Compassionate Care, Simplified.^#^查找简化的同情护理。
+zh^#^Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless.^#^无论您是在寻找可靠的医疗援助还是希望提供服务，Care My Way都能让整个过程变得轻而易举。
+zh^#^We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs.^#^我们提供了一个值得信赖的平台，家庭可以在该平台上联系符合您独特需求的合格医疗辅助工具。
+zh^#^Find a Healthcare provider^#^寻找医疗保健提供商
+zh^#^Our Features^#^我们的特色
+zh^#^Effortless Booking^#^轻松预订
+zh^#^Book Now^#^立即预订
+zh^#^Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.^#^在几秒钟内预订护理提供者。我们直观的平台使寻找帮助就像点击按钮一样简单。
+zh^#^Verified Professionals^#^经过验证的专业人员
+zh^#^Meet Providers^#^会见提供商
+zh^#^Every provider is background-checked and verified, so you can trust the care you receive.^#^每个提供者都经过背景调查和验证，因此您可以信任所获得的护理。
+zh^#^Personalized Matches^#^个性化比赛
+zh^#^Find Your Match^#^找到你的对手
+zh^#^Get matched with providers who fit your unique needs and preferences, every time.^#^每次都能与符合您独特需求和偏好的提供商相匹配。
+zh^#^Meet Our Healthcare Professionals^#^认识我们的医疗保健专业人员
+zh^#^Get to know the compassionate professionals behind Care My Way.^#^了解 Care My Way 背后富有同情心的专业人士。
+zh^#^Each caregiver is verified, experienced, and dedicated to supporting you or your loved one with kindness, respect, and personalized care.^#^每位护理人员都经过验证，经验丰富，致力于以友善、尊重和个性化护理为您或您的亲人提供支持。
+zh^#^How It Works^#^它是如何运作的
+zh^#^For Clients^#^致客户
+zh^#^Step 1^#^第 1 步
+zh^#^Tell Us Your Needs^#^告诉我们你的需求
+zh^#^Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.^#^回答几个有关您正在寻找的护理的简短问题。分享您的偏好、日程安排和任何特殊要求，以帮助我们为您匹配合适的提供商。
+zh^#^Step 2^#^第 2 步
+zh^#^Get Matched^#^获得配对
+zh^#^We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.^#^我们将为您联系符合您需求的合格、值得信赖的提供商。查看个人资料，检查凭证，然后选择适合您的提供商。
+zh^#^Step 3^#^第 3 步
+zh^#^Book & Begin Care^#^预订并开始护理
+zh^#^Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.^#^安排您的首次访问并获得所需的支持。直接通过我们的平台管理预约并与您的提供商沟通。
+zh^#^For Healthcare Providers^#^对于医疗保健提供商
+zh^#^Create Your Profile^#^创建你的个人资料
+zh^#^Showcase your skills, experience, and availability to potential clients. Highlight your certifications and areas of expertise.^#^向潜在客户展示您的技能、经验和可用性。重点介绍您的认证和专业领域。
+zh^#^Receive requests from clients who need your expertise. Review their needs and accept the opportunities that fit your schedule.^#^接收需要您的专业知识的客户的请求。查看他们的需求，接受适合您日程安排的机会。
+zh^#^Start Providing Care^#^开始提供护理
+zh^#^Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.^#^接受预订，与客户建立联系，并在您的社区中有所作为。轻松管理您的预约和个人资料。
+zh^#^Join as a Provider^#^以提供商身份加入
+pa^#^Find Compassionate Care, Simplified.^#^ਹਮਦਰਦੀ ਦੇਖਭਾਲ ਲੱਭੋ, ਸਰਲ.
+pa^#^Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless.^#^ਭਾਵੇਂ ਤੁਸੀਂ ਭਰੋਸੇਮੰਦ ਸਿਹਤ ਸੰਭਾਲ ਸਹਾਇਤਾ ਦੀ ਭਾਲ ਕਰ ਰਹੇ ਹੋ ਜਾਂ ਆਪਣੀਆਂ ਸੇਵਾਵਾਂ ਦੀ ਪੇਸ਼ਕਸ਼ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ, ਕੇਅਰ ਮਾਈ ਵੇਅ ਪ੍ਰਕਿਰਿਆ ਨੂੰ ਅਸਾਨ ਬਣਾਉਂਦਾ ਹੈ.
+pa^#^We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs.^#^ਅਸੀਂ ਇੱਕ ਭਰੋਸੇਮੰਦ ਪਲੇਟਫਾਰਮ ਪ੍ਰਦਾਨ ਕਰਦੇ ਹਾਂ ਜਿੱਥੇ ਪਰਿਵਾਰ ਤੁਹਾਡੀਆਂ ਵਿਲੱਖਣ ਜ਼ਰੂਰਤਾਂ ਨਾਲ ਮੇਲ ਖਾਂਦੀਆਂ ਯੋਗ ਹੈਲਥਕੇਅਰ ਏ
+pa^#^Find a Healthcare provider^#^ਸਿਹਤ ਸੰਭਾਲ ਪ੍ਰਦਾਤਾ ਲੱਭੋ
+pa^#^Our Features^#^ਸਾਡੀਆਂ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ
+pa^#^Effortless Booking^#^ਅਸਾਨੀ ਨਾਲ ਬੁਕਿੰਗ
+pa^#^Book Now^#^ਹੁਣੇ ਬੁੱਕ ਕਰੋ
+pa^#^Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.^#^ਸਕਿੰਟਾਂ ਵਿੱਚ ਦੇਖਭਾਲ ਪ੍ਰਦਾਤਾ ਬੁੱਕ ਕਰੋ। ਸਾਡਾ ਅਨੁਭਵੀ ਪਲੇਟਫਾਰਮ ਮਦਦ ਲੱਭਣਾ ਇੱਕ ਬਟਨ ਨੂੰ ਟੈਪ ਕਰਨ ਜਿੰਨਾ ਸੌਖਾ ਬਣਾਉਂਦਾ ਹੈ।
+pa^#^Verified Professionals^#^ਪ੍ਰਮਾਣਿਤ ਪੇਸ਼ੇਵਰ
+pa^#^Meet Providers^#^ਪ੍ਰਦਾਤਾਵਾਂ ਨੂੰ ਮਿਲੋ
+pa^#^Every provider is background-checked and verified, so you can trust the care you receive.^#^ਹਰ ਪ੍ਰਦਾਤਾ ਨੂੰ ਪਿਛੋਕੜ ਦੀ ਜਾਂਚ ਅਤੇ ਪ੍ਰਮਾਣਿਤ ਕੀਤਾ ਜਾਂਦਾ ਹੈ, ਤਾਂ ਜੋ ਤੁਸੀਂ ਪ੍ਰਾਪਤ ਕੀਤੀ ਦੇਖਭਾਲ 'ਤੇ ਭਰੋਸਾ ਕਰ ਸਕੋ।
+pa^#^Personalized Matches^#^ਵਿਅਕਤੀਗਤ ਮੈਚ
+pa^#^Find Your Match^#^ਆਪਣਾ ਮੈਚ ਲੱਭੋ
+pa^#^Get matched with providers who fit your unique needs and preferences, every time.^#^ਉਹਨਾਂ ਪ੍ਰਦਾਤਾਵਾਂ ਨਾਲ ਮੇਲ ਖਾਂਦੇ ਹੋ ਜੋ ਹਰ ਵਾਰ ਤੁਹਾਡੀਆਂ ਵਿਲੱਖਣ ਲੋੜਾਂ ਅਤੇ ਤਰਜੀਹਾਂ ਨੂੰ ਪੂਰਾ ਕਰਦੇ ਹਨ।
+pa^#^Meet Our Healthcare Professionals^#^ਸਾਡੇ ਹੈਲਥਕੇਅਰ ਪ੍ਰੋਫੈਸ਼ਨਲਾਂ
+pa^#^Get to know the compassionate professionals behind Care My Way.^#^ਕੇਅਰ ਮਾਈ ਵੇਅ ਦੇ ਪਿੱਛੇ ਹਮਦਰਦੀ ਵਾਲੇ ਪੇਸ਼ੇਵਰਾਂ ਨੂੰ ਜਾਣੋ।
+pa^#^Each caregiver is verified, experienced, and dedicated to supporting you or your loved one with kindness, respect, and personalized care.^#^ਹਰੇਕ ਦੇਖਭਾਲ ਕਰਨ ਵਾਲਾ ਪ੍ਰਮਾਣਿਤ, ਤਜਰਬੇਕਾਰ ਅਤੇ ਦਿਆਲਤਾ, ਸਤਿਕਾਰ ਅਤੇ ਵਿਅਕਤੀਗਤ ਦੇਖਭਾਲ ਨਾਲ ਤੁਹਾਡੇ ਜਾਂ ਤੁਹਾਡੇ ਅਜ਼ੀਜ਼ ਦਾ ਸਮਰਥਨ ਕਰਨ ਲਈ ਸਮਰਪਿਤ ਹੁੰਦਾ ਹੈ।
+pa^#^How It Works^#^ਇਹ ਕਿਵੇਂ ਕੰਮ ਕਰਦਾ ਹੈ
+pa^#^For Clients^#^ਗਾਹਕਾਂ ਲਈ
+pa^#^Step 1^#^ਕਦਮ 1
+pa^#^Tell Us Your Needs^#^ਸਾਨੂੰ ਆਪਣੀਆਂ ਜ਼ਰੂਰਤਾਂ ਦੱਸੋ
+pa^#^Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.^#^ਜਿਸ ਦੇਖਭਾਲ ਦੀ ਤੁਸੀਂ ਭਾਲ ਕਰ ਰਹੇ ਹੋ ਬਾਰੇ ਕੁਝ ਤੇਜ਼ ਪ੍ਰਸ਼ਨਾਂ ਦੇ ਜਵਾਬ ਦਿਓ. ਤੁਹਾਨੂੰ ਸਹੀ ਪ੍ਰਦਾਤਾ ਨਾਲ ਮੇਲ ਕਰਨ ਵਿੱਚ ਸਾਡੀ ਮਦਦ ਕਰਨ ਲਈ ਆਪਣੀਆਂ ਤਰਜੀਹਾਂ, ਕਾਰਜਕ੍ਰਮ ਅਤੇ ਕੋਈ ਵਿਸ਼ੇਸ਼ ਜ਼ਰੂਰਤਾਂ ਸਾਂਝੀਆਂ ਕਰੋ।
+pa^#^Step 2^#^ਕਦਮ 2
+pa^#^Get Matched^#^ਮੇਲ ਖਾਂਦੇ ਹੋ
+pa^#^We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.^#^ਅਸੀਂ ਤੁਹਾਨੂੰ ਯੋਗ, ਭਰੋਸੇਮੰਦ ਪ੍ਰਦਾਤਾਵਾਂ ਨਾਲ ਜੋੜਾਂਗੇ ਜੋ ਤੁਹਾਡੀਆਂ ਜ਼ਰੂਰਤਾਂ ਨੂੰ ਪੂਰਾ ਕਰਦੇ ਹਨ। ਪ੍ਰੋਫਾਈਲਾਂ ਦੀ ਸਮੀਖਿਆ ਕਰੋ, ਪ੍ਰਮਾਣ ਪੱਤਰਾਂ ਦੀ ਜਾਂਚ ਕਰੋ, ਅਤੇ ਉਹ ਪ੍ਰਦਾਤਾ ਚੁਣੋ ਜੋ ਤੁਹਾਡੇ ਲਈ ਸਹੀ ਹੈ।
+pa^#^Step 3^#^ਕਦਮ 3
+pa^#^Book & Begin Care^#^ਬੁੱਕ ਅਤੇ ਦੇਖਭਾਲ ਸ਼ੁਰੂ ਕਰੋ
+pa^#^Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.^#^ਆਪਣੀ ਪਹਿਲੀ ਫੇਰੀ ਨੂੰ ਤਹਿ ਕਰੋ ਅਤੇ ਲੋੜੀਂਦਾ ਸਮਰਥਨ ਪ੍ਰਾਪਤ ਕਰੋ. ਮੁਲਾਕਾਤਾਂ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰੋ ਅਤੇ ਸਾਡੇ ਪਲੇਟਫਾਰਮ ਦੁਆਰਾ ਸਿੱਧੇ ਆਪਣੇ ਪ੍ਰਦਾਤਾ ਨਾਲ ਸੰਚਾਰ ਕਰੋ
+pa^#^For Healthcare Providers^#^ਸਿਹਤ ਸੰਭਾਲ ਪ੍ਰਦਾਤਾਵਾਂ ਲਈ
+pa^#^Create Your Profile^#^ਆਪਣਾ ਪ੍ਰੋਫਾਈਲ ਬਣਾਓ
+pa^#^Showcase your skills, experience, and availability to potential clients. Highlight your certifications and areas of expertise.^#^ਸੰਭਾਵੀ ਗਾਹਕਾਂ ਲਈ ਆਪਣੇ ਹੁਨਰ, ਤਜ਼ਰਬੇ ਅਤੇ ਉਪਲਬਧਤਾ ਦਾ ਪ੍ਰਦਰਸ਼ਨ ਕਰੋ। ਆਪਣੇ ਪ੍ਰਮਾਣੀਕਰਣ ਅਤੇ ਮੁਹਾਰਤ ਦੇ ਖੇਤਰਾਂ ਨੂੰ ਉਜਾਗਰ ਕਰੋ.
+pa^#^Receive requests from clients who need your expertise. Review their needs and accept the opportunities that fit your schedule.^#^ਉਹਨਾਂ ਗਾਹਕਾਂ ਤੋਂ ਬੇਨਤੀਆਂ ਪ੍ਰਾਪਤ ਕਰੋ ਜਿਨ੍ਹਾਂ ਨੂੰ ਤੁਹਾਡੀ ਮੁਹਾਰਤ ਦੀ ਲੋੜ ਹੈ। ਉਨ੍ਹਾਂ ਦੀਆਂ ਜ਼ਰੂਰਤਾਂ ਦੀ ਸਮੀਖਿਆ ਕਰੋ ਅਤੇ ਉਨ੍ਹਾਂ ਮੌਕਿਆਂ ਨੂੰ ਸਵੀਕਾਰ ਕਰੋ ਜੋ ਤੁਹਾਡੇ ਕਾਰਜਕ੍ਰਮ ਦੇ ਅਨੁਕੂ
+pa^#^Start Providing Care^#^ਦੇਖਭਾਲ ਪ੍ਰਦਾਨ ਕਰਨਾ ਸ਼ੁਰੂ ਕਰੋ
+pa^#^Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.^#^ਬੁਕਿੰਗ ਸਵੀਕਾਰ ਕਰੋ, ਗਾਹਕਾਂ ਨਾਲ ਜੁੜੋ, ਅਤੇ ਆਪਣੇ ਭਾਈਚਾਰੇ ਵਿੱਚ ਫਰਕ ਲਓ। ਆਪਣੀਆਂ ਮੁਲਾਕਾਤਾਂ ਅਤੇ ਪ੍ਰੋਫਾਈਲ ਨੂੰ ਆਸਾਨੀ ਨਾਲ ਪ੍ਰਬੰਧਿਤ ਕਰੋ
+pa^#^Join as a Provider^#^ਇੱਕ ਪ੍ਰਦਾਤਾ ਵਜੋਂ ਸ਼ਾਮਲ ਹੋਵੋ
+hi^#^Find Compassionate Care, Simplified.^#^कम्पैशनेट केयर, सरलीकृत खोजें।
+hi^#^Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless.^#^चाहे आप एक विश्वसनीय स्वास्थ्य सेवा की तलाश कर रहे हों या अपनी सेवाएं देना चाहते हों, Care My Way प्रक्रिया को सरल बनाता है।
+hi^#^We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs.^#^हम एक विश्वसनीय प्लेटफ़ॉर्म प्रदान करते हैं जहाँ परिवार योग्य स्वास्थ्य देखभाल सहायता से जुड़ सकते हैं जो आपकी विशिष्ट ज़रूरतों से मेल खाते हैं।
+hi^#^Find a Healthcare provider^#^हेल्थकेयर प्रोवाइडर ढूंढें
+hi^#^Our Features^#^हमारी विशेषताएँ
+hi^#^Effortless Booking^#^आसान बुकिंग
+hi^#^Book Now^#^अभी बुक करें
+hi^#^Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.^#^कुछ ही सेकंड में केयर प्रोवाइडर बुक करें। हमारा सहज प्लेटफ़ॉर्म मदद ढूंढना उतना ही आसान बनाता है जितना कि एक बटन टैप करना।
+hi^#^Verified Professionals^#^सत्यापित पेशेवर
+hi^#^Meet Providers^#^प्रोवाइडर्स से मिलें
+hi^#^Every provider is background-checked and verified, so you can trust the care you receive.^#^प्रत्येक प्रदाता की पृष्ठभूमि-जाँच और सत्यापन किया जाता है, ताकि आप प्राप्त होने वाली देखभाल पर भरोसा कर सकें।
+hi^#^Personalized Matches^#^वैयक्तिकृत मैच
+hi^#^Find Your Match^#^अपना मैच ढूंढें
+hi^#^Get matched with providers who fit your unique needs and preferences, every time.^#^हर बार आपकी खास ज़रूरतों और प्राथमिकताओं के हिसाब से काम करने वाले प्रदाताओं से मेल खाते रहें।
+hi^#^Meet Our Healthcare Professionals^#^हमारे हेल्थकेयर प्रोफेशनल्स से मिलें
+hi^#^Get to know the compassionate professionals behind Care My Way.^#^केयर माय वे के पीछे के दयालु पेशेवरों को जानें।
+hi^#^Each caregiver is verified, experienced, and dedicated to supporting you or your loved one with kindness, respect, and personalized care.^#^प्रत्येक देखभालकर्ता सत्यापित, अनुभवी और दयालुता, सम्मान और व्यक्तिगत देखभाल के साथ आपकी या आपके प्रियजन की सहायता करने के लिए समर्पित है।
+hi^#^How It Works^#^यह काम किस प्रकार करता है
+hi^#^For Clients^#^क्लाइंट्स के लिए
+hi^#^Step 1^#^चरण 1
+hi^#^Tell Us Your Needs^#^हमें अपनी ज़रूरतें बताएं
+hi^#^Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.^#^आप जिस देखभाल की तलाश कर रहे हैं, उसके बारे में कुछ त्वरित प्रश्नों के उत्तर दें। सही प्रोवाइडर के साथ आपका मिलान करने में हमारी मदद करने के लिए अपनी प्राथमिकताएं, शेड्यूल और कोई भी विशेष आवश्यकताएं शेयर करें।
+hi^#^Step 2^#^चरण 2
+hi^#^Get Matched^#^मिलान करें
+hi^#^We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.^#^हम आपको योग्य, भरोसेमंद प्रदाताओं से जोड़ेंगे, जो आपकी ज़रूरतों को पूरा करते हैं। प्रोफ़ाइल की समीक्षा करें, क्रेडेंशियल्स की जांच करें और वह प्रदाता चुनें जो आपके लिए सही हो।
+hi^#^Step 3^#^चरण 3
+hi^#^Book & Begin Care^#^बुक एंड बिगिन केयर
+hi^#^Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.^#^अपनी पहली विज़िट शेड्यूल करें और आपको जो सहायता चाहिए वह प्राप्त करें। अपॉइंटमेंट प्रबंधित करें और हमारे प्लेटफ़ॉर्म के माध्यम से सीधे अपने प्रदाता के साथ संवाद करें।
+hi^#^For Healthcare Providers^#^स्वास्थ्य सेवा प्रदाताओं के लिए
+hi^#^Create Your Profile^#^अपनी प्रोफ़ाइल बनाएं
+hi^#^Showcase your skills, experience, and availability to potential clients. Highlight your certifications and areas of expertise.^#^संभावित ग्राहकों के लिए अपने कौशल, अनुभव और उपलब्धता का प्रदर्शन करें। अपने प्रमाणपत्रों और विशेषज्ञता के क्षेत्रों पर प्रकाश डालें।
+hi^#^Receive requests from clients who need your expertise. Review their needs and accept the opportunities that fit your schedule.^#^उन ग्राहकों से अनुरोध प्राप्त करें जिन्हें आपकी विशेषज्ञता की आवश्यकता है। उनकी ज़रूरतों की समीक्षा करें और उन अवसरों को स्वीकार करें जो आपके शेड्यूल के अनुसार हों।
+hi^#^Start Providing Care^#^देखभाल प्रदान करना शुरू करें
+hi^#^Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.^#^बुकिंग स्वीकार करें, क्लाइंट्स से जुड़ें, और अपने समुदाय में बदलाव लाएं। अपने अपॉइंटमेंट और प्रोफ़ाइल को आसानी से प्रबंधित करें।
+hi^#^Join as a Provider^#^प्रोवाइडर के रूप में शामिल हों
+tl^#^Find Compassionate Care, Simplified.^#^Maghanap ng Mahawain na Pangangalaga, Pinasimple.
+tl^#^Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless.^#^Naghahanap ka man ng maaasahang tulong sa pangangalagang pangkalusugan o naghahanap ng iyong mga serbisyo, ginagawang walang kahirap-hirap ng Care My Way ang proseso.
+tl^#^We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs.^#^Nagbibigay kami ng pinagkakatiwalaang platform kung saan maaaring kumonekta ang mga pamilya sa mga kwalipikadong tulong sa pangangalagang pangangalaga
+tl^#^Find a Healthcare provider^#^Maghanap ng isang provider ng pangkalusugan
+tl^#^Our Features^#^Ang aming Mga Tampok
+tl^#^Effortless Booking^#^Walang Mahirap na Pag-book
+tl^#^Book Now^#^Mag-book Ngayon
+tl^#^Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.^#^Mag-book ng isang care provider sa loob ng ilang segundo. Ginagawang madali ng aming madaling gamitin na platform ang paghahanap ng tulong tulong tulad ng pag-tap sa
+tl^#^Verified Professionals^#^Mga Verified Propesyonal
+tl^#^Meet Providers^#^Kilalanin ang Mga Tagapag
+tl^#^Every provider is background-checked and verified, so you can trust the care you receive.^#^Ang bawat provider ay nasuri at na-verify sa background, kaya maaari kang magtiwala sa pangangalaga na natatanggap mo.
+tl^#^Personalized Matches^#^Isinapersonal na Mga
+tl^#^Find Your Match^#^Hanapin ang Iyong Tugma
+tl^#^Get matched with providers who fit your unique needs and preferences, every time.^#^Tumugma sa mga provider na umaangkop sa iyong mga natatanging pangangailangan at kagustuhan, tuwing oras.
+tl^#^Meet Our Healthcare Professionals^#^Kilalanin ang Aming Mga Propesyonal
+tl^#^Get to know the compassionate professionals behind Care My Way.^#^Kilalanin ang mga mapagmahal na propesyonal sa likod ng Care My Way.
+tl^#^Each caregiver is verified, experienced, and dedicated to supporting you or your loved one with kindness, respect, and personalized care.^#^Ang bawat tagapag-alaga ay napatunayan, may karanasan, at nakatuon sa pagsuporta sa iyo o sa iyong mahal sa buhay na may kabaitan, respeto, at isinapersonal na pangangalaga
+tl^#^How It Works^#^Paano Ito Gumagana
+tl^#^For Clients^#^Para sa mga Kliyente
+tl^#^Step 1^#^Hakbang 1
+tl^#^Tell Us Your Needs^#^Sabihin sa amin ang iyong mga pangangailangan
+tl^#^Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.^#^Sagutin ang ilang mabilis na katanungan tungkol sa pangangalaga na iyong hinahanap. Ibahagi ang iyong mga kagustuhan, iskedyul, at anumang mga espesyal na kinakailangan upang matulungan kaming tumugma ka sa tamang provider.
+tl^#^Step 2^#^Hakbang 2
+tl^#^Get Matched^#^Kumuha ng Pagtutugma
+tl^#^We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.^#^Ikonekta ka namin sa mga kwalipikadong, pinagkakatiwalaang provider na umaangkop sa iyong mga pangangailangan. Suriin ang mga profile, suriin ang mga kredensyal, at piliin ang provider na tama para sa iyo.
+tl^#^Step 3^#^Hakbang 3
+tl^#^Book & Begin Care^#^Mag-book at Simulan ng Pangangalaga
+tl^#^Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.^#^I-iskedyul ang iyong unang pagbisita at kunin ang suporta na kailangan mo. Pamahalaan ang mga appointment at makipag-usap sa iyong provider nang direkta sa pamamagitan ng aming platform.
+tl^#^For Healthcare Providers^#^Para sa Mga Tagabigay ng Pang
+tl^#^Create Your Profile^#^Lumikha ng Iyong Profile
+tl^#^Showcase your skills, experience, and availability to potential clients. Highlight your certifications and areas of expertise.^#^Ipakita ang iyong mga kasanayan, karanasan, at pagkakaroon sa mga potensyal na kliyente. I-highlight ang iyong mga sertipikasyon at mga lugar ng kadalubhasaan.
+tl^#^Receive requests from clients who need your expertise. Review their needs and accept the opportunities that fit your schedule.^#^Tumanggap ng mga kahilingan mula sa mga kliyente na nangangailangan ng iyong kadalu Suriin ang kanilang mga pangangailangan at tanggapin ang mga oportunidad na umaangkop sa iyong iskedyul
+tl^#^Start Providing Care^#^Simulan ang Pagbibigay ng Pangang
+tl^#^Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.^#^Tanggapin ang mga booking, kumonekta sa mga kliyente, at gumawa ng pagkakaiba sa iyong komunidad. Pamahalaan ang iyong mga appointment at profile nang madali.
+tl^#^Join as a Provider^#^Sumali bilang isang Tagabigay
+it^#^Find Compassionate Care, Simplified.^#^Trova un'assistenza compassionevole, semplificata.
+it^#^Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless.^#^Che tu stia cercando un aiuto sanitario affidabile o stia cercando di offrire i tuoi servizi, Care My Way semplifica il processo.
+it^#^We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs.^#^Forniamo una piattaforma affidabile in cui le famiglie possono connettersi con ausili sanitari qualificati che soddisfano le tue esigenze specifiche.
+it^#^Find a Healthcare provider^#^Trova un operatore sanitario
+it^#^Our Features^#^Le nostre caratteristiche
+it^#^Effortless Booking^#^Prenotazione semplice
+it^#^Book Now^#^Prenota ora
+it^#^Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.^#^Prenota un fornitore di assistenza in pochi secondi. La nostra piattaforma intuitiva semplifica la ricerca di aiuto con il semplice tocco di un pulsante.
+it^#^Verified Professionals^#^Professionisti verificati
+it^#^Meet Providers^#^Incontra i fornitori
+it^#^Every provider is background-checked and verified, so you can trust the care you receive.^#^Ogni fornitore viene controllato e verificato, quindi puoi fidarti delle cure che ricevi.
+it^#^Personalized Matches^#^Partite personalizzate
+it^#^Find Your Match^#^Trova il tuo partner
+it^#^Get matched with providers who fit your unique needs and preferences, every time.^#^Trova fornitori che soddisfano le tue esigenze e preferenze specifiche, ogni volta.
+it^#^Our Features^#^Le nostre caratteristiche
+it^#^Effortless Booking^#^Prenotazione semplice
+it^#^Book Now^#^Prenota ora
+it^#^Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.^#^Prenota un fornitore di assistenza in pochi secondi. La nostra piattaforma intuitiva semplifica la ricerca di aiuto con il semplice tocco di un pulsante.
+it^#^Verified Professionals^#^Professionisti verificati
+it^#^Meet Providers^#^Incontra i fornitori
+it^#^Every provider is background-checked and verified, so you can trust the care you receive.^#^Ogni fornitore viene controllato e verificato, quindi puoi fidarti delle cure che ricevi.
+it^#^Personalized Matches^#^Partite personalizzate
+it^#^Find Your Match^#^Trova il tuo partner
+it^#^Get matched with providers who fit your unique needs and preferences, every time.^#^Trova fornitori che soddisfano le tue esigenze e preferenze specifiche, ogni volta.
+it^#^Meet Our Healthcare Professionals^#^Incontra i nostri professionisti sanitari
+it^#^Get to know the compassionate professionals behind Care My Way.^#^Vieni a conoscere i professionisti compassionevoli dietro Care My Way.
+it^#^Each caregiver is verified, experienced, and dedicated to supporting you or your loved one with kindness, respect, and personalized care.^#^Ogni caregiver è verificato, esperto e si dedica a sostenere te o la persona amata con gentilezza, rispetto e assistenza personalizzata.
+it^#^How It Works^#^Come funziona
+it^#^For Clients^#^Per i clienti
+it^#^Step 1^#^Fase 1
+it^#^Tell Us Your Needs^#^Raccontaci le tue esigenze
+it^#^Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.^#^Rispondi ad alcune brevi domande sull'assistenza che stai cercando. Condividi le tue preferenze, i tuoi orari ed eventuali requisiti speciali per aiutarci a trovare il fornitore giusto.
+it^#^Step 2^#^Fase 2
+it^#^Get Matched^#^Fatti abbinare
+it^#^We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.^#^Ti metteremo in contatto con fornitori qualificati e affidabili che soddisfano le tue esigenze. Rivedi i profili, controlla le credenziali e scegli il fornitore giusto per te.
+it^#^Step 3^#^Fase 3
+it^#^Book & Begin Care^#^Prenota e inizia l'assistenza
+it^#^Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.^#^Pianifica la tua prima visita e ottieni il supporto di cui hai bisogno. Gestisci gli appuntamenti e comunica con il tuo fornitore direttamente attraverso la nostra piattaforma.
+it^#^For Healthcare Providers^#^Per gli operatori sanitari
+it^#^Create Your Profile^#^Crea il tuo profilo
+it^#^Showcase your skills, experience, and availability to potential clients. Highlight your certifications and areas of expertise.^#^Mostra le tue capacità, esperienza e disponibilità ai potenziali clienti. Metti in evidenza le tue certificazioni e le tue aree di competenza.
+it^#^Receive requests from clients who need your expertise. Review their needs and accept the opportunities that fit your schedule.^#^Ricevi richieste da clienti che hanno bisogno della tua esperienza. Esamina le loro esigenze e accetta le opportunità che si adattano al tuo programma.
+it^#^Start Providing Care^#^Inizia a fornire assistenza
+it^#^Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.^#^Accetta prenotazioni, entra in contatto con i clienti e fai la differenza nella tua comunità. Gestisci i tuoi appuntamenti e il tuo profilo con facilità.
+it^#^Join as a Provider^#^Unisciti come fornitore
+de^#^Find Compassionate Care, Simplified.^#^Finden Sie Compassionate Care, Simplified.
+de^#^Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless.^#^Egal, ob Sie nach einer zuverlässigen medizinischen Hilfe suchen oder Ihre Dienstleistungen anbieten möchten, Care My Way macht den Prozess mühelos.
+de^#^We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs.^#^Wir bieten eine vertrauenswürdige Plattform, auf der Familien mit qualifizierten medizinischen Hilfsmitteln in Kontakt treten können, die Ihren individuellen Bedürfnissen entsprechen.
+de^#^Find a Healthcare provider^#^Finden Sie einen Gesundheitsdienstleister
+de^#^Our Features^#^Unsere Funktionen
+de^#^Effortless Booking^#^Müheloses Buchen
+de^#^Book Now^#^JETZT BUCHEN
+de^#^Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.^#^Buchen Sie in Sekundenschnelle einen Leistungserbringer. Unsere intuitive Plattform macht das Finden von Hilfe so einfach wie das Tippen auf eine Schaltfläche.
+de^#^Verified Professionals^#^Verifizierte Fachkräfte
+de^#^Meet Providers^#^Lernen Sie Anbieter kennen
+de^#^Every provider is background-checked and verified, so you can trust the care you receive.^#^Jeder Anbieter wird auf seinen Hintergrund überprüft und verifiziert, sodass Sie der Betreuung, die Sie erhalten, vertrauen können.
+de^#^Personalized Matches^#^Personalisierte Spiele
+de^#^Find Your Match^#^Finde dein Match
+de^#^Get matched with providers who fit your unique needs and preferences, every time.^#^Lassen Sie sich jedes Mal mit Anbietern zusammenbringen, die Ihren individuellen Bedürfnissen und Vorlieben entsprechen.
+de^#^Meet Our Healthcare Professionals^#^Lernen Sie unsere medizinischen Fachkräfte kennen
+de^#^Get to know the compassionate professionals behind Care My Way.^#^Lernen Sie die mitfühlenden Profis kennen, die hinter Care My Way stehen.
+de^#^Each caregiver is verified, experienced, and dedicated to supporting you or your loved one with kindness, respect, and personalized care.^#^Jede Pflegekraft ist verifiziert, erfahren und engagiert sich dafür, Sie oder Ihre Angehörigen mit Freundlichkeit, Respekt und persönlicher Betreuung zu unterstützen.
+de^#^How It Works^#^So funktioniert's
+de^#^For Clients^#^Für Kunden
+de^#^Step 1^#^1. Schritt
+de^#^Tell Us Your Needs^#^Teilen Sie uns Ihre Bedürfnisse mit
+de^#^Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.^#^Beantworten Sie ein paar kurze Fragen zu der Pflege, die Sie suchen. Teilen Sie uns Ihre Präferenzen, Ihren Zeitplan und alle speziellen Anforderungen mit, damit wir Sie mit dem richtigen Anbieter zusammenbringen können.
+de^#^Step 2^#^Schritt 2
+de^#^Get Matched^#^Lass dich abgleichen
+de^#^We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.^#^Wir verbinden Sie mit qualifizierten, vertrauenswürdigen Anbietern, die Ihren Bedürfnissen entsprechen. Überprüfen Sie Profile, überprüfen Sie die Anmeldeinformationen und wählen Sie den Anbieter aus, der zu Ihnen passt.
+de^#^Step 3^#^Schritt 3
+de^#^Book & Begin Care^#^Buche und beginne mit der Betreuung
+de^#^Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.^#^Vereinbaren Sie Ihren ersten Besuch und erhalten Sie die Unterstützung, die Sie benötigen. Verwalten Sie Termine und kommunizieren Sie direkt über unsere Plattform mit Ihrem Anbieter.
+de^#^For Healthcare Providers^#^Für Gesundheitsdienstleister
+de^#^Create Your Profile^#^Erstelle dein Profil
+de^#^Showcase your skills, experience, and availability to potential clients. Highlight your certifications and areas of expertise.^#^Präsentieren Sie potenziellen Kunden Ihre Fähigkeiten, Erfahrung und Verfügbarkeit. Heben Sie Ihre Zertifizierungen und Fachgebiete hervor.
+de^#^Receive requests from clients who need your expertise. Review their needs and accept the opportunities that fit your schedule.^#^Erhalten Sie Anfragen von Kunden, die Ihr Fachwissen benötigen. Überprüfe ihre Bedürfnisse und akzeptiere die Gelegenheiten, die zu deinem Zeitplan passen.
+de^#^Start Providing Care^#^Fangen Sie an, Pflege anzubieten
+de^#^Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.^#^Nehmen Sie Buchungen an, treten Sie mit Kunden in Kontakt und machen Sie einen Unterschied in Ihrer Community. Verwalte deine Termine und dein Profil mit Leichtigkeit.
+de^#^Join as a Provider^#^Als Anbieter beitreten
+pt^#^Find Compassionate Care, Simplified.^#^Encontre o cuidado compassivo, simplificado.
+pt^#^Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless.^#^Se você está procurando por um auxílio médico confiável ou procurando oferecer seus serviços, o Care My Way facilita o processo.
+pt^#^We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs.^#^Fornecemos uma plataforma confiável na qual as famílias podem se conectar com auxiliares de saúde qualificados que atendam às suas necessidades exclusivas.
+pt^#^Find a Healthcare provider^#^Encontre um prestador de serviços de saúde
+pt^#^Our Features^#^Nossas características
+pt^#^Effortless Booking^#^Reserva sem esforço
+pt^#^Book Now^#^Reserve agora
+pt^#^Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.^#^Reserve um profissional de saúde em segundos. Nossa plataforma intuitiva faz com que encontrar ajuda seja tão fácil quanto tocar em um botão.
+pt^#^Verified Professionals^#^Profissionais verificados
+pt^#^Meet Providers^#^Conheça os fornecedores
+pt^#^Every provider is background-checked and verified, so you can trust the care you receive.^#^Cada provedor é verificado e verificado, para que você possa confiar no atendimento que recebe.
+pt^#^Personalized Matches^#^Partidas personalizadas
+pt^#^Find Your Match^#^Encontre seu par
+pt^#^Get matched with providers who fit your unique needs and preferences, every time.^#^Encontre sempre fornecedores que atendam às suas necessidades e preferências exclusivas.
+pt^#^Meet Our Healthcare Professionals^#^Conheça nossos profissionais de saúde
+pt^#^Get to know the compassionate professionals behind Care My Way.^#^Conheça os profissionais compassivos por trás do Care My Way.
+pt^#^Each caregiver is verified, experienced, and dedicated to supporting you or your loved one with kindness, respect, and personalized care.^#^Cada cuidador é verificado, experiente e dedicado a apoiar você ou seu ente querido com gentileza, respeito e atendimento personalizado.
+pt^#^How It Works^#^Como funciona
+pt^#^For Clients^#^Para clientes
+pt^#^Step 1^#^Etapa 1
+pt^#^Tell Us Your Needs^#^Conte-nos suas necessidades
+pt^#^Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.^#^Responda a algumas perguntas rápidas sobre os cuidados que você está procurando. Compartilhe suas preferências, horários e quaisquer requisitos especiais para nos ajudar a encontrar o fornecedor certo para você.
+pt^#^Step 2^#^Etapa 2
+pt^#^Get Matched^#^Seja correspondido
+pt^#^We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.^#^Conectaremos você a fornecedores qualificados e confiáveis que atendam às suas necessidades. Analise os perfis, verifique as credenciais e escolha o provedor certo para você.
+pt^#^Step 3^#^Etapa 3
+pt^#^Book & Begin Care^#^Reserve e comece a cuidar
+pt^#^Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.^#^Agende sua primeira visita e obtenha o suporte de que você precisa. Gerencie consultas e comunique-se com seu provedor diretamente por meio de nossa plataforma.
+pt^#^For Healthcare Providers^#^Para prestadores de serviços de saúde
+pt^#^Step 1^#^Etapa 1
+pt^#^Create Your Profile^#^Crie seu perfil
+pt^#^Showcase your skills, experience, and availability to potential clients. Highlight your certifications and areas of expertise.^#^Mostre suas habilidades, experiência e disponibilidade para clientes em potencial. Destaque suas certificações e áreas de especialização.
+pt^#^Step 2^#^Etapa 2
+pt^#^Get Matched^#^Seja correspondido
+pt^#^Receive requests from clients who need your expertise. Review their needs and accept the opportunities that fit your schedule.^#^Receba solicitações de clientes que precisam de sua experiência. Analise as necessidades deles e aceite as oportunidades que se adequam à sua agenda.
+pt^#^Step 3^#^Etapa 3
+pt^#^Start Providing Care^#^Comece a prestar cuidados
+pt^#^Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.^#^Aceite reservas, conecte-se com clientes e faça a diferença em sua comunidade. Gerencie seus compromissos e perfil com facilidade.
+pt^#^Join as a Provider^#^Participe como provedor
+pt^#^How It Works^#^Como funciona
+pt^#^For Clients^#^Para clientes
+pt^#^Tell Us Your Needs^#^Conte-nos suas necessidades
+pt^#^Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.^#^Responda a algumas perguntas rápidas sobre os cuidados que você está procurando. Compartilhe suas preferências, horários e quaisquer requisitos especiais para nos ajudar a encontrar o fornecedor certo para você.
+pt^#^We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.^#^Conectaremos você a fornecedores qualificados e confiáveis que atendam às suas necessidades. Analise os perfis, verifique as credenciais e escolha o provedor certo para você.
+pt^#^Book & Begin Care^#^Reserve e comece a cuidar
+pt^#^Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.^#^Agende sua primeira visita e obtenha o suporte de que você precisa. Gerencie consultas e comunique-se com seu provedor diretamente por meio de nossa plataforma.
+pt^#^For Healthcare Providers^#^Para prestadores de serviços de saúde
+ru^#^Find Compassionate Care, Simplified.^#^Найдите упрощенный уход, основанный на сострадании.
+ru^#^Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless.^#^Если вы ищете надежную медицинскую помощь или хотите предложить свои услуги, Care My Way упростит этот процесс.
+ru^#^We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs.^#^Мы предоставляем надежную платформу, на которой семьи могут связаться с квалифицированными медицинскими работниками, отвечающими вашим уникальным потребностям.
+ru^#^Find a Healthcare provider^#^Найдите поставщика медицинских услуг
+ru^#^Our Features^#^Наши функции
+ru^#^Effortless Booking^#^Простое бронирование
+ru^#^Book Now^#^Забронируйте сейчас
+ru^#^Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.^#^Забронируйте врача за считанные секунды. Наша интуитивно понятная платформа позволяет легко найти помощь одним нажатием кнопки.
+ru^#^Verified Professionals^#^Проверенные профессионалы
+ru^#^Meet Providers^#^Познакомьтесь с поставщиками
+ru^#^Every provider is background-checked and verified, so you can trust the care you receive.^#^Каждый поставщик медицинских услуг проходит тщательную проверку и верификацию, поэтому вы можете доверять полученной медицинской помощи.
+ru^#^Personalized Matches^#^Персонализированные матчи
+ru^#^Find Your Match^#^Найдите свою вторую половинку
+ru^#^Get matched with providers who fit your unique needs and preferences, every time.^#^Каждый раз выбирайте поставщиков, которые соответствуют вашим уникальным потребностям и предпочтениям.
+ru^#^Meet Our Healthcare Professionals^#^Познакомьтесь с нашими медицинскими работниками
+ru^#^Get to know the compassionate professionals behind Care My Way.^#^Познакомьтесь с отзывчивыми профессионалами, стоящими за Care My Way.
+ru^#^Each caregiver is verified, experienced, and dedicated to supporting you or your loved one with kindness, respect, and personalized care.^#^Каждый опекун проверен, опытен и нацелен на то, чтобы поддержать вас или вашего близкого человека добротой, уважением и индивидуальным подходом.
+ru^#^How It Works^#^Как это работает
+ru^#^For Clients^#^Для клиентов
+ru^#^Step 1^#^Шаг 1
+ru^#^Tell Us Your Needs^#^Расскажите нам о своих потребностях
+ru^#^Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.^#^Ответьте на несколько коротких вопросов об уходе, который вам нужен. Расскажите о своих предпочтениях, расписании и любых особых требованиях, чтобы мы могли подобрать для вас подходящего поставщика медицинских услуг.
+ru^#^Step 2^#^Шаг 2
+ru^#^Get Matched^#^Подберите себе пару
+ru^#^We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.^#^Мы свяжем вас с квалифицированными и надежными поставщиками, отвечающими вашим потребностям. Просмотрите профили, проверьте учетные данные и выберите подходящего вам поставщика.
+ru^#^Step 3^#^Шаг 3
+ru^#^Book & Begin Care^#^Забронируйте и начните лечение
+ru^#^Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.^#^Запланируйте свой первый визит и получите необходимую поддержку. Управляйте встречами и общайтесь со своим провайдером напрямую через нашу платформу.
+ru^#^For Healthcare Providers^#^Для поставщиков медицинских услуг
+ru^#^Create Your Profile^#^Создайте свой профиль
+ru^#^Showcase your skills, experience, and availability to potential clients. Highlight your certifications and areas of expertise.^#^Продемонстрируйте потенциальным клиентам свои навыки, опыт и готовность к работе. Выделите свои сертификаты и области знаний.
+ru^#^Receive requests from clients who need your expertise. Review their needs and accept the opportunities that fit your schedule.^#^Получайте запросы от клиентов, которым нужен ваш опыт. Изучите их потребности и воспользуйтесь возможностями, которые соответствуют вашему графику.
+ru^#^Start Providing Care^#^Начните оказывать медицинскую помощь
+ru^#^Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.^#^Принимайте заказы, общайтесь с клиентами и меняйте жизнь своего сообщества к лучшему. С легкостью управляйте встречами и профилем.
+ru^#^Join as a Provider^#^Присоединяйтесь в качестве поставщика
+ta^#^Find Compassionate Care, Simplified.^#^இரக்கமான கவனிப்பைக் கண்டறியவும், எளிமைப்படுத்தப்பட்டது.
+ta^#^Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless.^#^நீங்கள் நம்பகமான சுகாதார உதவியைத் தேடுகிறீர்களா அல்லது உங்கள் சேவைகளை வழங்க விரும்பினாலும், கேர் மை வே செயல்முறையை சிரமமின்றி செய்கிறது.
+ta^#^We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs.^#^உங்கள் தனித்துவமான தேவைகளுக்கு பொருந்தக்கூடிய தகுதிவாய்ந்த சுகாதார உதவிகளுடன் குடும்பங்கள் இணைக்கக்கூடிய நம்பகமான தளத்தை நாங்கள்
+ta^#^Find a Healthcare provider^#^ஒரு சுகாதார வழங்குநரைக் கண்ட
+ta^#^Our Features^#^எங்கள் அம்சங்கள்
+ta^#^Effortless Booking^#^சிரமமற்ற முன்பதிவு
+ta^#^Book Now^#^இப்போது பதிவு செய்யுங்கள்
+ta^#^Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.^#^நொடிகளில் பராமரிப்பு வழங்குநரை முன்பதிவு எங்கள் உள்ளுணர்வு தளம் ஒரு பொத்தானைத் தட்டுவது போல உதவியைக் கண்டுபிடிப்பதை எளிதாக்க
+ta^#^Verified Professionals^#^சரிபார்க்கப்பட்ட தொழில்
+ta^#^Meet Providers^#^வழங்குநர்களை சந்திக்க
+ta^#^Every provider is background-checked and verified, so you can trust the care you receive.^#^ஒவ்வொரு வழங்குநரும் பின்னணி சரிபார்க்கப்பட்டு சரிபார்க்கப்படுகிறார்கள், எனவே நீங்கள் பெறும் கவனிப்பை நீங்கள் நம்பலாம்.
+ta^#^Personalized Matches^#^தனிப்பட்ட போட்டிகள்
+ta^#^Find Your Match^#^உங்கள் போட்டியைக் கண்டறியவும்
+ta^#^Get matched with providers who fit your unique needs and preferences, every time.^#^ஒவ்வொரு முறையும் உங்கள் தனித்துவமான தேவைகள் மற்றும் விருப்பங்களுக்கு ஏற்ற வழங்குநர்களுடன் பொருந்தவும்.
+ta^#^Meet Our Healthcare Professionals^#^எங்கள் சுகாதார வல்லுநர்களை
+ta^#^Get to know the compassionate professionals behind Care My Way.^#^கெயர் மை வேவின் பின்னால் உள்ள இரக்கமுள்ள நிபுணர்களை அறிந்து கொள்ளுங்கள்.
+ta^#^Each caregiver is verified, experienced, and dedicated to supporting you or your loved one with kindness, respect, and personalized care.^#^ஒவ்வொரு பராமரிப்பாளரும் சரிபார்க்கப்பட்டவர், அனுபவம் வாய்ந்தவர் மற்றும் உங்களை அல்லது உங்கள் அன்புக்குரியவரை தயவு, மரியாதை மற்றும் தனிப்பயனாக்கப்பட்ட கவனிப்புடன் ஆதரிக்க அர்ப்பண
+ta^#^How It Works^#^இது எப்படி வேலை செய்கிறது
+ta^#^For Clients^#^வாடிக்கையாளர்களுக்கு
+ta^#^Step 1^#^படி 1
+ta^#^Tell Us Your Needs^#^உங்கள் தேவைகளை எங்களிடம் சொல்லுங்கள்
+ta^#^Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.^#^நீங்கள் தேடும் கவனிப்பு குறித்த சில விரைவான கேள்விகளுக்கு பதிலளிக்கவும். உங்களை சரியான வழங்குநருடன் பொருத்த எங்களுக்கு உதவ உங்கள் விருப்பத்தேர்வுகள், அட்டவணை மற்றும் எந்த சிறப்பு தேவைகளையும் பகிரவும்.
+ta^#^Step 2^#^படி 2
+ta^#^Get Matched^#^பொருந்தவும்
+ta^#^We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.^#^உங்கள் தேவைகளுக்கு ஏற்ற தகுதிவாய்ந்த, நம்பகமான வழங்குநர்களுடன் உங்களை இணைப்போம். சுயவிவரங்களை மதிப்பாய்வு செய்து, சான்றிதழ்களைச் சரிபார்த்து, உங்களுக்கு சரியான வழங்குநரைத் தேர்வு
+ta^#^Step 3^#^படி 3
+ta^#^Book & Begin Care^#^புக் & ஸ்டிகன் கேர்
+ta^#^Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.^#^உங்கள் முதல் வருகையை திட்டமிட்டு உங்களுக்குத் தேவையான ஆதரவைப் பெறுங்கள். சந்திப்புகளை நிர்வகிக்கவும் மற்றும் எங்கள் தளத்தின் மூலம் உங்கள் வழங்குநருடன் நேரடியாக தொடர்பு கொள்ளுங்கள்
+ta^#^For Healthcare Providers^#^சுகாதார வழங்குநர்களுக்கு
+ta^#^Create Your Profile^#^உங்கள் சுயவிவரத்தை உருவாக்கவும்
+ta^#^Showcase your skills, experience, and availability to potential clients. Highlight your certifications and areas of expertise.^#^உங்கள் திறன்கள், அனுபவம் மற்றும் சாத்தியமான வாடிக்கையாளர்களுக்கு கிடைக்கும் தன்மையைக் கா உங்கள் சான்றிதழ்கள் மற்றும் நிபுணத்துவத் துறைகளை முன்னிலைப்படுத்தவும்
+ta^#^Receive requests from clients who need your expertise. Review their needs and accept the opportunities that fit your schedule.^#^உங்கள் நிபுணத்துவம் தேவையான வாடிக்கையாளர்களிடமிருந்து கோரிக்கைகளைப் பெறு அவர்களின் தேவைகளை மதிப்பாய்வு செய்து, உங்கள் அட்டவணைக்கு ஏற்ற வாய்ப்புகளை ஏற்றுக்கொள்ளுங்கள்.
+ta^#^Start Providing Care^#^பராமரிப்பு வழங்கத் தொடங்குங்கள்
+ta^#^Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.^#^முன்பதிவுகளை ஏற்றுக்கொள்ளுங்கள், வாடிக்கையாளர்களுடன் இணைக்கவும் மற்றும் உங்கள் சமூகத்தில் வித்தியாசத்தை ஏற்படுத்தவும் உங்கள் சந்திப்புகள் மற்றும் சுயவிவரத்தை எளிதாக நிர்வகிக்கவும்.
+ta^#^Join as a Provider^#^ஒரு வழங்குநராக சேரவும்
+vi^#^Find Compassionate Care, Simplified.^#^Tìm sự chăm sóc từ bi, đơn giản hóa.
+vi^#^Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless.^#^Cho dù bạn đang tìm kiếm một dịch vụ hỗ trợ chăm sóc sức khỏe đáng tin cậy hay đang tìm cách cung cấp dịch vụ của mình, Care My Way giúp quá trình này trở nên dễ dàng.
+vi^#^We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs.^#^Chúng tôi cung cấp một nền tảng đáng tin cậy nơi các gia đình có thể kết nối với các thiết bị hỗ trợ chăm sóc sức khỏe đủ điều kiện phù hợp với nhu cầu riêng của bạn.
+vi^#^Find a Healthcare provider^#^Tìm nhà cung cấp dịch vụ chăm sóc sức khỏe
+vi^#^Our Features^#^Tính năng của chúng tôi
+vi^#^Effortless Booking^#^Đặt chỗ dễ dàng
+vi^#^Book Now^#^Đặt ngay
+vi^#^Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.^#^Đặt chỗ cho một nhà cung cấp dịch vụ chăm sóc trong vài giây. Nền tảng trực quan của chúng tôi giúp việc tìm kiếm trợ giúp dễ dàng như chạm vào một nút.
+vi^#^Verified Professionals^#^Chuyên gia đã được xác minh
+vi^#^Meet Providers^#^Gặp gỡ các nhà cung cấp
+vi^#^Every provider is background-checked and verified, so you can trust the care you receive.^#^Mọi nhà cung cấp đều được kiểm tra và xác minh nền tảng, vì vậy bạn có thể tin tưởng vào sự chăm sóc mà bạn nhận được.
+vi^#^Personalized Matches^#^Trận đấu được cá nhân hóa
+vi^#^Find Your Match^#^Tìm trận đấu của bạn
+vi^#^Get matched with providers who fit your unique needs and preferences, every time.^#^Kết hợp với các nhà cung cấp phù hợp với nhu cầu và sở thích riêng của bạn, mọi lúc.
+vi^#^Meet Our Healthcare Professionals^#^Gặp gỡ các chuyên gia y tế của chúng tôi
+vi^#^Get to know the compassionate professionals behind Care My Way.^#^Tìm hiểu các chuyên gia từ bi đằng sau Care My Way.
+vi^#^Each caregiver is verified, experienced, and dedicated to supporting you or your loved one with kindness, respect, and personalized care.^#^Mỗi người chăm sóc được xác minh, có kinh nghiệm và tận tâm hỗ trợ bạn hoặc người thân của bạn bằng lòng tốt, tôn trọng và chăm sóc cá nhân.
+vi^#^How It Works^#^Nó hoạt động như thế nào
+vi^#^For Clients^#^Dành cho khách hàng
+vi^#^Step 1^#^Bước 1
+vi^#^Tell Us Your Needs^#^Hãy cho chúng tôi biết nhu cầu của bạn
+vi^#^Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.^#^Trả lời một vài câu hỏi nhanh về dịch vụ chăm sóc bạn đang tìm kiếm. Chia sẻ sở thích, lịch trình và bất kỳ yêu cầu đặc biệt nào của bạn để giúp chúng tôi kết hợp bạn với nhà cung cấp phù hợp.
+vi^#^Step 2^#^Bước 2
+vi^#^Get Matched^#^Được phù hợp
+vi^#^We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.^#^Chúng tôi sẽ kết nối bạn với các nhà cung cấp đủ tiêu chuẩn, đáng tin cậy, phù hợp với nhu cầu của bạn. Xem lại hồ sơ, kiểm tra thông tin đăng nhập và chọn nhà cung cấp phù hợp với bạn.
+vi^#^Step 3^#^Bước 3
+vi^#^Book & Begin Care^#^Đặt và bắt đầu chăm sóc
+vi^#^Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.^#^Lên lịch chuyến thăm đầu tiên của bạn và nhận được sự hỗ trợ bạn cần. Quản lý các cuộc hẹn và liên lạc trực tiếp với nhà cung cấp của bạn thông qua nền tảng của chúng tôi.
+vi^#^For Healthcare Providers^#^Đối với nhà cung cấp dịch vụ chăm sóc
+vi^#^Create Your Profile^#^Tạo hồ sơ của bạn
+vi^#^Showcase your skills, experience, and availability to potential clients. Highlight your certifications and areas of expertise.^#^Thể hiện kỹ năng, kinh nghiệm và sự sẵn có của bạn cho khách hàng tiềm năng. Làm nổi bật các chứng chỉ và lĩnh vực chuyên môn của bạn.
+vi^#^Receive requests from clients who need your expertise. Review their needs and accept the opportunities that fit your schedule.^#^Nhận yêu cầu từ khách hàng cần chuyên môn của bạn. Xem xét nhu cầu của họ và chấp nhận các cơ hội phù hợp với lịch trình của bạn.
+vi^#^Start Providing Care^#^Bắt đầu cung cấp dịch vụ chăm sóc
+vi^#^Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.^#^Chấp nhận đặt chỗ, kết nối với khách hàng và tạo sự khác biệt trong cộng đồng của bạn. Quản lý các cuộc hẹn và hồ sơ của bạn một cách dễ dàng.
+vi^#^Join as a Provider^#^Tham gia với tư cách là nhà cung cấp
+gu^#^Find Compassionate Care, Simplified.^#^કરુણ સંભાળ શોધો, સરળ.
+gu^#^Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless.^#^ભલે તમે વિશ્વસનીય હેલ્થકેર સહાય શોધી રહ્યાં હોવ અથવા તમારી સેવાઓ ઓફર કરવા માંગતા હો, કેર માય વે પ્રક્રિયાને સરળ બનાવે છે.
+gu^#^We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs.^#^અમે વિશ્વસનીય પ્લેટફોર્મ પ્રદાન કરીએ છીએ જ્યાં પરિવારો તમારી અનન્ય જરૂરિયાતો સાથે મેળ ખાતા લાયક હેલ્થકેર એડ્સ સાથે જોડાઈ શકે છે.
+gu^#^Find a Healthcare provider^#^હેલ્થકેર પ્રદાતા શોધો
+gu^#^Our Features^#^અમારી સુવિધાઓ
+gu^#^Effortless Booking^#^સરળ બુકિંગ
+gu^#^Book Now^#^હમણાં બુક કરો
+gu^#^Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.^#^સેકંડમાં સંભાળ પ્રદાતા બુક કરો. અમારું સાહજિક પ્લેટફોર્મ મદદ શોધવાનું બટન ટેપ કરવા જેટલું સરળ બનાવે છે.
+gu^#^Verified Professionals^#^ચકાસાયેલ વ્યાવસાય
+gu^#^Meet Providers^#^પ્રદાતાઓને મળો
+gu^#^Every provider is background-checked and verified, so you can trust the care you receive.^#^દરેક પ્રદાતા બેકગ્રાઉન્ડ-ચકાસાયેલ અને ચકાસાયેલ છે, જેથી તમે પ્રાપ્ત સંભાળ પર વિશ્વાસ કરી શકો છો.
+gu^#^Personalized Matches^#^વ્યક્તિગત મેચો
+gu^#^Find Your Match^#^તમારી મેચ શોધો
+gu^#^Get matched with providers who fit your unique needs and preferences, every time.^#^દર વખતે તમારી અનન્ય જરૂરિયાતો અને પસંદગીઓને બંધબેસતા એવા પ્રદાતાઓ સાથે મેળ ખાઓ.
+gu^#^Meet Our Healthcare Professionals^#^અમારા હેલ્થકેર પ્રોફેશનલ્સ
+gu^#^Get to know the compassionate professionals behind Care My Way.^#^કેર માય વે પાછળના કરુણ વ્યાવસાયિકોને જાણો.
+gu^#^Each caregiver is verified, experienced, and dedicated to supporting you or your loved one with kindness, respect, and personalized care.^#^દરેક સંભાળ રાખનાર ચકાસાયેલ છે, અનુભવી છે, અને દયા, આદર, અને વ્યક્તિગત કાળજી સાથે તમને અથવા તમારા પ્રિય વ્યક્તિને ટેકો આપવા માટે સમર્પિત છે.
+gu^#^How It Works^#^તે કેવી રીતે કાર્ય કરે છે
+gu^#^For Clients^#^ગ્રાહકો માટે
+gu^#^Step 1^#^પગલું 1
+gu^#^Tell Us Your Needs^#^અમને તમારી જરૂરિયાતો જણાવો
+gu^#^Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.^#^તમે જે સંભાળ શોધી રહ્યા છો તે વિશે થોડા ઝડપી પ્રશ્નોના જવાબ આપો. તમને યોગ્ય પ્રદાતા સાથે મેચ કરવામાં મદદ કરવા માટે તમારી પસંદગીઓ, શેડ્યૂલ અને કોઈપણ વિશેષ આવશ્યકતાઓ શેર કરો.
+gu^#^Step 2^#^પગલું 2
+gu^#^Get Matched^#^મેળ ખાય
+gu^#^We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.^#^અમે તમને લાયક, વિશ્વસનીય પ્રદાતાઓ સાથે જોડીશું જે તમારી જરૂરિયાતોને બંધબેસે છે. પ્રોફાઇલ્સની સમીક્ષા કરો, ઓળખપત્રો તપાસો અને તમારા માટે યોગ્ય પ્રદાતા પસંદ કરો.
+gu^#^Step 3^#^પગલું 3
+gu^#^Book & Begin Care^#^બુક એન્ડ બિગ કેર
+gu^#^Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.^#^તમારી પ્રથમ મુલાકાત શેડ્યૂલ કરો અને તમને જરૂરી સપોર્ટ મેળવો. નિમણૂંકોનું સંચાલન કરો અને અમારા પ્લેટફોર્મ દ્વારા સીધા તમારા પ્રદાતા સાથે વાતચીત કરો.
+gu^#^For Healthcare Providers^#^હેલ્થકેર પ્રદાતાઓ માટે
+gu^#^Create Your Profile^#^તમારી પ્રોફાઇલ બનાવો
+gu^#^Showcase your skills, experience, and availability to potential clients. Highlight your certifications and areas of expertise.^#^સંભવિત ગ્રાહકોને તમારી કુશળતા, અનુભવ અને ઉપલબ્ધતા દર્શાવો. તમારા પ્રમાણપત્રો અને કુશળતાના ક્ષેત્રોને પ્રકાશિત કરો.
+gu^#^Receive requests from clients who need your expertise. Review their needs and accept the opportunities that fit your schedule.^#^તમારી કુશળતાની જરૂર હોય તેવા ગ્રાહકો પાસેથી વિનંતીઓ પ્રાપ્ત કરો. તેમની જરૂરિયાતોની સમીક્ષા કરો અને તમારા શેડ્યૂલને બંધબેસતી તકો સ્વીકારો.
+gu^#^Start Providing Care^#^સંભાળ પ્રદાન કરવાનું શરૂ કરો
+gu^#^Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.^#^બુકિંગ સ્વીકારો, ક્લાયન્ટ્સ સાથે કનેક્ટ કરો અને તમારા સમુદાયમાં તફાવત કરો. તમારી નિમણૂકો અને પ્રોફાઇલને સરળતાથી મેનેજ કરો.
+gu^#^Join as a Provider^#^પ્રદાતા તરીકે જોડાઓ
+ko^#^Find Compassionate Care, Simplified.^#^간소화된 자비로운 케어를 찾아보세요.
+ko^#^Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless.^#^신뢰할 수 있는 의료 지원을 찾고 있든 서비스를 제공하고자 하든 Care My Way는 절차를 수월하게 만듭니다.
+ko^#^We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs.^#^당사는 가족이 귀하의 고유한 요구 사항에 맞는 자격을 갖춘 의료 보조기구를 이용할 수 있는 신뢰할 수 있는 플랫폼을 제공합니다.
+ko^#^Find a Healthcare provider^#^의료 서비스 제공자 찾기
+ko^#^Our Features^#^우리의 특징
+ko^#^Effortless Booking^#^간편한 예약
+ko^#^Book Now^#^지금 예약하기
+ko^#^Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.^#^몇 초 만에 의료 서비스 제공자를 예약하세요.직관적인 플랫폼을 통해 버튼을 탭하기만 하면 도움을 쉽게 찾을 수 있습니다.
+ko^#^Verified Professionals^#^검증된 전문가
+ko^#^Meet Providers^#^제공업체 만나기
+ko^#^Every provider is background-checked and verified, so you can trust the care you receive.^#^모든 의료 서비스 제공자는 신원 조회 및 검증을 거치므로 귀하가 받는 진료를 신뢰할 수 있습니다.
+ko^#^Personalized Matches^#^맞춤형 경기
+ko^#^Find Your Match^#^내 짝을 찾아라
+ko^#^Get matched with providers who fit your unique needs and preferences, every time.^#^항상 귀사의 고유한 요구와 선호도에 맞는 제공업체와 연결하세요.
+ko^#^Meet Our Healthcare Professionals^#^의료 전문가 만나기
+ko^#^Get to know the compassionate professionals behind Care My Way.^#^Care My Way의 자비로운 전문가들에 대해 알아보세요.
+ko^#^Each caregiver is verified, experienced, and dedicated to supporting you or your loved one with kindness, respect, and personalized care.^#^각 간병인은 검증되고 경험이 풍부하며 친절, 존중 및 맞춤형 치료로 귀하 또는 귀하의 사랑하는 사람을 지원하기 위해 최선을 다합니다.
+ko^#^How It Works^#^작동 원리
+ko^#^For Clients^#^고객용
+ko^#^Step 1^#^단계 1
+ko^#^Tell Us Your Needs^#^귀하의 요구 사항을 알려주십시오
+ko^#^Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.^#^찾고 있는 진료에 대한 몇 가지 간단한 질문에 답하세요.선호 사항, 일정, 특별 요구 사항을 알려 주시면 적합한 의료 서비스 제공자를 찾아드릴 수 있도록 도와드리겠습니다.
+ko^#^Step 2^#^2단계
+ko^#^Get Matched^#^매칭 받기
+ko^#^We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.^#^요구 사항에 맞는 신뢰할 수 있는 자격을 갖춘 제공업체와 연결해 드립니다.프로필을 검토하고, 자격 증명을 확인하고, 적합한 제공자를 선택하세요.
+ko^#^Step 3^#^단계 3
+ko^#^Book & Begin Care^#^예약 및 비기닝 케어
+ko^#^Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.^#^첫 방문을 예약하고 필요한 지원을 받으십시오.당사 플랫폼을 통해 직접 약속을 관리하고 의료 서비스 제공자와 소통하세요.
+ko^#^For Healthcare Providers^#^의료 서비스 제공자용
+ko^#^Create Your Profile^#^프로필 만들기
+ko^#^Showcase your skills, experience, and availability to potential clients. Highlight your certifications and areas of expertise.^#^잠재 고객에게 기술, 경험 및 가용성을 보여주세요.자격증 및 전문 분야를 강조하세요.
+ko^#^Receive requests from clients who need your expertise. Review their needs and accept the opportunities that fit your schedule.^#^전문 지식이 필요한 고객으로부터 요청을 받을 수 있습니다.고객의 요구 사항을 검토하고 일정에 맞는 기회를 받아들이세요.
+ko^#^Start Providing Care^#^진료 제공 시작
+ko^#^Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.^#^예약을 수락하고, 고객과 소통하고, 커뮤니티에서 변화를 만들어 보세요.약속과 프로필을 쉽게 관리하세요.
+ko^#^Join as a Provider^#^제공자로 가입
+pl^#^Find Compassionate Care, Simplified.^#^Znajdź współczującą opiekę, uproszczone.
+pl^#^Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless.^#^Niezależnie od tego, czy szukasz niezawodnej pomocy medycznej, czy chcesz zaoferować swoje usługi, Care My Way sprawia, że proces ten jest łatwy.
+pl^#^We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs.^#^Zapewniamy zaufaną platformę, na której rodziny mogą łączyć się z wykwalifikowanymi pomocą medycznymi, które odpowiadają Twoim wyjątkowym potrzebom.
+pl^#^Find a Healthcare provider^#^Znajdź dostawcę opieki zdrowotnej
+pl^#^Our Features^#^Nasze funkcje
+pl^#^Effortless Booking^#^Bezproblemowa rezerwacja
+pl^#^Book Now^#^Rezerwuj teraz
+pl^#^Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.^#^Zarezerwuj opiekuna w kilka sekund. Nasza intuicyjna platforma sprawia, że znalezienie pomocy jest tak proste, jak dotknięcie przycisku.
+pl^#^Verified Professionals^#^Sprawdzeni profesjonaliści
+pl^#^Meet Providers^#^Poznaj dostawców
+pl^#^Every provider is background-checked and verified, so you can trust the care you receive.^#^Każdy dostawca jest sprawdzany i weryfikowany w tle, więc możesz zaufać otrzymanej opiece.
+pl^#^Personalized Matches^#^Spersonalizowane mecze
+pl^#^Find Your Match^#^Znajdź swoje dopasowanie
+pl^#^Get matched with providers who fit your unique needs and preferences, every time.^#^Za każdym razem dopasuj się do dostawców, którzy odpowiadają Twoim unikalnym potrzebom i preferencjom.
+pl^#^Meet Our Healthcare Professionals^#^Poznaj naszych pracowników służby zdrowia
+pl^#^Get to know the compassionate professionals behind Care My Way.^#^Poznaj współczujących profesjonalistów stojących za Care My Way.
+pl^#^Each caregiver is verified, experienced, and dedicated to supporting you or your loved one with kindness, respect, and personalized care.^#^Każdy opiekun jest zweryfikowany, doświadczony i oddany wspieraniu Ciebie lub Twojej ukochanej osoby życzliwością, szacunkiem i spersonalizowaną opieką.
+pl^#^How It Works^#^Jak to działa
+pl^#^For Clients^#^Dla Klientów
+pl^#^Step 1^#^Krok 1
+pl^#^Tell Us Your Needs^#^Opowiedz nam o swoich potrzebach
+pl^#^Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.^#^Odpowiedz na kilka szybkich pytań dotyczących opieki, której szukasz. Podziel się swoimi preferencjami, harmonogramem i wszelkimi specjalnymi wymaganiami, aby pomóc nam dopasować Cię do odpowiedniego dostawcy.
+pl^#^Step 2^#^Krok 2
+pl^#^Get Matched^#^Dopasuj się
+pl^#^We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.^#^Połączymy Cię z wykwalifikowanymi, zaufanymi dostawcami, którzy odpowiadają Twoim potrzebom. Przejrzyj profile, sprawdź dane uwierzytelniające i wybierz dostawcę, który jest dla Ciebie odpowiedni.
+pl^#^Step 3^#^Krok 3
+pl^#^Book & Begin Care^#^Zarezerwuj i rozpocznij opiekę
+pl^#^Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.^#^Zaplanuj swoją pierwszą wizytę i uzyskaj potrzebne wsparcie. Zarządzaj spotkaniami i komunikuj się ze swoim dostawcą bezpośrednio za pośrednictwem naszej platformy.
+pl^#^For Healthcare Providers^#^Dla dostawców opieki zdrowotnej
+pl^#^Create Your Profile^#^Utwórz swój profil
+pl^#^Showcase your skills, experience, and availability to potential clients. Highlight your certifications and areas of expertise.^#^Zaprezentuj swoje umiejętności, doświadczenie i dostępność potencjalnym klientom. Podkreśl swoje certyfikaty i obszary wiedzy.
+pl^#^Receive requests from clients who need your expertise. Review their needs and accept the opportunities that fit your schedule.^#^Otrzymuj prośby od klientów, którzy potrzebują Twojej wiedzy. Przejrzyj ich potrzeby i zaakceptuj możliwości, które pasują do Twojego harmonogramu.
+pl^#^Start Providing Care^#^Zacznij zapewniać opiekę
+pl^#^Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.^#^Akceptuj rezerwacje, łącz się z klientami, i zmieniaj swoją społeczność. Z łatwością zarządzaj swoimi spotkaniami i profilem.
+pl^#^Join as a Provider^#^Dołącz jako dostawca
+el^#^Find Compassionate Care, Simplified.^#^Βρείτε συμπονετική φροντίδα, Απλοποιημένη.
+el^#^Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless.^#^Είτε αναζητάτε ένα αξιόπιστο βοήθημα υγειονομικής περίθαλψης είτε θέλετε να προσφέρετε τις υπηρεσίες σας, το Care My Way κάνει τη διαδικασία αβίαστη.
+el^#^We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs.^#^Παρέχουμε μια αξιόπιστη πλατφόρμα όπου οι οικογένειες μπορούν να συνδεθούν με εξειδικευμένα βοηθήματα υγειονομικής περίθαλψης που ταιριάζουν με τις μοναδικές σας ανάγκες.
+el^#^Find a Healthcare provider^#^Βρείτε έναν πάροχο υγειονομικής περίθαλψης
+el^#^Our Features^#^Τα χαρακτηριστικά γνωρίσματά μας
+el^#^Effortless Booking^#^Αβίαστη κράτηση
+el^#^Book Now^#^Κλείσε τώρα
+el^#^Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.^#^Κάντε κράτηση για έναν πάροχο φροντίδας σε δευτερόλεπτα. Η διαισθητική πλατφόρμα μας καθιστά την εύρεση βοήθειας τόσο εύκολη όσο το πάτημα ενός κουμπιού.
+el^#^Verified Professionals^#^Επαληθευμένοι επαγγελματίες
+el^#^Meet Providers^#^Γνωρίστε τους παρόχους
+el^#^Every provider is background-checked and verified, so you can trust the care you receive.^#^Κάθε πάροχος ελέγχεται και επαληθεύεται από το ιστορικό, ώστε να μπορείτε να εμπιστευτείτε τη φροντίδα που λαμβάνετε.
+el^#^Personalized Matches^#^Εξατομικευμένοι αγώνες
+el^#^Find Your Match^#^Βρείτε τον αγώνα σας
+el^#^Get matched with providers who fit your unique needs and preferences, every time.^#^Ταιριάξτε με παρόχους που ταιριάζουν στις μοναδικές ανάγκες και προτιμήσεις σας, κάθε φορά.
+el^#^Meet Our Healthcare Professionals^#^Γνωρίστε τους επαγγελματίες υγείας μας
+el^#^Get to know the compassionate professionals behind Care My Way.^#^Γνωρίστε τους συμπονετικούς επαγγελματίες πίσω από το Care My Way.
+el^#^Each caregiver is verified, experienced, and dedicated to supporting you or your loved one with kindness, respect, and personalized care.^#^Κάθε φροντιστής είναι επαληθευμένος, έμπειρος και αφοσιωμένος στο να υποστηρίζει εσάς ή το αγαπημένο σας πρόσωπο με καλοσύνη, σεβασμό και εξατομικευμένη φροντίδα.
+el^#^How It Works^#^Πως Λειτουργεί
+el^#^For Clients^#^Για Πελάτες
+el^#^Step 1^#^Βήμα 1
+el^#^Tell Us Your Needs^#^Πείτε μας τις ανάγκες σας
+el^#^Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.^#^Απαντήστε σε μερικές γρήγορες ερωτήσεις σχετικά με τη φροντίδα που αναζητάτε. Μοιραστείτε τις προτιμήσεις σας, το χρονοδιάγραμμα και τυχόν ειδικές απαιτήσεις για να μας βοηθήσετε να σας ταιριάξουμε με τον σωστό πάροχο.
+el^#^Step 2^#^Βήμα 2
+el^#^Get Matched^#^Αντιστοιχίστε
+el^#^We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.^#^Θα σας συνδέσουμε με εξειδικευμένους, αξιόπιστους παρόχους που ταιριάζουν στις ανάγκες σας. Ελέγξτε τα προφίλ, ελέγξτε τα διαπιστευτήρια και επιλέξτε τον πάροχο που σας ταιριάζει.
+el^#^Step 3^#^Βήμα 3
+el^#^Book & Begin Care^#^Κάντε κράτηση και ξεκινήστε τη φροντίδα
+el^#^Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.^#^Προγραμματίστε την πρώτη σας επίσκεψη και λάβετε την υποστήριξη που χρειάζεστε. Διαχειριστείτε ραντεβού και επικοινωνήστε με τον παροχέα σας απευθείας μέσω της πλατφόρμας μας.
+el^#^For Healthcare Providers^#^Για παρόχους υγειονομικής περίθαλψης
+el^#^Create Your Profile^#^Δημιουργήστε το προφίλ σας
+el^#^Showcase your skills, experience, and availability to potential clients. Highlight your certifications and areas of expertise.^#^Παρουσιάστε τις δεξιότητες, την εμπειρία και τη διαθεσιμότητά σας σε πιθανούς πελάτες. Επισημάνετε τις πιστοποιήσεις και τους τομείς εξειδίκευσής σας.
+el^#^Receive requests from clients who need your expertise. Review their needs and accept the opportunities that fit your schedule.^#^Λάβετε αιτήματα από πελάτες που χρειάζονται την τεχνογνωσία σας. Ελέγξτε τις ανάγκες τους και αποδεχτείτε τις ευκαιρίες που ταιριάζουν στο πρόγραμμά σας.
+el^#^Start Providing Care^#^Ξεκινήστε την παροχή φροντίδας
+el^#^Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.^#^Αποδεχτείτε κρατήσεις, συνδεθείτε με πελάτες και κάντε τη διαφορά στην κοινότητά σας. Διαχειριστείτε τα ραντεβού και το προφίλ σας με ευκολία.
+el^#^Join as a Provider^#^Εγγραφείτε ως πάροχος
+uk^#^Find Compassionate Care, Simplified.^#^Знайдіть співчутливий догляд, спрощений.
+uk^#^Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless.^#^Незалежно від того, чи шукаєте ви надійну медичну допомогу чи хочете запропонувати свої послуги, Care My Way робить процес легким.
+uk^#^We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs.^#^Ми пропонуємо надійну платформу, де сім'ї можуть зв'язатися з кваліфікованими медичними засобами, які відповідають вашим унікальним потребам.
+uk^#^Find a Healthcare provider^#^Знайти постачальника медичних послуг
+uk^#^Our Features^#^Наші особливості
+uk^#^Effortless Booking^#^Легке бронювання
+uk^#^Book Now^#^Забронювати зараз
+uk^#^Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.^#^Забронюйте лікаря за лічені секунди. Наша інтуїтивно зрозуміла платформа робить пошук допомоги таким же простим, як натискання кнопки.
+uk^#^Verified Professionals^#^Перевірені професіонали
+uk^#^Meet Providers^#^Зустрічайте постачальників
+uk^#^Every provider is background-checked and verified, so you can trust the care you receive.^#^Кожен постачальник перевірений та перевірений, тому ви можете довіряти отриманій допомозі.
+uk^#^Personalized Matches^#^Персоналізовані матчі
+uk^#^Find Your Match^#^Знайдіть свій матч
+uk^#^Get matched with providers who fit your unique needs and preferences, every time.^#^Щоразу зв'яжіться з постачальниками, які відповідають вашим унікальним потребам та уподобанням.
+uk^#^Meet Our Healthcare Professionals^#^Знайомтесь з нашими медичними працівниками
+uk^#^Get to know the compassionate professionals behind Care My Way.^#^Познайомтеся з співчутливими професіоналами, які стоять за Care My Way.
+uk^#^Each caregiver is verified, experienced, and dedicated to supporting you or your loved one with kindness, respect, and personalized care.^#^Кожен вихователь перевірений, досвідчений і відданий підтримці вас або вашої коханої людини добротою, повагою та персоналізованою турботою.
+uk^#^How It Works^#^Як це працює
+uk^#^For Clients^#^Для Клієнтів
+uk^#^Step 1^#^Крок 1
+uk^#^Tell Us Your Needs^#^Розкажіть нам свої потреби
+uk^#^Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.^#^Дайте відповідь на кілька швидких запитань щодо догляду, який ви шукаєте. Поділіться своїми уподобаннями, графіком та будь-якими спеціальними вимогами, щоб допомогти нам підібрати вас з правильним постачальником.
+uk^#^Step 2^#^Крок 2
+uk^#^Get Matched^#^Отримати відповідність
+uk^#^We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.^#^Ми зв'яжемо вас з кваліфікованими, надійними постачальниками, які відповідають вашим потребам. Перегляньте профілі, перевірте облікові дані та виберіть постачальника, який підходить саме вам.
+uk^#^Step 3^#^Крок 3
+uk^#^Book & Begin Care^#^Забронюйте та почніть догляд
+uk^#^Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.^#^Заплануйте свій перший візит і отримайте необхідну підтримку. Керуйте зустрічами та спілкуйтеся зі своїм постачальником безпосередньо через нашу платформу.
+uk^#^For Healthcare Providers^#^Для медичних працівників
+uk^#^Create Your Profile^#^Створіть свій профіль
+uk^#^Showcase your skills, experience, and availability to potential clients. Highlight your certifications and areas of expertise.^#^Продемонструйте свої навички, досвід та доступність потенційним клієнтам. Виділіть свої сертифікати та сфери знань.
+uk^#^Receive requests from clients who need your expertise. Review their needs and accept the opportunities that fit your schedule.^#^Отримуйте запити від клієнтів, яким потрібна ваша експертиза. Перегляньте їхні потреби та прийміть можливості, які відповідають вашому графіку.
+uk^#^Start Providing Care^#^Почніть надавати догляд
+uk^#^Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.^#^Приймайте бронювання, спілкуйтеся з клієнтами та змінюйте свою спільноту. Легко керуйте своїми зустрічами та профілем.
+uk^#^Join as a Provider^#^Приєднуйтесь як постачальник
+bn^#^Find Compassionate Care, Simplified.^#^সহমশীল যত্ন খুঁজুন।
+bn^#^Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless.^#^আপনি নির্ভরযোগ্য স্বাস্থ্যসেবা সহায়তার সন্ধান করছেন বা আপনার পরিষেবাগুলি সরবরাহ করতে চান, কেয়ার মাই ওয়ে প্রক্রিয়াটিকে অনায়াসে করে তোলে।
+bn^#^We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs.^#^আমরা একটি বিশ্বস্ত প্ল্যাটফর্ম সরবরাহ করি যেখানে পরিবারগুলি যোগ্য স্বাস্থ্যসেবা সহায়তার সাথে সংযোগ স্থাপন করতে পারে যা আপনার অনন্য প্রয়ো
+bn^#^Find a Healthcare provider^#^স্বাস্থ্যসেবা সরবরাহকারী খুঁজ
+bn^#^Our Features^#^আমাদের বৈশিষ্ট্য
+bn^#^Effortless Booking^#^অনায়াস বুকিং
+bn^#^Book Now^#^এখনই বুক করুন
+bn^#^Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.^#^সেকেন্ডের মধ্যে একটি যত্ন সরবরাহকারী বুক করুন। আমাদের স্বজ্ঞাত প্ল্যাটফর্ম একটি বোতাম ট্যাপ করার মতো সহায়তা খুঁজে পাওয়া সহজ করে
+bn^#^Verified Professionals^#^যাচাইকৃত পেশা
+bn^#^Meet Providers^#^সরবরাহকারীদের দেখা করুন
+bn^#^Every provider is background-checked and verified, so you can trust the care you receive.^#^প্রতিটি সরবরাহকারীকে ব্যাকগ্রাউন্ড-চেক এবং যাচাই করা হয়, তাই আপনি যে যত্ন গ্রহণ করেন তা বিশ্বাস করতে পারেন।
+bn^#^Personalized Matches^#^ব্যক্তিগত ম্যাচ
+bn^#^Find Your Match^#^আপনার ম্যাচ খুঁজুন
+bn^#^Get matched with providers who fit your unique needs and preferences, every time.^#^প্রতিবার আপনার অনন্য চাহিদা এবং পছন্দগুলির সাথে খাপ খায় এমন সরবরাহকারীদের সাথে মিলিত হন।
+bn^#^Meet Our Healthcare Professionals^#^আমাদের স্বাস্থ্যসেবা পেশাদারদের
+bn^#^Get to know the compassionate professionals behind Care My Way.^#^কেয়ার মাই ওয়ের পিছনে সহানুভূতিশীল পেশাদারদের জানুন।
+bn^#^Each caregiver is verified, experienced, and dedicated to supporting you or your loved one with kindness, respect, and personalized care.^#^প্রতিটি যত্নশীল ব্যক্তি যাচাইকৃত, অভিজ্ঞ এবং আপনাকে বা আপনার প্রিয়জনকে দয়া, শ্রদ্ধা এবং ব্যক্তিগতকৃত যত্নের সাথে সমর্থন করার জন্য নিবেদিত।
+bn^#^How It Works^#^এটি কিভাবে কাজ করে
+bn^#^For Clients^#^ক্লায়েন্টদের জন্য
+bn^#^Step 1^#^পদক্ষেপ 1
+bn^#^Tell Us Your Needs^#^আপনার প্রয়োজনীয়তা আমাদের জানান
+bn^#^Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.^#^আপনি যে যত্ন খুঁজছেন সে সম্পর্কে কয়েকটি দ্রুত প্রশ্নের উত্তর দিন। সঠিক সরবরাহকারীর সাথে আপনাকে মেলে দিতে আমাদের সহায়তা করার জন্য আপনার পছন্দ, সময়সূচী এবং কোনও বিশেষ প্রয়োজনীয়তা শেয়ার করুন।
+bn^#^Step 2^#^ধাপ 2
+bn^#^Get Matched^#^মিলিত হন
+bn^#^We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.^#^আমরা আপনাকে যোগ্য, বিশ্বস্ত সরবরাহকারীদের সাথে সংযুক্ত করব যারা আপনার প্রয়োজন অনুসারে। প্রোফাইলগুলি পর্যালোচনা করুন, শংসাপত্রগুলি পরীক্ষা করুন এবং আপনার জন্য সঠিক সরবরাহকারীটি চয়ন করুন।
+bn^#^Step 3^#^ধাপ 3
+bn^#^Book & Begin Care^#^বুক অ্যান্ড বিজিন কেয়ার
+bn^#^Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.^#^আপনার প্রথম পরিদর্শন সময়সূচী করুন এবং আপনার প্রয়োজনীয় সমর্থন পান। অ্যাপয়েন্টমেন্টগুলি পরিচালনা করুন এবং আমাদের প্ল্যাটফর্মের মাধ্যমে সরাসরি
+bn^#^For Healthcare Providers^#^স্বাস্থ্যসেবা সরবরাহকারী জন্য
+bn^#^Create Your Profile^#^আপনার প্রোফাইল তৈরি করুন
+bn^#^Showcase your skills, experience, and availability to potential clients. Highlight your certifications and areas of expertise.^#^সম্ভাব্য ক্লায়েন্টদের কাছে আপনার দক্ষতা, অভিজ্ঞতা এবং প্রাপ্যতা প্রদর্শন করুন আপনার শংসাপত্র এবং দক্ষতার ক্ষেত্রগুলি হাইলাইট করুন।
+bn^#^Receive requests from clients who need your expertise. Review their needs and accept the opportunities that fit your schedule.^#^আপনার দক্ষতার প্রয়োজন এমন ক্লায়েন্টদের কাছ থেকে অনুরোধ পান। তাদের চাহিদা পর্যালোচনা করুন এবং আপনার সময়সূচীতে উপযুক্ত সুযোগগুলি গ্রহণ করুন
+bn^#^Start Providing Care^#^যত্ন প্রদান শুরু করুন
+bn^#^Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.^#^বুকিং গ্রহণ করুন, ক্লায়েন্টদের সাথে সংযোগ স্থাপন করুন এবং আপনার সম্প্রদায়ের মধ্যে পার্থক্য তৈরি করুন। আপনার অ্যাপয়েন্টমেন্ট এবং প্রোফাইল সহজে পরিচালনা করুন।
+bn^#^Join as a Provider^#^প্রদানকারী হিসাবে যোগদান করুন
+ro^#^Needing healthcare help at home can happen when you least expect it.^#^A avea nevoie de ajutor medical la domiciliu se poate întâmpla atunci când vă așteptați cel mai puțin.
+ro^#^Find Compassionate Care, Simplified.^#^Găsiți îngrijire compasională, simplificată.
+ro^#^Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless.^#^Indiferent dacă sunteți în căutarea unui ajutor medical de încredere sau doriți să vă oferiți serviciile, Care My Way face procesul fără efort.
+ro^#^We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs.^#^Oferim o platformă de încredere în care familiile se pot conecta cu ajutoare medicale calificate care se potrivesc nevoilor dvs. unice.
+ro^#^Find a Healthcare provider^#^Găsiți un furnizor de asistență medicală
+ro^#^Our Features^#^Caracteristicile noastre
+ro^#^Effortless Booking^#^Rezervare fără efort
+ro^#^Book Now^#^Rezerva acum
+ro^#^Book a care provider in seconds. Our intuitive platform makes finding help as easy as tapping a button.^#^Rezervați un furnizor de îngrijire în câteva secunde. Platforma noastră intuitivă face găsirea ajutorului la fel de ușoară ca atingerea unui buton.
+ro^#^Verified Professionals^#^Profesioniști verificați
+ro^#^Meet Providers^#^Faceți cunoștință cu furnizorii
+ro^#^Every provider is background-checked and verified, so you can trust the care you receive.^#^Fiecare furnizor este verificat și verificat în fundal, astfel încât să puteți avea încredere în îngrijirea pe care o primiți.
+ro^#^Personalized Matches^#^Meciuri personalizate
+ro^#^Find Your Match^#^Găsește-ți perechea
+ro^#^Get matched with providers who fit your unique needs and preferences, every time.^#^Fiți potriviți cu furnizori care se potrivesc nevoilor și preferințelor dvs. unice, de fiecare dată.
+ro^#^Meet Our Healthcare Professionals^#^Faceți cunoștință cu profesioniștii noștri din domeniul sănătății
+ro^#^Get to know the compassionate professionals behind Care My Way.^#^Cunoașteți profesioniștii plini de compasiune din spatele Care My Way.
+ro^#^Each caregiver is verified, experienced, and dedicated to supporting you or your loved one with kindness, respect, and personalized care.^#^Fiecare îngrijitor este verificat, experimentat și dedicat să vă sprijine pe dvs. sau pe persoana iubită cu bunătate, respect și îngrijire personalizată.
+ro^#^How It Works^#^Cum funcţionează
+ro^#^For Clients^#^Pentru Clienți
+ro^#^Step 1^#^Pasul 1
+ro^#^Tell Us Your Needs^#^Spune-ne nevoile tale
+ro^#^Answer a few quick questions about the care you’re looking for. Share your preferences, schedule, and any special requirements to help us match you with the right provider.^#^Răspundeți la câteva întrebări rapide despre îngrijirea pe care o căutați. Împărtășiți-vă preferințele, programul și orice cerințe speciale pentru a ne ajuta să vă potrivim cu furnizorul potrivit.
+ro^#^Step 2^#^Pasul 2
+ro^#^Get Matched^#^Fiți potriviți
+ro^#^We’ll connect you with qualified, trusted providers who fit your needs. Review profiles, check credentials, and choose the provider that’s right for you.^#^Vă vom conecta cu furnizori calificați și de încredere, care se potrivesc nevoilor dumneavoastră. Examinați profilurile, verificați acreditările și alegeți furnizorul potrivit pentru dvs.
+ro^#^Step 3^#^Pasul 3
+ro^#^Book & Begin Care^#^Rezervați și începeți îngrijirea
+ro^#^Schedule your first visit and get the support you need. Manage appointments and communicate with your provider directly through our platform.^#^Programează-ți prima vizită și obține sprijinul de care ai nevoie. Gestionați întâlnirile și comunicați cu furnizorul dvs. direct prin intermediul platformei noastre.
+ro^#^For Healthcare Providers^#^Pentru furnizorii de servicii medicale
+ro^#^Create Your Profile^#^Creează-ți profilul
+ro^#^Showcase your skills, experience, and availability to potential clients. Highlight your certifications and areas of expertise.^#^Prezentați-vă abilitățile, experiența și disponibilitatea potențialilor clienți. Evidențiați-vă certificările și domeniile de expertiză.
+ro^#^Receive requests from clients who need your expertise. Review their needs and accept the opportunities that fit your schedule.^#^Primiți solicitări de la clienți care au nevoie de expertiza dvs. Examinați-le nevoile și acceptați oportunitățile care se potrivesc programului dvs.
+ro^#^Start Providing Care^#^Începeți să oferiți îngrijire
+ro^#^Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.^#^Acceptați rezervări, conectați-vă cu clienții și faceți diferența în comunitatea dvs. Gestionați-vă întâlnirile și profilul cu ușurință.
+ro^#^Join as a Provider^#^Alăturați-vă ca furnizor
