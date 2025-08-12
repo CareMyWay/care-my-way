@@ -1,6 +1,9 @@
+"use client";
+
 import React from "react";
 import OrangeButton from "../buttons/orange-button";
-import { CalendarCheck, ShieldCheck, Users } from "lucide-react"; // Example Lucide icons
+import { CalendarCheck, ShieldCheck, Users } from "lucide-react";
+import {useTranslation} from "react-i18next"; // Example Lucide icons
 
 const features = [
   {
@@ -49,11 +52,12 @@ const DESC_STYLE =
 const BOX_SIZE = "w-full h-64 md:w-[370px] md:h-[320px]";
 
 const FeaturesSection = () => {
+  const { t } = useTranslation();
   return (
     <section className="py-24 bg-white">
       <div className="px-4 flex justify-center">
         <h1 className="text-darkest-green text-3xl md:text-4xl font-bold mb-16 text-center w-full max-w-6xl">
-          Our Features
+          {t("Our Features")}
         </h1>
       </div>
 
@@ -82,14 +86,14 @@ const FeaturesSection = () => {
               <div className="w-full max-w-md flex items-center justify-center text-center">
                 <div>
                   <h2 className="text-2xl md:text-3xl font-bold text-darkest-green mb-4">
-                    {title}
+                    {t(title)}
                   </h2>
                   <OrangeButton
                     variant="route"
                     href={buttonHref}
                     className="mt-4 px-6 py-2 text-base"
                   >
-                    {buttonLabel}
+                    {t(buttonLabel)}
                   </OrangeButton>
                 </div>
               </div>
@@ -121,7 +125,7 @@ const FeaturesSection = () => {
                   `}
                 >
                   {icon}
-                  <div className={DESC_STYLE}>{description}</div>
+                  <div className={DESC_STYLE}>{t(description)}</div>
                 </div>
               </div>
             </div>

@@ -1,6 +1,9 @@
+"use client";
+
 import { Carousel } from "@/components/ui/carousel";
 import Image from "next/image";
 import GreenButton from "../buttons/green-button";
+import {useTranslation} from "react-i18next";
 
 export function MeetOurProviders() {
   const caregivers_name: string[] = [
@@ -15,18 +18,17 @@ export function MeetOurProviders() {
     "Anna L",
     "Craig B",
   ];
-
+  const { t } = useTranslation();
   return (
     <section className="py-16 md:px-10 text-center  bg-medium-green ">
       <div className="container mx-auto px-4 flex flex-col ">
         <div className="w-full text-h4-size md:w:2-1/2 mb-10">
           <h3 className="text-primary-white md:text-h3-size mb-2 ">
-            Meet Our Healthcare Professionals
+            {t("Meet Our Healthcare Professionals")}
           </h3>
           <p className="text-primary-white text-body4-size md:text-body2-size">
-            Get to know the compassionate professionals behind Care My Way. Each
-            caregiver is verified, experienced, and dedicated to supporting you
-            or your loved one with kindness, respect, and personalized care.
+            {t("Get to know the compassionate professionals behind Care My Way.")}{" "}
+            {t("Each caregiver is verified, experienced, and dedicated to supporting you or your loved one with kindness, respect, and personalized care.")}
           </p>
         </div>
 
