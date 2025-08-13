@@ -6,10 +6,10 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 // GOLIVE TODO: Implement a stripe webhook to handle payment confirmation (needed a public domain for this)
 const ddbClient = new DynamoDBClient({
-  region: "ca-central-1",
+  region: process.env.REGION!,
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+    accessKeyId: process.env.SDK_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.SDK_SECRET_ACCESS_KEY!,
   },
 });
 
@@ -19,13 +19,15 @@ export async function POST(req: Request) {
 
     const session = await stripe.checkout.sessions.retrieve(sessionId);
     const bookingId = session.metadata?.bookingId;
+    const notificationId = session.metadata?.notificationId;
 
     if (!bookingId) {
       throw new Error("Missing booking ID from Stripe metadata");
     }
 
+    // Update the booking status in DynamoDB
     const updateCommand = new UpdateItemCommand({
-      TableName: "Booking-pnrbd5j3jraz3p7qhb4mco6cwe-NONE",
+      TableName: process.env.BOOKING_TABLE_NAME!,
       Key: {
         id: { S: bookingId },
       },
@@ -36,6 +38,21 @@ export async function POST(req: Request) {
     });
 
     await ddbClient.send(updateCommand);
+
+    // Update notification as actioned if notificationId provided
+    if (notificationId) {
+      const updateNotificationCmd = new UpdateItemCommand({
+        TableName: process.env.NOTIFICATION_TABLE_NAME!,
+        Key: {
+          id: { S: notificationId },
+        },
+        UpdateExpression: "SET isActioned = :true",
+        ExpressionAttributeValues: {
+          ":true": { BOOL: true },
+        },
+      });
+      await ddbClient.send(updateNotificationCmd);
+    }
 
     return NextResponse.json({ 
       success: true,

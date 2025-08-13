@@ -294,11 +294,7 @@ export default function HomeDashPage() {
                 id: `notification-${notification.id}`,
                 type: "booking_accepted",
                 taskTitle: `Booking Accepted by ${notification.senderName}`,
-                description: `You have an accepted a booking request from ${bookingDetails.clientName} for ${bookingDetails.service} on ${new Date(bookingDetails.date).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric"
-                })} at ${bookingDetails.time}.`,
+                description: `You have an accepted a booking request from ${bookingDetails.clientName} for ${bookingDetails.service} on ${bookingDetails.date} at ${bookingDetails.time}.`,
                 bookingRequest: bookingDetails,
                 dueDate: "Within 24 hours",
                 dueTime: "Payment required",
@@ -312,11 +308,7 @@ export default function HomeDashPage() {
                 id: `notification-${notification.id}`,
                 type: "booking_declined",
                 taskTitle: `Booking Declined by ${notification.senderName}`,
-                description: `Your booking request for ${bookingDetails.service} on ${new Date(bookingDetails.date).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric"
-                })} at ${bookingDetails.time} was declined.`,
+                description: `Your booking request for ${bookingDetails.service} on ${bookingDetails.date} at ${bookingDetails.time} was declined.`,
                 bookingRequest: bookingDetails,
                 dueDate: "No further action",
                 dueTime: "—"
@@ -358,7 +350,7 @@ export default function HomeDashPage() {
           date: booking.date,
           time: booking.time,
           duration: booking.duration,
-          notificationId: todo.id,
+          notificationId: todo.id.replace(/^notification-/, ""),
         }),
       });
 
