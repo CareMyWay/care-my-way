@@ -955,3 +955,43 @@ ro^#^Receive requests from clients who need your expertise. Review their needs a
 ro^#^Start Providing Care^#^Începeți să oferiți îngrijire
 ro^#^Accept bookings, connect with clients, and make a difference in your community. Manage your appointments and profile with ease.^#^Acceptați rezervări, conectați-vă cu clienții și faceți diferența în comunitatea dvs. Gestionați-vă întâlnirile și profilul cu ușurință.
 ro^#^Join as a Provider^#^Alăturați-vă ca furnizor
+fr^#^Log In^#^Connectez-vous
+fr^#^Sign Up^#^INSCRIVEZ-VOUS
+zh-TW^#^Log In^#^登入
+zh-TW^#^Sign Up^#^註冊
+zh^#^Log In^#^登录
+zh^#^Sign Up^#^注册
+es^#^Log In^#^Iniciar sesión
+es^#^Sign Up^#^Inscríbase
+pa^#^Log In^#^ਲੌਗ ਇਨ ਕਰੋ
+pa^#^Sign Up^#^ਸਾਈਨ ਅਪ ਕਰੋ
+hi^#^Log In^#^लॉग इन करें
+hi^#^Sign Up^#^साइन अप करें
+tl^#^Log In^#^Mag-log in
+tl^#^Sign Up^#^Mag-sign up
+it^#^Log In^#^Effettua il login
+it^#^Sign Up^#^Registrati
+de^#^Log In^#^Einloggen
+de^#^Sign Up^#^Melde dich an
+pt^#^Log In^#^Faça o login
+pt^#^Sign Up^#^Cadastre-se
+ru^#^Log In^#^Войти
+ru^#^Sign Up^#^Зарегистрируйтесь
+ta^#^Log In^#^உள்நுழைக
+ta^#^Sign Up^#^பதிவு செய்யுங்கள்
+vi^#^Log In^#^Đăng nhập
+vi^#^Sign Up^#^Đăng Ký
+gu^#^Log In^#^લોગ ઇન કરો
+gu^#^Sign Up^#^સાઇન અપ કરો
+ko^#^Log In^#^로그인
+ko^#^Sign Up^#^가입하기
+pl^#^Log In^#^Zaloguj się
+pl^#^Sign Up^#^Zarejestruj się
+el^#^Log In^#^Σύνδεση
+el^#^Sign Up^#^Εγγραφείτε
+uk^#^Log In^#^Увійти
+uk^#^Sign Up^#^Зареєструватися
+bn^#^Log In^#^লগ ইন করুন
+bn^#^Sign Up^#^সাইন আপ করুন
+ro^#^Log In^#^Autentificare
+ro^#^Sign Up^#^Înscrie-te

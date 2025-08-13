@@ -138,7 +138,7 @@ export default function NavBar({ userGroups = [] }: NavBarProps) {
                 borderRadius="2rem"
                 onClick={() => redirect("/login")}
               >
-                Log In
+                {t("Log In")}
               </Button>
               <GreenButton
                 variant="action"
@@ -189,7 +189,7 @@ export default function NavBar({ userGroups = [] }: NavBarProps) {
                   setMenuOpen(false);
                 }}
               >
-                Log In
+                {t("Log In")}
               </Button>
               <GreenButton
                 className={"whitespace-nowrap"}
