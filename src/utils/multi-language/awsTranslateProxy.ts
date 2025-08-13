@@ -45,7 +45,7 @@ export async function getTranslationProxy(text: string, targetLang: string): Pro
   } catch (err) {
     console.error(err);
     // here it should raise the e, but, for test, I will return a string instead
-    return "DUMMY STRING";
+    return null;
   }
 
 
