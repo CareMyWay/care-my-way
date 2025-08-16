@@ -192,11 +192,12 @@ export default function CompleteProviderProfile() {
     };
 
     const handleSubmit = async () => {
+        // check if all sections are completed
         if (!Object.values(sectionCompletion).every((section) => section.completed)) {
             toast.error("Please complete all required sections before submitting");
             return;
         }
-
+        // check if user is logged in
         if (!currentUser?.userId) {
             toast.error("User not found. Please try logging in again.");
             return;
@@ -205,7 +206,7 @@ export default function CompleteProviderProfile() {
         setIsSaving(true);
 
         try {
-            // Build input object directly for Amplify client
+            // Get Current User
             const profileOwner = `${currentUser.userId}::${currentUser.username}`;
 
             // Get data from form sections
@@ -260,7 +261,8 @@ export default function CompleteProviderProfile() {
                 askingRate,
                 responseTime: professionalSummary?.responseTime,
                 servicesOffered: (professionalSummary?.servicesOffered as string[]) || [],
-                // Credentials (as JSON strings)
+
+                // Credentials (Convert arrays to JSON strings for DynamoDB)
                 education: (credentials?.education as unknown[])?.length ? JSON.stringify(credentials.education) : null,
                 certifications: (credentials?.certifications as unknown[])?.length ? JSON.stringify(credentials.certifications) : null,
                 workExperience: (credentials?.workExperience as unknown[])?.length ? JSON.stringify(credentials.workExperience) : null,
@@ -271,7 +273,7 @@ export default function CompleteProviderProfile() {
 
             console.log("Creating ProviderProfile with input:", input);
 
-            // Create the ProviderProfile 
+            // Create the ProviderProfile in Database
             const result = await client.models.ProviderProfile.create(input as unknown as Parameters<typeof client.models.ProviderProfile.create>[0]);
 
             if (result.errors) {

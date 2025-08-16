@@ -1,18 +1,22 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import OrangeButton from "../buttons/orange-button";
 import { type ProviderProfileData } from "@/actions/providerProfileActions";
 import BookingModal from "../ui/booking-modal";
 import { useRouter } from "next/navigation";
 import { getCurrentUser } from "@aws-amplify/auth";
+import { getFileUrl } from "@/utils/s3-upload";
 
 interface ProfileSummaryProps {
     profileData: ProviderProfileData;
 }
 
 const ProfileSummary: React.FC<ProfileSummaryProps> = ({ profileData }) => {
+    const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | null>(null);
+    const [isLoadingPhoto, setIsLoadingPhoto] = useState(false);
+
     // Helper function to get initials
     const getInitials = (firstName?: string, lastName?: string) => {
         if (!firstName && !lastName) return "P";
@@ -24,6 +28,40 @@ const ProfileSummary: React.FC<ProfileSummaryProps> = ({ profileData }) => {
         const parts = [profileData.city, profileData.province].filter(Boolean);
         return parts.length > 0 ? parts.join(", ") : "Location not specified";
     };
+
+    // Load profile photo from S3 if it's an S3 key
+    useEffect(() => {
+        const loadProfilePhoto = async () => {
+            if (!profileData.profilePhoto) {
+                setProfilePhotoUrl(null);
+                return;
+            }
+
+            // Check if it's already a full URL (starts with http)
+            if (profileData.profilePhoto.startsWith("http")) {
+                setProfilePhotoUrl(profileData.profilePhoto);
+                return;
+            }
+
+            // Assume it's an S3 key, get signed URL
+            try {
+                setIsLoadingPhoto(true);
+                const signedUrl = await getFileUrl(profileData.profilePhoto, 3600); // 1 hour expiry
+                if (signedUrl) {
+                    setProfilePhotoUrl(signedUrl);
+                } else {
+                    setProfilePhotoUrl(null);
+                }
+            } catch (error) {
+                console.error("Error loading profile photo:", error);
+                setProfilePhotoUrl(null);
+            } finally {
+                setIsLoadingPhoto(false);
+            }
+        };
+
+        loadProfilePhoto();
+    }, [profileData.profilePhoto]);
 
     const providerName = [profileData.firstName, profileData.lastName].filter(Boolean).join(" ") || "Unknown Provider";
     const providerTitle = profileData.profileTitle || "Healthcare Provider";
@@ -59,9 +97,9 @@ const ProfileSummary: React.FC<ProfileSummaryProps> = ({ profileData }) => {
         <div className="flex flex-col items-center border-solid border-1 rounded-none border-input-border-gray pb-7 w-full md:w-[320px] xl:w-[400px]">
             <div className="flex flex-col items-left w-[360px] p-7">
                 <div className="md:w-[220] xl:w-[320px] md:h-[220px] xl:h-[320px] mx-auto bg-gray-100 rounded-lg flex items-center justify-center">
-                    {profileData.profilePhoto ? (
+                    {profilePhotoUrl ? (
                         <Image
-                            src={profileData.profilePhoto}
+                            src={profilePhotoUrl}
                             alt={`${providerName}'s profile photo`}
                             width={320}
                             height={320}
@@ -69,15 +107,19 @@ const ProfileSummary: React.FC<ProfileSummaryProps> = ({ profileData }) => {
                         />
                     ) : (
                         <div className="w-full h-full bg-gradient-to-br from-[#4A9B9B] via-[#5CAB9B] to-[#6CBB9B] flex items-center justify-center rounded-lg">
-                            <span className="text-white text-6xl font-bold">
-                                {getInitials(profileData.firstName, profileData.lastName)}
-                            </span>
+                            {isLoadingPhoto ? (
+                                <div className="animate-spin rounded-full h-12 w-12 border-4 border-white/30 border-t-white"></div>
+                            ) : (
+                                <span className="text-white text-6xl font-bold">
+                                    {getInitials(profileData.firstName, profileData.lastName)}
+                                </span>
+                            )}
                         </div>
                     )}
                 </div>
                 <span className="text-h5-size xl:text-h4-size font-semibold text-darkest-green mt-5 md:mt-10 md:px-7 xl:px-0">{providerName.toUpperCase()}</span>
                 <div className="flex md:px-7 xl:px-0">
-                    <span className="text-body5-size xl:text-body3-size text-darkest-green">
+                    <span className="text-lg xl:text-lg text-darkest-green">
                         {providerTitle} | {location}
                     </span>
                 </div>
@@ -95,20 +137,20 @@ const ProfileSummary: React.FC<ProfileSummaryProps> = ({ profileData }) => {
                             </span>
                         </div>
                     ))}
-                    </div>   
                 </div>
-                <div className="mt-5">
-                    <OrangeButton variant="action" onClick={handleBookingClick} className="w-full">
-                        REQUEST TO BOOK
-                    </OrangeButton>
-                </div>
-                {isBookingModalOpen && (
+            </div>
+            <div className="mt-5">
+                <OrangeButton variant="action" onClick={handleBookingClick} className="w-full">
+                    REQUEST TO BOOK
+                </OrangeButton>
+            </div>
+            {isBookingModalOpen && (
                 <BookingModal
                     isOpen={isBookingModalOpen}
                     onOpenChange={setIsBookingModalOpen}
                     providerId={profileData.userId}
                     providerName={providerName}
-                    providerPhoto={profileData.profilePhoto}
+                    providerPhoto={profilePhotoUrl || profileData.profilePhoto}
                     providerTitle={providerTitle}
                     providerRate={String(profileData.askingRate ? `$${profileData.askingRate}/hour` : "Rate on request")}
                     providerRateFloat={profileData.askingRate}
@@ -116,7 +158,7 @@ const ProfileSummary: React.FC<ProfileSummaryProps> = ({ profileData }) => {
                     providerServices={profileData.servicesOffered || []}
                 />
             )}
-            </div>
+        </div>
     );
 };
 

@@ -21,18 +21,15 @@ export function ProfileIncompletePrompt() {
               </h2>
 
               <p className="text-gray-600 text-xl mb-8 leading-relaxed">
-                Your professional profile is not yet complete. Setting up your
-                profile helps clients find and connect with you based on your
-                services, experience, and credentials.
+                Your professional profile is not yet complete. Setting up your profile helps clients
+                find and connect with you based on your services, experience, and credentials.
               </p>
 
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-6 mb-8">
                 <div className="flex items-start justify-center">
                   <AlertCircle className="h-6 w-6 text-blue-600 mt-1 mr-4 flex-shrink-0" />
                   <div className="text-left">
-                    <h4 className="font-semibold text-blue-900 text-lg mb-3">
-                      What you&apos;ll add:
-                    </h4>
+                    <h4 className="font-semibold text-blue-900 text-lg mb-3">What you&apos;ll add:</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-blue-800">
                       <div className="flex items-center">
                         <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
@@ -63,30 +60,17 @@ export function ProfileIncompletePrompt() {
                   </Button>
                 </Link>
                 <Link href="/provider-dashboard">
-                  <Button
-                    variant="outline"
-                    className="dashboard-button-secondary px-10 py-4 text-lg font-semibold rounded-xl border-2 hover:bg-gray-50 transition-all duration-200"
-                  >
+                  <Button variant="outline" className="dashboard-button-secondary px-10 py-4 text-lg font-semibold rounded-xl border-2 hover:bg-gray-50 transition-all duration-200">
                     Return to Dashboard
                   </Button>
                 </Link>
               </div>
 
               <div className="flex items-center justify-center gap-2 text-gray-500">
-                <svg
-                  className="w-4 h-4"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.414-1.414L11 9.586V6z"
-                    clipRule="evenodd"
-                  />
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.414-1.414L11 9.586V6z" clipRule="evenodd" />
                 </svg>
-                <span className="text-sm">
-                  This will take about 5-10 minutes to complete
-                </span>
+                <span className="text-sm">This will take about 5-10 minutes to complete</span>
               </div>
             </div>
           </CardContent>
@@ -94,4 +78,4 @@ export function ProfileIncompletePrompt() {
       </div>
     </div>
   );
-}
+} 
