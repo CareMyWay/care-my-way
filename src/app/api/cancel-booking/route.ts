@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import { DynamoDBClient, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 
 const ddbClient = new DynamoDBClient({
-  region: "ca-central-1",
+  region: process.env.REGION!,
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+    accessKeyId: process.env.SDK_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.SDK_SECRET_ACCESS_KEY!,
   },
 });
 
@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     }
 
     const updateCommand = new UpdateItemCommand({
-      TableName: "Booking-pnrbd5j3jraz3p7qhb4mco6cwe-NONE",
+      TableName: process.env.BOOKING_TABLE_NAME!,
       Key: {
         id: { S: bookingId },
       },

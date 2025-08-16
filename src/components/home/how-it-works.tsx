@@ -1,5 +1,8 @@
+"use client";
+
 import React from "react";
 import OrangeButton from "../buttons/orange-button";
+import {useTranslation} from "react-i18next";
 
 const clientSteps = [
   {
@@ -64,23 +67,24 @@ const StepBox = ({
 );
 
 export function HowItWorks() {
+  const { t } = useTranslation();
   return (
     <section className="py-16 bg-lightest-green">
       <div className="container mx-auto px-4 max-w-6xl">
         <h2 className="mb-8 text-3xl md:text-4xl font-bold text-darkest-green text-left">
-          How It Works
+          {t("How It Works")}
         </h2>
         {/* For Clients */}
         <h4 className="mb-6 text-xl font-semibold text-darkest-green text-left">
-          For Clients
+          {t("For Clients")}
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
           {clientSteps.map((step, idx) => (
             <StepBox
               key={idx}
-              step={step.step}
-              title={step.title}
-              description={step.description}
+              step={t(step.step)}
+              title={t(step.title)}
+              description={t(step.description)}
               color="border-medium-green"
             />
           ))}
@@ -91,20 +95,20 @@ export function HowItWorks() {
             href="/"
             className="px-6 py-2 text-base"
           >
-            Find a Healthcare Provider
+            {t("Find a Healthcare Provider")}
           </OrangeButton>
         </div>
         {/* For Providers */}
         <h4 className="mb-6 text-xl font-semibold text-darkest-green text-left">
-          For Healthcare Providers
+          {t("For Healthcare Providers")}
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
           {providerSteps.map((step, idx) => (
             <StepBox
               key={idx}
-              step={step.step}
-              title={step.title}
-              description={step.description}
+              step={t(step.step)}
+              title={t(step.title)}
+              description={t(step.description)}
               color="border-darkest-green"
             />
           ))}
@@ -114,7 +118,7 @@ export function HowItWorks() {
           href="/"
           className="px-6 py-2 text-base"
         >
-          Join as a Provider
+          {t("Join as a Provider")}
         </OrangeButton>
       </div>
     </section>
