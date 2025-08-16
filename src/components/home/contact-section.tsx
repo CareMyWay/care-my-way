@@ -1,9 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { z } from "zod";
 import OrangeButton from "@/components/buttons/orange-button";
 import { Filter } from "bad-words";
 import * as LeoProfanity from "leo-profanity";
+import { generateClient } from "aws-amplify/api";
+import type { Schema } from "@/../amplify/data/resource"; // Adjust path to your schema file
+const client = generateClient<Schema>(); // Amplify GraphQL client
 
 const MAX_MESSAGE_LENGTH = 1000;
 const MAX_SUBJECT_LENGTH = 200;
@@ -66,22 +70,57 @@ const containsInappropriateContent = (text: string) =>
     violencePatterns.some((p) => p.test(text)) ||
     profanityPatterns.some((p) => p.test(text)));
 
+// Zod schema for form validation
+const formSchema = z.object({
+  fullname: z
+    .string()
+    .trim()
+    .min(1, "Name is required")
+    .max(MAX_NAME_LENGTH, `Max ${MAX_NAME_LENGTH} characters`)
+    .regex(NAME_REGEX, "Only letters, spaces, hyphens, and apostrophes allowed")
+    .refine((val) => !containsInappropriateContent(val), {
+      message: "Contains inappropriate language",
+    }),
+  email: z
+    .string()
+    .trim()
+    .min(1, "Email is required")
+    .regex(EMAIL_REGEX, "Invalid email address")
+    .refine((val) => !containsInappropriateContent(val), {
+      message: "Contains inappropriate language",
+    }),
+  subject: z
+    .string()
+    .trim()
+    .min(1, "Subject is required")
+    .max(MAX_SUBJECT_LENGTH, `Max ${MAX_SUBJECT_LENGTH} characters`)
+    .refine((val) => !containsInappropriateContent(val), {
+      message: "Contains inappropriate language",
+    }),
+  message: z
+    .string()
+    .trim()
+    .min(10, "Must be at least 10 characters")
+    .max(MAX_MESSAGE_LENGTH, `Max ${MAX_MESSAGE_LENGTH} characters`)
+    .refine((val) => !containsInappropriateContent(val), {
+      message: "Contains inappropriate language",
+    }),
+});
+
 interface FormData {
-  name: string;
+  fullname: string;
   email: string;
   subject: string;
   message: string;
 }
 interface FormErrors {
-  name?: string;
+  fullname?: string;
   email?: string;
   subject?: string;
   message?: string;
 }
 
-// =====================
 // Reusable Field Component
-// =====================
 function FormField({
   label,
   name,
@@ -139,7 +178,7 @@ function FormField({
 
 export default function ContactSection() {
   const [formData, setFormData] = useState<FormData>({
-    name: "",
+    fullname: "",
     email: "",
     subject: "",
     message: "",
@@ -162,49 +201,22 @@ export default function ContactSection() {
   };
 
   const validateForm = () => {
-    const newErrors: FormErrors = {};
-
-    const rules: Record<keyof FormData, () => void> = {
-      name: () => {
-        if (!formData.name.trim()) newErrors.name = "Name is required";
-        else if (formData.name.length > MAX_NAME_LENGTH)
-          newErrors.name = `Max ${MAX_NAME_LENGTH} characters`;
-        else if (!NAME_REGEX.test(formData.name))
-          newErrors.name =
-            "Only letters, spaces, hyphens, and apostrophes allowed";
-        else if (containsInappropriateContent(formData.name))
-          newErrors.name = "Contains inappropriate language";
-      },
-      email: () => {
-        if (!formData.email.trim()) newErrors.email = "Email is required";
-        else if (!EMAIL_REGEX.test(formData.email))
-          newErrors.email = "Invalid email address";
-        else if (containsInappropriateContent(formData.email))
-          newErrors.email = "Contains inappropriate language";
-      },
-      subject: () => {
-        if (!formData.subject.trim()) newErrors.subject = "Subject is required";
-        else if (formData.subject.length > MAX_SUBJECT_LENGTH)
-          newErrors.subject = `Max ${MAX_SUBJECT_LENGTH} characters`;
-        else if (containsInappropriateContent(formData.subject))
-          newErrors.subject = "Contains inappropriate language";
-      },
-      message: () => {
-        if (!formData.message.trim()) newErrors.message = "Message is required";
-        else if (formData.message.length > MAX_MESSAGE_LENGTH)
-          newErrors.message = `Max ${MAX_MESSAGE_LENGTH} characters`;
-        else if (formData.message.length < 10)
-          newErrors.message = "Must be at least 10 characters";
-        else if (containsInappropriateContent(formData.message))
-          newErrors.message = "Contains inappropriate language";
-      },
-    };
-
-    (Object.keys(rules) as (keyof FormData)[]).forEach((field) =>
-      rules[field]()
-    );
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    try {
+      formSchema.parse(formData);
+      setErrors({});
+      return true;
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const newErrors: FormErrors = {};
+        error.errors.forEach((err) => {
+          if (err.path[0]) {
+            newErrors[err.path[0] as keyof FormErrors] = err.message;
+          }
+        });
+        setErrors(newErrors);
+      }
+      return false;
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -219,14 +231,26 @@ export default function ContactSection() {
     setSubmitStatus("idle");
 
     try {
-      await new Promise((r) => setTimeout(r, 2000)); // mock send
-      setSubmitStatus("success");
-      setLastSubmitTime(Date.now());
-      setFormData({ name: "", email: "", subject: "", message: "" });
-      setTimeout(() => setSubmitStatus("idle"), 5000);
-    } catch {
+      // Send email via Amplify GraphQL mutation
+      const result = await client.mutations.sendContactEmail({
+        fullname: formData.fullname,
+        email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+      });
+
+      if (result.data?.success) {
+        setSubmitStatus("success");
+        setLastSubmitTime(Date.now());
+        setFormData({ fullname: "", email: "", subject: "", message: "" });
+        setTimeout(() => setSubmitStatus("idle"), 5000);
+      } else {
+        throw new Error(result.errors?.[0]?.message || "Failed to send email");
+      }
+    } catch (error) {
+      console.error("Error sending email:", error);
       setSubmitStatus("error");
-      setErrors({ message: "Failed to send message" });
+      setErrors({ message: "Failed to send message. Please try again." });
     } finally {
       setIsSubmitting(false);
     }
@@ -248,12 +272,12 @@ export default function ContactSection() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <FormField
               label="Full Name *"
-              name="name"
-              value={formData.name}
+              name="fullname"
+              value={formData.fullname}
               onChange={handleInputChange}
               maxLength={MAX_NAME_LENGTH}
               placeholder="Enter your full name"
-              error={errors.name}
+              error={errors.fullname}
               disabled={isSubmitting}
             />
             <FormField

@@ -19,6 +19,7 @@ export const auth = defineAuth({
       logoutUrls: ["http://localhost:3000/"],
     },
   },
+
   userAttributes: {
     "custom:userType": { dataType: "String", mutable: true },
   },

@@ -1,5 +1,6 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 import { postConfirmation } from "../auth/post-confirmation/resource";
+import { sendContactUsEmail } from "../functions/send-contact-us-email/resource";
 /*== STEP 1 ===============================================================
 The section below creates a UserProfile database table with a "content" field. Try
 adding a new "isDone" field as a boolean. The authorization rule below
@@ -101,13 +102,13 @@ const schema = a
         id: a.string().required(),
         providerId: a.string().required(), // Links to UserProfile.userId where userType = "Provider"
         profileOwner: a.string().required(), // For authorization
-        
+
         // Store all availability as JSON array
         availabilityData: a.json(), // Array of availability objects: [{date: "2025-07-21", time: "09:00", duration: 1.0, isAvailable: true}, ...]
-        
+
         // Weekly template for recurring availability
         weeklyTemplate: a.string().required(), // Template for weekly recurring schedule: {monday: ["09:00", "10:00"], tuesday: [...], ...}
-        
+
         // Metadata
         lastUpdated: a.datetime(),
         timezone: a.string().default("Alberta/Edmonton"), // Default timezone for Alberta
@@ -118,7 +119,9 @@ const schema = a
       ])
       .authorization((allow) => [
         // Provider owns their availability - full access
-        allow.ownerDefinedIn("profileOwner").to(["create", "read", "update", "delete"]),
+        allow
+          .ownerDefinedIn("profileOwner")
+          .to(["create", "read", "update", "delete"]),
         // Admins have full access
         allow.group("Admin").to(["create", "read", "update", "delete"]),
         // Authenticated users can read availability (for booking)
@@ -193,7 +196,9 @@ const schema = a
       ])
       .authorization((allow) => [
         // Provider owns their profile - full access
-        allow.ownerDefinedIn("profileOwner").to(["create", "read", "update", "delete"]),
+        allow
+          .ownerDefinedIn("profileOwner")
+          .to(["create", "read", "update", "delete"]),
         // Admins have full access
         allow.group("Admin").to(["create", "read", "update", "delete"]),
         // Authenticated users can read profiles (for marketplace)
@@ -201,9 +206,9 @@ const schema = a
         // Guests can read profiles (for marketplace browsing)
         allow.guest().to(["read"]),
       ]),
-      
-      // Booking schema
-      Booking: a
+
+    // Booking schema
+    Booking: a
       .model({
         id: a.string().required(),
         providerId: a.string().required(),
@@ -219,7 +224,7 @@ const schema = a
       })
       .secondaryIndexes((index) => [
         index("providerId"), // Add index for provider queries
-        index("clientId"),   // Add index for client queries
+        index("clientId"), // Add index for client queries
         index("bookingStatus"), // Add index for status filtering
       ])
       .authorization((allow) => [
@@ -227,8 +232,8 @@ const schema = a
         allow.group("Admin"),
       ]),
 
-      // Notification schema for booking requests and updates
-      Notification: a
+    // Notification schema for booking requests and updates
+    Notification: a
       .model({
         id: a.string().required(),
         recipientId: a.string().required(),
@@ -254,8 +259,8 @@ const schema = a
         allow.group("Admin"),
       ]),
 
-      //Message schema for chat between client and provider
-      Message: a
+    //Message schema for chat between client and provider
+    Message: a
       .model({
         id: a.string().required(),
         bookingId: a.string().required(),
@@ -275,6 +280,18 @@ const schema = a
         allow.authenticated().to(["create", "read"]),
         allow.group("Admin").to(["create", "read", "update", "delete"]),
       ]),
+    sendContactUsEmail: a
+      .mutation() // Use mutation for side effects like sending email
+      .arguments({
+        fullname: a.string().required(),
+        email: a.email().required(),
+        subject: a.string().required(),
+        message: a.string().required(),
+        recaptchaToken: a.string().required(), // Add reCAPTCHA token
+      })
+      .returns(a.json()) // Return JSON for success/error
+      .authorization((allow) => [allow.guest()]) // Allow unauthenticated users; change to allow.authenticated() if we want to require login
+      .handler(a.handler.function(sendContactUsEmail)),
   })
   .authorization((allow) => [allow.resource(postConfirmation)]);
 
