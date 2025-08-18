@@ -12,6 +12,7 @@ export interface AdminUserData {
     profileOwner: string;
     firstName?: string;
     lastName?: string;
+    profilePhoto?: string;
     createdAt?: string;
     updatedAt?: string;
 }
@@ -41,11 +42,12 @@ export async function getAllUsers(): Promise<AdminAllUsersResponse | null> {
             return null;
         }
 
-        // Fetch names from profile tables
+        // Fetch names and profile photos from profile tables
         const usersWithNames = await Promise.all(
             data.map(async (user) => {
                 let firstName = "";
                 let lastName = "";
+                let profilePhoto = "";
 
                 try {
                     if (user.userType === "Client") {
@@ -56,6 +58,7 @@ export async function getAllUsers(): Promise<AdminAllUsersResponse | null> {
                         if (clientProfiles && clientProfiles.length > 0) {
                             firstName = clientProfiles[0].firstName || "";
                             lastName = clientProfiles[0].lastName || "";
+                            // Note: ClientProfile doesn't have profilePhoto field based on schema
                         }
                     } else if (user.userType === "Provider") {
                         const { data: providerProfiles } = await cookieBasedClient.models.ProviderProfile.list({
@@ -65,6 +68,7 @@ export async function getAllUsers(): Promise<AdminAllUsersResponse | null> {
                         if (providerProfiles && providerProfiles.length > 0) {
                             firstName = providerProfiles[0].firstName || "";
                             lastName = providerProfiles[0].lastName || "";
+                            profilePhoto = providerProfiles[0].profilePhoto || "";
                         }
                     }
                     // For Admin, SuperAdmin, and Support users, names might not be available
@@ -81,6 +85,7 @@ export async function getAllUsers(): Promise<AdminAllUsersResponse | null> {
                     profileOwner: user.profileOwner || "",
                     firstName: firstName || undefined,
                     lastName: lastName || undefined,
+                    profilePhoto: profilePhoto || undefined,
                     createdAt: user.createdAt,
                     updatedAt: user.updatedAt,
                 };

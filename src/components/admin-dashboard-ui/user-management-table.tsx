@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from "react";
 import { AdminUserData, updateUserType, deleteUser } from "@/actions/admin/getAllUsers";
 import { Search, Edit, Trash2, User, Filter, Users, UserCheck, UserX } from "lucide-react";
+import UserProfilePicture from "./user-profile-picture";
 
 interface UserManagementTableProps {
     initialUsers: AdminUserData[];
@@ -218,11 +219,12 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
                                 <tr key={user.id} className="hover:bg-gray-50 transition-colors duration-150">
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center">
-                                            <div className="flex-shrink-0 h-10 w-10">
-                                                <div className="h-10 w-10 rounded-full bg-medium-green flex items-center justify-center">
-                                                    <User className="text-white" size={20} />
-                                                </div>
-                                            </div>
+                                            <UserProfilePicture
+                                                profilePhoto={user.profilePhoto}
+                                                firstName={user.firstName}
+                                                lastName={user.lastName}
+                                                size="md"
+                                            />
                                             <div className="ml-4">
                                                 <div className="text-sm font-medium text-darkest-green">
                                                     {user.firstName && user.lastName
