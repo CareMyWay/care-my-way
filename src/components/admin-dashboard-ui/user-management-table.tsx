@@ -25,9 +25,10 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
     // Filter and search users
     const filteredUsers = useMemo(() => {
         return users.filter((user) => {
+            const fullName = `${user.firstName || ""} ${user.lastName || ""}`.trim();
             const matchesSearch =
                 user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                user.userId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 user.userType.toLowerCase().includes(searchTerm.toLowerCase());
 
             const matchesFilter = userTypeFilter === "All" || user.userType === userTypeFilter;
@@ -131,7 +132,7 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
                         <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-medium-green" size={20} />
                         <input
                             type="text"
-                            placeholder="Search by email, user ID, or user type..."
+                            placeholder="Search by name, email, or user type..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="w-full pl-12 pr-4 py-3 border-2 border-light-green rounded-lg focus:border-medium-green focus:outline-none transition-colors duration-200 text-dark-green placeholder-medium-green"
@@ -196,7 +197,7 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
                         <thead className="bg-light-green">
                             <tr>
                                 <th className="px-6 py-4 text-left text-sm font-semibold text-darkest-green">
-                                    User
+                                    Name
                                 </th>
                                 <th className="px-6 py-4 text-left text-sm font-semibold text-darkest-green">
                                     Email
@@ -223,7 +224,15 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
                                                 </div>
                                             </div>
                                             <div className="ml-4">
-                                                <div className="text-sm font-medium text-darkest-green">{user.userId}</div>
+                                                <div className="text-sm font-medium text-darkest-green">
+                                                    {user.firstName && user.lastName
+                                                        ? `${user.firstName} ${user.lastName}`
+                                                        : user.firstName || user.lastName || "N/A"
+                                                    }
+                                                </div>
+                                                {(user.firstName || user.lastName) && (
+                                                    <div className="text-xs text-medium-green">{user.userId}</div>
+                                                )}
                                             </div>
                                         </div>
                                     </td>

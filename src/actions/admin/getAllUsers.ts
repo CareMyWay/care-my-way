@@ -10,6 +10,8 @@ export interface AdminUserData {
     email: string;
     userType: string;
     profileOwner: string;
+    firstName?: string;
+    lastName?: string;
     createdAt?: string;
     updatedAt?: string;
 }
@@ -39,18 +41,54 @@ export async function getAllUsers(): Promise<AdminAllUsersResponse | null> {
             return null;
         }
 
-        const users: AdminUserData[] = data.map((user) => ({
-            id: user.id,
-            userId: user.userId,
-            email: user.email || "",
-            userType: user.userType || "Client",
-            profileOwner: user.profileOwner || "",
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt,
-        }));
+        // Fetch names from profile tables
+        const usersWithNames = await Promise.all(
+            data.map(async (user) => {
+                let firstName = "";
+                let lastName = "";
+
+                try {
+                    if (user.userType === "Client") {
+                        const { data: clientProfiles } = await cookieBasedClient.models.ClientProfile.list({
+                            filter: { userId: { eq: user.userId } },
+                            authMode: "userPool",
+                        });
+                        if (clientProfiles && clientProfiles.length > 0) {
+                            firstName = clientProfiles[0].firstName || "";
+                            lastName = clientProfiles[0].lastName || "";
+                        }
+                    } else if (user.userType === "Provider") {
+                        const { data: providerProfiles } = await cookieBasedClient.models.ProviderProfile.list({
+                            filter: { userId: { eq: user.userId } },
+                            authMode: "userPool",
+                        });
+                        if (providerProfiles && providerProfiles.length > 0) {
+                            firstName = providerProfiles[0].firstName || "";
+                            lastName = providerProfiles[0].lastName || "";
+                        }
+                    }
+                    // For Admin, SuperAdmin, and Support users, names might not be available
+                    // in separate profile tables, so we'll leave them empty or show "N/A"
+                } catch (error) {
+                    console.warn(`Failed to fetch profile for user ${user.userId}:`, error);
+                }
+
+                return {
+                    id: user.id,
+                    userId: user.userId,
+                    email: user.email || "",
+                    userType: user.userType || "Client",
+                    profileOwner: user.profileOwner || "",
+                    firstName: firstName || undefined,
+                    lastName: lastName || undefined,
+                    createdAt: user.createdAt,
+                    updatedAt: user.updatedAt,
+                };
+            })
+        );
 
         return {
-            users,
+            users: usersWithNames,
             canManageAdmins: isSuperAdmin,
         };
     } catch (error) {
