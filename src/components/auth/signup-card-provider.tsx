@@ -7,7 +7,7 @@ export function SignUpCardProvider() {
 
   return (
     <div className="bg-primary-white rounded-lg shadow-drop p-8 w-[360px]">
-      <div className="mb-8 md:mb-24">
+      <div className="mb-6 md:mb-24">
         <Image
           src={"/svgs/client-signup/step1-as-cg.svg"}
           alt="Healthcare Provider"
@@ -27,7 +27,7 @@ export function SignUpCardProvider() {
         </p>
       </div>
 
-      <div className="flex flex-col items-center space-y-4 mt-10">
+      <div className="flex flex-col items-center space-y-4 mt-auto">
         <OrangeButton
           className="text-center s-btn orange-button self-center min-w-[220px] mb-4"
           onClick={() => router.push("/sign-up/register?userType=Provider")}
