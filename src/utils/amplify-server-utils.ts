@@ -43,29 +43,36 @@ export const isAuthenticated = async (): Promise<boolean> => {
   return result;
 };
 
-//Checks if use belongs to  the Admin group
+//Checks if user belongs to any admin group (SuperAdmin or Admin)
 // Use for admin-only pages or features
 // Enables admin specific functionality
 export const checkIsAdmin = async (): Promise<boolean> => {
   return await runWithAmplifyServerContext({
     nextServerContext: { cookies },
     async operation(contextSpec) {
-      let isAdmin = false;
       try {
         const session = await fetchAuthSession(contextSpec);
         const tokens = session.tokens;
         if (tokens && Object.keys(tokens).length > 0) {
           const groups = tokens.accessToken.payload["cognito:groups"];
-          if (Array.isArray(groups) && groups.includes("Admin")) {
-            isAdmin = true;
+          if (Array.isArray(groups)) {
+            return groups.includes("SuperAdmin") || groups.includes("Admin");
+          }
+          if (typeof groups === "string") {
+            return groups.split(",").includes("SuperAdmin") || groups.split(",").includes("Admin");
           }
         }
-        return isAdmin;
+        return false;
       } catch (error) {
-        return error;
+        return false;
       }
     },
   });
+};
+
+//Checks if user is a SuperAdmin
+export const checkIsSuperAdmin = async (): Promise<boolean> => {
+  return await checkIsInGroup("SuperAdmin");
 };
 
 //fetches user profile data from Cognito
@@ -121,7 +128,7 @@ export const getRedirectLinkForGroup = async (): Promise<string> => {
       const rawGroups = session.tokens?.accessToken?.payload["cognito:groups"];
 
       if (Array.isArray(rawGroups)) {
-        if (rawGroups.includes("Admin")) return "/admin-dashboard";
+        if (rawGroups.includes("SuperAdmin") || rawGroups.includes("Admin")) return "/admin-dashboard";
         if (rawGroups.includes("Provider")) return "/provider-dashboard";
         if (rawGroups.includes("Client")) return "/client-dashboard";
         if (rawGroups.includes("Support")) return "/support-dashboard";
@@ -129,7 +136,7 @@ export const getRedirectLinkForGroup = async (): Promise<string> => {
 
       if (typeof rawGroups === "string") {
         const groups = rawGroups.split(",");
-        if (groups.includes("Admin")) return "/admin-dashboard";
+        if (groups.includes("SuperAdmin") || groups.includes("Admin")) return "/admin-dashboard";
         if (groups.includes("Provider")) return "/provider-dashboard";
         if (groups.includes("Client")) return "/client-dashboard";
         if (groups.includes("Support")) return "/support-dashboard";

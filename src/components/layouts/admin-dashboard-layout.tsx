@@ -1,6 +1,6 @@
 import {
   getCurrentUserServer,
-  checkIsInGroup,
+  checkIsAdmin,
 } from "@/utils/amplify-server-utils";
 import { getUserProfile } from "@/actions/getUserProfile";
 import { redirect } from "next/navigation";
@@ -11,7 +11,7 @@ export default async function AdminDashboardLayout({
 }: {
   children: ReactNode;
 }) {
-  const isAdmin = await checkIsInGroup("Admin");
+  const isAdmin = await checkIsAdmin();
   if (!isAdmin) redirect("/not-found");
 
   const currentUser = await getCurrentUserServer();

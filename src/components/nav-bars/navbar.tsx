@@ -26,7 +26,8 @@ const roleRoutesMap: Record<
   string,
   { href: string; label: string; loggedIn: boolean }[]
 > = {
-  Admin: [{ href: "/admin-dashboard", label: "My Dashboard", loggedIn: true }],
+  SuperAdmin: [{ href: "/admin-dashboard", label: "Admin", loggedIn: true }],
+  Admin: [{ href: "/admin-dashboard", label: "Admin", loggedIn: true }],
   Provider: [
     { href: "/provider-dashboard", label: "My Dashboard", loggedIn: true },
   ],
@@ -88,12 +89,12 @@ export default function NavBar({ userGroups = [] }: NavBarProps) {
   // Use localUserGroups for role-based routes
   const roleBasedRoutes = authCheck
     ? Array.from(
-        new Map(
-          localUserGroups
-            .flatMap((group) => roleRoutesMap[group] || [])
-            .map((route) => [route.href, route])
-        ).values()
-      )
+      new Map(
+        localUserGroups
+          .flatMap((group) => roleRoutesMap[group] || [])
+          .map((route) => [route.href, route])
+      ).values()
+    )
     : [];
 
   const combinedRoutes = [...defaultSharedRoutes, ...roleBasedRoutes];
@@ -125,7 +126,7 @@ export default function NavBar({ userGroups = [] }: NavBarProps) {
         </div>
 
         <div className="hidden lg:flex items-center gap-4">
-          <LanguageSwitcher    />
+          <LanguageSwitcher />
           {authCheck ? (
             <GreenButton className={"whitespace-nowrap"} variant="action" onClick={handleSignOut}>
               {t("Sign Out")}
@@ -164,7 +165,7 @@ export default function NavBar({ userGroups = [] }: NavBarProps) {
         <div className="lg:hidden px-4 py-4 space-y-4 bg-white border-b border-gray-200">
           {renderRoutes(combinedRoutes)}
           <div className="my-4 border-t-2 border-darkest-green w-full" />
-          <LanguageSwitcher    />
+          <LanguageSwitcher />
           {authCheck ? (
             <GreenButton className={"whitespace-nowrap"} variant="action" onClick={handleSignOut}>
               {t("Sign Out")}

@@ -16,7 +16,7 @@ const schema = a
         email: a
           .string()
           .authorization((allow) => [
-            allow.group("Admin"),
+            allow.groups(["SuperAdmin", "Admin"]),
             allow.ownerDefinedIn("profileOwner").to(["read"]),
           ]),
         userType: a
@@ -24,20 +24,20 @@ const schema = a
           .default("Client")
           .authorization((allow) => [
             allow.ownerDefinedIn("profileOwner").to(["read", "create"]),
-            allow.groups(["Admin"]).to(["read", "update", "create"]),
+            allow.groups(["SuperAdmin", "Admin"]).to(["read", "update", "create"]),
           ]),
         profileOwner: a
           .string()
           .authorization((allow) => [
             allow.ownerDefinedIn("profileOwner").to(["read"]),
-            allow.group("Admin"),
+            allow.groups(["SuperAdmin", "Admin"]),
             allow.authenticated().to(["read"]),
           ]),
       })
       .secondaryIndexes((index) => [index("userId")])
       .authorization((allow) => [
         allow.ownerDefinedIn("profileOwner").to(["read", "update"]),
-        allow.group("Admin"),
+        allow.groups(["SuperAdmin", "Admin"]),
         allow.guest().to(["read"]),
         allow.authenticated().to(["read"]),
       ]),
@@ -50,7 +50,7 @@ const schema = a
           .string()
           .authorization((allow) => [
             allow.ownerDefinedIn("profileOwner").to(["read", "create"]),
-            allow.group("Admin").to(["read", "update"]),
+            allow.groups(["SuperAdmin", "Admin"]).to(["read", "update"]),
           ]),
         firstName: a.string(),
         lastName: a.string(),
@@ -101,13 +101,13 @@ const schema = a
         id: a.string().required(),
         providerId: a.string().required(), // Links to UserProfile.userId where userType = "Provider"
         profileOwner: a.string().required(), // For authorization
-        
+
         // Store all availability as JSON array
         availabilityData: a.json(), // Array of availability objects: [{date: "2025-07-21", time: "09:00", duration: 1.0, isAvailable: true}, ...]
-        
+
         // Weekly template for recurring availability
         weeklyTemplate: a.string().required(), // Template for weekly recurring schedule: {monday: ["09:00", "10:00"], tuesday: [...], ...}
-        
+
         // Metadata
         lastUpdated: a.datetime(),
         timezone: a.string().default("Alberta/Edmonton"), // Default timezone for Alberta
@@ -201,9 +201,9 @@ const schema = a
         // Guests can read profiles (for marketplace browsing)
         allow.guest().to(["read"]),
       ]),
-      
-      // Booking schema
-      Booking: a
+
+    // Booking schema
+    Booking: a
       .model({
         id: a.string().required(),
         providerId: a.string().required(),
@@ -224,11 +224,11 @@ const schema = a
       ])
       .authorization((allow) => [
         allow.authenticated().to(["create", "read", "update"]),
-        allow.group("Admin"),
+        allow.groups(["SuperAdmin", "Admin"]),
       ]),
 
-      // Notification schema for booking requests and updates
-      Notification: a
+    // Notification schema for booking requests and updates
+    Notification: a
       .model({
         id: a.string().required(),
         recipientId: a.string().required(),
@@ -251,11 +251,11 @@ const schema = a
       ])
       .authorization((allow) => [
         allow.authenticated().to(["create", "read", "update", "delete"]),
-        allow.group("Admin"),
+        allow.groups(["SuperAdmin", "Admin"]),
       ]),
 
-      //Message schema for chat between client and provider
-      Message: a
+    //Message schema for chat between client and provider
+    Message: a
       .model({
         id: a.string().required(),
         bookingId: a.string().required(),

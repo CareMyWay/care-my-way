@@ -6,7 +6,7 @@ import { postConfirmation } from "./post-confirmation/resource";
  * @see https://docs.amplify.aws/gen2/build-a-backend/auth
  */
 export const auth = defineAuth({
-  groups: ["Admin", "Client", "Support", "Provider"],
+  groups: ["SuperAdmin", "Admin", "Client", "Support", "Provider"],
   loginWith: {
     email: true,
     externalProviders: {
