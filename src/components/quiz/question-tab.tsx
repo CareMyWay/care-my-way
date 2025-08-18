@@ -18,16 +18,18 @@ export function QuestionTab({ currQuestionIdx, setCurrQuestionIdxAction, questio
   const lcl_a_pool = [... answerPool];
 
   const handleBack = () => {
-    setCurrQuestionIdxAction(currQuestionIdx - 1   );
+    if (currQuestionIdx > 1) {
+      setCurrQuestionIdxAction(currQuestionIdx - 1);
+    }
   };
 
   const handleNext = () => {
-    if (currQuestionIdx >= answerPool.length) return;
-    setCurrQuestionIdxAction(currQuestionIdx - (-1));
+    if (currQuestionIdx < questionPool.length) {
+      setCurrQuestionIdxAction(currQuestionIdx + 1);
+    }
   };
 
-  const handleSubmit = () =>{
-    if (currQuestionIdx >= answerPool.length) return;
+  const handleSubmit = () => {
     onQuizSubmit();
   };
 
@@ -59,56 +61,140 @@ export function QuestionTab({ currQuestionIdx, setCurrQuestionIdxAction, questio
   };
 
   return (
-    <>
-      <div className="bg-primary-white border border-gray-300 rounded-lg p-8 text-darkest-green w-auto h-auto">
-        <div className="flex items-center mb-5">
-          <h2 className="text-2xl font-bold text-darkest-green mr-4">
-            Question {currQuestionIdx}
-          </h2>
-        </div>
-        <div key={q_idx} className="mb-6 min-h-1/2">
-          <p className="text-lg mt-1 mb-3">{q_obj["q-str"]}</p>
+    <div className="w-full mx-auto p-4">
+      {/* Title and Description */}
+      <div className="mb-10 text-center">
+        <h3 className="text-3xl font-bold text-darkest-green mb-4">Care Needs Assessment</h3>
+        <p className="text-lg text-darkest-green mb-8 max-w-6xl mx-auto">
+          Answer each question to the best of your ability for the most accurate care recommendations. You can navigate between questions using the Next and Back buttons below. Please note that subsequent questions will only appear after answering the current question. 
+        </p>
+      </div>
 
-          {["DUMMY-Length=1-Array"].map(() => {
-            if (q_obj["a-tp"] === "checkbox") {
-              return (
-                <div key={`${q_idx}`}>
-                  {q_obj.checkboxes.map((str, i) => (
-                    <div className="flex mb-3 ml-[12px]" key={`${q_idx}-${i}`}>
-                      <input type="checkbox" key={i} value={i} id={`${q_idx}-${i}`} className="w-5 h-5 mt-1 accent-medium-green" checked={(lcl_a_pool[q_idx] & (1 << i)) != 0} onChange={handleChange}/>
-                      <label className="ml-3 text-lg" htmlFor={`${q_idx}-${i}`}> {str}</label>
-                    </div>
-                  ))}
-                </div>
-              );
-            }
-            else if (q_obj["a-tp"] === "radio") {
-              return (
-                <div key={`${q_idx}`}>
-                  {q_obj.radios.map((str, i) => (
-                    <div className="flex mb-3 ml-[12px]" key={`${q_idx}-${i}`}>
-                      <input type="radio" key={i} value={i} id={`${q_idx}-${i}`} name={`${q_idx}`} className="w-5 h-5 mt-1 accent-medium-green" checked={lcl_a_pool[q_idx] == i} onChange={handleChange}/>
-                      <label className="ml-3 text-lg" htmlFor={`${q_idx}-${i}`}> {str}</label>
-                    </div>
-                  ))}
-                </div>
-              );
-            } else {
-              return (
-                <div key={`${q_idx}`}>
-                  {q_obj["a-tp"]}
-                </div>
-              );
-            }
-          })}
+      {/* Progress indicator */}
+      <div className="mb-10">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-m font-medium text-gray-700">Quiz Progress</span>
+          <span className="text-m font-medium text-gray-700">{Math.round((currQuestionIdx / questionPool.length) * 100)}%</span>
         </div>
-
-        <div className="flex flex-row justify-between mt-15 items-end">
-          {currQuestionIdx > 1 ?                   ( <OrangeButton onClick={handleBack} variant={"action"} >BACK</OrangeButton>) : (<span></span>)}
-          {currQuestionIdx < questionPool.length ? ( <OrangeButton onClick={handleNext} variant={"action"} >NEXT</OrangeButton>) :
-                                                   ( <OrangeButton onClick={handleSubmit} variant={"action"} >SUBMIT</OrangeButton>)}
+        <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+          <div 
+            className="bg-medium-green h-2 rounded-full transition-all duration-300" 
+            style={{width: `${(currQuestionIdx / questionPool.length) * 100}%`}}
+          ></div>
+        </div>
+        <div className="text-center text-m text-gray-600">
+          {currQuestionIdx} of {questionPool.length} questions completed
         </div>
       </div>
-    </>
+
+      {/* White Question Container */}
+      <div className="bg-white rounded-lg p-8 border-2 border-gray-200 mb-10">
+        {/* Question */}
+        <div className="mb-7">
+          <h2 className="text-lg md:text-lg font-medium text-darkest-green leading-relaxed">
+            {currQuestionIdx}.  {q_obj["q-str"]}
+          </h2>
+        </div>
+
+        {/* Answer Options */}
+        <div className="space-y-3 mb-2">
+          {q_obj["a-tp"] === "checkbox" ? (
+            q_obj.checkboxes.map((str, i) => (
+              <label 
+                key={`${q_idx}-${i}`}
+                className={`
+                  block w-full p-6 rounded-lg border-2 cursor-pointer transition-all duration-200
+                  ${(lcl_a_pool[q_idx] & (1 << i)) !== 0 
+                    ? 'border-medium-green shadow-md' 
+                    : 'border-gray-200 bg-white hover:border-medium-green hover:bg-gray-50'
+                  }
+                `}
+              >
+                <div className="flex items-center">
+                  <input 
+                    type="checkbox" 
+                    id={`${q_idx}-${i}`} 
+                    className="sr-only" 
+                    checked={(lcl_a_pool[q_idx] & (1 << i)) !== 0} 
+                    onChange={handleChange}
+                  />
+                  <div className={`
+                    w-6 h-6 rounded border-2 mr-4 flex items-center justify-center transition-all
+                    ${(lcl_a_pool[q_idx] & (1 << i)) !== 0 
+                      ? 'border-medium-green bg-medium-green' 
+                      : 'border-gray-300'
+                    }
+                  `}>
+                    {(lcl_a_pool[q_idx] & (1 << i)) !== 0 && (
+                      <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </div>
+                  <span className="text-lg text-darkest-green">{str}</span>
+                </div>
+              </label>
+            ))
+          ) : (
+            q_obj.radios.map((str, i) => (
+              <label 
+                key={`${q_idx}-${i}`}
+                className={`
+                  block w-full p-5 rounded-xl border-2 cursor-pointer transition-all duration-200
+                  ${lcl_a_pool[q_idx] === i 
+                    ? 'border-medium-green shadow-md' 
+                    : 'border-gray-200 bg-white hover:border-medium-green hover:bg-gray-50'
+                  }
+                `}
+              >
+                <div className="flex items-center">
+                  <input 
+                    type="radio" 
+                    id={`${q_idx}-${i}`} 
+                    name={`${q_idx}`}
+                    className="sr-only" 
+                    checked={lcl_a_pool[q_idx] === i} 
+                    onChange={handleChange}
+                  />
+                  <div className={`
+                    w-6 h-6 rounded-full border-2 mr-4 flex items-center justify-center transition-all
+                    ${lcl_a_pool[q_idx] === i 
+                      ? 'border-medium-green' 
+                      : 'border-gray-300'
+                    }
+                  `}>
+                    {lcl_a_pool[q_idx] === i && (
+                      <div className="w-3 h-3 rounded-full bg-medium-green"></div>
+                    )}
+                  </div>
+                  <span className="text-lg text-darkest-green">{str}</span>
+                </div>
+              </label>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* Navigation Buttons */}
+      <div className="flex justify-between items-center">
+        {currQuestionIdx > 1 ? (
+          <OrangeButton onClick={handleBack} variant="action" className="px-13 py-3">
+            Back
+          </OrangeButton>
+        ) : (
+          <div></div>
+        )}
+        
+        {currQuestionIdx < questionPool.length ? (
+          <OrangeButton onClick={handleNext} variant="action" className="px-13 py-3">
+            Next
+          </OrangeButton>
+        ) : (
+          <OrangeButton onClick={handleSubmit} variant="action" className="px-13 py-3">
+            Submit
+          </OrangeButton>
+        )}
+      </div>
+    </div>
   );
 }

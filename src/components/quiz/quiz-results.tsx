@@ -1,67 +1,26 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import OrangeButton from "@/components/buttons/orange-button";
+import HealthcareProviderCard from "@/components/marketplace/healthcare-provider-card";
 import { ProcessedResults } from "./quiz-logic";
-
 
 interface QuizResultsProps {
   results: ProcessedResults;
   onStartOver: () => void;
 }
 
-// Helper function to categorize services
-const categorizeServices = (services: string[]) => {
-  const categories = [
-    {
-      name: "Health & Medical",
-      icon: "🩺",
-      services: services.filter(s =>
-        [
-          "Medication Management",
-          "Blood Pressure Monitoring",
-          "Chronic Disease Management",
-          "Post-Surgery Recovery",
-          "Diabetes Management",
-          "Palliative Care",
-          "Mental Health Support"
-        ].includes(s)
-      )
-    },
-    {
-      name: "Daily Living Support",
-      icon: "🏠",
-      services: services.filter(s =>
-        [
-          "Personal Care Assistance",
-          "Meal Preparation",
-          "Light Housekeeping",
-          "Mobility Assistance",
-          "Companion Care"
-        ].includes(s)
-      )
-    },
-    {
-      name: "Safety & Therapy",
-      icon: "🛡️",
-      services: services.filter(s =>
-        [
-          "Fall Prevention",
-          "Physical Therapy Assistance",
-          "Emergency Response",
-          "Dementia & Alzheimer's Care",
-          "Respite Care",
-          "Other Support Services"
-        ].includes(s)
-      )
-    }
-  ].filter(category => category.services.length > 0);
-
-  return categories;
-};
-
 export function QuizResults({ results, onStartOver }: QuizResultsProps) {
-  const { providers, services } = results;
+  const { services } = results;
+  const [expandedServices, setExpandedServices] = useState<Record<string, boolean>>({});
+
+  // Toggle service list expansion for subcategories
+  const toggleServiceList = (subcategoryKey: string) => {
+    setExpandedServices(prev => ({
+      ...prev,
+      [subcategoryKey]: !prev[subcategoryKey]
+    }));
+  };
 
   return (
     <div className="min-h-screen bg-primary-white py-12 px-4">
@@ -72,59 +31,76 @@ export function QuizResults({ results, onStartOver }: QuizResultsProps) {
             Your Care Assessment Results
           </h1>
           <p className="text-lg text-darkest-green mb-8 max-w-3xl mx-auto">
-            Based on your responses, we&apos;ve identified the healthcare professionals and
-            services that would be most beneficial for your care needs.
+            Based on your responses, we&apos;ve identified the healthcare services and support that would be most beneficial for your care needs.
           </p>
         </div>
 
         {/* Results Content */}
-        <div className="grid lg:grid-cols-2 gap-8 mb-12">
-          {/* Recommended Providers */}
-          <div className="bg-white border border-gray-200 rounded-lg p-8 shadow-sm">
-            <h2 className="text-2xl font-bold text-darkest-green mb-6 flex items-center">
-              Recommended Healthcare Professionals
-            </h2>
-
-            {providers.length > 0 ? (
-              <div className="space-y-4">
-                {providers.map((provider, index) => (
-                  <div
-                    key={index}
-                    className="border-l-4 border-medium-green pl-4 py-2"
-                  >
-                    <h3 className="font-bold text-darkest-green text-lg mb-2">
-                      {provider.name}
-                    </h3>
-                    <p className="text-darkest-green leading-relaxed">
-                      {provider.reason}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-darkest-green">
-                Based on your responses, you may not need additional professional
-                healthcare support at this time. However, it&apos;s always good to maintain
-                regular contact with your primary healthcare provider.
-              </p>
-            )}
-          </div>
-
+        <div className="mb-12">
           {/* Recommended Services */}
           <div className="bg-white border border-gray-200 rounded-lg p-8 shadow-sm">
             <h2 className="text-2xl font-bold text-darkest-green mb-6 flex items-center">
               Recommended Care Services
             </h2>
+            <p className="text-darkest-green mb-6 text-base leading-relaxed">
+              These personalized recommendations are based on your assessment responses. Each service category includes specific support options tailored to help you maintain independence, health, and quality of life. Click on "Specific Services" to explore detailed options within each category.
+            </p>
 
             {services.length > 0 ? (
-              <div className="grid gap-3">
-                {services.map((service, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center p-3 bg-gray-50 rounded-lg"
-                  >
-                    <span className="w-4 h-4 bg-light-green rounded-full mr-3 flex-shrink-0" />
-                    <span className="text-darkest-green font-medium">{service}</span>
+              <div className="space-y-6">
+                {services.map((category, categoryIndex) => (
+                  <div key={categoryIndex} className="border border-gray-200 rounded-lg p-6">
+                    {/* Category Header */}
+                    <h3 className="text-xl font-bold text-darkest-green mb-4 border-b border-gray-200 pb-2">
+                      {category.category}
+                    </h3>
+
+                    {/* Category Services */}
+                    <div className="space-y-4">
+                      {category.subcategories.map((subcategory, subIndex) => {
+                        const subcategoryKey = `${categoryIndex}-${subIndex}`;
+                        return (
+                          <div
+                            key={subIndex}
+                            className="border-l-4 border-medium-green pl-4 py-3 bg-gray-50 rounded-r-lg"
+                          >
+                            <h4 className="font-bold text-darkest-green text-lg mb-2">
+                              {subcategory.name}
+                            </h4>
+                            <p className="text-darkest-green text-sm mb-3 italic">
+                              {subcategory.reason}
+                            </p>
+                            <p className="text-darkest-green mb-3">
+                              {subcategory.description}
+                            </p>
+                            
+                            {/* Collapsible Services List */}
+                            <div className="ml-4">
+                              <button
+                                onClick={() => toggleServiceList(subcategoryKey)}
+                                className="flex items-center text-dark-green hover:text-medium-green font-semibold mb-2 transition-colors"
+                              >
+                                <span className={`transform transition-transform mr-2 ${expandedServices[subcategoryKey] ? 'rotate-90' : ''}`}>
+                                  ▶
+                                </span>
+                                Specific Services ({subcategory.services.length})
+                              </button>
+                              
+                              {expandedServices[subcategoryKey] && (
+                                <ul className="space-y-1 ml-6">
+                                  {subcategory.services.map((service, serviceIndex) => (
+                                    <li key={serviceIndex} className="flex items-start">
+                                      <span className="w-2 h-2 bg-medium-green rounded-full mr-3 mt-2 flex-shrink-0" />
+                                      <span className="text-darkest-green text-sm">{service}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -138,33 +114,56 @@ export function QuizResults({ results, onStartOver }: QuizResultsProps) {
           </div>
         </div>
 
-        {/* Service Categories Section */}
-        {services.length > 0 && (
-          <div className="bg-white border border-gray-200 rounded-lg p-8 shadow-sm mb-12">
-            <h2 className="text-2xl font-bold text-darkest-green mb-6 text-center">
-              Service Categories Overview
-            </h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              {categorizeServices(services).map(
-                (category, index) => (
-                  <div key={index} className="text-center">
-                    <div className="w-16 h-16 bg-light-green rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-2xl">{category.icon}</span>
-                    </div>
-                    <h3 className="font-bold text-darkest-green mb-2">
-                      {category.name}
-                    </h3>
-                    <ul className="text-sm text-darkest-green space-y-1">
-                      {category.services.map((service, serviceIndex) => (
-                        <li key={serviceIndex}>{service}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )
-              )}
-            </div>
+        {/* Recommended Providers Section */}
+        <div className="bg-white border border-gray-200 rounded-lg p-8 shadow-sm mb-12">
+          <h2 className="text-2xl font-bold text-darkest-green mb-6">
+            Recommended Providers
+          </h2>
+          <p className="text-darkest-green mb-6 text-base leading-relaxed">
+            Based on your care needs, here are some qualified healthcare providers in your area who specialize in the services you require.
+          </p>
+          
+          <div className="space-y-6">
+            {/* Nurse - Medication Administration */}
+            <HealthcareProviderCard
+              id="nurse-sarah-johnson"
+              name="Sarah Johnson"
+              title="Registered Nurse"
+              location="Downtown Vancouver"
+              experience="8 years of experience"
+              languages={["English", "French"]}
+              services={["Medication Administration", "Wound Care", "Health Monitoring", "Injection Services"]}
+              hourlyRate={45}
+              imageSrc="/images/home/meet-providers/person-placeholder-3.jpg"
+            />
+
+            {/* Healthcare Aide - Multiple Services */}
+            <HealthcareProviderCard
+              id="aide-michael-chen"
+              name="Michael Chen"
+              title="Healthcare Aide"
+              location="East Vancouver"
+              experience="5 years of experience"
+              languages={["English", "Mandarin"]}
+              services={["Homemaking", "Mobility Support", "Transfers", "Appointment Outings", "Personal Care"]}
+              hourlyRate={32}
+              imageSrc="/images/home/meet-providers/person-placeholder-7.jpg"
+            />
+
+            {/* Physiotherapist */}
+            <HealthcareProviderCard
+              id="physio-emma-rodriguez"
+              name="Emma Rodriguez"
+              title="Physiotherapist"
+              location="West Vancouver"
+              experience="12 years of experience"
+              languages={["English", "Spanish"]}
+              services={["Physical Therapy", "Mobility Assessment", "Exercise Programs", "Pain Management"]}
+              hourlyRate={85}
+              imageSrc="/images/home/meet-providers/person-placeholder-5.jpg"
+            />
           </div>
-        )}
+        </div>
 
         {/* Next Steps Section */}
         <div className="bg-light-green bg-opacity-20 border border-light-green rounded-lg p-8 mb-8">
