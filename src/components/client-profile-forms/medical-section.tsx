@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -42,14 +42,54 @@ interface MedicalSectionProps {
   defaultValues?: MedicalFormFields;
 }
 
+const questions: {
+  key: keyof MedicalFormFields;
+  label: string;
+  placeholder: string;
+}[] = [
+  {
+    key: "medicalConditions",
+    label:
+      "Do you have any medical conditions? If yes, please specify. Type 'NONE' if not applicable.",
+    placeholder: "e.g., diabetes, asthma, hypertension...",
+  },
+  {
+    key: "surgeriesOrHospitalizations",
+    label:
+      "Have you had any recent surgeries or hospitalizations? Type 'NONE' if not applicable.",
+    placeholder: "Please include dates if possible",
+  },
+  {
+    key: "chronicIllnesses",
+    label:
+      "Do you have any chronic illnesses? If yes, please specify. Type 'NONE' if not applicable.",
+    placeholder: "e.g., heart disease, arthritis...",
+  },
+  {
+    key: "allergies",
+    label:
+      "Do you have any allergies? If yes, please specify. Type 'NONE' if not applicable.",
+    placeholder: "e.g., food, medication, environmental...",
+  },
+  {
+    key: "medications",
+    label:
+      "Are you currently taking any medications? If yes, please specify. Type 'NONE' if not applicable.",
+    placeholder: "List all prescribed and over-the-counter medications",
+  },
+];
+
 export function MedicalSection({
   onDataChange,
   isCompleted,
   defaultValues,
 }: MedicalSectionProps) {
+  const [step, setStep] = useState(0);
+
   const {
     register,
     watch,
+    trigger,
     formState: { errors },
   } = useForm<MedicalFormFields>({
     mode: "onChange",
@@ -69,6 +109,29 @@ export function MedicalSection({
     });
     return () => subscription.unsubscribe();
   }, [watch, onDataChange]);
+
+  const currentQuestion = questions[step];
+  const totalSteps = questions.length;
+
+  const handleNext = async () => {
+    const valid = await trigger(currentQuestion.key);
+
+    if (!valid) return;
+
+    if (step < totalSteps - 1) {
+      setStep((prev) => prev + 1);
+    } else {
+      // Last step → section complete
+      const allValid = await trigger();
+      if (allValid) {
+        onDataChange(watch() as MedicalFormFields);
+      }
+    }
+  };
+
+  const handleBack = () => {
+    if (step > 0) setStep((prev) => prev - 1);
+  };
 
   return (
     <div className="h-full bg-white rounded-lg border shadow-sm overflow-hidden">
@@ -91,7 +154,7 @@ export function MedicalSection({
                 />
               </svg>
             ) : (
-              "5"
+              step + 1
             )}
           </div>
           <div>
@@ -99,140 +162,59 @@ export function MedicalSection({
               Medical Information
             </h2>
             <p className="text-sm text-gray-600">
-              Share relevant medical information
+              Question {step + 1} of {totalSteps}
             </p>
           </div>
         </div>
 
-        {/* Form */}
-        <form className="flex-1 overflow-y-auto space-y-6">
+        {/* Single Question */}
+        <form className="flex-1 flex flex-col justify-between">
           <div className="space-y-2">
-            <label htmlFor="medicalConditions" className="std-form-label">
-              Do you have any medical conditions? If yes, please specify. Type
-              &quot;NONE&quot; if not applicable.
+            <label htmlFor={currentQuestion.key} className="std-form-label">
+              {currentQuestion.label}
             </label>
             <div className="relative">
               <textarea
-                id="medicalConditions"
-                {...register("medicalConditions")}
+                key={currentQuestion.key} // force React to treat each step as a new input
+                id={currentQuestion.key}
+                {...register(currentQuestion.key)}
                 className="std-form-input"
-                rows={8}
+                rows={4}
+                placeholder={currentQuestion.placeholder}
                 maxLength={500}
-                placeholder="e.g., diabetes, asthma, hypertension..."
               />
               <div className="absolute bottom-2 right-2 text-xs text-gray-500 bg-white px-1 rounded">
-                {watch("medicalConditions")?.length || 0}/500
+                {watch(currentQuestion.key)?.length || 0}/500
               </div>
             </div>
-            {errors.medicalConditions && (
+            {errors[currentQuestion.key] && (
               <p className="text-sm text-red-600">
-                {errors.medicalConditions.message}
+                {errors[currentQuestion.key]?.message as string}
               </p>
             )}
           </div>
 
-          <div className="space-y-2">
-            <label
-              htmlFor="surgeriesOrHospitalizations"
-              className="std-form-label"
+          {/* Navigation / Completion */}
+          <div className="flex justify-between mt-6">
+            <button
+              type="button"
+              onClick={handleBack}
+              disabled={step === 0}
+              className="px-4 py-2 rounded bg-gray-200 disabled:opacity-50"
             >
-              Have you had any recent surgeries or hospitalizations? If yes,
-              please specify reason and dates. Type &quot;NONE&quot; if not
-              applicable.
-            </label>
-            <div className="relative">
-              <textarea
-                id="surgeriesOrHospitalizations"
-                {...register("surgeriesOrHospitalizations")}
-                className="std-form-input"
-                rows={3}
-                placeholder="Please include dates if possible"
-              />
-              <div className="absolute bottom-2 right-2 text-xs text-gray-500 bg-white px-1 rounded">
-                {watch("surgeriesOrHospitalizations")?.length || 0}/500
-              </div>
-            </div>
-            {errors.surgeriesOrHospitalizations && (
-              <p className="text-sm text-red-600">
-                {errors.surgeriesOrHospitalizations.message}
-              </p>
-            )}
-          </div>
+              Back
+            </button>
 
-          <div className="space-y-2">
-            <label htmlFor="chronicIllnesses" className="std-form-label">
-              Do you have any chronic illnesses? If yes, please specify. Type
-              &quot;NONE&quot; if not applicable.
-            </label>
-            <div className="relative">
-              <textarea
-                id="chronicIllnesses"
-                {...register("chronicIllnesses")}
-                className="std-form-input"
-                rows={2}
-                placeholder="e.g., heart disease, arthritis..."
-              />
-              <div className="absolute bottom-2 right-2 text-xs text-gray-500 bg-white px-1 rounded">
-                {watch("chronicIllnesses")?.length || 0}/500
-              </div>
-            </div>
-            {errors.chronicIllnesses && (
-              <p className="text-sm text-red-600">
-                {errors.chronicIllnesses.message}
-              </p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <label htmlFor="allergies" className="std-form-label">
-              Do you have any allergies? If yes, please specify. Type
-              &quot;NONE&quot; if not applicable.
-            </label>
-            <div className="relative">
-              <textarea
-                id="allergies"
-                {...register("allergies")}
-                className="std-form-input"
-                rows={2}
-                placeholder="e.g., food, medication, environmental..."
-              />
-              <div className="absolute bottom-2 right-2 text-xs text-gray-500 bg-white px-1 rounded">
-                {watch("allergies")?.length || 0}/500
-              </div>
-            </div>
-            {errors.allergies && (
-              <p className="text-sm text-red-600">{errors.allergies.message}</p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <label htmlFor="medications" className="std-form-label">
-              Are you currently taking any medications? If yes, please specify.
-              Type &quot;NONE&quot; if not applicable.
-            </label>
-            <div className="relative">
-              <textarea
-                id="medications"
-                {...register("medications")}
-                className="std-form-input"
-                rows={2}
-                placeholder="List all prescribed and over-the-counter medications"
-              />
-              <div className="absolute bottom-2 right-2 text-xs text-gray-500 bg-white px-1 rounded">
-                {watch("medications")?.length || 0}/500
-              </div>
-            </div>
-            {errors.medications && (
-              <p className="text-sm text-red-600">
-                {errors.medications.message}
-              </p>
-            )}
-          </div>
-
-          {/* Completion indicator */}
-          {isCompleted && (
-            <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
-              <div className="flex items-center gap-2 text-green-700">
+            {step < totalSteps - 1 ? (
+              <button
+                type="button"
+                onClick={handleNext}
+                className="px-4 py-2 rounded bg-[#4A9B9B] text-white"
+              >
+                Next
+              </button>
+            ) : watch(currentQuestion.key)?.trim() ? (
+              <div className="text-green-700 font-medium flex items-center gap-2">
                 <svg
                   className="w-4 h-4"
                   fill="currentColor"
@@ -244,12 +226,15 @@ export function MedicalSection({
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-sm font-medium">
-                  Section completed! Click Next to continue.
-                </span>
+                Lifestyle section complete! Click{" "}
+                <span className="underline">Next</span> below to continue.
               </div>
-            </div>
-          )}
+            ) : (
+              <p className="text-gray-500 italic">
+                Please answer this question to complete the section.
+              </p>
+            )}
+          </div>
         </form>
       </div>
     </div>

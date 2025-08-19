@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { PersonalInfoSection } from "@/components/client-profile-forms/personal-info-section";
 import { AddressSection } from "@/components/client-profile-forms/address-section";
 import { EmergencyContactSection } from "@/components/client-profile-forms/emergency-contact-section";
 import { ClientProfileNavSideBar } from "@/components/nav-bars/client-profile-nav-sidebar";
 import { getCurrentUser } from "aws-amplify/auth";
-import { useRouter } from "next/navigation";
 
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/../amplify/data/resource";
@@ -78,6 +78,7 @@ type LifestyleData = {
 
 export default function CompleteClientProfile() {
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
   const [activeSection, setActiveSection] = useState("personal-info");
   const [formData, setFormData] = useState({
     "personal-info": {},
@@ -339,7 +340,7 @@ export default function CompleteClientProfile() {
     }
   };
 
-  const router = useRouter();
+  // const router = useRouter();
 
   const handleSubmit = async () => {
     if (
@@ -423,8 +424,10 @@ export default function CompleteClientProfile() {
           return;
         }
 
-        console.log("Form data saved:", result.data);
-        router.push("/client-dashboard/profile-completed-status"); //  Redirect here
+        setSubmitSuccess(true);
+
+        // console.log("Form data saved:", result.data);
+        // router.push("/client-dashboard/profile-completed-status"); //  Redirect here
       } catch (error) {
         console.error("Submission error:", error);
         toast.error("Something went wrong!");
@@ -594,6 +597,79 @@ export default function CompleteClientProfile() {
           </div>
         </div>
       </main>
+      {submitSuccess && (
+        <>
+          {/* Modal Backdrop */}
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+          >
+            {/* Modal Content */}
+            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden animate-in fade-in duration-300">
+              {/* Success Header */}
+              <div className="bg-gradient-to-r from-[#4A9B9B] to-[#5CAB9B] px-6 py-8 text-center">
+                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg
+                    className="w-8 h-8 text-[#4A9B9B]"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-bold text-white mb-2">
+                  Profile Completed!
+                </h2>
+              </div>
+
+              {/* Modal Body */}
+              <div className="px-6 py-6">
+                <div className="space-y-4">
+                  {/* Success Message */}
+                  <div className="text-center">
+                    <h3 className="text-lg font-semibold text-darkest-green mb-2">
+                      What&apos;s Next?
+                    </h3>
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      Your profile is complete. You can now access the
+                      Healthcare Directory and/or try our Healthcare Transition
+                      Quiz.
+                    </p>
+                  </div>
+
+                  {/* Quick Stats */}
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <div className="text-center">
+                      <div>
+                        <div className="text-2xl font-bold text-[#4A9B9B]">
+                          ✓
+                        </div>
+                        <div className="text-xs text-gray-600">
+                          Profile Complete
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Modal Actions */}
+              <div className="px-6 pb-6 space-y-3">
+                <Link
+                  href="/client-dashboard/profile"
+                  className="w-full bg-[#CC5034] hover:bg-[#B84529] text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg text-center block"
+                >
+                  Go to Profile
+                </Link>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
