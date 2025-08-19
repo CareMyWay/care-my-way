@@ -18,7 +18,7 @@ import {
   BrainCircuit,
   PersonStanding,
 } from "lucide-react";
-import ProfileNotComplete from "./profile-not-complete";
+import { ProfileNotComplete } from "./profile-not-complete";
 
 const client = generateClient<Schema>();
 
