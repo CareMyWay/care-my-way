@@ -43,7 +43,7 @@ export function QuizResults({ results, onStartOver }: QuizResultsProps) {
                         Recommended Care Services
                         </h2>
                         <p className="text-darkest-green mb-4 sm:mb-6 text-sm sm:text-base leading-relaxed">
-                        These personalized recommendations are based on your assessment responses. Each service category includes specific support options tailored to help you maintain independence, health, and quality of life. Click on "Specific Services" to explore detailed options within each category.
+                        These personalized recommendations are based on your assessment responses. Each service category includes specific support options tailored to help you maintain independence, health, and quality of life. Click on &quot;Specific Services&quot; to explore detailed options within each category.
                         </p>
 
                         {services.length > 0 ? (
@@ -84,7 +84,7 @@ export function QuizResults({ results, onStartOver }: QuizResultsProps) {
                                                             onClick={() => toggleServiceList(subcategoryKey)}
                                                             className="flex items-center justify-start text-left text-dark-green hover:text-medium-green font-medium transition-colors text-xs sm:text-sm mb-1 min-h-[44px] touch-manipulation"
                                                             >
-                                                            <span className={`transform transition-transform mr-2 ${expandedServices[subcategoryKey] ? 'rotate-90' : ''}`}>
+                                                            <span className={`transform transition-transform mr-2 ${expandedServices[subcategoryKey] ? "rotate-90" : ""}`}>
                                                             ▶
                                                             </span>
                                                             See More Specific Services Offered ({subcategory.services.length})

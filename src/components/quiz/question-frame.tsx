@@ -5,10 +5,13 @@ import Loading from "@/app/loading";
 import {QuestionTab} from "@/components/quiz/question-tab";
 import {staticQuizData} from "@/components/quiz/staticQuizData";
 import type {Question} from "@/components/quiz/staticQuizData";
-import { processQuizAnswers, processResultsForDisplay, ProcessedResults } from "@/components/quiz/quiz-logic";
+import { processQuizAnswers, processResultsForDisplay} from "@/components/quiz/quiz-logic";
+import type { ProcessedResults } from "@/components/quiz/quiz-logic";
 
 interface QuestionFrameProps {
-    onQuizComplete: (processedResults:ProcessedResults) => void;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+    // (Reason: interface param name triggers rule in this repo; keeping for clarity)
+    onQuizComplete: (results: ProcessedResults) => void;
 }
 
 const QuestionFrame = ({ onQuizComplete }: QuestionFrameProps) => {
@@ -21,13 +24,10 @@ const QuestionFrame = ({ onQuizComplete }: QuestionFrameProps) => {
     const handleQuizSubmit = () => {
         // Process the answers through our quiz logic
         console.log("Quiz submitted with answers:", answerPool);
-        const rawResults = processQuizAnswers(answerPool);
-        const processedResults = processResultsForDisplay(rawResults);
-    
-        console.log("Processed results:", processedResults);
-    
-        // Call the parent callback with results
-        onQuizComplete(processedResults);
+        const raw = processQuizAnswers(answerPool);
+        onQuizComplete(processResultsForDisplay(raw));
+
+        console.log("Processed results:", processResultsForDisplay(raw));
     };
 
     useEffect(() => {

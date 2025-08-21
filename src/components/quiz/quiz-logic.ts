@@ -381,7 +381,7 @@ const SERVICE_CATEGORIES = {
             }
         }
     }
-}
+};
 
 
 // Helper function to add a service category with reason

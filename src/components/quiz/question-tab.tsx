@@ -133,8 +133,8 @@ export function QuestionTab({ currQuestionIdx, setCurrQuestionIdxAction, questio
                             className={`
                             block w-full p-4 sm:p-5 lg:p-6 rounded-lg border-2 cursor-pointer transition-all duration-200 min-h-[48px] touch-manipulation
                             ${(lcl_a_pool[q_idx] & (1 << i)) !== 0
-                            ? 'border-medium-green shadow-md'
-                            : 'border-gray-200 bg-white hover:border-medium-green hover:bg-gray-50'
+                            ? "border-medium-green shadow-md"
+                            : "border-gray-200 bg-white hover:border-medium-green hover:bg-gray-50"
                             }
                             `}>
                                 <div className="flex items-center">
@@ -148,8 +148,8 @@ export function QuestionTab({ currQuestionIdx, setCurrQuestionIdxAction, questio
                                     <div className={`
                                         w-5 h-5 lg:w-6 lg:h-6 flex-shrink-0 rounded border-2 mr-4 flex items-center justify-center transition-all
                                         ${(lcl_a_pool[q_idx] & (1 << i)) !== 0
-                                        ? 'border-medium-green bg-medium-green'
-                                        : 'border-gray-300'
+                                        ? "border-medium-green bg-medium-green"
+                                        : "border-gray-300"
                                         }
                                     `}
                                     >
@@ -170,8 +170,8 @@ export function QuestionTab({ currQuestionIdx, setCurrQuestionIdxAction, questio
                             className={`
                             block w-full p-4 sm:p-5 lg:p-6 rounded-xl border-2 cursor-pointer transition-all duration-200 min-h-[48px] touch-manipulation
                             ${lcl_a_pool[q_idx] === i
-                            ? 'border-medium-green shadow-md'
-                            : 'border-gray-200 bg-white hover:border-medium-green hover:bg-gray-50'
+                            ? "border-medium-green shadow-md"
+                            : "border-gray-200 bg-white hover:border-medium-green hover:bg-gray-50"
                             }
                             `}>
                                 <div className="flex items-center">
@@ -186,8 +186,8 @@ export function QuestionTab({ currQuestionIdx, setCurrQuestionIdxAction, questio
                                     <div className={`
                                     w-5 h-5 lg:w-6 lg:h-6 flex-shrink-0 rounded-full border-2 mr-4 flex items-center justify-center
                                     ${lcl_a_pool[q_idx] === i
-                                    ? 'border-medium-green'
-                                    : 'border-gray-300'
+                                    ? "border-medium-green"
+                                    : "border-gray-300"
                                     }
                                     `}>
                                         {lcl_a_pool[q_idx] === i && (
