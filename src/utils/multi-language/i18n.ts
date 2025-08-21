@@ -28,7 +28,7 @@ i18n
       escapeValue: false, // React already escapes
     },
     saveMissing: true,
-    missingKeyHandler: async (lng, ns, key, fallbackValue) => {
+    missingKeyHandler: async (_lng, ns, key, fallbackValue) => {
       const targetLang = i18n.language;
       if (key !== "DUMMY STRING") {
         if (targetLang !== "en" && (!i18n.hasResourceBundle(targetLang, "common") || !i18n.exists(key, { lng: targetLang, ns: "common" }))) {

@@ -8,10 +8,10 @@ import type {Question} from "@/components/quiz/staticQuizData";
 import { processQuizAnswers, processResultsForDisplay} from "@/components/quiz/quiz-logic";
 import type { ProcessedResults } from "@/components/quiz/quiz-logic";
 
+type OnQuizComplete = (_results: ProcessedResults) => void;
+
 interface QuestionFrameProps {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-    // (Reason: interface param name triggers rule in this repo; keeping for clarity)
-    onQuizComplete: (results: ProcessedResults) => void;
+    onQuizComplete: OnQuizComplete;
 }
 
 const QuestionFrame = ({ onQuizComplete }: QuestionFrameProps) => {
@@ -22,7 +22,6 @@ const QuestionFrame = ({ onQuizComplete }: QuestionFrameProps) => {
     const [answerPool, setAnswerPool] = useState<number[]>([]);
 
     const handleQuizSubmit = () => {
-        // Process the answers through our quiz logic
         console.log("Quiz submitted with answers:", answerPool);
         const raw = processQuizAnswers(answerPool);
         onQuizComplete(processResultsForDisplay(raw));

@@ -47,5 +47,12 @@ jobs:
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.install-command }}
 
-      - name: Run Next.js ESLint
-        run: ${{ steps.detect-package-manager.outputs.runner }} next lint --max-warnings=0
+      - name: Install ESLint dependencies
+        run: |
+          ${{ steps.detect-package-manager.outputs.manager }} add eslint@9
+          ${{ steps.detect-package-manager.outputs.manager }} add @microsoft/eslint-formatter-sarif@2.1.7
+
+      - name: Run ESLint with Flat Config
+        run: >
+          ${{ steps.detect-package-manager.outputs.runner }} eslint . \
+            --ext .js,.jsx,.ts,.tsx
