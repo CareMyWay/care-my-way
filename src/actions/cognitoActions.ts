@@ -90,7 +90,7 @@ export async function handleConfirmSignUp(
 }
 
 export async function handleSignIn(
-  prevState: string | undefined,
+  _prevState: string | undefined,
   formData: FormData
 ) {
   try {
