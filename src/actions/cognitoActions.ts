@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import {
   signUp,
   confirmSignUp,
+  confirmSignIn,
   signIn,
   signOut,
   resendSignUpCode,
@@ -19,7 +20,7 @@ export async function handleSignUp(
       throw new Error("User type is required");
     }
     // const { isSignUpComplete, userId, nextStep } = await signUp({
-    const { } = await signUp({
+    const {} = await signUp({
       username: String(formData.get("email")),
       password: String(formData.get("password")),
       options: {
@@ -94,20 +95,70 @@ export async function handleSignIn(
   formData: FormData
 ) {
   try {
-    // const { isSignedIn, nextStep } = await signIn({
-    const { nextStep } = await signIn({
-      username: String(formData.get("email")),
-      password: String(formData.get("password")),
+    const username = String(formData.get("email"));
+    const password = String(formData.get("password"));
+
+    const user = await signIn({
+      username,
+      password,
+      options: { authFlowType: "CUSTOM_WITH_SRP" },
     });
 
-    if (nextStep.signInStep === "CONFIRM_SIGN_UP") {
-      await resendSignUpCode({
-        username: String(formData.get("email")),
-      });
-      return `/sign-up/confirm-sign-up?email=${formData.get("email")}`;
+    if (user.nextStep.signInStep === "CONFIRM_SIGN_UP") {
+      await resendSignUpCode({ username });
+      return `/sign-up/confirm-sign-up?email=${username}`;
+    }
+
+    if (user.nextStep.signInStep === "CONFIRM_SIGN_IN_WITH_CUSTOM_CHALLENGE") {
+      return { step: "CUSTOM_CHALLENGE", user }; // return user for challenge
     }
 
     return "/auth/redirect-after-login";
+  } catch (error) {
+    return getErrorMessage(error);
+  }
+}
+
+// export async function handleSignIn(
+//   prevState: string | undefined,
+//   formData: FormData
+// ) {
+//   try {
+//     // const { isSignedIn, nextStep } = await signIn({
+//     const { nextStep } = await signIn({
+//       username: String(formData.get("email")),
+//       password: String(formData.get("password")),
+//       options: { authFlowType: "CUSTOM_WITH_SRP" }, // important
+//     });
+
+//     if (nextStep.signInStep === "CONFIRM_SIGN_UP") {
+//       await resendSignUpCode({
+//         username: String(formData.get("email")),
+//       });
+//       return `/sign-up/confirm-sign-up?email=${formData.get("email")}`;
+//     }
+
+//     // Amplify Gen 2 custom challenge step
+//     if (nextStep.signInStep === "CONFIRM_SIGN_IN_WITH_CUSTOM_CHALLENGE") {
+//       // Here you should trigger Google reCAPTCHA v3
+//       // and send the token back via confirmSignIn()
+//       return "/auth/recaptcha";
+//     }
+
+//     return "/auth/redirect-after-login";
+//   } catch (error) {
+//     return getErrorMessage(error);
+//   }
+// }
+
+export async function handleCustomChallenge(token: string, user: any) {
+  try {
+    const result = await confirmSignIn(user, token);
+
+    if (result.nextStep.signInStep === "DONE") {
+      return "/auth/redirect-after-login";
+    }
+    return "Challenge not completed. Please try again.";
   } catch (error) {
     return getErrorMessage(error);
   }

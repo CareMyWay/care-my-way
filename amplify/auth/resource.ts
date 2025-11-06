@@ -1,5 +1,8 @@
 import { defineAuth } from "@aws-amplify/backend";
 import { postConfirmation } from "./post-confirmation/resource";
+import { createAuthChallenge } from "./create-auth-challenge/resource";
+import { defineAuthChallenge } from "./define-auth-challenge/resource";
+import { verifyAuthChallengeResponse } from "./verify-auth-challenge-response/resource";
 
 /**
  * Define and configure your auth resource
@@ -24,6 +27,9 @@ export const auth = defineAuth({
   },
   triggers: {
     postConfirmation: postConfirmation,
+    createAuthChallenge,
+    defineAuthChallenge,
+    verifyAuthChallengeResponse,
   },
   access: (allow) => [allow.resource(postConfirmation).to(["addUserToGroup"])],
 });
