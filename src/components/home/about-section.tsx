@@ -2,7 +2,7 @@
 
 import React from "react";
 import GreenButton from "../buttons/green-button";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 const AboutSection = () => {
   const { t } = useTranslation();
@@ -12,8 +12,12 @@ const AboutSection = () => {
         <p className="text-primary-white text-center text-lg md:text-2xl mb-10">
           {t("Find Compassionate Care, Simplified.")}
           <br />
-          {t("Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless.")}{" "}
-          {t("We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs.")}
+          {t(
+            "Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless"
+          )}{" "}
+          {t(
+            "We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs"
+          )}
         </p>
         <GreenButton
           href="/marketplace"
