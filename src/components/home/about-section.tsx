@@ -13,10 +13,10 @@ const AboutSection = () => {
           {t("Find Compassionate Care, Simplified.")}
           <br />
           {t(
-            "Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless"
+            "Whether you’re searching for a reliable healthcare aid or looking to offer your services, Care My Way makes the process effortless."
           )}{" "}
           {t(
-            "We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs"
+            "We provide a trusted platform where families can connect with qualified healthcare aids who match your unique needs."
           )}
         </p>
         <GreenButton
