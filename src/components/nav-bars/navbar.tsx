@@ -33,6 +33,7 @@ const roleRoutesMap: Record<
   Client: [
     { href: "/client-dashboard", label: "My Dashboard", loggedIn: true },
     { href: "/client-dashboard/profile", label: "My Profile", loggedIn: true },
+    { href: "/quiz", label: "Healthcare Transition Quiz", loggedIn: true },
   ],
   Support: [
     { href: "/support-dashboard", label: "Support Dashboard", loggedIn: true },

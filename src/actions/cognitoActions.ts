@@ -10,7 +10,7 @@ import {
 import { getErrorMessage } from "@/utils/get-error-message";
 
 export async function handleSignUp(
-  prevState: string | undefined,
+  _prevState: string | undefined,
   formData: FormData
 ) {
   try {
@@ -42,7 +42,7 @@ export async function handleSignUp(
 }
 
 export async function handleSendEmailVerificationCode(
-  prevState: { message: string; errorMessage: string },
+  _prevState: { message: string; errorMessage: string },
   formData: FormData
 ) {
   let currentState;
@@ -51,12 +51,12 @@ export async function handleSendEmailVerificationCode(
       username: String(formData.get("email")),
     });
     currentState = {
-      ...prevState,
+      ..._prevState,
       message: "Code sent successfully",
     };
   } catch (error) {
     currentState = {
-      ...prevState,
+      ..._prevState,
       errorMessage: getErrorMessage(error),
     };
   }
@@ -65,7 +65,7 @@ export async function handleSendEmailVerificationCode(
 }
 
 export async function handleConfirmSignUp(
-  prevState: string | undefined,
+  _prevState: string | undefined,
   formData: FormData
 ): Promise<string | undefined> {
   try {
@@ -90,7 +90,7 @@ export async function handleConfirmSignUp(
 }
 
 export async function handleSignIn(
-  prevState: string | undefined,
+  _prevState: string | undefined,
   formData: FormData
 ) {
   try {
